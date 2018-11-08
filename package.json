@@ -3,7 +3,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-
+    "test": "lerna exec --scope \"$package\" --stream --parallel -- yarn test \"$extra_args\" --colors"
   },
   "workspaces": ["projects/*"]
 }

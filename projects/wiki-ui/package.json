@@ -6,6 +6,6 @@
   "main": "index.js",
   "version": "2.0.0",
   "scripts": {
-    "test": "jest --config ../../.jestrc.js"
+    "test": "jest --config ./.jestrc.js "
   }
 }
