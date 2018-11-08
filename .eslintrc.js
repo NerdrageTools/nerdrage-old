@@ -1,0 +1,39 @@
+module.exports = {
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "jest": true,
+    "node": false
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "eslint-plugin-import-order-alphabetical"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "function-paren-newline": "off",
+    "import/extensions": ["error", { "js": "never" }],
+    "import/no-unresolved": "off",
+    "import-order-alphabetical/order": "error",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "lines-between-class-members": "off",
+    "no-empty": "off",
+    "no-template-curly-in-string": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off",
+    "react/button-has-type": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
+    "react/jsx-one-expression-per-line": "off",
+    "react/no-array-index-key": "off",
+    "react/no-unused-prop-types": ["error", { "skipShapeProps": true }],
+    "react/prop-types": "off",
+    "semi": ["error", "never"],
+    "sort-imports": "off",
+    "sort-keys": ["error", "asc", { "caseSensitive": false, "natural": true }],
+    "sort-vars": ["error", { "ignoreCase": true }]
+  }
+}

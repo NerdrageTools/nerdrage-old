@@ -1,0 +1,11 @@
+{
+  "name": "nerdrage-ui",
+  "description": "NerdRAGE core ui components",
+  "license": "GPL-3.0",
+  "author": "Troy Alford",
+  "main": "index.js",
+  "version": "2.0.0",
+  "scripts": {
+    "test": "jest --config ../../.jestrc.js"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "sheetforge",
+  "description": "Sheetforge - React-based RPG Character Sheets",
+  "license": "GPL-3.0",
+  "author": "Troy Alford",
+  "bugs": {
+    "url": "https://github.com/NerdrageTools/nerdrage/issues"
+  },
+  "homepage": "https://nerdragetools.github.com/nerdrage/projects/sheetforge",
+  "keywords": [
+    "react",
+    "rpg",
+    "character-sheet"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NerdrageTools/nerdrage.git"
+  },
+  "version": "2.0.0",
+  "scripts": {
+    "test": "jest --config ../../.jestrc.js"
+  }
+}
