@@ -1,0 +1,19 @@
+{
+  "name": "core",
+  "description": "NerdRAGE - core utilities",
+  "license": "GPL-3.0",
+  "author": "Troy Alford",
+  "bugs": {
+    "url": "https://github.com/NerdrageTools/nerdrage/issues"
+  },
+  "homepage": "http://nerdrage.wiki",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NerdrageTools/nerdrage.git"
+  },
+  "version": "2.0.0",
+  "scripts": {
+    "test": "jest --config ../../.jestrc.js"
+  }
+}
