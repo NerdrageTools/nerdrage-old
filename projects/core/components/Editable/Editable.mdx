@@ -1,0 +1,46 @@
+---
+name: Editable
+route: /editable
+---
+import { Playground } from 'docz'
+import Editable from '@/components/Editable'
+
+## Editable Component
+The `Editable` component is a generic editor for most data types.
+
+<style>{`
+  .editable {
+    border: 1px solid #ddd;
+    padding: .25em;
+  }
+`}</style>
+
+### Boolean
+<Playground>
+  <Editable value={true} />
+</Playground>
+
+### Numeric
+<Playground>
+  <Editable value={4} />
+</Playground>
+
+#### Numeric (constrained to a range)
+<Playground>
+  <Editable value={10} max={20} min={0} step={2} />
+</Playground>
+
+### Range
+<Playground>
+  <Editable value={50} max={100} type="slider" />
+</Playground>
+
+### String
+<Playground>
+  <Editable value="Single Line String" />
+</Playground>
+
+### Multi-Line String
+<Playground>
+  <Editable value="Multi-Line String" type="multiline" />
+</Playground>

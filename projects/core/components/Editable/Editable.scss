@@ -1,0 +1,74 @@
+@import "~@/components/styles/placeholder.scss";
+
+.editable {
+  box-sizing: border-box;
+  color: inherit;
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  min-height: 30px;
+  min-width: 40px;
+  position: relative;
+
+  &:not(.readonly) {
+    > div, > p, > span {
+      cursor: pointer;
+    }
+  }
+
+  > div, > span, > input, > textarea {
+    align-items: inherit;
+    border: 1px solid transparent;
+    border: none;
+    color: inherit;
+    display: flex;
+    flex: 1;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    height: 100%; max-height: 100%;
+    justify-content: inherit;
+    line-height: inherit;
+    margin: 0;
+    outline: none;
+    overflow: hidden;
+    padding: .25em;
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    text-align: inherit;
+    width: 100%; min-width: 40px;
+  }
+
+  > div.multiline, > textarea {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+
+    > p {
+      margin: 0 0 .5rem 0;
+      padding: 0;
+    }
+  }
+
+  .placeholder {
+    color: rgba(200, 200, 200, .8);
+    font-style: italic;
+  }
+  > input, > textarea {
+    @include placeholder(rgba(200, 200, 200, .8)) {
+      color: rgba(200, 200, 200, .8);
+      font-style: italic;
+    };
+  }
+
+  &:focus-within { outline: -webkit-focus-ring-color auto 1px; }
+
+  input[type="checkbox"] {
+    height: 1em;
+    min-width: auto;
+    width: 1em;
+    margin: auto;
+  }
+}
