@@ -1,6 +1,6 @@
 {
   "name": "wiki-ui",
-  "description": "NerdRAGE core ui components",
+  "description": "NerdRAGE wiki ui",
   "license": "GPL-3.0",
   "author": "Troy Alford",
   "main": "index.js",
