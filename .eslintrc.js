@@ -4,7 +4,7 @@ module.exports = {
     "browser": true,
     "commonjs": true,
     "jest": true,
-    "node": false
+    "node": true
   },
   "parser": "babel-eslint",
   "plugins": [
@@ -13,9 +13,10 @@ module.exports = {
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
     "function-paren-newline": "off",
-    "import/extensions": ["error", { "js": "never" }],
-    "import/no-unresolved": "off",
     "import-order-alphabetical/order": "error",
+    "import/extensions": ["error", { "js": "never" }],
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/no-static-element-interactions": "off",
