@@ -1,0 +1,26 @@
+.search-box {
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  > .search.icon {
+    fill: #ccc;
+    position: absolute;
+    left: .25rem;
+  }
+
+  &:focus-within {
+    > .search.icon {
+      fill: currentColor;
+    }
+  }
+
+  > input {
+    border-radius: 5px;
+    border: 1px inset;
+    flex: 1;
+    padding: .25rem .25rem .25rem 1.5rem;
+  }
+}

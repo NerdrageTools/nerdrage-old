@@ -1,0 +1,12 @@
+.header {
+  background-color: white;
+  color: black;
+  display: flex;
+
+  > .logo {
+    cursor: pointer;
+  }
+  > .search-box {
+    flex: 1;
+  }
+}
