@@ -10,6 +10,10 @@ export default class Layout extends Component {
 
   render = () => {
     const { theme } = this.context
+    const style = {
+      ...theme,
+      color: theme.foreground,
+    }
 
     return (<>
       <Head>
@@ -19,7 +23,7 @@ export default class Layout extends Component {
           rel="stylesheet"
         />
       </Head>
-      <div className="wiki layout" style={theme}>
+      <div className="wiki layout" style={style}>
         <Header />
         <div className="content">
           <Navigation />
