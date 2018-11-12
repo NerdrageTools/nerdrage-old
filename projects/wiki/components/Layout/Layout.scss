@@ -11,15 +11,14 @@
   padding: 0;
   width: 100vw;
 
-  > .header {
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 40px;
-    padding: 5px;
-  }
   > .content {
     display: flex;
     flex-direction: row;
     flex: 1;
+
+    > .page {
+      flex: 1;
+      margin: 5px;
+    }
   }
 }

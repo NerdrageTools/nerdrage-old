@@ -1,7 +1,9 @@
 .navigation {
   border-right: 1px solid;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   min-width: 150px;
   overflow: auto;
-  padding: .5rem;
+  padding: 5px;
 }
