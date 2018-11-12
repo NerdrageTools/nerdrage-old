@@ -11,8 +11,8 @@ export default class Navigation extends Component {
 
   render = () => (
     <div className="navigation" style={{ borderColor: this.context.theme.primary }}>
-      {this.context.navigation.map((slug, key) => (
-        <ArticleLink key={key} slug={slug}>{slug}</ArticleLink>
+      {this.context.navigation.map(({ slug, text }, key) => (
+        <ArticleLink key={key} slug={slug}>{text}</ArticleLink>
       ))}
     </div>
   )
