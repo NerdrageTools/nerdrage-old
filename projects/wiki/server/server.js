@@ -25,6 +25,12 @@ app.prepare().then(async () => {
   const client = await MongoClient.connect(url, { useNewUrlParser: true })
   const db = client.db(DB_NAME)
 
+  server.get('/api/campaign', ByCampaign, async (request, response) => {
+    const slug = request.params.campaign
+    const campaign = await db.collection('campaigns').findOne({ slug }) || {}
+    return response.status(200).json(campaign)
+  })
+
   server.get('/api/wiki/:slug', ByCampaign, async (request, response) => {
     const article = await db.collection('articles').findOne(request.params) || {}
     return response.status(200).json(article)

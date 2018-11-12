@@ -2,14 +2,14 @@ import Logo from 'core/icons/fist.svg'
 import Link from 'next/link'
 import React, { Component } from 'react'
 import SearchBox from '@/components/SearchBox'
-import ThemeContext from '@/contexts/Theme'
+import CampaignContext from '@/contexts/Campaign'
 import './Header.scss'
 
 export default class Header extends Component {
-  static contextType = ThemeContext
+  static contextType = CampaignContext
 
   render = () => {
-    const theme = this.context
+    const { theme } = this.context
 
     return (
       <div
@@ -17,14 +17,14 @@ export default class Header extends Component {
         style={{
           backgroundColor: theme.primary,
           color: theme.secondary,
-          fontFamily: theme.fontForBody,
+          fontFamily: theme.fontFamily,
         }}
       >
         <Link as="/" href="/index">
-          <>
+          <div className="logo">
             <Logo className="logo x2" />
-            <div style={{ fontFamily: theme.fontForBody }}>NerdRAGE</div>
-          </>
+            <div>NerdRAGE</div>
+          </div>
         </Link>
         <SearchBox />
       </div>

@@ -1,44 +1,32 @@
-import fetch from 'isomorphic-unfetch'
+import Head from 'next/head'
 import React, { Component } from 'react'
 import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
-import ThemeContext from '@/contexts/Theme'
-import URI from '@/utilities/URI'
+import Campaign from '@/contexts/Campaign'
 import './Layout.scss'
 
 export default class Layout extends Component {
-  static getInitialProps = async ({ req }) => ({
-    theme: await fetch(URI(req, '/api/theme')).then(r => r.json()),
-  })
+  static contextType = Campaign
 
-  static defaultProps = {
-    theme: {
-      background: '#fff',
-      fontForContent: 'Ubuntu',
-      fontForHeaders: 'Calibri',
-      foreground: '#333',
-      primary: '#42afe3',
-      secondary: '#fff',
-    },
-  }
+  render = () => {
+    const { theme } = this.context
 
-  componentWillMount() {
-    if (process.browser) {
-      const { fontForContent, fontForHeaders } = this.props.theme
-      const WebFont = require('webfontloader') // eslint-disable-line
-      WebFont.load({ google: { families: [fontForContent, fontForHeaders] } })
-    }
-  }
-
-  render = () => (
-    <ThemeContext.Provider value={this.props.theme}>
-      <div className="wiki layout">
+    return (<>
+      <Head>
+        <link
+          key="content-font"
+          href={`//fonts.googleapis.com/css?family=${theme.fontFamily}:400,400i,700,700i`}
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="wiki layout" style={theme}>
         <Header />
         <div className="content">
           <Navigation />
           {this.props.children}
         </div>
       </div>
-    </ThemeContext.Provider>
-  )
+  </>
+    )
+  }
 }
