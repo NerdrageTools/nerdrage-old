@@ -24,18 +24,17 @@
     z-index: 1;
 
     > .tab {
-      box-shadow: 0 -3px 3px rgba($palette-gray-light, .5) inset;
-      display: flex;
-      padding: 7px 5px 0 5px;
       background-color: $palette-offwhite;
       border: 1px solid $palette-gray-light;
       border-bottom: none;
       border-radius: 5px 5px 0 0;
+      box-shadow: 0 -3px 3px rgba($palette-gray-light, .5) inset;
       color: lighten($palette-gray-dark, 40%);
       cursor: pointer;
+      display: flex;
       display: inline-flex;
-      padding: 7px;
       margin: 3px 0 0 0;
+      padding: .5rem 1rem;
       z-index: 0;
 
       > .icon {
@@ -47,7 +46,7 @@
 
       &.is-active {
         background: $color-bg;
-        border-color: $color-border;
+        border-color: inherit;
         border-bottom: 1px solid $color-bg;
         box-shadow:
           -3px -3px 3px rgba($palette-gray-light, .5),
@@ -55,7 +54,7 @@
         ;
         color: $color-text;
         margin: 0 0 -1px 0;
-        padding-top: 9px;
+        padding-top: calc(.5rem + 2px);
         z-index: 1;
       }
     }
