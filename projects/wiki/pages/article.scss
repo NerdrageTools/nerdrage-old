@@ -1,0 +1,26 @@
+.article.page {
+  display: flex;
+  flex-direction: column;
+
+  > .title {
+    align-items: center;
+    display: flex;
+    font-size: 2em;
+    font-weight: bold;
+    justify-content: flex-start;
+    padding: 10px;
+  }
+
+  > .tab-set {
+    > .tabs.edit {
+      ~ .tab-contents { padding: 0; }
+    }
+    > .tabs.html {
+      > .tab.html.is-active {
+        background-color: #fff;
+        border-bottom-color: #fff;
+      }
+      ~ .tab-contents { padding: 0; }
+    }
+  }
+}
