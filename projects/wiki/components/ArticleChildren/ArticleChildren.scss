@@ -1,0 +1,57 @@
+@import '~@/styles/breakpoint';
+@import '~@/styles/classes/dropshadow';
+@import '~@/styles/classes/ellipsis';
+@import '~@/styles/palette';
+
+.article-children {
+  @include dropshadow();
+
+  border: 2px solid $color-border;
+  border-radius: 5px;
+  display: grid;
+  grid-template-areas:
+    "header"
+    "link-list"
+  ;
+  margin-top: 1em;
+  overflow: hidden;
+
+  header {
+    background-color: $palette-gray-light;
+    border: none;
+    border-bottom: 2px groove;
+    color: $palette-gray-dark;
+    padding: 5px;
+
+    .icon {
+      font-size: 14px;
+    }
+  }
+  .link-list {
+    background-color: lighten($palette-gray-light, 10%);
+    columns: 4;
+    column-fill: balance;
+    column-gap: 10px;
+    padding: 10px;
+
+    > a { display: inherit; }
+  }
+}
+
+@include breakpoint(medium) {
+  .article-children {
+    .link-list {
+      columns: 3;
+    }
+  }
+}
+
+@include breakpoint(small) {
+  .article-children {
+    .link-list {
+      columns: 2;
+
+      a { @include ellipsis; }
+    }
+  }
+}
