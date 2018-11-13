@@ -38,20 +38,18 @@ export default class WysiwygEditor extends Component {
           onKeyUp={this.handleChangeEvent}
           onPaste={this.handleChangeEvent}
         />
-        <style jsx>
-          {`
-            .wysiwyg-editor .menubar {
-              background: ${theme.background};
-              border-color: ${theme.primary};
-            }
-            .wysiwyg-editor .mce-btn.mce-active {
-              background: ${theme.primary};
-              color: ${theme.secondary};
-            }
-            .mce-tooltip {
-              font-family: ${theme.fontFamily};
-            }
-          `}
+        <style>{`
+          .wysiwyg-editor .menubar {
+            background: ${theme.background};
+            border-color: ${theme.primary};
+          }
+          .wysiwyg-editor .mce-btn.mce-active {
+            background: ${theme.primary};
+            color: ${theme.secondary};
+          }
+          .mce-tooltip {
+            font-family: ${theme.fontFamily};
+          }`}
         </style>
       </div>
     )

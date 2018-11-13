@@ -1,8 +1,5 @@
 @import '~@/styles/classes/dropshadow';
 @import '~@/styles/palette';
-// @import '~tinymce/skins/lightgray/skin.min.css';
-// @import '~tinymce/skins/lightgray/content.inline.min.css';
-
 
 .tab-set > .tabs.wysiwyg ~ .tab-contents {
   padding: 0;
@@ -10,12 +7,8 @@
 }
 
 .wysiwyg-editor {
-  display: grid;
-  grid-template-areas:
-    "menubar"
-    "editor"
-  ;
-  grid-template-rows: 40px calc(100% - 42px);
+  display: flex;
+  flex-direction: column;
   height: 100%;
 
   .menubar {
@@ -23,6 +16,7 @@
     border-style: solid;
     border-width: 0 0 1px 0;
     display: grid;
+    height: 35px;
     margin-bottom: 5px;
     overflow: hidden;
 
@@ -39,6 +33,8 @@
   }
 
   .mce-content-body {
+    flex: 1;
+    outline: none;
     overflow-y: auto;
     padding: 10px;
   }
