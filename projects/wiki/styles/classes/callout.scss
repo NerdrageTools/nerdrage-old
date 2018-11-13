@@ -1,0 +1,53 @@
+@mixin callout-color($color, $icon) {
+  background-color: lighten($color, 2.5%);
+
+  th { background-color: $color; }
+
+  &:before {
+    background-color: darken($color, 2.5%);
+    background-image: $icon;
+  }
+}
+
+.callout, [class*="callout-"] {
+  background-color: $palette-white;
+  border-color: $palette-gray-light;
+  border-style: solid;
+  border-width: 1px;
+  margin: 1em 0;
+  overflow: hidden;
+  padding: 5px 5px 5px 30px;
+  position: relative;
+
+  &:first-child { margin-top: 0; }
+
+  td, th, &:before {
+    border-color: $palette-gray-light;
+    border-style: solid;
+  }
+  &:before {
+    content: '';
+    display: inline-block;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    border-width: 0 1px 0 0;
+    position: absolute;
+    left: 0; top: 0; height: 100%; width: 24px;
+  }
+
+  &[class*="-book"] { @include callout-color($color-book, $image-book); }
+  &[class*="-combo"] { @include callout-color($color-combo, $image-combo); }
+  &[class*="-info"] { @include callout-color($color-info, $image-info); }
+  &[class*="-system"] { @include callout-color($color-system, $image-system); }
+}
+
+table[class*="callout-"] {
+  border-width: 1px;
+  padding: 0 0 0 23px;
+
+  &:before {
+    border-right-width: 1px;
+    border-radius: 5px 0 0 5px;
+  }
+}

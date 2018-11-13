@@ -1,0 +1,12 @@
+.loading {
+  align-content: center;
+  display: grid;
+  height: 100%;
+  justify-content: center;
+
+  &:after {
+    background-color: rgba(255, 255, 255, .8);
+    content: 'Loading...';
+    font-weight: bold;
+  }
+}

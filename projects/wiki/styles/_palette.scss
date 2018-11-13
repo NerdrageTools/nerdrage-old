@@ -1,0 +1,39 @@
+// Colors by name
+$palette-beige:       #fdf5e6;
+$palette-blue-light:  #e2fbfb;
+$palette-blue-royal:  #08f;
+$palette-blue:        #42afe3;
+$palette-gold-dark:   #998100;
+$palette-gold:        #ffd700;
+$palette-gray-dark:   #333;
+$palette-gray-light:  #d3d6db;
+$palette-gray-medium: #999;
+$palette-green:       #97cd76;
+$palette-offwhite:    #f6f6f6;
+$palette-orange:      #e8720c;
+$palette-red:         #c44;
+$palette-white:       #fff;
+
+// Colors by purpose
+$color-bg-danger:     lighten($palette-red, 10%);
+$color-bg-inverse:    $palette-blue;
+$color-bg-modal:      transparentize($palette-offwhite, 0.25);
+$color-bg-warning:    $palette-gold;
+$color-bg:            $palette-offwhite;
+$color-bg-button:     darken($color-bg, 5%);
+$color-book:          $palette-blue-light;
+$color-border:        $palette-blue;
+$color-combo:         lighten($palette-green, 25%);
+$color-danger:        $palette-red;
+$color-highlight:     $palette-blue-light;
+$color-info:          $palette-blue-light;
+$color-link-missing:  $palette-red;
+$color-link:          $palette-blue-royal;
+$color-success:       $palette-green;
+$color-system:        $palette-beige;
+$color-table-bg-even: $palette-white;
+$color-table-bg-odds: $palette-offwhite;
+$color-text-inverse:  $palette-offwhite;
+$color-text:          $palette-gray-dark;
+$color-text-danger:   lighten($palette-red, 50%);
+$color-warning:       $palette-gold-dark;

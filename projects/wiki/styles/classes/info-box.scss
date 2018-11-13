@@ -1,0 +1,19 @@
+.info-box {
+  @include dropshadow();
+
+  border: 2px solid $color-border;
+  float: right;
+  font-size: .9rem;
+  margin: 0 0 1em 1em;
+  width: 275px;
+
+  th, td { padding: 5px; }
+}
+
+@include breakpoint(small) {
+  .info-box {
+    float: none;
+    margin: 0 0 1em 0;
+    width: 100%;
+  }
+}
