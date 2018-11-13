@@ -12,15 +12,14 @@
   }
 
   > .tab-set {
-    > .tabs.edit {
-      ~ .tab-contents { padding: 0; }
-    }
+    .tab-contents { padding: 0; }
+
+    > .tabs.read ~ .tab-contents { padding: .5rem; }
     > .tabs.html {
       > .tab.html.is-active {
         background-color: #fff;
         border-bottom-color: #fff;
       }
-      ~ .tab-contents { padding: 0; }
     }
   }
 }
