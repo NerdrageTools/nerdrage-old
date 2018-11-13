@@ -1,0 +1,15 @@
+@mixin breakpoint($size) {
+  $mediaRule: "(min-width: #{$screen-large-width})";
+
+  @if ($size == small) {
+    $mediaRule: "(max-width: #{$screen-small-width}px)";
+  } @else if ($size == medium) {
+    $minWidth: $screen-small-width + 1;
+    $maxWidth: $screen-large-width - 1;
+    $mediaRule: "(min-width: #{$minWidth}px) and (max-width: #{$maxWidth}px)";
+  }
+
+  @media only screen and #{$mediaRule} {
+    @content;
+  }
+}
