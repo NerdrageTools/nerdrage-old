@@ -1,4 +1,8 @@
+@import '~@/styles/palette';
+
 .wiki.layout {
+  background: $color-bg;
+  background: var(--color-background);
   display: flex;
   flex: 1;
   flex-direction: column;

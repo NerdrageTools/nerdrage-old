@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import TinyMCE from './TinyMCE'
-import Campaign from '@/contexts/Campaign'
 import './ArticleEditor.scss'
 import './WysiwygEditor.scss'
 
 export default class WysiwygEditor extends Component {
-  static contextType = Campaign
-
   static defaultProps = {
     onChange: () => {},
   }
@@ -23,7 +20,6 @@ export default class WysiwygEditor extends Component {
   }
 
   render = () => {
-    const { theme } = this.context
     const { html, onChange, ...props } = this.props
 
     return (
@@ -38,19 +34,6 @@ export default class WysiwygEditor extends Component {
           onKeyUp={this.handleChangeEvent}
           onPaste={this.handleChangeEvent}
         />
-        <style>{`
-          .wysiwyg-editor .menubar {
-            background: ${theme.background};
-            border-color: ${theme.primary};
-          }
-          .wysiwyg-editor .mce-btn.mce-active {
-            background: ${theme.primary};
-            color: ${theme.secondary};
-          }
-          .mce-tooltip {
-            font-family: ${theme.fontFamily};
-          }`}
-        </style>
       </div>
     )
   }

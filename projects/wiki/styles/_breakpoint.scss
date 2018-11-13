@@ -1,3 +1,6 @@
+$screen-small-width: 550 !default;
+$screen-large-width: 980 !default;
+
 @mixin breakpoint($size) {
   $mediaRule: "(min-width: #{$screen-large-width})";
 

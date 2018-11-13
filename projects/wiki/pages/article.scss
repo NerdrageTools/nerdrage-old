@@ -1,9 +1,14 @@
+@import '~@/styles/palette';
+
 .article.page {
   display: flex;
   flex-direction: column;
 
   > .title {
     align-items: center;
+    border-bottom: 1px solid;
+    border-bottom-color: $color-border;
+    border-bottom-color: var(--color-primary);
     display: flex;
     font-size: 2em;
     font-weight: bold;

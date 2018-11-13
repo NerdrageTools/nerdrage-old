@@ -1,5 +1,4 @@
 @mixin dropshadow {
-  box-shadow:
-    2px 2px 5px $palette-gray-light
-  ;
+  box-shadow: 2px 2px 5px $palette-gray-light;
+  box-shadow: 2px 2px 5px var(--color-shadow);
 }

@@ -10,7 +10,7 @@ export default class Navigation extends Component {
   }
 
   render = () => (
-    <div className="navigation" style={{ borderColor: this.context.theme.primary }}>
+    <div className="navigation">
       {this.context.navigation.map(({ slug, text }, key) => (
         <ArticleLink key={key} slug={slug}>{text}</ArticleLink>
       ))}

@@ -14,7 +14,6 @@ $palette-orange:      #e8720c;
 $palette-red:         #c44;
 $palette-white:       #fff;
 
-// Colors by purpose
 $color-bg-danger:     lighten($palette-red, 10%);
 $color-bg-inverse:    $palette-blue;
 $color-bg-modal:      transparentize($palette-offwhite, 0.25);
@@ -29,6 +28,7 @@ $color-highlight:     $palette-blue-light;
 $color-info:          $palette-blue-light;
 $color-link-missing:  $palette-red;
 $color-link:          $palette-blue-royal;
+$color-shadow:        transparentize($palette-gray-light, .5);
 $color-success:       $palette-green;
 $color-system:        $palette-beige;
 $color-table-bg-even: $palette-white;

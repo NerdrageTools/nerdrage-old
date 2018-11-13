@@ -1,9 +1,14 @@
+@import '~@/styles/palette';
+
 .header {
   align-items: center;
   background-color: white;
+  background-color: var(--color-primary);
   border-bottom: 1px outset;
-  box-shadow: 0px 2px 5px #ccc;
+  box-shadow: 0px 2px 5px $color-shadow;
+  box-shadow: 0px 2px 5px var(--color-shadow);
   color: black;
+  color: var(--color-secondary);
   display: flex;
   justify-content: flex-start;
   min-height: 40px;

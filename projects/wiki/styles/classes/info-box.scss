@@ -2,6 +2,7 @@
   @include dropshadow();
 
   border: 2px solid $color-border;
+  border: 2px solid var(--color-border);
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;

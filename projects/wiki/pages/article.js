@@ -14,8 +14,8 @@ let HtmlEditor = () => <div />
 let WysiwygEditor = () => <div />
 
 if (process.browser && window) {
-  HtmlEditor = dynamic(() => import('@/components/HtmlEditor'))
   WysiwygEditor = dynamic(() => import('@/components/WysiwygEditor'))
+  HtmlEditor = dynamic(() => import('@/components/HtmlEditor'))
 }
 
 export default class Article extends Component {

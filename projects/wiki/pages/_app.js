@@ -16,6 +16,7 @@ export default class Wiki extends App {
 
   render = () => {
     const { campaign, Component, pageProps } = this.props // eslint-disable-line
+    const { theme } = campaign
 
     return (
       <Campaign.Provider value={campaign}>
@@ -23,6 +24,16 @@ export default class Wiki extends App {
           <Layout>
             <Component {...pageProps} />
           </Layout>
+          <style>{`
+            :root {
+              --font-primary:     ${theme.fontFamily};
+              --color-background: ${theme.background};
+              --color-borders:    ${theme.primary};
+              --color-foreground: ${theme.foreground};
+              --color-primary:    ${theme.primary};
+              --color-secondary:  ${theme.secondary};
+            }
+          `}</style>
         </Container>
       </Campaign.Provider>
     )

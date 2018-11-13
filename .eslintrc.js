@@ -29,6 +29,7 @@ module.exports = {
     "operator-linebreak": "off",
     "react/button-has-type": "off",
     "react/destructuring-assignment": "off",
+    "react/jsx-closing-tag-location": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
     "react/jsx-one-expression-per-line": "off",
     "react/no-array-index-key": "off",
