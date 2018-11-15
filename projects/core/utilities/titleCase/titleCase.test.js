@@ -1,4 +1,4 @@
-import titleCase from './titleCase'
+import titleCase from 'core/utilities/titleCase'
 
 it('converts camelCase words', () => {
   expect(titleCase('camelCaseWords')).toBe('Camel Case Words')

@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-import Header from '@/components/Header'
-import Navigation from '@/components/Navigation'
-import Campaign from '@/contexts/Campaign'
+import Header from 'wiki/components/Header'
+import Navigation from 'wiki/components/Navigation'
+import Campaign from 'wiki/contexts/Campaign'
 import './Layout.scss'
 
 export default class Layout extends Component {

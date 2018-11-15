@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
-import Layout from '@/components/Layout'
-import Campaign from '@/contexts/Campaign'
-import URI from '@/utilities/URI'
-import '@/styles/all.scss'
+import Layout from 'wiki/components/Layout'
+import Campaign from 'wiki/contexts/Campaign'
+import URI from 'wiki/utilities/URI'
+import 'wiki/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async (context) => {

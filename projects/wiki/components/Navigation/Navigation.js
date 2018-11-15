@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import ArticleLink from '@/components/ArticleLink'
-import CampaignContext from '@/contexts/Campaign'
+import ArticleLink from 'wiki/components/ArticleLink'
+import CampaignContext from 'wiki/contexts/Campaign'
 import './Navigation.scss'
 
 export default class Navigation extends Component {

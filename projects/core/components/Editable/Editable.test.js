@@ -1,7 +1,7 @@
+import Editable from 'core/components/Editable'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Simulate } from 'react-dom/test-utils'
-import Editable from './Editable'
 
 describe('Editable', () => {
   let parent = document.createElement('div')

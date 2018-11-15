@@ -1,4 +1,4 @@
-import formatBytes from '@/utilities/formatBytes'
+import formatBytes from 'core/utilities/formatBytes'
 
 it('formatBytes() parses correctly', () => {
   expect(formatBytes(123)).toEqual('123bytes')

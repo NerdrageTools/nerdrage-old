@@ -1,12 +1,13 @@
 const baseConfig = require('../../.jestrc.js')
 const packageJSON = require('./package.json')
+const path = require('path')
 
 module.exports = {
   ...baseConfig,
   moduleNameMapper: {
     ...baseConfig.moduleNameMapper,
-    '@/(.*)$': `<rootDir>/projects/${packageJSON.name}/$1`,
+    '@/(.*)$': `${__dirname}/$1`,
   },
   name: packageJSON.name,
-  testMatch: [`<rootDir>/projects/${packageJSON.name}/**/*.test.js`],
+  testMatch: [`${__dirname}/**/*.test.js`],
 }

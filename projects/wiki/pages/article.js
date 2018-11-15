@@ -1,3 +1,4 @@
+import Editable from 'core/components/Editable'
 import EditIcon from 'core/icons/edit.svg'
 import HtmlIcon from 'core/icons/html.svg'
 import ReadIcon from 'core/icons/read.svg'
@@ -5,9 +6,9 @@ import fetch from 'isomorphic-unfetch'
 import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
-import ArticleChildren from '@/components/ArticleChildren'
-import TabSet from '@/components/TabSet'
-import URI from '@/utilities/URI'
+import ArticleChildren from 'wiki/components/ArticleChildren'
+import TabSet from 'wiki/components/TabSet'
+import URI from 'wiki/utilities/URI'
 import './article.scss'
 
 let HtmlEditor = () => <div />
@@ -45,7 +46,7 @@ export default class Article extends Component {
 
     return (
       <div className="article page">
-        <div className="title">{title}</div>
+        <Editable className="title" defaultValue={title} />
         <TabSet
           activeTabId={activeTab}
           onTabClicked={this.handleTabClicked}

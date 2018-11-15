@@ -14,7 +14,7 @@ module.exports = {
     "comma-dangle": ["error", "always-multiline"],
     "function-paren-newline": "off",
     "import-order-alphabetical/order": "error",
-    "import/extensions": ["error", { "js": "never", "scss": "always" }],
+    "import/extensions": ["error", { "js": "never", "scss": "always", "svg": "always" }],
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
     "jsx-a11y/anchor-is-valid": "off",

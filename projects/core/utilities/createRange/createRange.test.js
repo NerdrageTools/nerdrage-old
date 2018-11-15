@@ -1,4 +1,4 @@
-import createRange from './createRange'
+import createRange from 'core/utilities/createRange'
 
 jest.unmock('./createRange')
 

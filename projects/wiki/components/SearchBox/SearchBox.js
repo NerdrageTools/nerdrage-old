@@ -1,6 +1,6 @@
 import SearchIcon from 'core/icons/search.svg'
 import React, { Component } from 'react'
-import Campaign from '@/contexts/Campaign'
+import Campaign from 'wiki/contexts/Campaign'
 import './SearchBox.scss'
 
 export default class SearchBox extends Component {

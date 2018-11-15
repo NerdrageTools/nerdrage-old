@@ -1,4 +1,4 @@
-import flatten from './flatten'
+import flatten from 'core/utilities/flatten'
 
 describe('utilities/array/flatten', () => {
   it('leaves 1-dimensional arrays intact', () => {

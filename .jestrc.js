@@ -6,7 +6,9 @@ module.exports = {
   moduleNameMapper: {
     '(.*)\.(css|eot|gif|jpg|otf|png|svg|ttf|woff2?)$': '<rootDir>/mocks/fileMock.js',
     '(.*)\.s?css$': '<rootDir>/mocks/styleMock.js',
-    '@/(.*)$': '<rootDir>/source/$1',
+    'core/(.*)$': path.resolve(__dirname, 'projects/core/$1'),
+    'sheetforge/(.*)$': path.resolve(__dirname, 'projects/sheetforge/$1'),
+    'wiki/(.*)$': path.resolve(__dirname, 'projects/wiki/$1'),
   },
   modulePathIgnorePatterns: ['build', 'docs'],
   resolver: 'jest-directory-named-resolver',

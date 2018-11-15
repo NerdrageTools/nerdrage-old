@@ -1,7 +1,7 @@
 import Logo from 'core/icons/fist.svg'
 import Link from 'next/link'
 import React from 'react'
-import SearchBox from '@/components/SearchBox'
+import SearchBox from 'wiki/components/SearchBox'
 import './Header.scss'
 
 export default function Header() {

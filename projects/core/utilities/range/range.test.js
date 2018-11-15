@@ -1,4 +1,4 @@
-import range from '@/utilities/range'
+import range from 'core/utilities/range'
 
 describe('range()', () => {
   it('returns 1 value when low === high', () => {

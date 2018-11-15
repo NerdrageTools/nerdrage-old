@@ -5,8 +5,8 @@ module.exports = {
   ...baseConfig,
   moduleNameMapper: {
     ...baseConfig.moduleNameMapper,
-    '@/(.*)$': `<rootDir>/projects/${packageJSON.name}/$1`,
+    '@/(.*)$': `${__dirname}/$1`,
   },
   name: packageJSON.name,
-  testMatch: [`<rootDir>/projects/${packageJSON.name}/**/*.test.js`],
+  testMatch: [`${__dirname}/**/*.test.js`],
 }

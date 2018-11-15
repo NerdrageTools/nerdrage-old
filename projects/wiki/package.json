@@ -1,5 +1,5 @@
 {
-  "name": "wiki",
+  "name": "@nerdrage/wiki",
   "description": "NerdRAGE wiki",
   "license": "GPL-3.0",
   "author": "Troy Alford",
@@ -7,9 +7,8 @@
   "version": "2.0.0",
   "scripts": {
     "build": "next build",
-    "dev": "nodemon -w ./server -e js --exec babel-node server/server.js",
-    "start": "NODE_ENV=production node ./server/server.js",
-    "test": "jest --config ./.jestrc.js "
+    "develop": "nodemon -w ./server -e js --exec babel-node server/server.js",
+    "start": "NODE_ENV=production node ./server/server.js"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^2.4.0",
@@ -26,11 +25,14 @@
     "next-compose-plugins": "^2.1.1",
     "next-routes": "^1.4.2",
     "node-sass": "^4.10.0",
-    "react": "^16.6.1",
+    "react": "^16.6.3",
     "react-ace": "^6.2.0",
-    "react-dom": "^16.6.1",
+    "react-dom": "^16.6.3",
     "react-jsx-parser": "^1.5.1",
     "tinymce": "^4.8.5",
     "webfontloader": "^1.6.28"
+  },
+  "devDependencies": {
+    "next-plugin-transpile-modules": "^0.1.3"
   }
 }

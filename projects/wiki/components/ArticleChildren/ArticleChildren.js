@@ -1,6 +1,6 @@
 import TagIcon from 'core/icons/tag.svg'
 import React from 'react'
-import ArticleLink from '@/components/ArticleLink'
+import ArticleLink from 'wiki/components/ArticleLink'
 import './ArticleChildren.scss'
 
 const ArticleChildren = ({

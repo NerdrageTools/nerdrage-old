@@ -1,6 +1,6 @@
-import React from 'react'
-import bound from '@/utilities/bound'
-import noop from '@/utilities/noop'
+import bound from 'core/utilities/bound'
+import noop from 'core/utilities/noop'
+import React, { Component } from 'react'
 import './Editable.scss'
 
 const TYPES = [
@@ -12,7 +12,7 @@ const TYPES = [
   'number', 'slider',
 ]
 
-export default class Editable extends React.Component {
+export default class Editable extends Component {
   static displayName = 'Editable'
 
   static defaultProps = {
