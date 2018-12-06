@@ -19,6 +19,7 @@
     "develop": "yarn watch",
     "prebuild": "yarn clean",
     "prewatch": "yarn clean",
+    "pretest": "jest --clearCache",
     "test": "jest --config ./.jestrc.js ",
     "watch": "yarn webpack --watch "
   },
