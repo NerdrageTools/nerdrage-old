@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`controllers/Article mocks db 1`] = `
+Object {
+  "_id": "foo",
+  "aliases": Array [
+    "foo",
+    "few",
+    "fooh",
+  ],
+  "campaign": "qa",
+  "data": Object {
+    "dummy": "data",
+  },
+  "html": "Foo <b>Bar</b>",
+  "slug": "foo",
+  "tags": Array [
+    "test",
+  ],
+  "title": "Foo",
+}
+`;
