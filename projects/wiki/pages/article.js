@@ -34,15 +34,16 @@ export default class Article extends Component {
   }
 
   handleChangeHtml = (html) => {
-
+    this.setState({ html })
   }
   handleTabClicked = (tab) => {
     if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
   }
 
   render() {
-    const { children, html, title } = this.props
+    const { children, title } = this.props
     const { activeTab } = this.state
+    const html = this.state.html || this.props.html
 
     return (
       <div className="article page">

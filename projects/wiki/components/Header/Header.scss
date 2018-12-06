@@ -18,7 +18,23 @@
     box-sizing: border-box;
     cursor: pointer;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     min-width: 150px;
+
+    > .nerd, > .rage {
+      font-size: 1.4em;
+      text-shadow:
+         1px  1px 0 rgba(255,255,255,.8),
+        -1px  1px 0 rgba(255,255,255,.8),
+         1px -1px 0 rgba(255,255,255,.8),
+        -1px -1px 0 rgba(255,255,255,.8),
+         1px  1px 3px #666,
+        -1px  1px 3px #666,
+         1px -1px 3px #666,
+        -1px -1px 3px #666,
+      ;
+    }
+    .nerd { color: #000; }
+    .rage { color: #f00; }
   }
 }

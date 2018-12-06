@@ -10,7 +10,8 @@ export default function Header() {
       <Link as="/" href="/index">
         <div className="logo">
           <Logo className="logo x2" />
-          <div>NerdRAGE</div>
+          <div className="nerd">Nerd</div>
+          <div className="rage">RAGE</div>
         </div>
       </Link>
       <SearchBox />

@@ -3,7 +3,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "develop": "lerna run develop"
+    "develop": "lerna run develop --stream --scope "
   },
   "workspaces": ["projects/*"]
 }

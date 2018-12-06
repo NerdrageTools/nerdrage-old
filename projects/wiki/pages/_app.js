@@ -1,8 +1,9 @@
+import merge from 'deepmerge'
 import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
 import Layout from 'wiki/components/Layout'
-import Campaign from 'wiki/contexts/Campaign'
+import Campaign, { DEFAULTS } from 'wiki/contexts/Campaign'
 import URI from 'wiki/utilities/URI'
 import 'wiki/styles/all.scss'
 
@@ -10,7 +11,9 @@ export default class Wiki extends App {
   static getInitialProps = async (context) => {
     const { Component } = context
     const props = await App.getInitialProps(context)
-    const campaign = await fetch(URI(context.ctx.req, '/api/campaign')).then(r => r.json())
+    const campaign = await fetch(URI(context.ctx.req, '/api/campaign'))
+      .then(r => r.json())
+      .then(c => merge(DEFAULTS, c))
     return { ...props, campaign, Component }
   }
 

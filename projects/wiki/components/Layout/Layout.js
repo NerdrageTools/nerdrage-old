@@ -9,10 +9,11 @@ export default class Layout extends Component {
   static contextType = Campaign
 
   render = () => {
-    const { theme } = this.context
+    const { name, theme } = this.context
 
-    return (<>
+    return <>
       <Head>
+        <title>{name}</title>
         <link
           key="content-font"
           href={`//fonts.googleapis.com/css?family=${theme.fontFamily}:400,400i,700,700i`}
@@ -26,7 +27,6 @@ export default class Layout extends Component {
           {this.props.children}
         </div>
       </div>
-  </>
-    )
+    </>
   }
 }

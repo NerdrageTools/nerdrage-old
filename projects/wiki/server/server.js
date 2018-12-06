@@ -3,17 +3,16 @@ import compression from 'compression'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { MongoClient } from 'mongodb'
 import next from 'next'
+import WikiController from './controllers/Wiki'
+import database from './database'
 import ByCampaign from './middleware/ByCampaign'
 import routes from './routes'
 
 dotenv.config()
 
-const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 const PRODUCTION = process.env.NODE_ENV === 'production'
 const app = next({ dev: !PRODUCTION })
-const url = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}?retryWrites=true`
 const handler = routes.getRequestHandler(app)
 
 const server = express()
@@ -21,9 +20,14 @@ const server = express()
   .use(cors())
   .options('*', cors())
 
-app.prepare().then(async () => {
-  const client = await MongoClient.connect(url, { useNewUrlParser: true })
-  const db = client.db(DB_NAME)
+Promise.all([
+  database.connect(),
+  app.prepare(),
+]).then(async ([db]) => {
+  server.use((request, response, nextMiddleware) => {
+    request.db = db
+    nextMiddleware()
+  })
 
   server.get('/api/campaign', ByCampaign, async (request, response) => {
     const slug = request.params.campaign
@@ -31,10 +35,7 @@ app.prepare().then(async () => {
     return response.status(200).json(campaign)
   })
 
-  server.get('/api/wiki/:slug', ByCampaign, async (request, response) => {
-    const article = await db.collection('articles').findOne(request.params) || {}
-    return response.status(200).json(article)
-  })
+  server.use('/api/wiki', ByCampaign, WikiController)
 
   server.get('*', (request, response) => handler(request, response))
   server.listen(3000, (error) => {
