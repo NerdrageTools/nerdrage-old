@@ -8,7 +8,8 @@
   "scripts": {
     "build": "next build",
     "develop": "nodemon -w ./server -e js --exec babel-node server/server.js",
-    "start": "NODE_ENV=production node ./server/server.js"
+    "start": "NODE_ENV=production node ./server/server.js",
+    "test": "jest --config ./.jestrc.js "
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^2.4.0",
@@ -33,6 +34,7 @@
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
+    "mongodb-memory-server": "^2.7.2",
     "next-plugin-transpile-modules": "^0.1.3"
   }
 }
