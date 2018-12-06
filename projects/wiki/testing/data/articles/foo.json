@@ -1,0 +1,12 @@
+{
+  "_id": "foo",
+  "aliases": ["foo", "few", "fooh"],
+  "campaign": "qa",
+  "data": {
+    "dummy": "data"
+  },
+  "html": "Foo <b>Bar</b>",
+  "slug": "foo",
+  "tags": ["test"],
+  "title": "Foo"
+}
