@@ -1,6 +1,4 @@
-import createRange from '@nerdrage/core/utilities/createRange'
-
-jest.unmock('./createRange')
+import createRange from './createRange'
 
 describe('createRange()', () => {
   it('returns 1 value when low === high', () => {

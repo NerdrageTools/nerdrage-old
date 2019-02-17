@@ -1,6 +1,4 @@
-import { slugify, slugifyUrl } from '@nerdrage/core/utilities/slugs'
-
-jest.unmock('./slugs')
+import { slugify, slugifyUrl } from './slugs'
 
 describe('slugify()', () => {
   it('returns empty string for falsy values', () => {
