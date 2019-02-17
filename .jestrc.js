@@ -6,9 +6,9 @@ module.exports = {
   moduleNameMapper: {
     '(.*)\.(css|eot|gif|jpg|otf|png|svg|ttf|woff2?)$': path.resolve(__dirname, 'mocks/fileMock.js'),
     '(.*)\.s?css$': path.resolve(__dirname, 'mocks/styleMock.js'),
-    'core/(.*)$': path.resolve(__dirname, 'projects/core/$1'),
-    'sheetforge/(.*)$': path.resolve(__dirname, 'projects/sheetforge/$1'),
-    'wiki/(.*)$': path.resolve(__dirname, 'projects/wiki/$1'),
+    '@nerdrage/core/(.*)$': path.resolve(__dirname, 'projects/core/$1'),
+    '@nerdrage/sheetforge/(.*)$': path.resolve(__dirname, 'projects/sheetforge/$1'),
+    '@nerdrage/wiki/(.*)$': path.resolve(__dirname, 'projects/wiki/$1'),
   },
   modulePathIgnorePatterns: ['build', 'coverage', 'docs'],
   resolver: 'jest-directory-named-resolver',

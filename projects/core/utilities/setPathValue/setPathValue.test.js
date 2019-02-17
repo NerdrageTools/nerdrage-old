@@ -1,4 +1,4 @@
-import setPathValue from 'core/utilities/setPathValue'
+import setPathValue from '@nerdrage/core/utilities/setPathValue'
 
 describe('utilities/object/setPathValue()', () => {
   it('sets nested property values on simple objects', () => {

@@ -1,4 +1,4 @@
-import pluck from 'core/utilities/pluck'
+import pluck from '@nerdrage/core/utilities/pluck'
 
 it('utilities/pluck', () => {
   const object = { bar: 'BAR', foo: 'FOO' }

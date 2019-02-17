@@ -1,8 +1,8 @@
+import Header from '@nerdrage/wiki/components/Header'
+import Navigation from '@nerdrage/wiki/components/Navigation'
+import Campaign from '@nerdrage/wiki/contexts/Campaign'
 import Head from 'next/head'
 import React, { Component } from 'react'
-import Header from 'wiki/components/Header'
-import Navigation from 'wiki/components/Navigation'
-import Campaign from 'wiki/contexts/Campaign'
 import './Layout.scss'
 
 export default class Layout extends Component {

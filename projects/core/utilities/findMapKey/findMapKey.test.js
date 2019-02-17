@@ -1,4 +1,4 @@
-import findMapKey from 'core/utilities/findMapKey'
+import findMapKey from '@nerdrage/core/utilities/findMapKey'
 
 const foo = { bar: 'Bar!', foo: 'Foo!' }
 const bar = { bar: 'Bar!', foo: 'Foo!' }

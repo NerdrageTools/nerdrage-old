@@ -1,4 +1,4 @@
-import titleCase from 'core/utilities/titleCase'
+import titleCase from '@nerdrage/core/utilities/titleCase'
 
 it('converts camelCase words', () => {
   expect(titleCase('camelCaseWords')).toBe('Camel Case Words')

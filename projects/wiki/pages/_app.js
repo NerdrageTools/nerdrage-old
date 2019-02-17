@@ -1,11 +1,11 @@
+import Layout from '@nerdrage/wiki/components/Layout'
+import Campaign, { DEFAULTS } from '@nerdrage/wiki/contexts/Campaign'
+import URI from '@nerdrage/wiki/utilities/URI'
 import merge from 'deepmerge'
 import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
-import Layout from 'wiki/components/Layout'
-import Campaign, { DEFAULTS } from 'wiki/contexts/Campaign'
-import URI from 'wiki/utilities/URI'
-import 'wiki/styles/all.scss'
+import '@nerdrage/wiki/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async (context) => {

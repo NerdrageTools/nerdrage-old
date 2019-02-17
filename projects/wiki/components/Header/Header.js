@@ -1,7 +1,7 @@
-import Logo from 'core/icons/fist.svg'
+import Logo from '@nerdrage/core/icons/fist.svg'
+import SearchBox from '@nerdrage/wiki/components/SearchBox'
 import Link from 'next/link'
 import React from 'react'
-import SearchBox from 'wiki/components/SearchBox'
 import './Header.scss'
 
 export default function Header() {

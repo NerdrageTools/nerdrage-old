@@ -1,4 +1,4 @@
-import kebabCase from 'core/utilities/kebabCase'
+import kebabCase from '@nerdrage/core/utilities/kebabCase'
 
 it('utilities/kebabCase', () => {
   expect(kebabCase('This is a String')).toEqual('this-is-a-string')

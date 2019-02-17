@@ -1,5 +1,5 @@
-import kebabCase from 'core/utilities/kebabCase'
-import unique from 'core/utilities/unique'
+import kebabCase from '@nerdrage/core/utilities/kebabCase'
+import unique from '@nerdrage/core/utilities/unique'
 
 function strip(string) {
   return string

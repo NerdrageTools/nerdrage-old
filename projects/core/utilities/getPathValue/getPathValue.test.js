@@ -1,4 +1,4 @@
-import getPathValue from 'core/utilities/getPathValue'
+import getPathValue from '@nerdrage/core/utilities/getPathValue'
 
 describe('utilities/resolvePath', () => {
   it('extracts properties from objects and arrays', () => {

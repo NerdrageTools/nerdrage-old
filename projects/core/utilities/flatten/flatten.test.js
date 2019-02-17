@@ -1,4 +1,4 @@
-import flatten from 'core/utilities/flatten'
+import flatten from '@nerdrage/core/utilities/flatten'
 
 describe('utilities/array/flatten', () => {
   it('leaves 1-dimensional arrays intact', () => {

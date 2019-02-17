@@ -1,9 +1,9 @@
 {
-  "devDependencies": { "lerna": "^3.4.3" },
+  "devDependencies": { "lerna": "^3.13.0" },
   "name": "root",
   "private": true,
   "scripts": {
-    "develop": "lerna run develop --stream --scope "
+    "develop": "lerna run develop --stream "
   },
   "workspaces": ["projects/*"]
 }

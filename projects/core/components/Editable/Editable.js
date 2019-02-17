@@ -1,5 +1,5 @@
-import bound from 'core/utilities/bound'
-import noop from 'core/utilities/noop'
+import bound from '@nerdrage/core/utilities/bound'
+import noop from '@nerdrage/core/utilities/noop'
 import React, { Component } from 'react'
 import './Editable.scss'
 

@@ -1,6 +1,6 @@
-import SearchIcon from 'core/icons/search.svg'
+import SearchIcon from '@nerdrage/core/icons/search.svg'
+import Campaign from '@nerdrage/wiki/contexts/Campaign'
 import React, { Component } from 'react'
-import Campaign from 'wiki/contexts/Campaign'
 import './SearchBox.scss'
 
 export default class SearchBox extends Component {

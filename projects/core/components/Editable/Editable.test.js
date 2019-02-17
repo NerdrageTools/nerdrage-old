@@ -1,4 +1,4 @@
-import Editable from 'core/components/Editable'
+import Editable from '@nerdrage/core/components/Editable'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Simulate } from 'react-dom/test-utils'

@@ -1,4 +1,4 @@
-import { slugify, slugifyUrl } from 'core/utilities/slugs'
+import { slugify, slugifyUrl } from '@nerdrage/core/utilities/slugs'
 
 jest.unmock('./slugs')
 

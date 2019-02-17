@@ -1,4 +1,4 @@
-import flatten from 'core/utilities/flatten'
+import flatten from '@nerdrage/core/utilities/flatten'
 
 export default (object, ...keys) => {
   if (typeof object !== 'object') return {}

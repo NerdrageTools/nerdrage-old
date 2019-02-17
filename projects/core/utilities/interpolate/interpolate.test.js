@@ -1,4 +1,4 @@
-import interpolate from 'core/utilities/interpolate'
+import interpolate from '@nerdrage/core/utilities/interpolate'
 
 describe('utilities/string/interpolate', () => {
   it('resolves simple properties', () => {

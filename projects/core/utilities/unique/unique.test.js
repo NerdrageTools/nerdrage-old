@@ -1,4 +1,4 @@
-import unique from 'core/utilities/unique'
+import unique from '@nerdrage/core/utilities/unique'
 
 describe('utilities/unique', () => {
   it('can filter simple values', () => {

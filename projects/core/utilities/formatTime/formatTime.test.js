@@ -1,4 +1,4 @@
-import formatTime from 'core/utilities/formatTime'
+import formatTime from '@nerdrage/core/utilities/formatTime'
 
 it('formatTime() parses correctly', () => {
   /* eslint-disable no-mixed-operators */

@@ -1,6 +1,6 @@
-import TagIcon from 'core/icons/tag.svg'
+import TagIcon from '@nerdrage/core/icons/tag.svg'
+import ArticleLink from '@nerdrage/wiki/components/ArticleLink'
 import React from 'react'
-import ArticleLink from 'wiki/components/ArticleLink'
 import './ArticleChildren.scss'
 
 const ArticleChildren = ({

@@ -1,4 +1,4 @@
-import splitObjectPath from 'core/utilities/splitObjectPath'
+import splitObjectPath from '@nerdrage/core/utilities/splitObjectPath'
 
 export default (object, path, value) => {
   const split = splitObjectPath(path)
