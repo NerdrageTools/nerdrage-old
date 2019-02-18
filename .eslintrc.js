@@ -25,6 +25,7 @@ module.exports = {
     "lines-between-class-members": "off",
     "no-empty": "off",
     "no-template-curly-in-string": "off",
+    "no-underscore-dangle": "off",
     "object-curly-newline": "off",
     "operator-linebreak": "off",
     "react/button-has-type": "off",
