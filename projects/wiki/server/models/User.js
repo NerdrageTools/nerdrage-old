@@ -62,7 +62,7 @@ UserSchema.methods.comparePassword = function comparePassword(password) {
 UserSchema.methods.toProfile = function toProfile() {
   return {
     ...Object.keys(this.toJSON()).reduce((all, key) => {
-      if (!['_id', 'password'].includes(key)) {
+      if (!['password'].includes(key)) {
         return { ...all, [key]: this[key] }
       }
       return all
