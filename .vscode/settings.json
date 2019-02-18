@@ -21,8 +21,6 @@
   "git.enableSmartCommit": true,
   "javascript.implicitProjectConfig.experimentalDecorators": true,
   "terminal.integrated.fontFamily": "'SourceCodePro+Powerline+Awesome Regular'",
-  "window.zoomLevel": -1,
-  "workbench.startupEditor": "newUntitledFile",
   "git.ignoreLimitWarning": true,
   "eslint.enable": true,
 }
