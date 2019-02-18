@@ -1,4 +1,4 @@
-import getPathValue from '@nerdrage/core/utilities/getPathValue'
+import getPathValue from '../getPathValue'
 
 export default (string, object) => {
   const matches = string.match(/(\${[a-z0-9-_[\].]*})/gi)

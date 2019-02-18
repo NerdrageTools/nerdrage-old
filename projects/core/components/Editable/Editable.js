@@ -1,6 +1,6 @@
-import bound from '@nerdrage/core/utilities/bound'
-import noop from '@nerdrage/core/utilities/noop'
 import React, { Component } from 'react'
+import bound from '@/utilities/bound'
+import noop from '@/utilities/noop'
 import './Editable.scss'
 
 const TYPES = [
