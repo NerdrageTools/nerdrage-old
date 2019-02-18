@@ -1,4 +1,4 @@
 export default (request, response, next) => {
-  request.params.campaign = request.hostname.split('.').shift()
+  request.campaign = request.hostname.split('.').shift()
   next()
 }
