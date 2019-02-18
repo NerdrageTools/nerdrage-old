@@ -11,7 +11,7 @@ import CampaignController from './controllers/CampaignController'
 import UserController from './controllers/UserController'
 import database from './database'
 import ByCampaign from './middleware/ByCampaign'
-import RandomizeSession from './middleware/RandomizeSession'
+import SessionSettings from './middleware/SessionSettings'
 import routes from './routes'
 import './models'
 
@@ -28,10 +28,10 @@ const server = express()
     keys: ['name', 'username'],
     name: 'session',
   }))
+  .use(SessionSettings)
   .use(cors())
   .use(express.urlencoded({ extended: true }))
   .use(express.json())
-  .use(RandomizeSession)
   .options('*', cors())
 
 Promise.all([
