@@ -1,13 +1,19 @@
 /* eslint-disable no-console */
 import compression from 'compression'
+import cookieSession from 'cookie-session'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import mongoose from 'mongoose'
 import next from 'next'
-import WikiController from './controllers/Wiki'
+import ArticleController from './controllers/ArticleController'
+import CampaignController from './controllers/CampaignController'
+import UserController from './controllers/UserController'
 import database from './database'
 import ByCampaign from './middleware/ByCampaign'
+import RandomizeSession from './middleware/RandomizeSession'
 import routes from './routes'
+import './models'
 
 dotenv.config()
 
@@ -17,7 +23,15 @@ const handler = routes.getRequestHandler(app)
 
 const server = express()
   .use(compression())
+  .use(cookieSession({
+    httpOnly: true,
+    keys: ['name', 'username'],
+    name: 'session',
+  }))
   .use(cors())
+  .use(express.urlencoded({ extended: true }))
+  .use(express.json())
+  .use(RandomizeSession)
   .options('*', cors())
 
 Promise.all([
@@ -29,13 +43,12 @@ Promise.all([
     nextMiddleware()
   })
 
-  server.get('/api/campaign', ByCampaign, async (request, response) => {
-    const slug = request.params.campaign
-    const campaign = await db.collection('campaigns').findOne({ slug }) || {}
-    return response.status(200).json(campaign)
-  })
+  mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOSTNAME}/${process.env.DB_NAME}`, { useNewUrlParser: true })
+  mongoose.Promise = global.Promise
 
-  server.use('/api/wiki', ByCampaign, WikiController)
+  server.use('/api/article', ByCampaign, ArticleController)
+  server.use('/api/campaign', ByCampaign, CampaignController)
+  server.use('/api/user', UserController)
 
   server.get('*', (request, response) => handler(request, response))
   server.listen(3000, (error) => {
