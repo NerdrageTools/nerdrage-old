@@ -69,7 +69,7 @@ export default {
     alias: { '@': __dirname },
     extensions: ['.css', '.js', '.scss'],
     modules: ['node_modules'],
-    plugins: [new DirectoryNamedWebpackPlugin()],
+    plugins: [new DirectoryNamedWebpackPlugin(true)],
   },
   stats: {
     all: false,

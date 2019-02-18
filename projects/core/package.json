@@ -14,7 +14,7 @@
   },
   "version": "2.0.0",
   "scripts": {
-    "build": "npx babel ./ --ignore './*.js','./**/*.test.js','./build/*' --out-dir build",
+    "build": "npx babel ./ --root-mode upward --ignore './*.js','./**/*.test.js','./build/*' --out-dir build",
     "clean": "rimraf build/*",
     "develop": "yarn watch",
     "prebuild": "yarn clean",
