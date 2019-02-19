@@ -1,15 +1,16 @@
 import mongoose from 'mongoose'
 import Slug from './Slug'
 
+const { ObjectId: ObjectIdType } = mongoose.Schema.Types
+
 const ArticleSchema = new mongoose.Schema({
-  aliases: [{ ...Slug, ref: 'Article' }],
-  campaign: { ref: 'Campaign', type: String, unique: false },
+  aliases: [Slug],
+  campaign: { default: null, ref: 'Campaign', required: false, type: ObjectIdType, unique: false },
   createdBy: { ref: 'User', type: String },
   data: Object,
-  editors: [{ ref: 'User', type: String }],
   lastUpdatedBy: { ref: 'User', type: String },
   slug: { ...Slug, required: true, unique: false },
-  tags: [{ ...Slug, ref: 'Article' }],
+  tags: [Slug],
   title: { required: true, type: String },
 }, {
   timestamps: true,
