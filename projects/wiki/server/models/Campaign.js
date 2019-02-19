@@ -53,6 +53,11 @@ CampaignSchema.methods.isEditableBy = function isEditableBy(userId) {
   )
 }
 
+CampaignSchema.methods.isOwnedBy = function isOwnedBy(userId) {
+  const matches = matchObjectId(userId)
+  return Boolean(this.owners.some(matches))
+}
+
 CampaignSchema.methods.isVisibleTo = function isVisibleTo(userId) {
   const matches = matchObjectId(userId)
   if (!this.private) return true
