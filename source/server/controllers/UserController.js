@@ -1,6 +1,6 @@
 import express from 'express'
-import NoAnonymous from '../middleware/NoAnonymous'
-import User from '../models/User'
+import NoAnonymous from '@/server/middleware/NoAnonymous'
+import User from '@/server/models/User'
 
 const controller = express()
 
@@ -24,12 +24,16 @@ controller.put('/', async (request, response) => {
   }
 })
 
-controller.get('/', NoAnonymous, async (request, response) => {
+controller.get('/', async (request, response) => {
+  if (!request.session.username) {
+    return response.status(200).send({ anonymous: true })
+  }
+
   try {
     const user = await User.findOne({ username: request.session.username })
-    response.status(200).send(user)
+    return response.status(200).send(user)
   } catch (error) {
-    response.status(500).send({ message: 'Unknown error.' })
+    return response.status(500).send({ message: 'Unknown error.' })
   }
 })
 
