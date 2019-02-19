@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "develop": "nodemon -w ./server -e js --exec \"babel-node source/server/server.js\"",
+    "develop": "nodemon -w ./source/server -e js --exec \"babel-node source/server/server.js\"",
     "start": "NODE_ENV=production babel-node source/server/server.js"
   },
   "dependencies": {
