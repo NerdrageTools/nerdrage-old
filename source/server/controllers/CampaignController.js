@@ -4,8 +4,11 @@ import Campaign from '../models/Campaign'
 const controller = express()
 
 controller.get('/', async (request, response) => {
-  const campaign = await Campaign.findOne({ domain: request.campaign }) || {}
-  return response.status(200).json(campaign)
+  const campaign = await Campaign.findOne({ domain: request.campaign })
+    .populate('editors players owners', 'name username')
+    .exec()
+
+  return response.status(200).json(campaign || {})
 })
 
 controller.put('/', async (request, response) => {
