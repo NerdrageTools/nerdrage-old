@@ -11,10 +11,16 @@ export default class Wiki extends App {
   static getInitialProps = async (context) => {
     const { Component } = context
     const props = await App.getInitialProps(context)
-    const campaign = await fetch(URI(context.ctx.req, '/api/campaign'))
-      .then(r => r.json())
-      .then(c => merge(DEFAULTS, c))
-    return { ...props, campaign, Component }
+    const [campaign, user] = await Promise.all([
+      fetch(URI(context.ctx.req, '/api/campaign')).then(r => r.json()),
+      fetch(URI(context.ctx.req, '/api/user')).then(r => r.json()),
+    ])
+    return {
+      ...props,
+      campaign: merge(DEFAULTS, campaign),
+      Component,
+      user,
+    }
   }
 
   render = () => {
