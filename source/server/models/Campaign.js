@@ -31,11 +31,11 @@ const CampaignSchema = new mongoose.Schema({
   theme: {
     default: {},
     type: {
-      background: ColorCode,
-      fontFamily: String,
-      foreground: ColorCode,
-      primary: ColorCode,
-      secondary: ColorCode,
+      background: { ...ColorCode, default: '#fff' },
+      fontFamily: { default: 'Ubuntu', type: String },
+      foreground: { ...ColorCode, default: '#333' },
+      primary: { ...ColorCode, default: '#42afe3' },
+      secondary: { ...ColorCode, default: '#fff' },
     },
   },
 }, {

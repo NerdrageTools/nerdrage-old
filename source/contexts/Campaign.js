@@ -1,9 +1,16 @@
 import React from 'react'
 
 export const DEFAULTS = {
+  createdAt: null,
+  createdBy: {},
+  domain: '',
+  editors: [],
+  lastUpdatedAt: null,
+  lastUpdatedBy: {},
   name: 'New Campaign',
   navigation: [],
-  slug: '',
+  owners: [],
+  private: false,
   theme: {
     background: '#fff',
     fontFamily: 'Ubuntu',
@@ -11,6 +18,7 @@ export const DEFAULTS = {
     primary: '#42afe3',
     secondary: '#fff',
   },
+  version: 0,
 }
 
 export default React.createContext(DEFAULTS)
