@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
   versionKey: 'version',
 })
 
-UserSchema.pre('save', function beforeUserSave(next) {
+UserSchema.pre('save', function (next) {
   if (!this.isModified('password')) { next(); return }
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltError, salt) => {
     if (saltError) { next(saltError); return }
@@ -51,7 +51,7 @@ UserSchema.pre('save', function beforeUserSave(next) {
   })
 })
 
-UserSchema.methods.comparePassword = function comparePassword(password) {
+UserSchema.methods.comparePassword = function (password) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (error, isMatch) => {
       if (error) reject(error)
@@ -59,7 +59,7 @@ UserSchema.methods.comparePassword = function comparePassword(password) {
     })
   })
 }
-UserSchema.methods.toProfile = function toProfile() {
+UserSchema.methods.toProfile = function () {
   return {
     ...Object.keys(this.toJSON()).reduce((all, key) => {
       if (!['password'].includes(key)) {

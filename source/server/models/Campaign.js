@@ -45,7 +45,7 @@ const CampaignSchema = new mongoose.Schema({
 
 const matchObjectId = id => vs => vs.equals(ObjectId(id))
 
-CampaignSchema.methods.isEditableBy = function isEditableBy(userId) {
+CampaignSchema.methods.isEditableBy = function (userId) {
   const matches = matchObjectId(userId)
   return Boolean(
     this.owners.some(matches)
@@ -53,12 +53,12 @@ CampaignSchema.methods.isEditableBy = function isEditableBy(userId) {
   )
 }
 
-CampaignSchema.methods.isOwnedBy = function isOwnedBy(userId) {
+CampaignSchema.methods.isOwnedBy = function (userId) {
   const matches = matchObjectId(userId)
   return Boolean(this.owners.some(matches))
 }
 
-CampaignSchema.methods.isVisibleTo = function isVisibleTo(userId) {
+CampaignSchema.methods.isVisibleTo = function (userId) {
   const matches = matchObjectId(userId)
   if (!this.private) return true
 
