@@ -12,6 +12,7 @@ module.exports = {
   ],
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
+    "func-names": "off",
     "function-paren-newline": "off",
     "import-order-alphabetical/order": "error",
     "import/extensions": ["error", { "js": "never", "scss": "always", "svg": "always" }],
