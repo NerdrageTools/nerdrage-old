@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
-import Slug from './Slug'
+import Slug from '@/server/models/Slug'
+import unique from '@/utilities/unique/unique'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 
-const ArticleSchema = new mongoose.Schema({
+export const ArticleSchema = new mongoose.Schema({
   aliases: [Slug],
   campaign: { default: null, ref: 'Campaign', required: false, type: ObjectIdType, unique: false },
   createdBy: { ref: 'User', type: String },
@@ -19,4 +20,20 @@ const ArticleSchema = new mongoose.Schema({
 
 ArticleSchema.index({ campaign: 1, slug: 1 }, { unique: true })
 
-export default mongoose.model('Article', ArticleSchema)
+const slugifyArray = array => unique(array.map(value => (
+  value.toLowerCase().replace(/[^\w-_]/g, '-').replace(/-{2,}|^-|-$/g, '')
+))).sort()
+
+ArticleSchema.pre('save', function (next) {
+  this.aliases = slugifyArray(this.aliases)
+  this.tags = slugifyArray(this.tags)
+
+  mongoose.models.Article.updateMany(
+    { _id: { $ne: this._id } },
+    { $pull: { aliases: { $in: this.aliases } } }
+  ).then(() => next())
+})
+
+const Article = mongoose.model('Article', ArticleSchema)
+
+export default Article
