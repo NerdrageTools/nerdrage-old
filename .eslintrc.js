@@ -11,6 +11,7 @@ module.exports = {
     "eslint-plugin-import-order-alphabetical"
   ],
   "rules": {
+    "arrow-parens": ["error", "as-needed"],
     "comma-dangle": ["error", "always-multiline"],
     "func-names": "off",
     "function-paren-newline": "off",
