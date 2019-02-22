@@ -20,6 +20,7 @@ dotenv.config()
 const PRODUCTION = process.env.NODE_ENV === 'production'
 const app = next({ dev: !PRODUCTION, dir: './source' })
 const routeHandler = routes.getRequestHandler(app)
+const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 
 const server = express()
   .use(compression())
@@ -43,7 +44,10 @@ Promise.all([
     nextMiddleware()
   })
 
-  mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOSTNAME}/${process.env.DB_NAME}`, { useNewUrlParser: true })
+  mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+  })
   mongoose.Promise = global.Promise
 
   server.use('/api/article', ByCampaign, ArticleController)
@@ -51,11 +55,11 @@ Promise.all([
   server.use('/api/user', UserController)
 
   server.get('*', routeHandler)
-  server.listen(3000, (error) => {
+  server.listen(3000, error => {
     if (error) throw error
     console.log('~> Listening on port 3000')
   })
-}).catch((exception) => {
+}).catch(exception => {
   console.error(exception.stack)
   process.exit(1)
 })
