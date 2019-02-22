@@ -4,7 +4,8 @@
   "scripts": {
     "build": "next build",
     "develop": "nodemon -w ./source/server -e js --exec \"babel-node source/server/server.js\"",
-    "start": "NODE_ENV=production babel-node source/server/server.js"
+    "start": "NODE_ENV=production babel-node source/server/server.js",
+    "test": "jest"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^3.0.1",
