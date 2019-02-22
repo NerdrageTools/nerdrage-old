@@ -33,10 +33,7 @@ module.exports = withPlugins([withSass, withCSS], {
       test: /\.svg$/,
     })
 
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      '@': __dirname,
-    }
+    config.resolve.alias['@'] = __dirname
     config.resolve.plugins = [new DirectoryNamedWebpackPlugin(true)]
     config.resolve.symlinks = true
 
