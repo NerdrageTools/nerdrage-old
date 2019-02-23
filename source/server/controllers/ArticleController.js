@@ -14,17 +14,22 @@ controller.get('/:slug', async (request, response) => {
 
   const { slug } = request.params
   let article = await Article.findOne({ $or: [
-    { domain: campaign.domain, slug },
-    { domain: undefined, slug },
+    /* eslint-disable sort-keys */
+    { domain: campaign.domain, $or: [{ aliases: slug }, { slug }] },
+    { domain: undefined, $or: [{ aliases: slug }, { slug }] },
+    /* eslint-ensable sort-keys */
   ] }).sort({ campaign: -1 })
     .populate('campaign', 'domain name')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
 
   if (!article) {
-    article = new Article().toJSON()
-    delete article._id
+    article = await new Article().render()
+    delete article.id
+  } else {
+    article = await article.render()
   }
+  delete article._id
 
   return response.status(200).json(article)
 })
