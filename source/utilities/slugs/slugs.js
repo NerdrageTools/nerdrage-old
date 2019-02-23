@@ -1,5 +1,5 @@
-import kebabCase from '../kebabCase'
-import unique from '../unique'
+import kebabCase from '../kebabCase/kebabCase'
+import unique from '../unique/unique'
 
 function strip(string) {
   return string

@@ -3,12 +3,23 @@ import Article from './Article'
 
 const { ObjectId } = mongoose.Types
 
-mongoose.connect('mongodb://localhost/test', {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-})
-
 describe('models/Article', () => {
+  beforeAll(async done => {
+    await mongoose.connect('mongodb://localhost/test', {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+    })
+    done()
+  })
+  beforeEach(async done => {
+    await Article.create([
+      { _id: ObjectId('aaaaaaaaaaaa'), aliases: ['albatross'], slug: 'a', title: 'A' },
+      { _id: ObjectId('bbbbbbbbbbbb'), aliases: ['boggin', 'bug'], slug: 'b', title: 'B' },
+      { _id: ObjectId('cccccccccccc'), aliases: ['carpet', 'cactus'], slug: 'c', title: 'C' },
+    ])
+    done()
+  })
+
   it('uniques and sorts aliases/tags onSave', async done => {
     await Article.deleteMany({})
 
@@ -40,45 +51,114 @@ describe('models/Article', () => {
   })
 
   it('clears aliases from other articles onSave', async done => {
-    let A = new Article({
-      _id: ObjectId('5c6f906d4a0e252061614c8d'),
-      aliases: ['a', 'b'],
-      slug: 'a',
-      title: 'A',
+    const NEW = await Article.create({
+      aliases: ['albatross', 'bug', 'carpet'],
+      slug: 'new',
+      title: 'New',
     })
-    A = await A.save()
 
-    expect(A.toJSON().aliases).toEqual(['a', 'b'])
-
-    let B = new Article({
-      _id: ObjectId('5c6f906d4a0e252061614c8e'),
-      aliases: ['b', 'c'],
-      slug: 'b',
-      title: 'B',
-    })
-    B = await B.save()
-    A = await Article.findOne({ _id: A._id })
-
-    expect(B.toJSON().aliases).toEqual(['b', 'c'])
-    expect(A.toJSON().aliases).toEqual(['a'])
-
-    let C = new Article({
-      _id: ObjectId('5c6f906d4a0e252061614c8f'),
-      aliases: ['a', 'b', 'c'],
-      slug: 'c',
-      title: 'C',
-    })
-    C = await C.save()
-    B = await Article.findOne({ _id: B._id })
-    A = await Article.findOne({ _id: A._id })
-
-    expect(C.toJSON().aliases).toEqual(['a', 'b', 'c'])
-    expect(B.toJSON().aliases).toEqual([])
-    expect(A.toJSON().aliases).toEqual([])
+    const A = await Article.findOne({ slug: 'a' })
+    const B = await Article.findOne({ slug: 'b' })
+    const C = await Article.findOne({ slug: 'c' })
+    expect(A.toJSON().aliases).not.toContain('albatross')
+    expect(B.toJSON().aliases).not.toContain('bug')
+    expect(C.toJSON().aliases).not.toContain('carpet')
+    expect(NEW.toJSON().aliases).toEqual(['albatross', 'bug', 'carpet'])
 
     done()
   })
 
+  it('computes links[]', async done => {
+    const article = new Article({
+      html: `
+        <a href="foo">Foo</a>
+        <a href="/foo/bar">Bar</a>
+        <a href="http://google.com/baz">Google Baz</a>
+        <a href="foo">Foo</a>
+      `,
+      slug: 'foo',
+      title: 'Foo!',
+    })
+
+    expect(await article.renderLinks()).toEqual(['bar', 'foo'])
+    done()
+  })
+
+  it('computes missing[]', async () => {
+    const article = await new Article({
+      _id: ObjectId('dddddddddddd'),
+      html: `
+        <a href="/a">A</a>
+        <a href="/b">B</a>
+        <a href="/e">E</a>
+        <a href="/f">F</a>
+      `,
+      slug: 'd',
+      title: 'D',
+    })
+
+    expect(await article.renderMissing()).toEqual(['e', 'f'])
+  })
+
+  it('enforces unique aliases onSave', async () => {
+    expect(await Article.find({ aliases: 'albatross' })).toHaveLength(1)
+    expect(await Article.find({ aliases: 'bug' })).toHaveLength(1)
+    expect(await Article.find({ aliases: 'carpet' })).toHaveLength(1)
+
+    const article = await new Article({
+      _id: ObjectId('dddddddddddd'),
+      aliases: ['albatross', 'bug', 'carpet'],
+      html: `
+        <a href="/a">A</a>
+        <a href="/b">B</a>
+        <a href="/e">E</a>
+        <a href="/f">F</a>
+      `,
+      slug: 'd',
+      title: 'D',
+    }).save()
+
+    expect(article.toJSON().aliases).toEqual(['albatross', 'bug', 'carpet'])
+    const albatross = await Article.find({ aliases: 'albatross' })
+    expect(albatross).toHaveLength(1)
+    expect(albatross[0]._id.equals(article._id)).toBeTruthy()
+
+    const bug = await Article.find({ aliases: 'bug' })
+    expect(bug).toHaveLength(1)
+    expect(bug[0]._id.equals(article._id)).toBeTruthy()
+
+    const carpet = await Article.find({ aliases: 'carpet' })
+    expect(carpet).toHaveLength(1)
+    expect(carpet[0]._id.equals(article._id)).toBeTruthy()
+
+    return Article.deleteMany({ slug: { $in: ['a', 'b', 'c'] } })
+  })
+
+  it('renders cleanly', async done => {
+    const NEW = new Article({
+      html: `
+        <h1>New!</h1>
+        <a href="/a">A</a>
+        <a href="/missing-link">Missing!</a>
+        <include from="b" sections="*" />
+        <include from="missing-include" sections="*" />
+      `,
+      slug: 'new',
+      title: 'New',
+    })
+
+    const rendered = await NEW.render()
+    expect(rendered.links).toEqual(['a', 'b', 'missing-include', 'missing-link'])
+    expect(rendered.missing).toEqual(['missing-include', 'missing-link'])
+    expect(rendered.html).toMatchSnapshot()
+
+    done()
+  })
+
+  afterEach(async done => {
+    await Article.deleteMany()
+    done()
+  })
   afterAll(async done => {
     await mongoose.disconnect()
     done()
