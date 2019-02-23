@@ -9,7 +9,7 @@ module.exports = withPlugins([withSass, withCSS], {
   webpack(nextConfig, options) {
     const config = { ...nextConfig }
 
-    config.module.rules.forEach((rule) => {
+    config.module.rules.forEach(rule => {
       if (!Array.isArray(rule.use)) return
 
       const cssLoader = rule.use.find(use => use.loader && use.loader === 'css-loader')
