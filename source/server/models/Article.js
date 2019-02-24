@@ -1,8 +1,7 @@
-import url from 'url'
-import cheerio from 'cheerio'
 import mongoose from 'mongoose'
+import cleanUp from './Article/cleanUp'
+import renderLinks from './Article/renderLinks'
 import Slug from '@/server/models/Slug'
-import { extractUrlSlug } from '@/utilities/slugs/slugs'
 import transclude from '@/utilities/transclude'
 import unique from '@/utilities/unique/unique'
 
@@ -31,76 +30,36 @@ export const ArticleSchema = new mongoose.Schema({
 ArticleSchema.index({ campaign: 1, slug: 1 }, { unique: true })
 ArticleSchema.pre('save', function (next) {
   this.aliases = slugifyArray(this.aliases)
+  this.html = cleanUp(this.html)
   this.tags = slugifyArray(this.tags)
 
   mongoose.models.Article.updateMany(
-    { _id: { $ne: this._id } },
+    { _id: { $ne: this._id }, campaign: this.campaign },
     { $pull: { aliases: { $in: this.aliases } } }
   ).then(() => next())
 })
 
-ArticleSchema.methods.renderLinks = async function () {
-  const $ = cheerio.load(this.html || '', { decodeEntities: false, xmlMode: true })
-  const links = []
-
-  $('a').each((index, element) => {
-    const $link = $(element)
-    const href = $link.attr('href') || ''
-    const slug = extractUrlSlug(href)
-    const parsedUrl = url.parse(href)
-
-    const isInternal = !parsedUrl.hostname
-    if (isInternal) {
-      if (slug.match(/\.(gif|jpg|png)$/)) {
-        $link.attr('href', `/media/${slug}`)
-      } else {
-        $link.attr('href', `/page/${slug}`)
-      }
-      links.push(slug)
-    } else {
-      $link.attr('target', '_new').addClass('external')
-    }
-  })
-
-  this.html = $.html()
-  return Promise.resolve(unique(links).sort())
-}
-
-ArticleSchema.methods.renderMissing = async function () {
-  const $ = cheerio.load(this.html || '', { decodeEntities: false, xmlMode: true })
-  const links = await this.renderLinks()
-  const linked = await this.db.model('Article')
-    .find({ $or: [{ slug: { $in: links } }, { aliases: { $in: links } }] })
-    .select('slug aliases')
-    .exec()
-
-  const foundLinks = linked.reduce((all, { aliases, slug }) => ([...all, slug, ...aliases]), [])
-  const missing = links.filter(link => !foundLinks.includes(link))
-
-  $('a').each((index, element) => {
-    const $link = $(element)
-    const href = $link.attr('href') || ''
-    const slug = extractUrlSlug(href)
-    if (missing.includes(slug)) {
-      $link.addClass('missing')
-    }
-  })
-
-  this.html = $.html()
-  return unique(missing).sort()
-}
-
 ArticleSchema.methods.render = async function () {
-  return Promise.all([
-    transclude(this.html),
-    this.renderLinks(),
-    this.renderMissing(),
-  ]).then(([transcluded, links, missing]) => ({
+  const links = await renderLinks(this.html, this.campaign)
+  const includes = await transclude(links.html)
+
+  return Promise.resolve({
     ...this.toJSON(),
-    html: transcluded.html,
-    links: unique([...transcluded.links, ...links]).sort(),
-    missing: unique([...transcluded.missing, ...missing]).sort(),
-  }))
+    html: includes.html,
+    links: unique([...links.links, ...includes.links]).sort(),
+    missing: unique([...links.missing, ...includes.missing]).sort(),
+  })
+}
+
+ArticleSchema.statics.locate = function (slug, campaignId) {
+  return this.findOne({
+    /* eslint-disable sort-keys */
+    $and: [
+      { $or: [{ campaign: campaignId }, { campaign: null }] },
+      { $or: [{ aliases: slug }, { slug }] },
+    ],
+  /* eslint-ensable sort-keys */
+  }).sort({ campaign: -1 })
 }
 
 ArticleSchema.pre('save', function () { this.compute() })
