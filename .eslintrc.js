@@ -26,6 +26,7 @@ module.exports = {
     "jsx-a11y/no-static-element-interactions": "off",
     "lines-between-class-members": "off",
     "no-empty": "off",
+    "no-shadow": ["error", { "allow": ["_"] }],
     "no-template-curly-in-string": "off",
     "no-underscore-dangle": "off",
     "object-curly-newline": "off",
