@@ -71,7 +71,7 @@ controller.post('/login', async (request, response) => {
 
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
-      await user.update({ lastLogin: Date.now() })
+      await user.updateOne({ lastLogin: Date.now() })
       const updated = await User.findOne({ username })
 
       Object.assign(request.session, updated.toProfile())
