@@ -20,6 +20,7 @@
     "crypto-js": "^3.1.9-1",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "js-beautify": "^1.8.9",
     "mongoose": "^5.4.14",
     "next": "^8.0.2",
     "next-compose-plugins": "^2.1.1",
