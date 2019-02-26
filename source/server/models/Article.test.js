@@ -5,13 +5,14 @@ const { ObjectId } = mongoose.Types
 
 describe('models/Article', () => {
   beforeAll(async done => {
-    await mongoose.connect('mongodb://localhost/test', {
+    await mongoose.connect('mongodb://localhost/test-articles', {
       useCreateIndex: true,
       useNewUrlParser: true,
     })
     done()
   })
   beforeEach(async done => {
+    await Article.deleteMany({})
     await Article.create([
       { _id: ObjectId('aaaaaaaaaaaa'), aliases: ['albatross'], slug: 'a', title: 'A' },
       { _id: ObjectId('bbbbbbbbbbbb'), aliases: ['boggin', 'bug'], slug: 'b', title: 'B' },
@@ -125,11 +126,8 @@ describe('models/Article', () => {
     done()
   })
 
-  afterEach(async done => {
-    await Article.deleteMany({})
-    done()
-  })
   afterAll(async done => {
+    await mongoose.connection.db.dropDatabase()
     await mongoose.disconnect()
     done()
   })

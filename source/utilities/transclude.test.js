@@ -4,10 +4,14 @@ import Article from '@/server/models/Article'
 
 describe('utilities/transclude', () => {
   beforeAll(async done => {
-    await mongoose.connect('mongodb://localhost/test', {
+    await mongoose.connect('mongodb://localhost/test-transclude', {
       useCreateIndex: true,
       useNewUrlParser: true,
     })
+    done()
+  })
+  beforeEach(async done => {
+    await Article.deleteMany({})
     done()
   })
 
@@ -46,12 +50,8 @@ describe('utilities/transclude', () => {
     done()
   })
 
-  afterEach(async done => {
-    await Article.deleteMany({})
-    done()
-  })
-
   afterAll(async done => {
+    await mongoose.connection.db.dropDatabase()
     await mongoose.disconnect()
     done()
   })
