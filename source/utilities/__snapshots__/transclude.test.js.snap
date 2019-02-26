@@ -5,27 +5,26 @@ exports[`utilities/transclude transcludes 1`] = `
       <h3>Title</h3>
       <include sections=\\"*\\" from=\\"a\\" class=\\"noedit\\">
   Ant!
+
 </include>
       <include sections=\\"simple\\" from=\\"b\\" class=\\"noedit\\">
   Bug!
 </include>
       <include sections=\\"simple,nested\\" from=\\"c\\" class=\\"noedit\\">
   Foo
-  
-          Bar
-          <include sections=\\"simple\\" from=\\"b\\" class=\\"noedit\\">
+   Bar
+  <include sections=\\"simple\\" from=\\"b\\" class=\\"noedit\\">
   Bug!
 </include>
-        
+
 </include>
       <include sections=\\"simple,nested\\" from=\\"cat\\" class=\\"noedit\\">
   Foo
-  
-          Bar
-          <include sections=\\"simple\\" from=\\"b\\" class=\\"noedit\\">
+   Bar
+  <include sections=\\"simple\\" from=\\"b\\" class=\\"noedit\\">
   Bug!
 </include>
-        
+
 </include>
       <include sections=\\"*\\" from=\\"d\\" class=\\"noedit\\">
 <div class=\\"warning\\">Included Article 'd' does not exist</div>

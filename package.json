@@ -5,7 +5,7 @@
     "build": "next build",
     "develop": "nodemon -w ./source/server -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
     "start": "NODE_ENV=production babel-node source/server/server.js",
-    "test": "jest --env=node"
+    "test": "jest"
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^3.0.1",
@@ -88,5 +88,11 @@
   },
   "resolutions": {
     "mongoose": "^5.4.14"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpe?g|png|gif|eot|otf|svg|ttf|woff2?)$": "<rootDir>/mocks/fileMock.js",
+      "\\.s?css$": "<rootDir>/mocks/styleMock.js"
+    }
   }
 }

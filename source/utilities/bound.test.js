@@ -1,4 +1,4 @@
-import bound from '@/utilities/bound'
+import bound from './bound'
 
 describe('bound()', () => {
   it('correctly applies ranges to numeric values', () => {

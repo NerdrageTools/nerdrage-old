@@ -1,4 +1,4 @@
-import getPathValue from '../getPathValue'
+import getPathValue from '@/utilities/getPathValue'
 
 export default (string, object) => {
   const matches = string.match(/(\${[a-z0-9-_[\].]*})/gi)

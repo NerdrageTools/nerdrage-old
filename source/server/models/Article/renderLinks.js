@@ -1,8 +1,8 @@
 import url from 'url'
 import cheerio from 'cheerio'
 import Article from '@/server/models/Article'
-import { extractUrlSlug } from '@/utilities/slugs/slugs'
-import unique from '@/utilities/unique/unique'
+import { extractUrlSlug } from '@/utilities/slugs'
+import unique from '@/utilities/unique'
 
 export default async function renderLinks(html, campaignId) {
   const $ = cheerio.load(html || '', { decodeEntities: false, xmlMode: true })

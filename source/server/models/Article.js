@@ -3,7 +3,7 @@ import cleanUp from './Article/cleanUp'
 import renderLinks from './Article/renderLinks'
 import Slug from '@/server/models/Slug'
 import transclude from '@/utilities/transclude'
-import unique from '@/utilities/unique/unique'
+import unique from '@/utilities/unique'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 const slugifyArray = array => unique(array.map(value => (

@@ -1,4 +1,4 @@
-import formatTime from '@/utilities/formatTime'
+import formatTime from './formatTime'
 
 it('formatTime() parses correctly', () => {
   /* eslint-disable no-mixed-operators */

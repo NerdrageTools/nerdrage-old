@@ -1,4 +1,4 @@
-import interpolate from '@/utilities/interpolate'
+import interpolate from './interpolate'
 
 describe('utilities/string/interpolate', () => {
   it('resolves simple properties', () => {

@@ -1,4 +1,4 @@
-import getPathValue from '@/utilities/getPathValue'
+import getPathValue from './getPathValue'
 
 describe('utilities/resolvePath', () => {
   it('extracts properties from objects and arrays', () => {

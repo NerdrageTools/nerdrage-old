@@ -1,4 +1,4 @@
-import setPathValue from '@/utilities/setPathValue'
+import setPathValue from './setPathValue'
 
 describe('utilities/object/setPathValue()', () => {
   it('sets nested property values on simple objects', () => {

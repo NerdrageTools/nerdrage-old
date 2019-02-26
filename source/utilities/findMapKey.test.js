@@ -1,4 +1,4 @@
-import findMapKey from '@/utilities/findMapKey'
+import findMapKey from './findMapKey'
 
 const foo = { bar: 'Bar!', foo: 'Foo!' }
 const bar = { bar: 'Bar!', foo: 'Foo!' }

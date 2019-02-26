@@ -1,4 +1,4 @@
-import unique from '@/utilities/unique'
+import unique from './unique'
 
 describe('utilities/unique', () => {
   it('can filter simple values', () => {

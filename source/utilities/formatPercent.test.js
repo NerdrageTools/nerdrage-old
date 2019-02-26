@@ -1,4 +1,4 @@
-import formatPercent from '@/utilities/formatPercent'
+import formatPercent from './formatPercent'
 
 it('formatPercent() parses correctly', () => {
   expect(formatPercent(0.123456789)).toEqual('12.34%')

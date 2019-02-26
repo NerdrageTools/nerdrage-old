@@ -46,6 +46,11 @@ describe('utilities/transclude', () => {
     done()
   })
 
+  afterEach(async done => {
+    await Article.deleteMany({})
+    done()
+  })
+
   afterAll(async done => {
     await mongoose.disconnect()
     done()

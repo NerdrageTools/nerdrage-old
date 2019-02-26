@@ -126,7 +126,7 @@ describe('models/Article', () => {
   })
 
   afterEach(async done => {
-    await Article.deleteMany()
+    await Article.deleteMany({})
     done()
   })
   afterAll(async done => {
