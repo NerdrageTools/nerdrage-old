@@ -12,28 +12,28 @@ controller.put('/', async (request, response) => {
       lastLogin: undefined,
     })
     const updated = await user.save()
-    return response.status(200).send(updated.toProfile())
+    return response.status(200).json(updated.toProfile())
   } catch (error) {
     switch (error.code) {
       case 11000:
-        return response.status(409).send({ message: 'Username or email is already in use.' })
+        return response.status(409).json({ message: 'Username or email is already in use.' })
       default:
         console.error(`Error in PUT /api/user: ${error}`) // eslint-disable-line
-        return response.status(500).send({ message: error.message || 'Unknown error.' })
+        return response.status(500).json({ message: error.message || 'Unknown error.' })
     }
   }
 })
 
 controller.get('/', async (request, response) => {
   if (!request.session.username) {
-    return response.status(200).send({ anonymous: true })
+    return response.status(200).json({ anonymous: true })
   }
 
   try {
     const user = await User.findOne({ username: request.session.username })
-    return response.status(200).send(user)
+    return response.status(200).json(user)
   } catch (error) {
-    return response.status(500).send({ message: 'Unknown error.' })
+    return response.status(500).json({ message: 'Unknown error.' })
   }
 })
 
@@ -48,13 +48,13 @@ controller.post('/', NoAnonymous, async (request, response) => {
 
     const updated = await user.save()
     Object.assign(request.session, updated.toProfile())
-    return response.status(200).send(updated)
+    return response.status(200).json(updated)
   } catch (error) {
     switch (error.code) {
       case 11000:
-        return response.status(409).send({ message: 'Username or email is already in use.' })
+        return response.status(409).json({ message: 'Username or email is already in use.' })
       default:
-        return response.status(500).send({ message: 'Unknown error.' })
+        return response.status(500).json({ message: 'Unknown error.' })
     }
   }
 })
@@ -66,7 +66,7 @@ controller.post('/login', async (request, response) => {
     const user = await User.findOne({ username }, { password: 1 })
 
     if (!user) {
-      return response.status(401).send({ message: 'Username or password is invalid.' })
+      return response.status(401).json({ message: 'Username or password is invalid.' })
     }
 
     const isMatch = await user.comparePassword(password)
@@ -75,13 +75,13 @@ controller.post('/login', async (request, response) => {
       const updated = await User.findOne({ username })
 
       Object.assign(request.session, updated.toProfile())
-      return response.status(200).send(updated.toProfile())
+      return response.status(200).json(updated.toProfile())
     }
 
-    return response.status(401).send({ message: 'Username or password is invalid.' })
+    return response.status(401).json({ message: 'Username or password is invalid.' })
   } catch (error) {
     console.error(error)
-    return response.status(500).send({ message: 'Unknown error.' })
+    return response.status(500).json({ message: 'Unknown error.' })
   }
 })
 
@@ -93,14 +93,14 @@ controller.post('/:username', NoAnonymous, async (request, response) => {
 
     const currentUser = await User.findOne({ username: request.session.username })
     if (!currentUser.isAdmin) {
-      return response.status(401).send({
+      return response.status(401).json({
         message: 'You must be an administrator to edit another user.',
       })
     }
 
     const targetUser = await User.findOne({ username: request.params.username })
     if (!targetUser) {
-      return response.status(404).send({
+      return response.status(404).json({
         message: `No such user: '${request.params.username}'.`,
       })
     }
@@ -108,9 +108,9 @@ controller.post('/:username', NoAnonymous, async (request, response) => {
     Object.assign(targetUser, request.body)
 
     const updated = await targetUser.save()
-    return response.status(200).send(updated)
+    return response.status(200).json(updated)
   } catch (error) {
-    return response.status(500).send({
+    return response.status(500).json({
       message: 'Unknown error. Please try again.',
     })
   }
