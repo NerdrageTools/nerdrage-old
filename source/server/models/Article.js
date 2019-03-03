@@ -29,6 +29,7 @@ export const ArticleSchema = new mongoose.Schema({
   tags: [Slug],
   title: { required: true, type: String },
 }, {
+  id: false,
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
@@ -71,8 +72,6 @@ ArticleSchema.statics.locate = function (slug, campaignId) {
   /* eslint-ensable sort-keys */
   }).sort({ campaign: -1 })
 }
-
-ArticleSchema.pre('save', function () { this.compute() })
 
 const Article = mongoose.model('Article', ArticleSchema)
 

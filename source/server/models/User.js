@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
   },
 }, {
+  id: false,
   timestamps: true,
   versionKey: 'version',
 })

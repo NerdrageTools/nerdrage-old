@@ -13,7 +13,7 @@ export const getArticle = async (request, response) => {
   }
 
   const { slug } = request.params
-  let article = await Article.locate(slug, campaign.id)
+  let article = await Article.locate(slug, campaign._id)
     .populate('campaign', 'domain name')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()

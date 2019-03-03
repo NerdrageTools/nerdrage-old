@@ -39,11 +39,12 @@ const CampaignSchema = new mongoose.Schema({
     },
   },
 }, {
+  id: false,
   timestamps: true,
   versionKey: 'version',
 })
 
-const matchObjectId = id => vs => vs.equals(ObjectId(id))
+const matchObjectId = id => vs => ObjectId(id).equals(vs)
 
 CampaignSchema.methods.isEditableBy = function (userId) {
   const matches = matchObjectId(userId)
