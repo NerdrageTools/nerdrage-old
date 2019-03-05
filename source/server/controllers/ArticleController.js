@@ -64,8 +64,8 @@ export const upsertArticle = async (request, response) => {
   let { article, body: updates } = request
   updates = {
     ...omit(updates, '_id', 'slug'),
-    lastUpdatedBy: userId,
     campaign: campaign._id,
+    lastUpdatedBy: userId,
     slug,
   }
 

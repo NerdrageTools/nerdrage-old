@@ -8,7 +8,7 @@ import URI from '@/utilities/URI'
 import '@/styles/all.scss'
 
 export default class Wiki extends App {
-  static getInitialProps = async (context) => {
+  static getInitialProps = async context => {
     const { Component } = context
     const props = await App.getInitialProps(context)
     const [campaign, user] = await Promise.all([

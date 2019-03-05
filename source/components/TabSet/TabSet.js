@@ -30,7 +30,7 @@ export default function TabSet({
       {showTabs && (
       <>
         <ul className={`tabs ${activeTabId}`}>
-          {tabs.map((tab) => {
+          {tabs.map(tab => {
             // eslint-disable-next-line no-param-reassign
             if (!tab.onClick) tab.onClick = () => onTabClicked(tab.id)
 

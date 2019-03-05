@@ -3,7 +3,7 @@ import Article from '@/server/models/Article'
 import unique from '@/utilities/unique'
 
 export default function transclude(html, campaignId) {
-  const $ = cheerio.load(html, { xmlMode: true, decodeEntities: false })
+  const $ = cheerio.load(html, { decodeEntities: false, xmlMode: true })
   const links = []
   const missing = []
 
@@ -33,7 +33,7 @@ export default function transclude(html, campaignId) {
         return Promise.resolve()
       }
 
-      const $article = $.load(article.html, { xmlMode: true, decodeEntities: false })
+      const $article = $.load(article.html, { decodeEntities: false, xmlMode: true })
 
       const sections = $include.attr('sections')
       if (sections === '*' || !sections) {

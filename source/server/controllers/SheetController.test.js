@@ -27,9 +27,9 @@ const SHEET = (props = {}) => new Sheet({
   _id: '111111111111',
   campaign: null,
   data: {},
-  slug: 'test',
   ownedBy: OWNER._id,
   public: false,
+  slug: 'test',
   ...props,
 })
 
@@ -141,8 +141,8 @@ describe('server/controllers/ArticleController', () => {
       expect(response.status).toHaveBeenCalledWith(200)
       expect(response.json.mock.calls[0][0]).toMatchObject({
         data: { foo: 'bar' },
-        slug: 'foo',
         ownedBy: ObjectId(OWNER._id),
+        slug: 'foo',
       })
 
       done()

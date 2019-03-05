@@ -33,10 +33,10 @@ export default class Article extends Component {
     activeTab: 'read',
   }
 
-  handleChangeHtml = (html) => {
+  handleChangeHtml = html => {
     this.setState({ html })
   }
-  handleTabClicked = (tab) => {
+  handleTabClicked = tab => {
     if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
   }
 

@@ -12,8 +12,8 @@ const slugifyArray = array => unique(array.map(value => (
 ))).sort()
 const BEAUTIFY_OPTIONS = {
   end_with_newline: true,
-  indent_size: 2,
   indent_char: ' ',
+  indent_size: 2,
   preserve_newlines: false,
   wrap_line_length: 0,
 }

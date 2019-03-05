@@ -37,6 +37,6 @@ export default class AceEditor extends Component {
   }
   componentWillUnmount = () => { this.editor = null }
 
-  setRef = (ace) => { this.editor = (ace || {}).editor }
+  setRef = ace => { this.editor = (ace || {}).editor }
   render = () => <ReactAce ref={this.setRef} {...this.props} />
 }

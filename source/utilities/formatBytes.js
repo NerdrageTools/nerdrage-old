@@ -1,4 +1,4 @@
-export default (bytes) => {
+export default bytes => {
   /* eslint-disable no-mixed-operators */
   const KB = 1024
   const MB = 1024 * KB

@@ -62,7 +62,7 @@ export default class Editable extends Component {
     this.handleToggleEditing()
   }
 
-  createRefWithAutoFocus = (editor) => {
+  createRefWithAutoFocus = editor => {
     if (!editor) { return }
     this.editor = editor
 
@@ -91,7 +91,7 @@ export default class Editable extends Component {
     this.props.onChange(value, this.state.resetValue)
   }
 
-  handleKeys = (event) => {
+  handleKeys = event => {
     const { target, key, ctrlKey, metaKey } = event
 
     if (this.props.onKeyDown !== noop) {

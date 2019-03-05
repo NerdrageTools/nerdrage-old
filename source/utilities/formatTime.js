@@ -1,5 +1,5 @@
 
-export default (seconds) => {
+export default seconds => {
   const MINUTE = 60
   const HOUR = MINUTE * 60
   const DAY = HOUR * 24

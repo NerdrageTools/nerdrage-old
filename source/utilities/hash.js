@@ -1,7 +1,7 @@
 export default function hash(value = '', radix = 16) {
   const string = JSON.stringify(value)
   let h = 0
-  string.split('').forEach((char) => {
+  string.split('').forEach(char => {
     /* eslint-disable no-bitwise */
     h = ((h << 5) - h) + char.charCodeAt(0)
     h &= h // Convert to 32-bit integer

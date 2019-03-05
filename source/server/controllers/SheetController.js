@@ -6,7 +6,7 @@ import omit from '@/utilities/omit'
 export const permissions = (...required) => async (request, response, next) => {
   const { domain, session: { _id: userId, isAdmin }, params: { slug } } = request
   const campaign = await Campaign.findOne({ domain })
-  const sheet = await Sheet.findOne({ slug, campaign: campaign._id })
+  const sheet = await Sheet.findOne({ campaign: campaign._id, slug })
     .populate('campaign', 'domain name')
     .populate('ownedBy', 'name username')
     .exec()
@@ -80,7 +80,7 @@ export const upsertSheet = async (request, response) => {
 }
 export const deleteSheet = async (request, response) => {
   const { campaign, slug } = request
-  await Sheet.findOneAndDelete({ slug, campaign: campaign._id })
+  await Sheet.findOneAndDelete({ campaign: campaign._id, slug })
 
   return response.status(204).send()
 }

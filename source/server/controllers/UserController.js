@@ -18,7 +18,7 @@ controller.put('/', async (request, response) => {
       case 11000:
         return response.status(409).json({ message: 'Username or email is already in use.' })
       default:
-        console.error(`Error in PUT /api/user: ${error}`) // eslint-disable-line
+        console.error(`Error in PUT /api/user: ${error}`) // eslint-disable-line no-console
         return response.status(500).json({ message: error.message || 'Unknown error.' })
     }
   }
@@ -80,7 +80,7 @@ controller.post('/login', async (request, response) => {
 
     return response.status(401).json({ message: 'Username or password is invalid.' })
   } catch (error) {
-    console.error(error)
+    console.error(error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
   }
 })

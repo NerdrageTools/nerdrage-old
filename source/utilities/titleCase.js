@@ -1,4 +1,4 @@
-export default (string) => {
+export default string => {
   if (!string) return ''
 
   return string
