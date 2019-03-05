@@ -4,7 +4,8 @@ import Campaign from '../models/Campaign'
 const controller = express()
 
 controller.get('/', async (request, response) => {
-  const campaign = await Campaign.findOne({ domain: request.campaign })
+  const { domain } = request
+  const campaign = await Campaign.findOne({ domain })
     .populate('editors players owners', 'name username')
     .exec()
 
@@ -40,7 +41,7 @@ controller.put('/', async (request, response) => {
 controller.post('/:domain?', async (request, response) => {
   try {
     const updates = { ...request.body }
-    const domain = request.params.domain || request.campaign
+    const domain = request.params.domain || request.domain
     const campaign = await Campaign.findOne({ domain })
     const userId = request.session._id
 
