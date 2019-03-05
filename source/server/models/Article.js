@@ -21,10 +21,11 @@ const BEAUTIFY_OPTIONS = {
 export const ArticleSchema = new mongoose.Schema({
   aliases: [Slug],
   campaign: { default: null, ref: 'Campaign', required: false, type: ObjectIdType, unique: false },
-  createdBy: { ref: 'User', type: String },
+  createdBy: { ref: 'User', type: ObjectIdType },
   data: Object,
   html: { default: '', type: String },
-  lastUpdatedBy: { ref: 'User', type: String },
+  lastUpdatedBy: { ref: 'User', type: ObjectIdType },
+  secret: { default: false, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
   tags: [Slug],
   title: { required: true, type: String },
