@@ -8,6 +8,7 @@ import mongoose from 'mongoose'
 import next from 'next'
 import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
+import SheetController from './controllers/SheetController'
 import UserController from './controllers/UserController'
 import database from './database'
 import ByCampaign from './middleware/ByCampaign'
@@ -52,6 +53,7 @@ Promise.all([
 
   server.use('/api/article', ByCampaign, ArticleController)
   server.use('/api/campaign', ByCampaign, CampaignController)
+  server.use('/api/sheet', ByCampaign, SheetController)
   server.use('/api/user', UserController)
 
   server.get('*', routeHandler)
