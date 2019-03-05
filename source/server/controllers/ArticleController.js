@@ -4,19 +4,49 @@ import Campaign from '@/server/models/Campaign'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
-export const getArticle = async (request, response) => {
-  const campaign = await Campaign.findOne({ domain: request.campaign })
-  if (!request.session.isAdmin && !campaign.isVisibleTo(request.session._id)) {
-    return response.status(401).json({
-      message: `This content is private to the ${campaign.domain} campaign.`,
-    })
-  }
-
-  const { slug } = request.params
-  let article = await Article.locate(slug, campaign._id)
+export const permissions = (...required) => async (request, response, next) => {
+  const { domain, session: { _id: userId, isAdmin }, params: { slug } } = request
+  const campaign = await Campaign.findOne({ domain })
+  const article = await Article.locate(slug, campaign._id)
     .populate('campaign', 'domain name')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
+
+  const isEditable = isAdmin || campaign.isEditableBy(userId)
+  const isVisible = isAdmin || campaign.isVisibleTo(userId)
+  const isOwnedBy = isAdmin || campaign.isOwnedBy(userId)
+
+  if (required.includes('view') && !isVisible) {
+    return response.status(401).json({
+      message: `This content is private to the ${domain} campaign.`,
+    })
+  }
+  if (required.includes('edit') && !isEditable) {
+    return response.status(401).json({
+      message: `You do not have permission to edit the ${domain} campaign.`,
+    })
+  }
+  if (article && article.secret && !isOwnedBy) {
+    return response.status(401).json({
+      message: `This article is secret! Only owners of the ${campaign.domain} campaign can see or edit it.`,
+    })
+  }
+
+  Object.assign(request, {
+    article,
+    campaign,
+    isEditable,
+    isOwnedBy,
+    isVisible,
+    slug,
+  })
+
+  return next()
+}
+
+export const getArticle = async (request, response) => {
+  const { campaign, slug } = request
+  let { article } = request
 
   if (!article) {
     article = {
@@ -29,47 +59,37 @@ export const getArticle = async (request, response) => {
 
   return response.status(200).json(article)
 }
-export const updateArticle = async (request, response) => {
-  const campaign = await Campaign.findOne({ domain: request.campaign })
-  if (!request.session.isAdmin && !campaign.isEditableBy(request.session._id)) {
-    return response.status(401).json({
-      message: `You do not have permission to edit the ${campaign.domain} campaign.`,
-    })
+export const upsertArticle = async (request, response) => {
+  const { campaign, session: { _id: userId }, slug } = request
+  let { article, body: updates } = request
+  updates = {
+    ...omit(updates, '_id', 'slug'),
+    lastUpdatedBy: userId,
+    campaign: campaign._id,
+    slug,
   }
 
-  const { slug } = request.params
-  let article = await Article.findOne({ slug, campaign: campaign._id })
-  if (article) {
-    article.set(omit(request.body, '_id'))
+  if (article && article.campaign && article.campaign._id.equals(campaign._id)) {
+    article.set(updates)
   } else {
-    article = new Article({
-      ...omit(request.body, '_id'),
-      campaign: campaign._id,
-      slug,
-    })
+    article = new Article(updates)
   }
 
-  const saved = await article.save()
-  const rendered = await saved.render()
-  return response.status(200).json(rendered)
+  const { _id } = await article.save()
+  const saved = await Article.findOne({ _id })
+    .populate('campaign', 'domain name')
+    .populate('createdBy lastUpdatedBy', 'name username')
+    .exec()
+  return response.status(200).json(await saved.render())
 }
-
 export const deleteArticle = async (request, response) => {
-  const campaign = await Campaign.findOne({ domain: request.campaign })
-  if (!request.session.isAdmin && !campaign.isEditableBy(request.session._id)) {
-    return response.status(401).json({
-      message: `You do not have permission to edit the ${campaign.domain} campaign.`,
-    })
-  }
-
-  const { slug } = request.params
-  await Article.findOneAndDelete({ slug, campaign: campaign._id })
-
+  const { article } = request
+  if (article) { await article.delete() }
   return response.status(204).send()
 }
 
 const controller = express()
-controller.get('/:slug', getArticle)
-controller.post('/:slug', updateArticle)
-controller.delete('/:slug', deleteArticle)
+controller.get('/:slug', permissions('view'), getArticle)
+controller.post('/:slug', permissions('edit'), upsertArticle)
+controller.delete('/:slug', permissions('edit'), deleteArticle)
 export default controller

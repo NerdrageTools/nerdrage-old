@@ -3,10 +3,12 @@ import mongoose from 'mongoose'
 import {
   deleteArticle,
   getArticle,
-  updateArticle,
+  permissions,
+  upsertArticle,
 } from './ArticleController'
 import Article from '@/server/models/Article'
 import Campaign from '@/server/models/Campaign'
+import pluck from '@/utilities/pluck'
 
 const { ObjectId } = mongoose.Types
 
@@ -30,9 +32,12 @@ const CAMPAIGN = (props = {}) => new Campaign({
   ...props,
 })
 
-const mockRequest = (slug, session = {}, body = {}) => (
-  { campaign: slug, session, params: { slug }, body }
-)
+const mockRequest = (slug = 'test', session = {}, body = {}) => ({
+  body,
+  campaign: slug,
+  params: { slug },
+  session,
+})
 const mockResponse = () => {
   const response = {}
   response.json = jest.fn(() => response)
@@ -42,115 +47,162 @@ const mockResponse = () => {
 }
 
 describe('server/controllers/ArticleController', () => {
-  describe('getArticle', () => {
-    it('returns 401 for private campaigns the user is not a member of', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN({ private: true }), 'findOne')
-      const response = mockResponse()
-
-      await getArticle(mockRequest('test', {}), response)
-      expect(response.status).toHaveBeenCalledWith(401)
-
-      done()
-    })
-    it('returns 200 for public campaigns', async done => {
-      mockingoose.Article.toReturn(ARTICLE(), 'findOne')
+  describe('permissions', () => {
+    it('passes for Admin users', async done => {
       mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
       const response = mockResponse()
+      const next = jest.fn()
+      await permissions('edit')(mockRequest('test', ADMIN), response, next)
 
-      await getArticle(mockRequest('test', ADMIN), response)
-      expect(response.status).toHaveBeenCalledWith(200)
+      expect(response.status).not.toHaveBeenCalled()
+      expect(next).toHaveBeenCalled()
 
       done()
     })
-    it('returns 200 for campaign participants', async done => {
-      mockingoose.Article.toReturn(ARTICLE(), 'findOne')
+    it('returns 401 to non-viewers if required', async done => {
       mockingoose.Campaign.toReturn(CAMPAIGN({ private: true }), 'findOne')
       const response = mockResponse()
+      const next = jest.fn()
+      await permissions('view')(mockRequest(), response, next)
 
-      await getArticle(mockRequest('test', PLAYER), response)
+      expect(response.status).toHaveBeenCalledWith(401)
+      expect(response.json.mock.calls[0][0].message).toMatch(/This content is private/)
+      expect(next).not.toHaveBeenCalled()
+
+      done()
+    })
+    it('returns 401 to non-editors if required', async done => {
+      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const response = mockResponse()
+      const next = jest.fn()
+      await permissions('edit')(mockRequest('test', PLAYER), response, next)
+
+      expect(response.status).toHaveBeenCalledWith(401)
+      expect(response.json.mock.calls[0][0].message).toMatch(/You do not have permission to edit/)
+      expect(next).not.toHaveBeenCalled()
+
+      done()
+    })
+    it('returns 401 to non-viewers if article is secret', async done => {
+      mockingoose.Article.toReturn(ARTICLE({ secret: true }), 'findOne')
+      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const response = mockResponse()
+      const next = jest.fn()
+      await permissions()(mockRequest(), response, next)
+
+      expect(response.status).toHaveBeenCalledWith(401)
+      expect(response.json.mock.calls[0][0].message).toMatch(/This article is secret!/)
+      expect(next).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+  describe('getArticle', () => {
+    it('returns article if found', async done => {
+      const request = { article: ARTICLE({ secret: true }), campaign: CAMPAIGN({ private: true }) }
+      const response = mockResponse()
+
+      await getArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(200)
+      expect(response.json.mock.calls[0][0]).toMatchObject(await request.article.render())
 
       done()
     })
     it('returns 200 and defaults for articles not found', async done => {
-      mockingoose.Article.toReturn(null, 'findOne')
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const request = { article: null, campaign: CAMPAIGN() }
       const response = mockResponse()
 
-      await getArticle(mockRequest('test'), response)
+      await getArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(200)
       expect(response.json.mock.calls[0][0]).toMatchObject({
-        campaign: { domain: 'test' },
-        slug: 'test',
+        aliases: [],
+        campaign: pluck(request.campaign, 'domain', 'name'),
+        html: '\n',
+        links: [],
+        missing: [],
+        secret: false,
+        tags: [],
       })
       expect(response.json.mock.calls[0][0]._id).toBeUndefined()
 
       done()
     })
   })
-  describe('updateArticle', () => {
-    it('returns 401 if user is not editor', async done => {
-      mockingoose.Article.toReturn(ARTICLE(), 'findOne')
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+  describe('upsertArticle', () => {
+    it('accepts updates', async done => {
+      const updates = { html: 'foo', title: 'Foo!' }
+      const request = {
+        article: ARTICLE(),
+        body: updates,
+        campaign: CAMPAIGN(),
+        session: EDITOR,
+        slug: 'foo',
+      }
       const response = mockResponse()
 
-      await updateArticle(mockRequest('test', {}, { html: 'foo' }), response)
-      expect(response.status).toHaveBeenCalledWith(401)
+      mockingoose.Article.toReturn(
+        ARTICLE({ ...updates, campaign: ObjectId('111111111111'), slug: 'foo' }),
+        'findOne'
+      )
 
-      done()
-    })
-    it('accepts updates from editors', async done => {
-      mockingoose.Article.toReturn(ARTICLE(), 'findOne')
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
-      const response = mockResponse()
-
-      await updateArticle(mockRequest('test', EDITOR, { html: 'foo' }), response)
+      await upsertArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(200)
-      expect(response.json.mock.calls[0][0]).toMatchObject({ html: 'foo\n' })
+      expect(response.json.mock.calls[0][0]).toMatchObject({
+        html: 'foo\n',
+        slug: 'foo',
+        title: 'Foo!',
+      })
 
       done()
     })
     it('always writes to current campaign', async done => {
-      mockingoose.Article
-        .toReturn(null, 'findOne')
-        .toReturn([], 'find')
-      mockingoose.Campaign.toReturn(
-        CAMPAIGN({ _id: '111111111111' }),
-        'findOne'
-      )
+      const updates = { html: 'foo', slug: 'foo', title: 'Foo!' }
+      const request = {
+        article: null,
+        body: updates,
+        campaign: CAMPAIGN(),
+        session: EDITOR,
+        slug: 'foo',
+      }
       const response = mockResponse()
 
-      await updateArticle(mockRequest('test', EDITOR, {
-        html: 'foo',
-        title: 'Foo!',
-      }), response)
+      mockingoose.Article.toReturn(
+        ARTICLE({ ...updates, campaign: ObjectId('111111111111') }),
+        'findOne'
+      )
+
+      await upsertArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(200)
       const json = response.json.mock.calls[0][0]
       expect(json).toMatchObject({
         campaign: ObjectId('111111111111'),
         html: 'foo\n',
-        slug: 'test',
+        slug: 'foo',
       })
 
       done()
     })
   })
   describe('deleteArticle', () => {
-    it('rejects DELETE calls from non-editors', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+    it('performs delete if article is found', async done => {
+      const request = { article: ARTICLE() }
+      request.article.delete = jest.fn()
       const response = mockResponse()
 
-      await deleteArticle(mockRequest('test', PLAYER), response)
-      expect(response.status).toHaveBeenCalledWith(401)
+      await deleteArticle(request, response)
+      expect(request.article.delete).toHaveBeenCalled()
+      expect(response.status).toHaveBeenCalledWith(204)
+      expect(response.send).toHaveBeenCalled()
 
       done()
     })
-    it('accepts DELETE calls from editors', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+    it('returns 204 even if article is not found', async done => {
+      const request = { article: null }
       const response = mockResponse()
 
-      await deleteArticle(mockRequest('test', EDITOR), response)
+      await deleteArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(204)
+      expect(response.send).toHaveBeenCalled()
 
       done()
     })
