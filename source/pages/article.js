@@ -37,12 +37,13 @@ export default class Article extends Component {
     activeTab: 'read',
     aliases: this.props.aliases,
     html: this.props.html,
+    secret: this.props.secret,
     tags: this.props.tags,
     title: this.props.title,
   }
 
   get isDirty() {
-    const propsToCompare = ['html', 'title', 'tags', 'aliases']
+    const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
     const fromState = JSON.stringify(pluck(this.state, propsToCompare))
     const fromProps = JSON.stringify(pluck(this.props, propsToCompare))
 
@@ -50,6 +51,14 @@ export default class Article extends Component {
   }
 
   handleHtmlChange = html => this.setState({ html })
+  handleSave = async () => {
+    const updated = await fetch(`/api/article/${this.props.slug}`, {
+      body: JSON.stringify(this.state),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    }).then(r => r.json())
+    this.setState(updated)
+  }
   handleTabClicked = tab => {
     if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
   }
