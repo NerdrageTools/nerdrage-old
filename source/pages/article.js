@@ -9,6 +9,7 @@ import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
 import HtmlIcon from '@/icons/html.svg'
 import ReadIcon from '@/icons/read.svg'
+import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import './article.scss'
 
@@ -34,11 +35,21 @@ export default class Article extends Component {
 
   state = {
     activeTab: 'read',
+    aliases: this.props.aliases,
+    html: this.props.html,
+    tags: this.props.tags,
+    title: this.props.title,
   }
 
-  handleChangeHtml = html => {
-    this.setState({ html })
+  get isDirty() {
+    const propsToCompare = ['html', 'title', 'tags', 'aliases']
+    const fromState = JSON.stringify(pluck(this.state, propsToCompare))
+    const fromProps = JSON.stringify(pluck(this.props, propsToCompare))
+
+    return fromState !== fromProps
   }
+
+  handleHtmlChange = html => this.setState({ html })
   handleTabClicked = tab => {
     if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
   }
@@ -50,48 +61,39 @@ export default class Article extends Component {
       <ArticleChildren articles={this.props.children} />
     </>
   )
-
   render() {
     const { isEditable } = this.props
     const { activeTab } = this.state
     const html = this.state.html || this.props.html
     const title = this.state.title || this.props.title
 
-    if (!isEditable) {
-      return (
-        <div className="article page">
-          <h1>{title}</h1>
-          {this.renderReadOnlyContent()}
-        </div>
-      )
-    }
-
     return (
       <div className="article page">
         <Editable
           className="title"
           onChange={this.handleTitleChange}
+          readOnly={!isEditable}
           value={title}
         />
         <TabSet
           activeTabId={activeTab}
           buttons={(
             <>
-              <button>Save</button>
+              {this.isDirty && <button onClick={this.handleSave}>Save</button>}
             </>
           )}
           onTabClicked={this.handleTabClicked}
-          showTabs
+          showTabs={isEditable}
           tabs={[{
             contents: this.renderReadOnlyContent(),
             id: 'read',
             tab: <ReadIcon />,
           }, {
-            contents: <WysiwygEditor html={html} onChange={this.handleChangeHtml} />,
+            contents: <WysiwygEditor html={html} onChange={this.handleHtmlChange} />,
             id: 'edit',
             tab: <EditIcon />,
           }, {
-            contents: <HtmlEditor value={html} onChange={this.handleChangeHtml} />,
+            contents: <HtmlEditor value={html} onChange={this.handleHtmlChange} />,
             id: 'html',
             tab: <HtmlIcon />,
           }]}
