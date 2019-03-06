@@ -14,7 +14,7 @@ const ArticleChildren = ({
   const links = articles
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
     .map(({ slug, displayName }) => (
-      <ArticleLink key={slug} to={`/page/${slug}`}>{displayName}</ArticleLink>
+      <ArticleLink key={slug} to={`/article/${slug}`}>{displayName}</ArticleLink>
     ))
 
   return (

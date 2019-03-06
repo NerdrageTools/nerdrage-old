@@ -9,7 +9,7 @@ export default function cleanUp(html) {
     $el.removeClass('missing')
       .removeClass('external')
       .removeAttr('target')
-      .attr('href', href.replace(/^\/(page|media)\//, ''))
+      .attr('href', href.replace(/^\/(article|media)\//, ''))
     if (($el.attr('class') || '').trim() === '') $el.removeAttr('class')
   })
   $('include').each((_, el) => $(el).removeClass('noedit').html(''))

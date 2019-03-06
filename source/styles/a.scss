@@ -5,4 +5,8 @@ a {
   text-decoration: none;
 
   &:hover { text-decoration: underline; }
+
+  &.missing {
+    color: $color-link-missing;
+  }
 }

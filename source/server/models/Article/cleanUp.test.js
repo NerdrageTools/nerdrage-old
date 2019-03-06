@@ -3,8 +3,8 @@ import cleanUp from './cleanUp'
 describe('models/Article/cleanUp', () => {
   it('clears markup from links and includes', () => {
     expect(cleanUp(`
-      <a href="/page/foo" class="highlight missing">Foo!</a>
-      <a href="/page/bar">Bar!</a>
+      <a href="/article/foo" class="highlight missing">Foo!</a>
+      <a href="/article/bar">Bar!</a>
       <a href="/media/baz.gif" class="missing" target="_new">Baz!</a>
       <a href="http://www.google.com/foo" class="external">Google Fu</a>
       <include from="foo" sections="bar,baz">

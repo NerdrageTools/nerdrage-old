@@ -19,7 +19,7 @@ export default async function renderLinks(html, campaignId) {
       if (slug.match(/\.(gif|jpg|png)$/)) {
         $link.attr('href', `/media/${slug}`)
       } else {
-        $link.attr('href', `/page/${slug}`)
+        $link.attr('href', `/article/${slug}`)
       }
       links.push(slug)
     } else {

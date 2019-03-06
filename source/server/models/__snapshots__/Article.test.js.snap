@@ -2,8 +2,8 @@
 
 exports[`models/Article renders cleanly 1`] = `
 "<h1>New!</h1>
-<a href=\\"/page/a\\">A</a>
-<a href=\\"/page/missing-link\\" class=\\"missing\\">Missing!</a>
+<a href=\\"/article/a\\">A</a>
+<a href=\\"/article/missing-link\\" class=\\"missing\\">Missing!</a>
 <include from=\\"b\\" sections=\\"*\\" class=\\"noedit\\">
 </include>
 <include from=\\"missing-include\\" sections=\\"*\\" class=\\"noedit\\">
