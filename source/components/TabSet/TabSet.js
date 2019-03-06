@@ -28,7 +28,6 @@ export default function TabSet({
   return (
     <div className={className}>
       {showTabs && (
-      <>
         <ul className={`tabs ${activeTabId}`}>
           {tabs.map(tab => {
             // eslint-disable-next-line no-param-reassign
@@ -45,9 +44,8 @@ export default function TabSet({
           })}
           <li className="buttons">{buttons}</li>
         </ul>
-      </>
       )}
-      <div className="tab-contents">
+      <div className={`tab-contents ${activeTabId}`}>
         {activeTab.contents}
       </div>
     </div>
