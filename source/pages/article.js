@@ -5,6 +5,7 @@ import JsxParser from 'react-jsx-parser'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import TabSet from '@/components/TabSet'
+import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
 import HtmlIcon from '@/icons/html.svg'
 import ReadIcon from '@/icons/read.svg'
@@ -20,14 +21,16 @@ if (process.browser && window) {
 }
 
 export default class Article extends Component {
+  static contextType = Application
   static defaultProps = {
     children: [],
     html: '',
     title: '',
   }
-  static getInitialProps = async ({ query, req }) => (
-    fetch(URI(req, `/api/article/${query.slug}`)).then(r => r.json())
-  )
+  static getInitialProps = async ({ query, req }) => {
+    const headers = req ? { cookie: req.headers.cookie } : {}
+    return fetch(URI(req, `/api/article/${query.slug}`), { headers }).then(r => r.json())
+  }
 
   state = {
     activeTab: 'read',
@@ -39,26 +42,50 @@ export default class Article extends Component {
   handleTabClicked = tab => {
     if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
   }
+  handleTitleChange = title => this.setState({ title })
+
+  renderReadOnlyContent = () => (
+    <>
+      <JsxParser jsx={this.state.html || this.props.html} />
+      <ArticleChildren articles={this.props.children} />
+    </>
+  )
 
   render() {
-    const { children, title } = this.props
+    const { isEditable } = this.props
     const { activeTab } = this.state
     const html = this.state.html || this.props.html
+    const title = this.state.title || this.props.title
+
+    if (!isEditable) {
+      return (
+        <div className="article page">
+          <h1>{title}</h1>
+          {this.renderReadOnlyContent()}
+        </div>
+      )
+    }
 
     return (
       <div className="article page">
-        <Editable className="title" defaultValue={title} />
+        <Editable
+          className="title"
+          onChange={this.handleTitleChange}
+          value={title}
+        />
         <TabSet
           activeTabId={activeTab}
+          buttons={(
+            <>
+              <button>Save</button>
+            </>
+          )}
           onTabClicked={this.handleTabClicked}
           showTabs
           tabs={[{
-            contents: <>
-              <JsxParser jsx={html} />
-              <ArticleChildren articles={children} />
-            </>,
+            contents: this.renderReadOnlyContent(),
             id: 'read',
-            tab: <><ReadIcon style={{ marginRight: 5 }} /> Article</>,
+            tab: <ReadIcon />,
           }, {
             contents: <WysiwygEditor html={html} onChange={this.handleChangeHtml} />,
             id: 'edit',

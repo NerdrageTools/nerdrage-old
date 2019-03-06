@@ -45,7 +45,7 @@ export const permissions = (...required) => async (request, response, next) => {
 }
 
 export const getArticle = async (request, response) => {
-  const { campaign, slug } = request
+  const { campaign, isEditable, slug } = request
   let { article } = request
 
   if (!article) {
@@ -57,10 +57,15 @@ export const getArticle = async (request, response) => {
     article = await article.render()
   }
 
-  return response.status(200).json(article)
+  return response.status(200).json({ ...article, isEditable })
 }
 export const upsertArticle = async (request, response) => {
-  const { campaign, session: { _id: userId }, slug } = request
+  const {
+    campaign,
+    isEditable,
+    session: { _id: userId },
+    slug,
+  } = request
   let { article, body: updates } = request
   updates = {
     ...omit(updates, '_id', 'slug'),
@@ -80,7 +85,10 @@ export const upsertArticle = async (request, response) => {
     .populate('campaign', 'domain name')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
-  return response.status(200).json(await saved.render())
+  return response.status(200).json({
+    ...await saved.render(),
+    isEditable,
+  })
 }
 export const deleteArticle = async (request, response) => {
   const { article } = request

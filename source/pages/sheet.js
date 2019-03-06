@@ -26,7 +26,8 @@ export default class Sheet extends Component {
   }
 
   static getInitialProps = async ({ query, req }) => {
-    const result = await fetch(URI(req, `/api/sheet/${query.slug}`))
+    const headers = req ? { cookie: req.headers.cookie } : {}
+    const result = await fetch(URI(req, `/api/sheet/${query.slug}`), { headers })
     if (result.status !== 200) {
       return Promise.resolve({ statusCode: result.status })
     }
