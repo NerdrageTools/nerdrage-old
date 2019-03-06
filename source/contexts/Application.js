@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const DEFAULTS = {
+const CAMPAIGN_DEFAULTS = {
   createdAt: null,
   createdBy: {},
   domain: '',
@@ -20,5 +20,11 @@ export const DEFAULTS = {
   },
   version: 0,
 }
+const USER_DEFAULTS = {
+  anonymous: true,
+}
 
-export default React.createContext(DEFAULTS)
+export default React.createContext({
+  campaign: CAMPAIGN_DEFAULTS,
+  user: USER_DEFAULTS,
+})

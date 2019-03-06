@@ -1,9 +1,8 @@
-import merge from 'deepmerge'
 import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
 import Layout from '@/components/Layout'
-import Campaign, { DEFAULTS } from '@/contexts/Campaign'
+import Application from '@/contexts/Application'
 import URI from '@/utilities/URI'
 import '@/styles/all.scss'
 
@@ -17,18 +16,18 @@ export default class Wiki extends App {
     ])
     return {
       ...props,
-      campaign: merge(DEFAULTS, campaign),
+      campaign,
       Component,
       user,
     }
   }
 
   render = () => {
-    const { campaign, Component, pageProps } = this.props // eslint-disable-line
+    const { campaign, Component, pageProps, user } = this.props // eslint-disable-line
     const { theme } = campaign
 
     return (
-      <Campaign.Provider value={campaign}>
+      <Application.Provider value={{ campaign, user }}>
         <Container className="wiki">
           <Layout>
             <Component {...pageProps} />
@@ -44,7 +43,7 @@ export default class Wiki extends App {
             }
           `}</style>
         </Container>
-      </Campaign.Provider>
+      </Application.Provider>
     )
   }
 }

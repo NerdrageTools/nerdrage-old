@@ -2,14 +2,14 @@ import Head from 'next/head'
 import React, { Component } from 'react'
 import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
-import Campaign from '@/contexts/Campaign'
+import Application from '@/contexts/Application'
 import './Layout.scss'
 
 export default class Layout extends Component {
-  static contextType = Campaign
+  static contextType = Application
 
   render = () => {
-    const { name, theme } = this.context
+    const { name, theme } = this.context.campaign
 
     return (
       <>
