@@ -13,11 +13,21 @@
     font-size: 2em;
     font-weight: bold;
     justify-content: flex-start;
+    margin: 0;
+    min-height: 40px;
     padding: 10px;
   }
 
   > .tab-set {
-    .tab-contents { padding: 0; }
+    .tab-contents {
+      &:not(.read) { padding: 0; }
+      > p { // Loading component
+        align-items: center;
+        display: flex;
+        flex: 1;
+        justify-content: center;
+      }
+    }
 
     > .tabs.read ~ .tab-contents { padding: .5rem; }
     > .tabs.html {
