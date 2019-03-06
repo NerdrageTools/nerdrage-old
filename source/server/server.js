@@ -10,7 +10,6 @@ import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
 import SheetController from './controllers/SheetController'
 import UserController from './controllers/UserController'
-import database from './database'
 import ByCampaign from './middleware/ByCampaign'
 import SessionSettings from './middleware/SessionSettings'
 import routes from './routes'
@@ -23,33 +22,25 @@ const app = next({ dev: !PRODUCTION, dir: './source' })
 const routeHandler = routes.getRequestHandler(app)
 const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 
-const server = express()
-  .use(compression())
-  .use(cookieSession({
-    httpOnly: true,
-    keys: ['name', 'username'],
-    name: 'session',
-  }))
-  .use(SessionSettings)
-  .use(cors())
-  .use(express.urlencoded({ extended: true }))
-  .use(express.json())
-  .options('*', cors())
-
-Promise.all([
-  database.connect(),
-  app.prepare(),
-]).then(async ([db]) => {
-  server.use((request, response, nextMiddleware) => {
-    request.db = db
-    nextMiddleware()
-  })
-
+app.prepare().then(async () => {
   mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {
     useCreateIndex: true,
     useNewUrlParser: true,
   })
   mongoose.Promise = global.Promise
+
+  const server = express()
+    .use(compression())
+    .use(cookieSession({
+      httpOnly: true,
+      keys: ['name', 'username'],
+      name: 'session',
+    }))
+    .use(SessionSettings)
+    .use(cors())
+    .use(express.urlencoded({ extended: true }))
+    .use(express.json())
+    .options('*', cors())
 
   server.use('/api/article', ByCampaign, ArticleController)
   server.use('/api/campaign', ByCampaign, CampaignController)
