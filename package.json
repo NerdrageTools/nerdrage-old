@@ -21,6 +21,9 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "js-beautify": "^1.9.0",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
+    "mobx-state-tree": "^3.10.2",
     "mongoose": "^5.4.16",
     "next": "^8.0.3",
     "next-compose-plugins": "^2.1.1",
@@ -30,6 +33,7 @@
     "react-dom": "^16.8.3",
     "react-jsx-parser": "^1.14.1",
     "resolve-from": "^4.0.0",
+    "sheetforge": "^2.1.6",
     "tinymce": "4.8.5",
     "typescript": "^3.3.3333",
     "webfontloader": "^1.6.28"
