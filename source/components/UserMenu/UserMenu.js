@@ -6,18 +6,21 @@ import './UserMenu.scss'
 export default class UserMenu extends Component {
   static contextType = Application
 
-  renderAnonymous = () => (
-    <Link href="/login">
-      <a className="login-button">Log In</a>
-    </Link>
-  )
+  renderAnonymous = () => {
+    const { asPath, query } = this.context.router
+    const redirectTo = query.redirectTo || asPath
+
+    return (
+      <Link href={`/login?redirectTo=${redirectTo}`}><a>Log In</a></Link>
+    )
+  }
   renderLoggedIn = () => (
     <Fragment>
       <Link href="/profile">
-        {this.context.user.username}
+        <a>{this.context.user.username}</a>
       </Link>
       |
-      <a onClick={this.context.logOff}>Log Off</a>
+      <a href="#" onClick={this.context.logOff}>Log Off</a>
     </Fragment>
   )
 
