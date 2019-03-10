@@ -38,6 +38,7 @@ module.exports = {
     "react/jsx-one-expression-per-line": "off",
     "react/no-array-index-key": "off",
     "react/no-unused-prop-types": ["error", { "skipShapeProps": true }],
+    "react/jsx-wrap-multilines": ["off"],
     "react/prop-types": "off",
     "semi": ["error", "never"],
     "sort-imports": "off",
