@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-unfetch'
 import Link from 'next/link'
 import React, { Component, Fragment } from 'react'
 import Application from '@/contexts/Application'
@@ -6,11 +5,6 @@ import './UserMenu.scss'
 
 export default class UserMenu extends Component {
   static contextType = Application
-
-  handleLogOff = async () => {
-    await fetch('/api/user/logoff')
-    this.context.setUser({ anonymous: true })
-  }
 
   renderAnonymous = () => (
     <Link href="/login">
@@ -23,7 +17,7 @@ export default class UserMenu extends Component {
         {this.context.user.username}
       </Link>
       |
-      <a onClick={this.handleLogOff}>Log Off</a>
+      <a onClick={this.context.logOff}>Log Off</a>
     </Fragment>
   )
 
