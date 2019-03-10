@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
 import next from 'next'
+import nocache from 'nocache'
 import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
 import SheetController from './controllers/SheetController'
@@ -42,10 +43,10 @@ app.prepare().then(async () => {
     .use(express.json())
     .options('*', cors())
 
-  server.use('/api/article', ByCampaign, ArticleController)
-  server.use('/api/campaign', ByCampaign, CampaignController)
-  server.use('/api/sheet', ByCampaign, SheetController)
-  server.use('/api/user', UserController)
+  server.use('/api/article', nocache(), ByCampaign, ArticleController)
+  server.use('/api/campaign', nocache(), ByCampaign, CampaignController)
+  server.use('/api/sheet', nocache(), ByCampaign, SheetController)
+  server.use('/api/user', nocache(), UserController)
 
   server.get('*', routeHandler)
   server.listen(3000, error => {
