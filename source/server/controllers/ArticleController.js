@@ -1,12 +1,10 @@
 import express from 'express'
 import Article from '@/server/models/Article'
-import Campaign from '@/server/models/Campaign'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { domain, session: { _id: userId, isAdmin }, params: { slug } } = request
-  const campaign = await Campaign.findOne({ domain })
+  const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
   const article = await Article.locate(slug, campaign._id)
     .populate('campaign', 'domain name')
     .populate('createdBy lastUpdatedBy', 'name username')

@@ -32,9 +32,9 @@ const CAMPAIGN = (props = {}) => new Campaign({
   ...props,
 })
 
-const mockRequest = (slug = 'test', session = {}, body = {}) => ({
+const mockRequest = (slug = '', { campaign = CAMPAIGN(), session = {}, body = {} } = {}) => ({
   body,
-  campaign: slug,
+  campaign,
   params: { slug },
   session,
 })
@@ -49,10 +49,10 @@ const mockResponse = () => {
 describe('server/controllers/ArticleController', () => {
   describe('permissions', () => {
     it('passes for Admin users', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const request = mockRequest('test', { session: ADMIN })
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('edit')(mockRequest('test', ADMIN), response, next)
+      await permissions('edit')(request, response, next)
 
       expect(response.status).not.toHaveBeenCalled()
       expect(next).toHaveBeenCalled()
@@ -60,10 +60,10 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-viewers if required', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN({ private: true }), 'findOne')
+      const request = mockRequest('test', { campaign: CAMPAIGN({ private: true }) })
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('view')(mockRequest(), response, next)
+      await permissions('view')(request, response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/This content is private/)
@@ -72,10 +72,10 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-editors if required', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const request = mockRequest('test', { session: PLAYER })
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('edit')(mockRequest('test', PLAYER), response, next)
+      await permissions('edit')(request, response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/You do not have permission to edit/)
@@ -85,10 +85,10 @@ describe('server/controllers/ArticleController', () => {
     })
     it('returns 401 to non-viewers if article is secret', async done => {
       mockingoose.Article.toReturn(ARTICLE({ secret: true }), 'findOne')
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
+      const request = mockRequest()
       const response = mockResponse()
       const next = jest.fn()
-      await permissions()(mockRequest(), response, next)
+      await permissions()(request, response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/This article is secret!/)

@@ -1,11 +1,9 @@
 import express from 'express'
-import Campaign from '@/server/models/Campaign'
 import Sheet from '@/server/models/Sheet'
 import omit from '@/utilities/omit'
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { domain, session: { _id: userId, isAdmin }, params: { slug } } = request
-  const campaign = await Campaign.findOne({ domain })
+  const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
   const sheet = await Sheet.findOne({ campaign: campaign._id, slug })
     .populate('campaign', 'domain name')
     .populate('ownedBy', 'name username')

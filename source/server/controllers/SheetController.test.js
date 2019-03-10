@@ -33,9 +33,9 @@ const SHEET = (props = {}) => new Sheet({
   ...props,
 })
 
-const mockRequest = (session = {}, slug = 'test', body = {}) => ({
+const mockRequest = (slug = 'test', { campaign = CAMPAIGN(), session = {}, body = {} } = {}) => ({
   body,
-  campaign: slug,
+  campaign,
   params: { slug },
   session,
 })
@@ -50,11 +50,11 @@ const mockResponse = () => {
 describe('server/controllers/ArticleController', () => {
   describe('permissions', () => {
     it('passes for Admin users', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
       mockingoose.Sheet.toReturn(SHEET(), 'findOne')
+      const request = mockRequest('test', { session: ADMIN })
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('edit')(mockRequest(ADMIN), response, next)
+      await permissions('edit')(request, response, next)
 
       expect(response.status).not.toHaveBeenCalled()
       expect(next).toHaveBeenCalled()
@@ -62,10 +62,11 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-viewers if required', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN({ private: true }), 'findOne')
+      mockingoose.Sheet.toReturn(SHEET(), 'findOne')
+      const request = mockRequest('test', { campaign: CAMPAIGN({ private: true }) })
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('view')(mockRequest(), response, next)
+      await permissions('view')(request, response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/This content is private/)
@@ -74,10 +75,9 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-editors', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('edit')(mockRequest(PLAYER), response, next)
+      await permissions('edit')(mockRequest('test', { session: PLAYER }), response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/You do not have permission to edit/)
@@ -86,11 +86,10 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('passes for non-owners if sheet is public', async done => {
-      mockingoose.Campaign.toReturn(CAMPAIGN(), 'findOne')
       mockingoose.Sheet.toReturn(SHEET({ public: true }), 'findOne')
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('view')(mockRequest(PLAYER), response, next)
+      await permissions('view')(mockRequest('test', { session: PLAYER }), response, next)
 
       expect(response.status).not.toHaveBeenCalled()
       expect(next).toHaveBeenCalled()
