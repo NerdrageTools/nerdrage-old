@@ -2,6 +2,7 @@ import fetch from 'isomorphic-unfetch'
 import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
+import Alert from '@/components/Alert'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import TabSet from '@/components/TabSet'
@@ -26,11 +27,17 @@ export default class Article extends Component {
   static defaultProps = {
     children: [],
     html: '',
+    message: '',
     title: '',
   }
   static getInitialProps = async ({ query, req }) => {
     const headers = req ? { cookie: req.headers.cookie } : {}
-    return fetch(URI(req, `/api/article/${query.slug}`), { headers }).then(r => r.json())
+    const result = await fetch(URI(req, `/api/article/${query.slug}`), { headers })
+    const json = await result.json()
+    return {
+      httpStatusCode: result.status,
+      ...json,
+    }
   }
 
   state = {
@@ -71,13 +78,22 @@ export default class Article extends Component {
     </>
   )
   render() {
-    const { isEditable } = this.props
+    const { httpStatusCode, isEditable, message } = this.props
     const { activeTab } = this.state
     const html = this.state.html || this.props.html
     const title = this.state.title || this.props.title
 
+    if (httpStatusCode !== 200) {
+      return (
+        <div className="article page">
+          <Alert type="error">{message}</Alert>
+        </div>
+      )
+    }
+
     return (
       <div className="article page">
+        {message && <Alert>{message}</Alert>}
         <Editable
           className="title"
           onChange={this.handleTitleChange}
