@@ -48,6 +48,9 @@ app.prepare().then(async () => {
   server.use('/api/sheet', nocache(), ByCampaign, SheetController)
   server.use('/api/user', nocache(), UserController)
 
+  server.get('/', (_, response) => {
+    response.redirect(302, '/article/home')
+  })
   server.get('*', routeHandler)
   server.listen(3000, error => {
     if (error) throw error
