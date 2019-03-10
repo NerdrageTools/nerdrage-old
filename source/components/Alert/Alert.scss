@@ -1,0 +1,14 @@
+@import '~@/styles/palette';
+
+.alert {
+  background: $color-info;
+  border-radius: 5px;
+  border: 1px solid darken($color-info, 10%);
+  margin: .5rem;
+  padding: .75rem;
+
+  &.error {
+    background: lighten($color-danger, 30%);
+    border: 1px solid $color-danger;
+  }
+}
