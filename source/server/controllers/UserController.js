@@ -85,6 +85,11 @@ controller.post('/login', async (request, response) => {
   }
 })
 
+controller.post('/logoff', async (request, response) => {
+  request.session = { anonymous: true }
+  return response.status(200).json({ message: 'Successfully logged off.' })
+})
+
 controller.post('/:username', NoAnonymous, async (request, response) => {
   try {
     if (request.session.username === request.params.username) {

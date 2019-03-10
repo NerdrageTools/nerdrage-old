@@ -22,12 +22,24 @@ export default class Wiki extends App {
     }
   }
 
+  state = {
+    user: this.props.user,
+  }
+
+  setUser = user => this.setState({ user })
+
   render = () => {
-    const { campaign, Component, pageProps, user } = this.props // eslint-disable-line
+    const { campaign, Component, pageProps } = this.props // eslint-disable-line
+    const { user } = this.state
     const { theme } = campaign
+    const context = {
+      campaign,
+      setUser: this.setUser,
+      user,
+    }
 
     return (
-      <Application.Provider value={{ campaign, user }}>
+      <Application.Provider value={context}>
         <Container className="wiki">
           <Layout>
             <Component {...pageProps} />

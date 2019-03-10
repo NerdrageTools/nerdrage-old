@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import SearchBox from '@/components/SearchBox'
+import UserMenu from '@/components/UserMenu'
 import Logo from '@/icons/fist.svg'
 import './Header.scss'
 
@@ -15,6 +16,7 @@ export default function Header() {
         </div>
       </Link>
       <SearchBox />
+      <UserMenu />
     </div>
   )
 }
