@@ -9,10 +9,11 @@ import '@/styles/all.scss'
 export default class Wiki extends App {
   static getInitialProps = async context => {
     const { Component, ctx: { req } } = context
+    const headers = req ? { cookie: req.headers.cookie } : {}
     const props = await App.getInitialProps(context)
     const [campaign, user] = await Promise.all([
       fetch(URI(req, '/api/campaign')).then(r => r.json()),
-      fetch(URI(req, '/api/user', { credentials: 'include' })).then(r => r.json()),
+      fetch(URI(req, '/api/user'), { headers }).then(r => r.json()),
     ])
     return {
       ...props,
@@ -26,7 +27,8 @@ export default class Wiki extends App {
     user: this.props.user,
   }
 
-  logOff = async () => {
+  logOff = async event => {
+    event.preventDefault()
     await fetch('/api/user/logoff', { method: 'POST' })
     window.location.href = window.location.href
   }
@@ -34,12 +36,13 @@ export default class Wiki extends App {
   setUser = user => this.setState({ user })
 
   render = () => {
-    const { campaign, Component, pageProps } = this.props // eslint-disable-line
+    const { campaign, Component, pageProps, router } = this.props // eslint-disable-line
     const { user } = this.state
     const { theme } = campaign
     const context = {
       campaign,
       logOff: this.logOff,
+      router,
       setUser: this.setUser,
       user,
     }
