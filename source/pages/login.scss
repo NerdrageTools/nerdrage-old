@@ -2,10 +2,16 @@
 
 .login.page {
   > .container {
+    background-color: var(--color-primary);
+    border-radius: 1em;
+    border: 2px solid var(--color-secondary);
+    box-shadow: 3px 3px 3px #ccc;
+    color: var(--color-secondary);
     display: flex;
     flex-direction: column;
-    width: 250px;
     margin: auto;
+    padding: 2em;
+    width: 250px;
 
     > .buttons {
       display: flex;

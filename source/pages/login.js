@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch'
+import Router from 'next/router'
 import React, { Component } from 'react'
 import Application from '@/contexts/Application'
 import './login.scss'
@@ -25,32 +26,49 @@ export default class LoginPage extends Component {
     })
     const json = await response.json()
     if (response.status === 200) {
+      const { redirectTo } = this.context.router.query
       this.context.setUser(json)
+      if (redirectTo) Router.push(redirectTo)
     } else {
       this.setState(json)
     }
   }
 
-  render = () => (
-    <div className="login page">
-      <div className="container">
-        <h3>Log In</h3>
-        <input
-          type="text"
-          placeholder="Username"
-          ref={this.username}
-          onKeyPress={this.handleKeyPress}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          ref={this.password}
-          onKeyPress={this.handleKeyPress}
-        />
-        <div className="buttons">
-          <button className="login" onClick={this.handleSubmit}>Submit</button>
+  renderLoggedIn = () => <>
+    <p>You are currently logged in as user <b>{this.context.user.username}</b>.</p>
+    <div className="buttons">
+      <button className="login" onClick={this.context.logOff}>Log Off</button>
+    </div>
+  </>
+
+  renderLogIn = () => <>
+    <h3>Log In</h3>
+    <input
+      type="text"
+      placeholder="Username"
+      ref={this.username}
+      onKeyPress={this.handleKeyPress}
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      ref={this.password}
+      onKeyPress={this.handleKeyPress}
+    />
+    <div className="buttons">
+      <button className="login" onClick={this.handleSubmit}>Submit</button>
+    </div>
+  </>
+
+  render = () => {
+    const { anonymous } = this.context.user
+
+    return (
+      <div className="login page">
+        <div className="container">
+          {anonymous ? this.renderLogIn() : this.renderLoggedIn()}
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
