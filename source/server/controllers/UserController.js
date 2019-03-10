@@ -74,8 +74,9 @@ controller.post('/login', async (request, response) => {
       await user.updateOne({ lastLogin: Date.now() })
       const updated = await User.findOne({ username })
 
-      Object.assign(request.session, updated.toProfile())
-      return response.status(200).json(updated.toProfile())
+      const profile = updated.toProfile()
+      request.session = profile
+      return response.status(200).json(profile)
     }
 
     return response.status(401).json({ message: 'Username or password is invalid.' })
@@ -85,8 +86,8 @@ controller.post('/login', async (request, response) => {
   }
 })
 
-controller.post('/logoff', async (request, response) => {
-  request.session = { anonymous: true }
+controller.use('/logoff', async (request, response) => {
+  request.session = null
   return response.status(200).json({ message: 'Successfully logged off.' })
 })
 
