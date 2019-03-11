@@ -4,18 +4,25 @@
   display: flex;
   flex-direction: column;
 
-  > .title {
-    align-items: center;
+  > .title-bar {
     border-bottom: 1px solid;
     border-bottom-color: $color-border;
     border-bottom-color: var(--color-primary);
     display: flex;
-    font-size: 2em;
-    font-weight: bold;
-    justify-content: flex-start;
-    margin: 0;
-    min-height: 40px;
-    padding: 10px;
+    flex-direction: row;
+    align-items: center;
+
+    > .title {
+      align-items: center;
+      display: flex;
+      flex: 1;
+      font-size: 2em;
+      font-weight: bold;
+      justify-content: flex-start;
+      margin: 0;
+      min-height: 40px;
+      padding: 10px;
+    }
   }
 
   > .tab-set {

@@ -1,0 +1,17 @@
+@import '~@/styles/palette';
+
+.favorite {
+  cursor: pointer;
+  padding: 12px;
+  height: 40px;
+  width: 40px;
+
+  &.on {
+    color: $palette-gold;
+    stroke-width: 3px;
+    stroke: $palette-gold-dark;
+  }
+  &.off {
+    color: $palette-gray-medium;
+  }
+}

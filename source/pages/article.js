@@ -5,6 +5,7 @@ import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
+import Favorite from '@/components/Favorite'
 import TabSet from '@/components/TabSet'
 import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
@@ -21,6 +22,15 @@ if (process.browser && window) {
   WysiwygEditor = dynamic(() => import('@/components/WysiwygEditor'))
   HtmlEditor = dynamic(() => import('@/components/HtmlEditor'))
 }
+
+const STATE_FIELDS = [
+  'aliases',
+  'html',
+  'secret',
+  'slug',
+  'tags',
+  'title',
+]
 
 export default class Article extends Component {
   static contextType = Application
@@ -41,20 +51,13 @@ export default class Article extends Component {
   }
   static getDerivedStateFromProps(props, state) {
     if (props.slug !== state.slug) {
-      return {
-        activeTab: 'read',
-        ...pluck(props, 'aliases', 'html', 'secret', 'slug', 'tags', 'title'),
-      }
+      return { activeTab: 'read', ...pluck(props, STATE_FIELDS) }
     }
 
     return state
   }
 
-  state = {
-    activeTab: 'read',
-    ...pluck(this.props, 'aliases', 'html', 'secret', 'slug', 'tags', 'title'),
-  }
-
+  state = { activeTab: 'read', ...pluck(this.props, STATE_FIELDS) }
 
   get isDirty() {
     const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
@@ -64,6 +67,11 @@ export default class Article extends Component {
     return fromState !== fromProps
   }
 
+  handleFavoriteToggle = async () => {
+    const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
+      .then(r => r.json())
+    this.context.setUser(updated)
+  }
   handleHtmlChange = html => this.setState({ html })
   handleSave = async () => {
     const updated = await fetch(`/api/article/${this.props.slug}`, {
@@ -85,10 +93,12 @@ export default class Article extends Component {
     </>
   )
   render() {
-    const { httpStatusCode, isEditable, message } = this.props
     const { activeTab } = this.state
+    const { campaign, httpStatusCode, isEditable, message, slug } = this.props
+    const { favorites } = this.context.user
     const html = this.state.html || this.props.html
     const title = this.state.title || this.props.title
+    const isFavorite = favorites.includes(`${campaign.domain}:${slug}`)
 
     if (httpStatusCode !== 200) {
       return (
@@ -101,12 +111,15 @@ export default class Article extends Component {
     return (
       <div className="article page">
         {message && <Alert>{message}</Alert>}
-        <Editable
-          className="title"
-          onChange={this.handleTitleChange}
-          readOnly={!isEditable}
-          value={title}
-        />
+        <div className="title-bar">
+          <Editable
+            className="title"
+            onChange={this.handleTitleChange}
+            readOnly={!isEditable}
+            value={title}
+          />
+          <Favorite onToggle={this.handleFavoriteToggle} value={isFavorite} />
+        </div>
         <TabSet
           activeTabId={activeTab}
           buttons={(

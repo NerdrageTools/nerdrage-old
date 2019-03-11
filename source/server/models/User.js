@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
       'Invalid email address',
     ],
   },
+  favorites: [String],
   isAdmin: { default: false, type: Boolean },
   lastLogin: Date,
   name: { trim: true, type: String },

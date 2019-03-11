@@ -1,4 +1,5 @@
 import express from 'express'
+import ByCampaign from '@/server/middleware/ByCampaign'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 import User from '@/server/models/User'
 
@@ -89,6 +90,18 @@ controller.post('/login', async (request, response) => {
 controller.use('/logoff', async (request, response) => {
   request.session = null
   return response.status(200).json({ message: 'Successfully logged off.' })
+})
+
+controller.post('/favorites/:slug', NoAnonymous, ByCampaign, async (request, response) => {
+  const { domain, params: { slug }, session: { username } } = request
+  const favorite = `${domain}:${slug}`
+
+  const user = await User.findOne({ username })
+  const verb = user.favorites.includes(favorite) ? '$pull' : '$addToSet'
+
+  await user.update({ [verb]: { favorites: favorite } })
+
+  return response.status(200).json(await User.findOne({ username }))
 })
 
 controller.post('/:username', NoAnonymous, async (request, response) => {
