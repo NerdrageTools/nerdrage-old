@@ -39,15 +39,22 @@ export default class Article extends Component {
       ...json,
     }
   }
+  static getDerivedStateFromProps(props, state) {
+    if (props.slug !== state.slug) {
+      return {
+        activeTab: 'read',
+        ...pluck(props, 'aliases', 'html', 'secret', 'slug', 'tags', 'title'),
+      }
+    }
+
+    return state
+  }
 
   state = {
     activeTab: 'read',
-    aliases: this.props.aliases,
-    html: this.props.html,
-    secret: this.props.secret,
-    tags: this.props.tags,
-    title: this.props.title,
+    ...pluck(this.props, 'aliases', 'html', 'secret', 'slug', 'tags', 'title'),
   }
+
 
   get isDirty() {
     const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
