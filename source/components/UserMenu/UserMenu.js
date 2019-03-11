@@ -11,16 +11,21 @@ export default class UserMenu extends Component {
     const redirectTo = query.redirectTo || asPath
 
     return (
-      <Link href={`/login?redirectTo=${redirectTo}`}><a>Log In</a></Link>
+      <Link href={`/login?redirectTo=${redirectTo}`}>
+        <a href="#" className="logon">Log In</a>
+      </Link>
     )
   }
   renderLoggedIn = () => (
     <Fragment>
       <Link href="/profile">
-        <a>{this.context.user.username}</a>
+        <div className="username">
+          <span>logged in as</span>
+          <a href="#">{this.context.user.username}</a>
+        </div>
       </Link>
-      |
-      <a href="#" onClick={this.context.logOff}>Log Off</a>
+      <div className="divider" />
+      <a href="#" className="logoff" onClick={this.context.logOff}>log<br/>out</a>
     </Fragment>
   )
 

@@ -7,9 +7,36 @@
   justify-content: center;
   margin-right: .5rem;
 
-  > a {
+  > * {
+    padding: .5rem;
+  }
+
+  > .divider {
+    border-left: 1px solid;
+    height: 40px;
+    margin: 0 8px;
+    opacity: .6;
+    padding: 0;
+  }
+
+  .username {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    > span {
+      font-size: .6rem;
+      opacity: .7;
+    }
+  }
+  a {
     color: var(--color-secondary);
     font-size: .8rem;
-    padding: .5rem;
+    font-weight: bold;
+  }
+  .logoff {
+    font-size: .6rem;
+    opacity: .7;
   }
 }
