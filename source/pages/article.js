@@ -6,6 +6,7 @@ import Alert from '@/components/Alert'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import Favorite from '@/components/Favorite'
+import Link from '@/components/Link'
 import TabSet from '@/components/TabSet'
 import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
@@ -88,7 +89,7 @@ export default class Article extends Component {
 
   renderReadOnlyContent = () => (
     <>
-      <JsxParser jsx={this.state.html || this.props.html} />
+      <JsxParser components={{ a: Link }} jsx={this.state.html || this.props.html} />
       <ArticleChildren articles={this.props.children} />
     </>
   )
