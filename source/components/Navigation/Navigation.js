@@ -11,10 +11,12 @@ export default class Navigation extends Component {
 
   render = () => {
     const { navigation } = this.context.campaign
+    const { asPath } = this.context.router
+
     return (
       <div className="navigation">
         {navigation.map(({ slug, text }, key) => (
-          <ArticleLink key={key} slug={slug}>{text}</ArticleLink>
+          <ArticleLink key={key} slug={slug} active={asPath === `/article/${slug}`}>{text}</ArticleLink>
         ))}
       </div>
     )
