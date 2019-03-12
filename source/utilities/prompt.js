@@ -1,0 +1,38 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Dialog from '@/components/Dialog'
+
+export default async function prompt(text = '', title = 'Prompt') {
+  const container = document.createElement('div')
+  document.body.appendChild(container)
+
+  return new Promise((resolve, reject) => {
+    const inputBox = React.createRef()
+    const handleCancel = () => reject()
+    const handleOk = () => resolve(inputBox.current.value)
+
+    const handleKeyDown = event => {
+      switch (event.key) {
+        case 'Enter':
+          return handleOk()
+        case 'Escape':
+          return handleCancel()
+        default:
+          return undefined
+      }
+    }
+
+    ReactDOM.render((
+      <Dialog modal onCancel={handleCancel} onOk={handleOk} title={title}>
+        <div className="text">{text}</div>
+        <div className="input">
+          <input onKeyDown={handleKeyDown} ref={inputBox} type="text" />
+        </div>
+      </Dialog>
+    ), container, () => {
+      inputBox.current.focus()
+    })
+  }).finally(() => {
+    document.body.removeChild(container)
+  })
+}
