@@ -79,6 +79,7 @@ controller.post('/login', async (request, response) => {
       const updated = await User.findOne({ username })
 
       const profile = updated.toProfile()
+      request.session = profile
       return response.status(200).json(profile)
     }
 
