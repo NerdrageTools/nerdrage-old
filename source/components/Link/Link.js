@@ -14,7 +14,7 @@ export default class Link extends Component {
     const [type, slug] = href.split('/')
     return (
       <NextLink href={`/${type}?slug=${slug}`} as={href}>
-        <a href={href} {...props}>{children}</a>
+        <a className={className} href={href} {...props}>{children}</a>
       </NextLink>
     )
   }
