@@ -5,13 +5,17 @@ import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
-import Favorite from '@/components/Favorite'
 import Link from '@/components/Link'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
+import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
+import FavoriteOffIcon from '@/icons/favorite-off.svg'
+import FavoriteOnIcon from '@/icons/favorite-on.svg'
 import HtmlIcon from '@/icons/html.svg'
+import SecretOnIcon from '@/icons/private.svg'
+import SecretOffIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
@@ -69,11 +73,6 @@ export default class Article extends Component {
     return fromState !== fromProps
   }
 
-  handleFavoriteToggle = async () => {
-    const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
-      .then(r => r.json())
-    this.context.setUser(updated)
-  }
   handleHtmlChange = html => this.setState({ html })
   handleSave = async () => {
     const updated = await fetch(`/api/article/${this.props.slug}`, {
@@ -90,6 +89,23 @@ export default class Article extends Component {
   }
   handleTagsChange = tags => this.setState({ tags })
   handleTitleChange = title => this.setState({ title })
+  handleToggleFavorite = async () => {
+    const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
+      .then(r => r.json())
+    this.context.setUser(updated)
+  }
+  handleToggleSecret = async () => {
+    const payload = { secret: !this.state.secret }
+    const response = await fetch(`/api/article/${this.props.slug}`, {
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    })
+    const updated = pluck(await response.json(), 'secret')
+    if (response.status === 200) {
+      this.setState(updated)
+    }
+  }
 
   renderReadOnlyContent = () => (
     <>
@@ -98,14 +114,14 @@ export default class Article extends Component {
     </>
   )
   render = () => {
-    const { activeTab } = this.state
-    const { campaign = {}, httpStatusCode, isEditable, message, slug } = this.props
+    const { activeTab, secret } = this.state
+    const { campaign = {}, httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
     const aliases = this.state.aliases || this.props.aliases
     const html = this.state.html || this.props.html
-    const title = this.state.title || this.props.title
     const isFavorite = favorites.includes(`${campaign.domain}:${slug}`)
     const tags = this.state.tags || this.props.tags
+    const title = this.state.title || this.props.title
 
     if (httpStatusCode !== 200) {
       return (
@@ -125,7 +141,23 @@ export default class Article extends Component {
             readOnly={!isEditable}
             value={title}
           />
-          <Favorite onToggle={this.handleFavoriteToggle} value={isFavorite} />
+          {isOwner &&
+            <Toggle
+              offIcon={SecretOffIcon}
+              offIconStyle={{ color: '#cccccc' }}
+              onIcon={SecretOnIcon}
+              onIconStyle={{ color: '#85b12a' }}
+              onToggle={this.handleToggleSecret}
+              title="Foo"
+              value={secret}
+            />
+          }
+          <Toggle
+            offIcon={FavoriteOffIcon}
+            onIcon={FavoriteOnIcon}
+            onToggle={this.handleToggleFavorite}
+            value={isFavorite}
+          />
         </div>
         <TabSet
           activeTabId={activeTab}
