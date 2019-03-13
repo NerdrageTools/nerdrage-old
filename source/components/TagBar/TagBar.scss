@@ -1,20 +1,15 @@
 .tag-bar {
-  align-items: center;
-  display: grid;
-  justify-items: flex-start;
-  min-height: 35px;
+  display: block;
+  min-height: 40px;
   padding: 2px;
 
-  > span {
+  > div, > div > div {
     align-items: center;
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
     justify-items: flex-start;
-    max-width: 100%;
-    overflow: hidden;
   }
 
-  &.readonly {
+  &.readOnly {
     background: transparent;
   }
 
@@ -22,5 +17,6 @@
     background: inherit;
     border: none;
     margin: 0 5px;
+    width: 100px;
   }
 }

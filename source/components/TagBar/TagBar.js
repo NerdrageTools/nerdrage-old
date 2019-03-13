@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import TagsInput from 'react-tagsinput'
 import Tag from '@/components/Tag'
 import noop from '@/utilities/noop'
@@ -50,6 +51,12 @@ export default class TagBar extends Component {
     }
   }
 
+  renderInput = ({ addTag, onChange, ...props }) => (
+    !this.props.readOnly
+      ? <input type="text" onChange={this.handleTextInput(onChange)} {...props} />
+      : null
+  )
+  renderLayout = (tags, input) => <Scrollbars universal>{input}{tags}</Scrollbars>
   renderTag = ({ className, key, tag }) => (
     <Tag
       asLink={this.props.asLinks}
@@ -59,11 +66,6 @@ export default class TagBar extends Component {
       removable={!this.props.readOnly}
       tag={tag}
     />
-  )
-  renderInput = ({ addTag, onChange, ...props }) => (
-    !this.props.readOnly
-      ? <input type="text" onChange={this.handleTextInput(onChange)} {...props} />
-      : null
   )
   render() {
     const { className, inputSettings, readOnly, tags, tagSettings } = this.props
@@ -80,6 +82,7 @@ export default class TagBar extends Component {
         onChange={this.handleChange}
         onlyUnique
         readOnly={readOnly}
+        renderLayout={this.renderLayout}
         renderInput={this.renderInput}
         renderTag={this.renderTag}
         tagProps={tagSettings}
