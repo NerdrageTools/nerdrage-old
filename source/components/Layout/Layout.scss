@@ -1,5 +1,8 @@
 @import '~@/styles/palette';
 
+$navigation-width: 150px;
+$page-width: calc(100vw - #{$navigation-width});
+
 .wiki.layout {
   background: $color-bg;
   background: var(--color-background);
@@ -20,6 +23,12 @@
     flex-direction: row;
     flex: 1;
 
-    > .page { flex: 1; }
+    > .navigation {
+      width: $navigation-width;
+    }
+    > .page {
+      flex: 1;
+      width: $page-width;
+    }
   }
 }
