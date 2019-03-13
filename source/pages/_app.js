@@ -3,18 +3,18 @@ import App, { Container } from 'next/app'
 import React from 'react'
 import Layout from '@/components/Layout'
 import Application from '@/contexts/Application'
+import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import '@/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async context => {
     const { Component, ctx: { req } } = context
-    const headers = req ? { cookie: req.headers.cookie } : {}
+    const headers = pluck(req && req.headers, 'cookie')
     const props = await App.getInitialProps(context)
-    const [campaign, user] = await Promise.all([
-      fetch(URI(req, '/api/campaign')).then(r => r.json()),
-      fetch(URI(req, '/api/user'), { headers }).then(r => r.json()),
-    ])
+    const campaign = (req && req.campaign) || await fetch(URI(req, '/api/campaign')).then(r => r.json())
+    const user = (req && req.user) || await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
+
     return {
       ...props,
       campaign,
