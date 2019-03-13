@@ -11,8 +11,7 @@ import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
 import SheetController from './controllers/SheetController'
 import UserController from './controllers/UserController'
-import ByCampaign from './middleware/ByCampaign'
-import SessionSettings from './middleware/SessionSettings'
+import ContextLoader from './middleware/ContextLoader'
 import routes from './routes'
 import './models'
 
@@ -37,20 +36,25 @@ app.prepare().then(async () => {
       keys: ['name', 'username'],
       name: 'session',
     }))
-    .use(SessionSettings)
     .use(cors())
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
     .options('*', cors())
 
-  server.use('/api/article', nocache(), ByCampaign, ArticleController)
-  server.use('/api/campaign', nocache(), ByCampaign, CampaignController)
-  server.use('/api/sheet', nocache(), ByCampaign, SheetController)
-  server.use('/api/user', nocache(), UserController)
+  server.get('/favicon.ico', (request, response) => {
+    response.status(200).sendFile(`${__dirname}/favicon.ico`)
+  })
+
+  server.use('/api/article', ContextLoader, nocache(), ArticleController)
+  server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
+  server.use('/api/sheet', ContextLoader, nocache(), SheetController)
+  server.use('/api/user', ContextLoader, nocache(), UserController)
 
   server.get('/', (_, response) => {
     response.redirect(302, '/article/home')
   })
+  server.get('/article/:slug', ContextLoader, routeHandler)
+  server.get('/sheet/:slug', ContextLoader, routeHandler)
   server.get('*', routeHandler)
   server.listen(3000, error => {
     if (error) throw error

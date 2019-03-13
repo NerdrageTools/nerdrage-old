@@ -42,7 +42,7 @@ export default class Article extends Component {
     title: '',
   }
   static getInitialProps = async ({ query, req }) => {
-    const headers = req ? { cookie: req.headers.cookie } : {}
+    const headers = pluck(req && req.headers, 'cookie')
     const result = await fetch(URI(req, `/api/article/${query.slug}`), { headers })
     const json = await result.json()
     return {
