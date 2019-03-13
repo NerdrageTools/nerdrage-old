@@ -1,5 +1,5 @@
 export default (request, response, next) => {
-  if (!request.session.username) {
+  if (!request.user) {
     response.status(401).send({
       message: 'You must be logged in to perform this action.',
     })

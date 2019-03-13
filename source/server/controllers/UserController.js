@@ -1,5 +1,4 @@
 import express from 'express'
-import ByCampaign from '@/server/middleware/ByCampaign'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 import User from '@/server/models/User'
 
@@ -12,8 +11,9 @@ controller.put('/', async (request, response) => {
       isAdmin: false,
       lastLogin: undefined,
     })
-    const updated = await user.save()
-    return response.status(200).json(updated.toProfile())
+    const profile = (await user.save()).toProfile()
+    request.session = profile
+    return response.status(200).json(profile)
   } catch (error) {
     switch (error.code) {
       case 11000:
@@ -26,12 +26,12 @@ controller.put('/', async (request, response) => {
 })
 
 controller.get('/', async (request, response) => {
-  if (!request.session.username) {
+  const { user } = request
+  if (!user) {
     return response.status(200).json({ anonymous: true })
   }
 
   try {
-    const user = await User.findOne({ username: request.session.username })
     return response.status(200).json(user)
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })
@@ -39,8 +39,8 @@ controller.get('/', async (request, response) => {
 })
 
 controller.post('/', NoAnonymous, async (request, response) => {
+  const { user } = request
   try {
-    const user = await User.findOne({ username: request.session.username }, { password: 1 })
     if (user.isAdmin) {
       Object.assign(user, request.body)
     } else {
@@ -49,7 +49,7 @@ controller.post('/', NoAnonymous, async (request, response) => {
 
     const updated = await user.save()
     Object.assign(request.session, updated.toProfile())
-    return response.status(200).json(updated)
+    return response.status(200).json(updated.toProfile())
   } catch (error) {
     if (error.code === 11000) {
       return response.status(409).json({ message: 'Username or email is already in use.' })
@@ -79,7 +79,6 @@ controller.post('/login', async (request, response) => {
       const updated = await User.findOne({ username })
 
       const profile = updated.toProfile()
-      request.session = profile
       return response.status(200).json(profile)
     }
 
@@ -95,16 +94,14 @@ controller.use('/logoff', async (request, response) => {
   return response.status(200).json({ message: 'Successfully logged off.' })
 })
 
-controller.post('/favorites/:slug', NoAnonymous, ByCampaign, async (request, response) => {
-  const { domain, params: { slug }, session: { username } } = request
+controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
+  const { domain, params: { slug }, user } = request
   const favorite = `${domain}:${slug}`
-
-  const user = await User.findOne({ username })
   const verb = user.favorites.includes(favorite) ? '$pull' : '$addToSet'
 
   await user.update({ [verb]: { favorites: favorite } })
 
-  return response.status(200).json(await User.findOne({ username }))
+  return response.status(200).json(await User.findOne({ username: user.username }))
 })
 
 controller.post('/:username', NoAnonymous, async (request, response) => {
@@ -113,7 +110,7 @@ controller.post('/:username', NoAnonymous, async (request, response) => {
       return response.redirect(302, '/api/users/')
     }
 
-    const currentUser = await User.findOne({ username: request.session.username })
+    const currentUser = request.user
     if (!currentUser.isAdmin) {
       return response.status(401).json({
         message: 'You must be an administrator to edit another user.',
