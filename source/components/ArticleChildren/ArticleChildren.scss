@@ -1,30 +1,23 @@
 @import '~@/styles/breakpoint';
-@import '~@/styles/classes/dropshadow';
 @import '~@/styles/classes/ellipsis';
 @import '~@/styles/palette';
 
 .article-children {
-  @include dropshadow();
-
-  border: 1px solid $color-border;
-  border: 1px solid var(--color-primary);
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
+  margin-top: 2em;
   overflow: hidden;
 
   header {
     align-items: center;
-    background-color: $palette-gray-light;
-    border-bottom: 2px groove;
-    border: none;
+    border-bottom: 1px solid var(--color-primary);
     color: $palette-gray-dark;
     display: flex;
     flex-direction: row;
+    font-weight: bold;
     justify-content: flex-start;
     opacity: .9;
-    padding: 5px;
+    padding: .5rem;
 
     > svg {
       margin-right: .25rem;
@@ -32,11 +25,9 @@
     }
   }
   .link-list {
-    background-color: lighten($palette-gray-light, 10%);
     columns: 4;
     column-fill: balance;
     column-gap: 10px;
-    padding: 10px;
 
     > a { display: inherit; }
   }

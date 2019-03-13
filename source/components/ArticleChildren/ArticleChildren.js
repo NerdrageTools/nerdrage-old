@@ -14,13 +14,15 @@ export default function ArticleChildren({
   const links = articles
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(({ slug, title }) => (
-      <ArticleLink key={slug} slug={slug}>{title}</ArticleLink>
+      <li key={slug}>
+        <ArticleLink slug={slug}>{title}</ArticleLink>
+      </li>
     ))
 
   return (
     <div className={`article-children ${className}`.trim()}>
       <header>{icon} {caption}</header>
-      <div className="link-list">{links}</div>
+      <ul className="link-list">{links}</ul>
     </div>
   )
 }
