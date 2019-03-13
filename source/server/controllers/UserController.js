@@ -51,12 +51,15 @@ controller.post('/', NoAnonymous, async (request, response) => {
     Object.assign(request.session, updated.toProfile())
     return response.status(200).json(updated)
   } catch (error) {
-    switch (error.code) {
-      case 11000:
-        return response.status(409).json({ message: 'Username or email is already in use.' })
-      default:
-        return response.status(500).json({ message: 'Unknown error.' })
+    if (error.code === 11000) {
+      return response.status(409).json({ message: 'Username or email is already in use.' })
     }
+    if (error.name === 'ValidationError') {
+      return response.status(409).json({ message: error.message })
+    }
+
+    console.error(`Error in POST /api/user: ${error.code}: ${error}`) // eslint-disable-line no-console
+    return response.status(500).json({ message: 'Unknown error.' })
   }
 })
 
