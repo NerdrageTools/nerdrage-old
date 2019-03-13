@@ -53,8 +53,8 @@ app.prepare().then(async () => {
   server.get('/', (_, response) => {
     response.redirect(302, '/article/home')
   })
-  server.get('/article/:slug', ContextLoader, routeHandler)
-  server.get('/sheet/:slug', ContextLoader, routeHandler)
+  server.get('/article/:slug', ContextLoader, nocache(), routeHandler)
+  server.get('/sheet/:slug', ContextLoader, nocache(), routeHandler)
   server.get('*', routeHandler)
   server.listen(3000, error => {
     if (error) throw error
