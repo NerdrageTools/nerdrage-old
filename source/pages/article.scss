@@ -44,4 +44,14 @@
       }
     }
   }
+
+  .tag-bar {
+    border-top: 1px solid var(--color-primary);
+
+    &:not(.readOnly) {
+      background: $color-bg-button;
+      box-shadow: 0 3px 3px $color-shadow inset;
+      padding-top: 3px;
+    }
+  }
 }

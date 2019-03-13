@@ -34,6 +34,7 @@
     "react-dom": "^16.8.3",
     "react-draggable": "^3.2.1",
     "react-jsx-parser": "^1.14.1",
+    "react-tagsinput": "^3.19.0",
     "resolve-from": "^4.0.0",
     "sheetforge": "^2.1.6",
     "tinymce": "4.8.5",

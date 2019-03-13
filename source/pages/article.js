@@ -8,6 +8,7 @@ import Editable from '@/components/Editable'
 import Favorite from '@/components/Favorite'
 import Link from '@/components/Link'
 import TabSet from '@/components/TabSet'
+import TagBar from '@/components/TagBar'
 import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
 import HtmlIcon from '@/icons/html.svg'
@@ -83,8 +84,11 @@ export default class Article extends Component {
     this.setState(updated)
   }
   handleTabClicked = tab => {
-    if (tab !== this.state.activeTab) { this.setState({ activeTab: tab }) }
+    if (tab !== this.state.activeTab) {
+      this.setState({ activeTab: tab })
+    }
   }
+  handleTagsChange = tags => this.setState({ tags })
   handleTitleChange = title => this.setState({ title })
 
   renderReadOnlyContent = () => (
@@ -93,13 +97,15 @@ export default class Article extends Component {
       <ArticleChildren articles={this.props.children} />
     </>
   )
-  render() {
+  render = () => {
     const { activeTab } = this.state
-    const { campaign, httpStatusCode, isEditable, message, slug } = this.props
-    const { favorites } = this.context.user
+    const { campaign = {}, httpStatusCode, isEditable, message, slug } = this.props
+    const { favorites = [] } = this.context.user
+    const aliases = this.state.aliases || this.props.aliases
     const html = this.state.html || this.props.html
     const title = this.state.title || this.props.title
     const isFavorite = favorites.includes(`${campaign.domain}:${slug}`)
+    const tags = this.state.tags || this.props.tags
 
     if (httpStatusCode !== 200) {
       return (
@@ -123,11 +129,9 @@ export default class Article extends Component {
         </div>
         <TabSet
           activeTabId={activeTab}
-          buttons={(
-            <>
-              {this.isDirty && <button onClick={this.handleSave}>Save</button>}
-            </>
-          )}
+          buttons={<>
+            {this.isDirty && <button onClick={this.handleSave}>Save</button>}
+          </>}
           onTabClicked={this.handleTabClicked}
           showTabs={isEditable}
           tabs={[{
@@ -143,6 +147,14 @@ export default class Article extends Component {
             id: 'html',
             tab: <HtmlIcon />,
           }]}
+        />
+        <TagBar
+          asLinks
+          banned={[slug, ...aliases]}
+          className="tags"
+          onChange={this.handleTagsChange}
+          tags={tags}
+          readOnly={!isEditable}
         />
       </div>
     )

@@ -1,0 +1,26 @@
+.tag-bar {
+  align-items: center;
+  display: grid;
+  justify-items: flex-start;
+  min-height: 35px;
+  padding: 2px;
+
+  > span {
+    align-items: center;
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: flex-start;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  &.readonly {
+    background: transparent;
+  }
+
+  .tag-bar-input {
+    background: inherit;
+    border: none;
+    margin: 0 5px;
+  }
+}
