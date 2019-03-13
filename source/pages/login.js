@@ -10,6 +10,10 @@ export default class LoginPage extends Component {
   username = React.createRef()
   password = React.createRef()
 
+  componentDidMount = () => {
+    this.username.current.focus()
+  }
+
   handleKeyPress = event => {
     if (event.key === 'Enter') {
       this.handleSubmit()
