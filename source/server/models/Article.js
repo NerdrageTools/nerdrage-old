@@ -52,11 +52,16 @@ ArticleSchema.pre('save', function (next) {
 ArticleSchema.methods.render = async function () {
   const links = await renderLinks(this.html, this.campaign)
   const includes = await transclude(links.html)
+  const childArticles = await mongoose.models.Article
+    .find({ tags: { $in: [this.slug, ...this.aliases] } })
+    .select('slug title')
+    .exec()
 
   const html = beautify(includes.html, BEAUTIFY_OPTIONS)
 
   return Promise.resolve({
     ...this.toJSON(),
+    childArticles,
     html,
     links: unique([...links.links, ...includes.links]).sort(),
     missing: unique([...links.missing, ...includes.missing]).sort(),

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Link from '@/components/Link'
 import Remove from '@/icons/remove.svg'
+import TagIcon from '@/icons/tag.svg'
 import noop from '@/utilities/noop'
 import './Tag.scss'
 
@@ -26,6 +27,7 @@ export default class Tag extends Component {
 
     return (
       <span className={classNames}>
+        <TagIcon />
         {asLink
           ? <Link className="link" href={`/article/${tag}`}>{tag}</Link>
           : <span className="text">{tag}</span>

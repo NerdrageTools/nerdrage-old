@@ -37,7 +37,7 @@ const STATE_FIELDS = [
 export default class Article extends Component {
   static contextType = Application
   static defaultProps = {
-    children: [],
+    childArticles: [],
     html: '',
     message: '',
     title: '',
@@ -94,7 +94,7 @@ export default class Article extends Component {
   renderReadOnlyContent = () => (
     <>
       <JsxParser components={{ a: Link }} jsx={this.state.html || this.props.html} />
-      <ArticleChildren articles={this.props.children} />
+      <ArticleChildren articles={this.props.childArticles} />
     </>
   )
   render = () => {
