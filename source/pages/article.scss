@@ -67,7 +67,7 @@
     }
   }
 
-  .tag-bar {
+  .tag-bar.tags {
     border-top: 1px solid var(--color-primary);
 
     &:not(.readOnly) {

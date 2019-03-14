@@ -1,0 +1,11 @@
+@import '~@/styles/palette';
+
+button {
+  border-radius: .25rem;
+  padding: .25rem;
+
+  &.danger {
+    background-color: $color-danger;
+    color: $color-text-danger;
+  }
+}

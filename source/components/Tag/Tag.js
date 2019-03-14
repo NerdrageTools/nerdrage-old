@@ -20,14 +20,14 @@ export default class Tag extends Component {
     const { asLink, className, removable, tag } = this.props
     const classNames = [
       'tag',
-      asLink ? 'tag-link' : '',
+      asLink ? 'is-link' : '',
       className,
       removable ? 'removable' : '',
     ].filter(Boolean).join(' ')
 
     return (
       <span className={classNames}>
-        <TagIcon />
+        <TagIcon className="tag-icon" />
         {asLink
           ? <Link className="link" href={`/article/${tag}`}>{tag}</Link>
           : <span className="text">{tag}</span>

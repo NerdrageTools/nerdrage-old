@@ -4,7 +4,7 @@
   align-items: center;
   background-color: $palette-offwhite;
   border-radius: 3px;
-  border: 1px solid $palette-blue-royal;
+  border: 1px solid;
   display: flex;
   flex-direction: row;
   font-size: .9em;
@@ -27,7 +27,7 @@
     &:last-child { margin-left: .25em; }
   }
 
-  &.tag-link {
+  &.is-link {
     color: $color-link;
     font-size: .8rem;
   }

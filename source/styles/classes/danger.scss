@@ -1,12 +1,4 @@
 .danger {
-  border: 2px solid $color-bg-danger;
-  border-radius: 5px;
+  border-color: $color-bg-danger;
   color: $color-danger;
-  padding: 5px;
-
-  &:before {
-    content: '';
-    font-family: 'axis-wiki';
-    margin-right: .25em;
-  }
 }

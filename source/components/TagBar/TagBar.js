@@ -26,7 +26,7 @@ export default class TagBar extends Component {
       placeholder: 'add tag',
     },
     tagSettings: {
-      className: 'tag',
+      className: '',
       classNameRemove: 'remove',
     },
   }
@@ -56,11 +56,13 @@ export default class TagBar extends Component {
       ? <input type="text" onChange={this.handleTextInput(onChange)} {...props} />
       : null
   )
-  renderLayout = (tags, input) => <Scrollbars universal>{input}{tags}</Scrollbars>
+  renderLayout = (tags, input) => (
+    <Scrollbars autoHide universal>{tags}{input}</Scrollbars>
+  )
   renderTag = ({ className, key, tag }) => (
     <Tag
       asLink={this.props.asLinks}
-      className={`icon-tag ${className}`.trim()}
+      className={className}
       key={key}
       onRemove={this.handleTagRemove}
       removable={!this.props.readOnly}

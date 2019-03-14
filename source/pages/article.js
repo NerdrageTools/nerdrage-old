@@ -17,6 +17,8 @@ import HtmlIcon from '@/icons/html.svg'
 import SecretOnIcon from '@/icons/private.svg'
 import SecretOffIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
+import SettingsIcon from '@/icons/settings.svg'
+import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import './article.scss'
@@ -66,9 +68,11 @@ export default class Article extends Component {
   state = { activeTab: 'read', ...pluck(this.props, STATE_FIELDS) }
 
   componentDidMount() {
+    const { slug } = this.props
     const { router } = this.context
-    if (router.query.slug !== this.props.slug) {
-      router.replace(`/article/${this.props.slug}`)
+    if (router.query.slug !== slug) {
+      this.setState({ redirectedFrom: router.query.slug })
+      router.push(`/article?slug=${slug}`, `/article/${slug}`, { shallow: true })
     }
   }
 
@@ -80,6 +84,14 @@ export default class Article extends Component {
     return fromState !== fromProps
   }
 
+  handleAliasesChange = aliases => this.setState({ aliases })
+  handleDelete = async () => {
+    if (!await confirm('Are you sure you want to permanently delete this article?')) return
+    const response = await fetch(`/api/article/${this.props.slug}`, { method: 'DELETE' })
+    if (response.status === 204) {
+      this.context.router.push('/article/home')
+    }
+  }
   handleHtmlChange = html => this.setState({ html })
   handleSave = async () => {
     const updated = await fetch(`/api/article/${this.props.slug}`, {
@@ -114,14 +126,34 @@ export default class Article extends Component {
     }
   }
 
-  renderReadOnlyContent = () => (
-    <>
-      <JsxParser components={{ a: Link }} jsx={this.state.html || this.props.html} />
-      <ArticleChildren articles={this.props.childArticles} />
-    </>
-  )
+  renderReadOnlyContent = () => <>
+    <JsxParser components={{ a: Link }} jsx={this.state.html || this.props.html} />
+    <ArticleChildren articles={this.props.childArticles} />
+  </>
+  renderSettingsTab = () => <>
+    <fieldset>
+      <legend>Aliases</legend>
+      <TagBar
+        banned={[this.state.slug]}
+        className="aliases"
+        onChange={this.handleAliasesChange}
+        tags={this.state.aliases}
+        inputSettings={{ placeholder: 'add alias' }}
+        readOnly={!this.props.isEditable}
+      />
+    </fieldset>
+    {this.props.isEditable && (
+      <fieldset className="danger">
+        <legend className="danger">Danger</legend>
+        <div className="row">
+          <button className="danger" onClick={this.handleDelete}>Delete</button>
+          <span>Warning: This cannot be undone.</span>
+        </div>
+      </fieldset>
+    )}
+  </>
   render = () => {
-    const { activeTab, secret } = this.state
+    const { activeTab, redirectedFrom, secret } = this.state
     const { campaign = {}, httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
     const aliases = this.state.aliases || this.props.aliases
@@ -187,7 +219,11 @@ export default class Article extends Component {
             contents: <HtmlEditor value={html} onChange={this.handleHtmlChange} />,
             id: 'html',
             tab: <HtmlIcon />,
-          }]}
+          }, {
+            contents: this.renderSettingsTab(),
+            id: 'settings',
+            tab: <SettingsIcon />,
+          }].filter(Boolean)}
         />
         <TagBar
           asLinks
