@@ -65,6 +65,13 @@ export default class Article extends Component {
 
   state = { activeTab: 'read', ...pluck(this.props, STATE_FIELDS) }
 
+  componentDidMount() {
+    const { router } = this.context
+    if (router.query.slug !== this.props.slug) {
+      router.replace(`/article/${this.props.slug}`)
+    }
+  }
+
   get isDirty() {
     const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
     const fromState = JSON.stringify(pluck(this.state, propsToCompare))
@@ -141,6 +148,9 @@ export default class Article extends Component {
             readOnly={!isEditable}
             value={title}
           />
+          {redirectedFrom && (
+            <div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
+          )}
           {isOwner &&
             <Toggle
               className="secret"
