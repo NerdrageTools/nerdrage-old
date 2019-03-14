@@ -83,7 +83,9 @@
     flex: 1;
     max-width: 100vw;
     overflow-y: auto;
-    padding: 10px;
+    > div:first-child {
+      padding: 10px;
+    }
   }
 
   &.no-tabs {

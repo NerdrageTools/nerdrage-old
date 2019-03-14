@@ -1,4 +1,5 @@
 import React from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import noop from '@/utilities/noop'
 import './TabSet.scss'
 
@@ -45,9 +46,9 @@ export default function TabSet({
           <li className="buttons">{buttons}</li>
         </ul>
       )}
-      <div className={`tab-contents ${activeTabId}`}>
+      <Scrollbars autoHide hideTracksWhenNotNeeded className={`tab-contents ${activeTabId}`} universal>
         {activeTab.contents}
-      </div>
+      </Scrollbars>
     </div>
   )
 }
