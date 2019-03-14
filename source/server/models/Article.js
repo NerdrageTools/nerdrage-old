@@ -1,3 +1,4 @@
+import cheerio from 'cheerio'
 import { html_beautify as beautify } from 'js-beautify'
 import mongoose from 'mongoose'
 import cleanUp from './Article/cleanUp'
@@ -25,6 +26,7 @@ export const ArticleSchema = new mongoose.Schema({
   data: Object,
   html: { default: '', type: String },
   lastUpdatedBy: { ref: 'User', type: ObjectIdType },
+  plainText: { default: '', select: false, type: String },
   secret: { default: false, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
   tags: [Slug],
@@ -38,10 +40,14 @@ export const ArticleSchema = new mongoose.Schema({
 })
 
 ArticleSchema.index({ campaign: 1, slug: 1 }, { unique: true })
+ArticleSchema.index({ plainText: 'text', title: 'text' })
 ArticleSchema.pre('save', function (next) {
   this.aliases = slugifyArray(this.aliases)
   this.html = beautify(cleanUp(this.html), BEAUTIFY_OPTIONS)
   this.tags = slugifyArray(this.tags)
+
+  const $ = cheerio.load(this.html, { decodeEntities: false, xmlMode: true })
+  this.plainText = $.text()
 
   mongoose.models.Article.updateMany(
     { _id: { $ne: this._id }, campaign: this.campaign },
