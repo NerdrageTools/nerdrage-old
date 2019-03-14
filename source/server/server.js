@@ -9,6 +9,7 @@ import next from 'next'
 import nocache from 'nocache'
 import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
+import SearchController from './controllers/SearchController'
 import SheetController from './controllers/SheetController'
 import UserController from './controllers/UserController'
 import ContextLoader from './middleware/ContextLoader'
@@ -47,6 +48,7 @@ app.prepare().then(async () => {
 
   server.use('/api/article', ContextLoader, nocache(), ArticleController)
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
+  server.use('/api/search', ContextLoader, nocache(), SearchController)
   server.use('/api/sheet', ContextLoader, nocache(), SheetController)
   server.use('/api/user', ContextLoader, nocache(), UserController)
 
