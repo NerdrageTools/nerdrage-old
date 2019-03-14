@@ -143,16 +143,15 @@ export default class Article extends Component {
           />
           {isOwner &&
             <Toggle
+              className="secret"
               offIcon={SecretOffIcon}
-              offIconStyle={{ color: '#cccccc' }}
               onIcon={SecretOnIcon}
-              onIconStyle={{ color: '#85b12a' }}
               onToggle={this.handleToggleSecret}
-              title="Foo"
               value={secret}
             />
           }
           <Toggle
+            className="favorite"
             offIcon={FavoriteOffIcon}
             onIcon={FavoriteOnIcon}
             onToggle={this.handleToggleFavorite}

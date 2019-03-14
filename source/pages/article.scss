@@ -23,6 +23,23 @@
       min-height: 40px;
       padding: 10px;
     }
+
+    > .toggle {
+      &.off { color: transparentize($palette-gray-medium, .5); }
+      &.secret {
+        &.on {
+          color: $palette-green; // #85b12a;
+          stroke: darken($palette-green, 30%);
+          stroke-width: 2px;
+        }
+      }
+      &.favorite {
+        &.on {
+          stroke: $palette-gold-dark;
+          stroke-width: 3px;
+        }
+      }
+    }
   }
 
   > .tab-set {
