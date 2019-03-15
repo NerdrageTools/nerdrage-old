@@ -29,15 +29,16 @@
   --palette-red:         #{$palette-red};
   --palette-white:       #{$palette-white};
 
-  --color-bg-danger:     #{$color-bg-danger};
+  --color-bg-button:     #{$color-bg-button};
   --color-bg-inverse:    #{$color-bg-inverse};
   --color-bg-modal:      #{$color-bg-modal};
   --color-bg-warning:    #{$color-bg-warning};
   --color-bg:            #{$color-bg};
-  --color-bg-button:     #{$color-bg-button};
   --color-book:          #{$color-book};
   --color-border:        #{$color-border};
   --color-combo:         #{$color-combo};
+  --color-danger-bg:     #{$color-danger-bg};
+  --color-danger-text:   #{$color-danger-text};
   --color-danger:        #{$color-danger};
   --color-highlight:     #{$color-highlight};
   --color-info:          #{$color-info};
@@ -50,6 +51,5 @@
   --color-table-bg-odds: #{$color-table-bg-odds};
   --color-text-inverse:  #{$color-text-inverse};
   --color-text:          #{$color-text};
-  --color-text-danger:   #{$color-text-danger};
   --color-warning:       #{$color-warning};
 }

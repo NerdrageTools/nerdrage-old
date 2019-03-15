@@ -46,13 +46,11 @@
       align-items: center;
       display: flex;
       flex-direction: row;
-      height: 2em;
       justify-content: flex-end;
       padding: .25em;
 
       > button, > .button {
         margin: 0 .1em;
-        padding: .25em;
       }
     }
   }
