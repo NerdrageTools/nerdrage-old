@@ -36,6 +36,7 @@ module.exports = {
     "react/jsx-closing-tag-location": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
     "react/jsx-one-expression-per-line": "off",
+    "react/no-access-state-in-setstate": "off",
     "react/no-array-index-key": "off",
     "react/no-unused-prop-types": ["error", { "skipShapeProps": true }],
     "react/jsx-wrap-multilines": ["off"],
