@@ -45,6 +45,7 @@ export default class Article extends Component {
   static defaultProps = {
     childArticles: [],
     html: '',
+    httpStatusCode: 200,
     message: '',
     title: '',
   }
@@ -83,9 +84,9 @@ export default class Article extends Component {
   get isDirty() {
     const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
     const fromState = JSON.stringify(pluck(this.state, propsToCompare))
-    const fromProps = JSON.stringify(pluck(this.state.saved, propsToCompare))
+    const fromSaved = JSON.stringify(pluck(this.state.saved, propsToCompare))
 
-    return fromState !== fromProps
+    return fromState !== fromSaved
   }
 
   handleAliasesChange = aliases => this.setState({ aliases })
@@ -99,7 +100,6 @@ export default class Article extends Component {
   handleHtmlChange = html => this.setState({ html })
   handleSave = async () => {
     const saved = await fetch(`/api/article/${this.props.slug}`, {
-      // eslint-disable-next-line react/no-access-state-in-setstate
       body: JSON.stringify(pluck(this.state, STATE_FIELDS)),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',

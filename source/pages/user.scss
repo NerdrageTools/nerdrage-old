@@ -1,0 +1,46 @@
+@import '~@/styles/palette';
+@import '~@/styles/breakpoint';
+
+.user.page {
+  padding: 1em;
+
+  > .title.row {
+    font-size: 2em;
+
+    > svg {
+      height: 2em;
+      width: 2em;
+
+      &.is-admin.on {
+        color: $palette-gold;
+        stroke: $palette-gold-dark;
+        stroke-width: 2%;
+      }
+    }
+    > .editable {
+      flex: 1;
+      font-weight: bold;
+      min-height: 50px;
+    }
+  }
+
+  > .user-info {
+    columns: 2;
+
+    .row {
+      > b { width: 150px; }
+    }
+  }
+
+  .favorites.icon {
+    color: $palette-gold;
+    stroke: $palette-gold-dark;
+    stroke-width: 3px;
+  }
+}
+
+@include breakpoint(medium) {
+  .user-page {
+    > .user-info { columns: 1; }
+  }
+}

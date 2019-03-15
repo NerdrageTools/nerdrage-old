@@ -18,7 +18,7 @@ export default class UserMenu extends Component {
   }
   renderLoggedIn = () => (
     <Fragment>
-      <Link href="/profile">
+      <Link href={`/user/${this.context.user.username}`}>
         <div className="username">
           <span>logged in as</span>
           <a href="#">{this.context.user.username}</a>

@@ -1,6 +1,8 @@
 import express from 'express'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 import User from '@/server/models/User'
+import omit from '@/utilities/omit'
+import pluck from '@/utilities/pluck'
 
 const controller = express()
 
@@ -25,14 +27,32 @@ controller.put('/', async (request, response) => {
   }
 })
 
-controller.get('/', async (request, response) => {
-  const { user } = request
-  if (!user) {
+controller.get('/:username?', async (request, response) => {
+  const { user: currentUser } = request
+  const { username } = request.params
+
+  if (username) {
+    const targetUser = await User.findOne({ username })
+    if (!targetUser) {
+      return response.status(404).json({
+        message: `Unable to locate a user with username '${username}'.`,
+      })
+    }
+    if (currentUser && currentUser.isAdmin) {
+      return response.status(200).json(targetUser)
+    }
+
+    return response.status(200).json(
+      pluck(targetUser, '_id', 'createdAt', 'isAdmin', 'lastLogin', 'username')
+    )
+  }
+
+  if (!currentUser) {
     return response.status(200).json({ anonymous: true })
   }
 
   try {
-    return response.status(200).json(user)
+    return response.status(200).json(currentUser)
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })
   }
@@ -41,11 +61,11 @@ controller.get('/', async (request, response) => {
 controller.post('/', NoAnonymous, async (request, response) => {
   const { user } = request
   try {
-    if (user.isAdmin) {
-      Object.assign(user, request.body)
-    } else {
-      Object.assign(user, { ...request.body, isAdmin: false })
+    const updates = omit(request.body, '_id', 'createdAt', 'lastLogin', 'updatedAt', 'version')
+    if (!user.isAdmin) {
+      delete updates.isAdmin
     }
+    Object.assign(user, updates)
 
     const updated = await user.save()
     Object.assign(request.session, updated.toProfile())
@@ -108,7 +128,7 @@ controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
 controller.post('/:username', NoAnonymous, async (request, response) => {
   try {
     if (request.session.username === request.params.username) {
-      return response.redirect(302, '/api/users/')
+      return response.redirect(307, '/api/user/')
     }
 
     const currentUser = request.user
