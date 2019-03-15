@@ -51,7 +51,7 @@ ArticleSchema.pre('save', function (next) {
   this.tags = slugifyArray(this.tags)
 
   const $ = cheerio.load(this.html, { decodeEntities: false, xmlMode: true })
-  this.plainText = entities.decodeHTML($.text())
+  this.plainText = entities.decodeHTML($.text().replace(/(\s\s+)|\n/g, ' '))
   this.searchKeys = computeSearchKeys(this.plainText)
 
   mongoose.models.Article.updateMany(
@@ -62,7 +62,7 @@ ArticleSchema.pre('save', function (next) {
 
 ArticleSchema.methods.render = async function () {
   const links = await renderLinks(this.html, this.campaign)
-  const includes = await transclude(links.html)
+  const includes = await transclude(links.html, this.campaign)
   const childArticles = await mongoose.models.Article
     .find({ tags: { $in: [this.slug, ...this.aliases] } })
     .select('slug title')

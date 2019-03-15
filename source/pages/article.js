@@ -65,7 +65,11 @@ export default class Article extends Component {
     return state
   }
 
-  state = { activeTab: 'read', ...pluck(this.props, STATE_FIELDS) }
+  state = {
+    activeTab: 'read',
+    ...pluck(this.props, STATE_FIELDS),
+    saved: pluck(this.props, STATE_FIELDS),
+  }
 
   componentDidMount() {
     const { slug } = this.props
@@ -79,7 +83,7 @@ export default class Article extends Component {
   get isDirty() {
     const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
     const fromState = JSON.stringify(pluck(this.state, propsToCompare))
-    const fromProps = JSON.stringify(pluck(this.props, propsToCompare))
+    const fromProps = JSON.stringify(pluck(this.state.saved, propsToCompare))
 
     return fromState !== fromProps
   }
@@ -94,12 +98,13 @@ export default class Article extends Component {
   }
   handleHtmlChange = html => this.setState({ html })
   handleSave = async () => {
-    const updated = await fetch(`/api/article/${this.props.slug}`, {
-      body: JSON.stringify(this.state),
+    const saved = await fetch(`/api/article/${this.props.slug}`, {
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      body: JSON.stringify(pluck(this.state, STATE_FIELDS)),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     }).then(r => r.json())
-    this.setState(updated)
+    this.setState({ ...saved, saved })
   }
   handleTabClicked = tab => {
     if (tab !== this.state.activeTab) {
@@ -158,7 +163,7 @@ export default class Article extends Component {
     const { favorites = [] } = this.context.user
     const aliases = this.state.aliases || this.props.aliases
     const html = this.state.html || this.props.html
-    const isFavorite = favorites.includes(`${campaign.domain}:${slug}`)
+    const isFavorite = favorites.includes(`${campaign ? campaign.domain : ''}:${slug}`)
     const tags = this.state.tags || this.props.tags
     const title = this.state.title || this.props.title
 
@@ -203,7 +208,7 @@ export default class Article extends Component {
         <TabSet
           activeTabId={activeTab}
           buttons={<>
-            {this.isDirty && <button onClick={this.handleSave}>Save</button>}
+            {this.isDirty && <button className="safe" onClick={this.handleSave}>Save</button>}
           </>}
           onTabClicked={this.handleTabClicked}
           showTabs={isEditable}
