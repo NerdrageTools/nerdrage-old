@@ -60,7 +60,11 @@ export default class Article extends Component {
   }
   static getDerivedStateFromProps(props, state) {
     if (props.slug !== state.slug) {
-      return { activeTab: 'read', ...pluck(props, STATE_FIELDS) }
+      return {
+        activeTab: 'read',
+        ...pluck(props, STATE_FIELDS),
+        title: props.title || new URLSearchParams(window.location.search).get('title') || '',
+      }
     }
 
     return state
@@ -69,7 +73,8 @@ export default class Article extends Component {
   state = {
     activeTab: 'read',
     ...pluck(this.props, STATE_FIELDS),
-    saved: pluck(this.props, STATE_FIELDS),
+    saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {},
+    title: this.props.title || this.context.router.query.title,
   }
 
   componentDidMount() {
@@ -165,6 +170,7 @@ export default class Article extends Component {
     const html = this.state.html || this.props.html
     const isFavorite = favorites.includes(`${campaign ? campaign.domain : ''}:${slug}`)
     const tags = this.state.tags || this.props.tags
+    const isNew = !this.props._id
     const title = this.state.title || this.props.title
 
     if (httpStatusCode !== 200) {
