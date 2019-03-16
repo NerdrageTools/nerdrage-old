@@ -40,14 +40,14 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheet = async (request, response) => {
-  const { domain, sheet, slug } = request
+  const { domain, isEditable, sheet, slug } = request
   if (!sheet) {
     return response.status(404).json({
       message: `Unable to find sheet '${slug}' in the ${domain} campaign.`,
     })
   }
 
-  return response.status(200).json(sheet.toJSON())
+  return response.status(200).json({ ...sheet.toJSON(), isEditable })
 }
 export const upsertSheet = async (request, response) => {
   const { body, campaign, session: { _id: userId }, slug } = request

@@ -10,6 +10,7 @@ export const SheetSchema = new mongoose.Schema({
   ownedBy: { ref: 'User', type: ObjectIdType },
   public: { default: false, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
+  title: { default: 'Unnamed Character', type: String },
 }, {
   id: false,
   timestamps: true,
