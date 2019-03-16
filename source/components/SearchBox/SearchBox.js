@@ -52,9 +52,10 @@ export default class SearchBox extends Component {
 
     return (
       <Downshift
+        id="search-box"
+        itemToString={article => (article ? article.title : '')}
         onInputValueChange={this.handleSearch}
         onSelect={this.handleSelect}
-        itemToString={article => (article ? article.title : '')}
         ref={this.downshift}
       >
         {({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
