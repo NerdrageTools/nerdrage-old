@@ -163,15 +163,10 @@ export default class Article extends Component {
     )}
   </>
   render = () => {
-    const { activeTab, redirectedFrom, secret } = this.state
+    const { activeTab, aliases, html, redirectedFrom, secret, tags, title } = this.state
     const { campaign = {}, httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
-    const aliases = this.state.aliases || this.props.aliases
-    const html = this.state.html || this.props.html
     const isFavorite = favorites.includes(`${campaign ? campaign.domain : ''}:${slug}`)
-    const tags = this.state.tags || this.props.tags
-    const isNew = !this.props._id
-    const title = this.state.title || this.props.title
 
     if (httpStatusCode !== 200) {
       return (
