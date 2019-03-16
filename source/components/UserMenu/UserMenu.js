@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React, { Component, Fragment } from 'react'
+import CreateMenu from '@/components/CreateMenu'
+import { MenuItem } from '@/components/FlyoutMenu'
 import Application from '@/contexts/Application'
 import './UserMenu.scss'
 
@@ -25,7 +27,9 @@ export default class UserMenu extends Component {
         </div>
       </Link>
       <div className="divider" />
-      <a href="#" className="logoff" onClick={this.context.logOff}>log<br/>out</a>
+      <CreateMenu>
+        <MenuItem className="logoff" onClick={this.context.logOff}>Log Out</MenuItem>
+      </CreateMenu>
     </Fragment>
   )
 
