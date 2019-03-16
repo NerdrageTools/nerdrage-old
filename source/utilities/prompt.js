@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Dialog from '@/components/Dialog'
+import './prompt.scss'
 
-export default async function prompt(text = '', title = 'Prompt') {
+export default async function prompt(text = '', { defaultValue = '', title = 'Prompt' } = {}) {
   const container = document.createElement('div')
   document.body.appendChild(container)
 
@@ -23,13 +24,25 @@ export default async function prompt(text = '', title = 'Prompt') {
     }
 
     ReactDOM.render((
-      <Dialog modal onCancel={handleCancel} onOk={handleOk} title={title}>
+      <Dialog
+        className="prompt"
+        modal
+        onCancel={handleCancel}
+        onOk={handleOk}
+        title={title}
+      >
         <div className="text">{text}</div>
         <div className="input">
-          <input onKeyDown={handleKeyDown} ref={inputBox} type="text" />
+          <input
+            defaultValue={defaultValue}
+            onKeyDown={handleKeyDown}
+            ref={inputBox}
+            type="text"
+          />
         </div>
       </Dialog>
     ), container, () => {
+      inputBox.current.select()
       inputBox.current.focus()
     })
   }).finally(() => {
