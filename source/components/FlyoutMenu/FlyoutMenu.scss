@@ -18,6 +18,17 @@
       border-radius: 5px 5px 0 0;
       border-width: 1px 1px 0 1px;
     }
+
+    > .menu-toggler:before, > .flyout-panel:before {
+      background-color: #ffffff22;
+      bottom: 0;
+      content: '';
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 
   > .menu-toggler {
@@ -25,7 +36,9 @@
     background: inherit;
     display: flex;
     justify-content: center;
+    overflow: hidden;
     padding: .5rem;
+    position: relative;
     z-index: 1;
   }
 
@@ -38,6 +51,7 @@
     flex-direction: column;
     margin-top: -1px;
     min-width: 150px;
+    overflow: hidden;
     padding: .5em;
     position: absolute;
     right: 0;
