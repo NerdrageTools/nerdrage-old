@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react'
 import CreateMenu from '@/components/CreateMenu'
 import { MenuItem } from '@/components/FlyoutMenu'
 import Application from '@/contexts/Application'
+import LogOutIcon from '@/icons/logout.svg'
 import './UserMenu.scss'
 
 export default class UserMenu extends Component {
@@ -28,7 +29,9 @@ export default class UserMenu extends Component {
       </Link>
       <div className="divider" />
       <CreateMenu>
-        <MenuItem className="logoff" onClick={this.context.logOff}>Log Out</MenuItem>
+        <MenuItem className="logoff" onClick={this.context.logOff}>
+          <LogOutIcon /> Log Out
+        </MenuItem>
       </CreateMenu>
     </Fragment>
   )

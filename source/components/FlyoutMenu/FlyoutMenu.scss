@@ -34,6 +34,8 @@
   > .menu-toggler {
     align-items: center;
     background: inherit;
+    border: 1px solid transparent;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     overflow: hidden;
@@ -63,7 +65,15 @@
       margin: .25rem 0;
     }
     .menu-item {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
       padding: .25rem;
+
+      > svg:first-child {
+        margin-right: .5rem;
+      }
 
       &.clickable {
         cursor: pointer;
