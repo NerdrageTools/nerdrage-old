@@ -20,8 +20,8 @@ export default function Dialog({
           <div className="body">{children}</div>
           <div className="buttons">
             {buttons || <>
-              <button className="ok button" onClick={onOk}>Ok</button>
-              <button className="cancel button" onClick={onCancel}>Cancel</button>
+              <button className="ok button safe" onClick={onOk}>Ok</button>
+              <button className="cancel button link" onClick={onCancel}>Cancel</button>
             </>}
           </div>
         </div>
