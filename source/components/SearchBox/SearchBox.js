@@ -48,7 +48,7 @@ export default class SearchBox extends Component {
   render() {
     const { placeholder } = this.props
     const { options } = this.state
-    const { theme } = this.context.campaign
+    const { theme } = this.context
 
     return (
       <Downshift

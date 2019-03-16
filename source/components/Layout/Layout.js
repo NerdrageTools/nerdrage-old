@@ -32,8 +32,9 @@ export default class Layout extends Component {
   }
 
   render = () => {
-    const { name, theme } = this.context.campaign
+    const { campaign, theme } = this.context
     const { size } = this.state
+    const name = campaign ? campaign.name : 'Unknown Campaign'
 
     return <>
       <Head>

@@ -8,6 +8,7 @@ $page-width: calc(100vw - #{$navigation-width});
   background: var(--color-background);
   display: flex;
   flex: 1;
+  flex-direction: column;
   height: 100vh;
   margin: 0;
   max-height: 100vh;
@@ -22,6 +23,7 @@ $page-width: calc(100vw - #{$navigation-width});
     flex-direction: row;
     flex: 1;
     height: 100%;
+    width: 100%;
 
     > .navigation {
       width: $navigation-width;
@@ -29,6 +31,9 @@ $page-width: calc(100vw - #{$navigation-width});
     > .page {
       flex: 1;
       max-height: calc(100vh - 44px);
+      width: 100%;
+    }
+    > .navigation ~ .page {
       width: $page-width;
     }
   }

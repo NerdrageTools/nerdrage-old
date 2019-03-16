@@ -1,12 +1,12 @@
 import { distanceInWordsToNow } from 'date-fns'
 import React, { Component } from 'react'
-import Alert from '@/components/Alert'
 import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import AdminIcon from '@/icons/admin.svg'
 import FavoriteIcon from '@/icons/favorite-on.svg'
+import Error from '@/pages/_error'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
@@ -20,23 +20,29 @@ export default class UserPage extends Component {
   static defaultProps = {
     httpStatusCode: 200,
     message: '',
-    user: undefined,
+    user: { anonymous: true },
   }
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
     const result = await (fetch(URI(req, `/api/user/${query.username}`), { headers }))
+    const json = await result.json()
+
     if (result.status !== 200) {
       return {
         httpStatusCode: result.status,
-        ...await result.json(),
+        ...json,
       }
     }
 
-    return { user: await result.json() }
+    return { user: json }
   }
   static getDerivedStateFromProps(props, state) {
     if (props.user.username !== state.user.username) {
-      return { user: props.user }
+      return {
+        ...state,
+        saved: pluck(props.user, UPDATABLE_FIELDS),
+        user: props.user,
+      }
     }
 
     return state
@@ -95,11 +101,7 @@ export default class UserPage extends Component {
     const isEditable = user === currentUser || currentUser.isAdmin
 
     if (httpStatusCode !== 200) {
-      return (
-        <div className="article page">
-          <Alert type="error">{message}</Alert>
-        </div>
-      )
+      return <Error statusCode={httpStatusCode} message={message} />
     }
 
     return (
@@ -119,7 +121,7 @@ export default class UserPage extends Component {
               offIcon={AdminIcon}
               onIcon={AdminIcon}
               value={user.isAdmin}
-            />
+              />
             : (user.isAdmin && <AdminIcon className="is-admin on" />)
           }
           {isEditable && this.isDirty && (
@@ -148,10 +150,14 @@ export default class UserPage extends Component {
         <hr />
         {user.favorites && (
           <ArticleChildren
-            articles={user.favorites.map(favorite => ({
-              slug: favorite.split(':').pop(),
-              title: favorite,
-            }))}
+            articles={user.favorites.map(favorite => {
+              const [domain, slug] = favorite.split(':')
+              return {
+                domain,
+                slug,
+                title: slug,
+              }
+            })}
             caption="Favorites"
             icon={<FavoriteIcon className="favorites icon" />}
           />

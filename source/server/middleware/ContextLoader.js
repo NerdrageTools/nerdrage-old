@@ -16,5 +16,6 @@ export default async (request, response, next) => {
     request.session = user.toProfile()
     request.session.lastRequest = (new Date()).getMilliseconds()
   }
-  next()
+
+  return next()
 }
