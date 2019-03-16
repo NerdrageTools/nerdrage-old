@@ -43,7 +43,7 @@ controller.get('/:username?', async (request, response) => {
     }
 
     return response.status(200).json(
-      pluck(targetUser, '_id', 'createdAt', 'isAdmin', 'lastLogin', 'username')
+      pluck(targetUser.toJSON(), '_id', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
     )
   }
 

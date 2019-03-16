@@ -9,7 +9,7 @@ controller.get('/', async (request, response) => {
     .populate('editors players owners', 'name username')
     .exec()
 
-  return response.status(200).json(campaign || {})
+  return response.status(200).json(campaign)
 })
 
 controller.put('/', async (request, response) => {

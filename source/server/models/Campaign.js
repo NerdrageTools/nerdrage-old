@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Slug from './Slug'
+import defaultTheme from '@/data/defaultTheme'
 
 const { ObjectId } = mongoose.Types.ObjectId
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
@@ -29,13 +30,13 @@ const CampaignSchema = new mongoose.Schema({
   players: [{ ref: 'User', type: ObjectIdType }],
   private: { default: false, type: Boolean },
   theme: {
-    default: {},
+    default: defaultTheme,
     type: {
-      background: { ...ColorCode, default: '#fff' },
-      fontFamily: { default: 'Ubuntu', type: String },
-      foreground: { ...ColorCode, default: '#333' },
-      primary: { ...ColorCode, default: '#42afe3' },
-      secondary: { ...ColorCode, default: '#fff' },
+      background: { ...ColorCode, default: defaultTheme.background },
+      fontFamily: { default: defaultTheme.fontFamily, type: String },
+      foreground: { ...ColorCode, default: defaultTheme.foreground },
+      primary: { ...ColorCode, default: defaultTheme.primary },
+      secondary: { ...ColorCode, default: defaultTheme.secondary },
     },
   },
 }, {

@@ -3,6 +3,8 @@ import App, { Container } from 'next/app'
 import React from 'react'
 import Layout from '@/components/Layout'
 import Application from '@/contexts/Application'
+import defaultTheme from '@/data/defaultTheme'
+import Error from '@/pages/_error'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import '@/styles/all.scss'
@@ -12,13 +14,27 @@ export default class Wiki extends App {
     const { Component, ctx: { req } } = context
     const headers = pluck(req && req.headers, 'cookie')
     const props = await App.getInitialProps(context)
-    const campaign = (req && req.campaign) || await fetch(URI(req, '/api/campaign')).then(r => r.json())
-    const user = (req && req.user) || await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
+    const campaign = await fetch(URI(req, '/api/campaign')).then(r => r.json())
+    const user = await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
+    let host
+
+    /* eslint-disable prefer-destructuring */
+    if (process.browser) {
+      host = window.location.host
+    } else {
+      host = req.get('host')
+    }
+    /* eslint-enable prefer-destructuring */
+
+    const domain = host.split('.').shift()
+    const rootUrl = host.slice(domain.length + 1)
 
     return {
       ...props,
       campaign,
       Component,
+      domain,
+      rootUrl,
       user,
     }
   }
@@ -36,22 +52,33 @@ export default class Wiki extends App {
   setUser = user => this.setState({ user })
 
   render = () => {
-    const { campaign, Component, pageProps, router } = this.props // eslint-disable-line
+    const { campaign, Component, domain, pageProps, rootUrl, router } = this.props
     const { user } = this.state
-    const { theme } = campaign
+    const theme = campaign ? campaign.theme : defaultTheme
     const context = {
       campaign,
+      domain,
       logOff: this.logOff,
+      rootUrl,
       router,
       setUser: this.setUser,
+      theme,
       user,
     }
+
+    const campaignError = !campaign && !['/user', '/login'].includes(router.pathname)
 
     return (
       <Application.Provider value={context}>
         <Container className="wiki">
           <Layout>
-            <Component {...pageProps} />
+            {campaignError
+              ? <Error
+                  statusCode={404}
+                  message="This campaign does not exist."
+                />
+              : <Component {...pageProps} />
+            }
           </Layout>
           <style>{`
             :root {
