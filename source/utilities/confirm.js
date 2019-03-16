@@ -2,24 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Dialog from '@/components/Dialog'
 
-export default async function prompt(text = '', title = 'Prompt') {
+export default async function confirm(text = '', title = 'Prompt') {
   const container = document.createElement('div')
   document.body.appendChild(container)
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const handleNo = () => resolve(false)
     const handleYes = () => resolve(true)
-
-    const handleKeyDown = event => {
-      switch (event.key) {
-        case 'Enter':
-          return handleYes()
-        case 'Escape':
-          return handleNo()
-        default:
-          return undefined
-      }
-    }
 
     ReactDOM.render((
       <Dialog
