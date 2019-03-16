@@ -9,6 +9,7 @@ export const permissions = (...required) => async (request, response, next) => {
     .populate('ownedBy', 'name username')
     .exec()
 
+  const isParticipant = campaign.isParticipant(userId) || isAdmin
   const isOwner = (sheet && sheet.ownedBy.equals(userId)) || campaign.isOwnedBy(userId)
   const isEditable = isOwner || campaign.isOwnedBy(userId) || isAdmin
   const isVisible = (campaign.isVisibleTo(userId) && sheet && sheet.public) || isOwner || isAdmin
@@ -32,6 +33,8 @@ export const permissions = (...required) => async (request, response, next) => {
   Object.assign(request, {
     campaign,
     isEditable,
+    isOwner,
+    isParticipant,
     isVisible,
     sheet,
     slug,
@@ -40,18 +43,21 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheet = async (request, response) => {
-  const { domain, isEditable, sheet, slug } = request
+  const { domain, isEditable, isOwner, isParticipant, sheet, slug } = request
   if (!sheet) {
     return response.status(404).json({
+      isEditable: isParticipant,
+      isOwner,
       message: `Unable to find sheet '${slug}' in the ${domain} campaign.`,
     })
   }
 
-  return response.status(200).json({ ...sheet.toJSON(), isEditable })
+  return response.status(200).json({ ...sheet.toJSON(), isEditable, isOwner, isParticipant })
 }
 export const upsertSheet = async (request, response) => {
-  const { body, campaign, session: { _id: userId }, slug } = request
+  const { body, campaign, isEditable, isOwner, session: { _id: userId }, slug } = request
   let { sheet } = request
+  const creating = !sheet
 
   const updates = {
     ...omit(body, '_id', 'slug'),
@@ -59,14 +65,14 @@ export const upsertSheet = async (request, response) => {
     slug,
   }
 
-  if (sheet) {
-    sheet.set(updates)
-  } else {
+  if (creating) {
     sheet = new Sheet({
       ...updates,
       campaign: campaign._id,
       ownedBy: userId,
     })
+  } else {
+    sheet.set(updates)
   }
 
   const { _id } = await sheet.save()
@@ -74,7 +80,11 @@ export const upsertSheet = async (request, response) => {
     .populate('campaign', 'domain name')
     .populate('ownedBy', 'name username')
     .exec()
-  return response.status(200).json(saved.toJSON())
+  return response.status(200).json({
+    ...saved.toJSON(),
+    isEditable: creating ? true : isEditable,
+    isOwner: creating ? true : isOwner,
+  })
 }
 export const deleteSheet = async (request, response) => {
   const { campaign, slug } = request

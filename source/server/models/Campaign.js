@@ -65,8 +65,17 @@ CampaignSchema.methods.isVisibleTo = function (userId) {
 
   return Boolean(
     this.owners.some(matches)
-      || this.editors.some(matches)
-      || this.players.some(matches)
+    || this.editors.some(matches)
+    || this.players.some(matches)
+  )
+}
+
+CampaignSchema.methods.isParticipant = function (userId) {
+  const matches = matchObjectId(userId)
+  return Boolean(
+    this.owners.some(matches)
+    || this.editors.some(matches)
+    || this.players.some(matches)
   )
 }
 

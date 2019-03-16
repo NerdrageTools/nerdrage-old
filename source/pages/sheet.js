@@ -4,6 +4,7 @@ import { CharacterModel, LayoutModel, Sheet as SfSheet } from 'sheetforge'
 import Editable from '@/components/Editable'
 import Application from '@/contexts/Application'
 import defaultLayout from '@/data/defaultSheetLayout'
+import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import 'sheetforge/build/sheetforge.css'
@@ -21,27 +22,20 @@ export default class Sheet extends Component {
     children: [],
     data: {},
     layout: defaultLayout,
-    title: 'Unnamed Character',
+    title: '',
   }
 
   state = {
-    data: this.props.data,
-    layout: this.props.layout,
-    saved: {
-      data: this.props.data,
-      layout: this.props.layout,
-      title: this.props.title || this.context.router.query.title,
-    },
-    title: this.props.title || this.context.router.query.title,
+    ...pluck(this.props, '_id', 'data', 'layout', 'isEditable', 'isOwner'),
+    saved: pluck(this.props, 'data', 'layout', 'title'),
+    title: this.props.title || this.context.router.query.title || 'Unnamed Character',
   }
 
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
-    const result = await fetch(URI(req, `/api/sheet/${query.slug}`), { headers })
-    if (result.status !== 200) {
-      return Promise.resolve({ statusCode: result.status })
-    }
-    return result.json()
+    const response = await fetch(URI(req, `/api/sheet/${query.slug}`), { headers })
+    const json = await response.json()
+    return { statusCode: response.status, ...json }
   }
 
   get isDirty() {
@@ -54,6 +48,15 @@ export default class Sheet extends Component {
   handleChange = (data, layout) => {
     this.setState({ data, layout })
   }
+  handleDelete = async () => {
+    if (await confirm('Are you sure you want to permanently delete this sheet?')) {
+      const { slug } = this.context.router.query
+      const response = await fetch(`/api/sheet/${slug}`, { method: 'DELETE' })
+      if (response.status === 204) {
+        this.context.router.back()
+      }
+    }
+  }
   handleSave = async () => {
     const { slug } = this.context.router.query
     const response = await fetch(`/api/sheet/${slug}`, {
@@ -61,18 +64,23 @@ export default class Sheet extends Component {
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     })
+    const json = await response.json()
     if (response.status === 200) {
-      const sheet = await response.json()
-      return this.setState({ ...sheet, saved: pluck(sheet, UPDATABLE_FIELDS) })
+      return this.setState({
+        ...json,
+        saved: {
+          ...this.state.saved,
+          ...pluck(json, UPDATABLE_FIELDS),
+        },
+      })
     }
 
-    return this.setState(await response.json())
+    return this.setState(json)
   }
   handleTitleChange = title => this.setState({ title })
 
   render = () => {
-    const { data, layout, title } = this.state
-    const isEditable = this.props.isEditable || !this.props._id
+    const { data, isEditable, isOwner, layout, title } = this.state
 
     return (
       <div className="sheet page">
@@ -83,8 +91,11 @@ export default class Sheet extends Component {
             readOnly={!isEditable}
             value={title}
           />
-          {this.isDirty && (
+          {isEditable && this.isDirty && (
             <button className="save safe" onClick={this.handleSave}>Save</button>
+          )}
+          {isOwner && (
+            <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}
         </div>
         <div className="sheet-container">
@@ -92,6 +103,7 @@ export default class Sheet extends Component {
             character={CharacterModel.create(data)}
             layout={LayoutModel.create(layout)}
             onChange={this.handleChange}
+            readOnly={!isEditable}
           />
         </div>
       </div>
