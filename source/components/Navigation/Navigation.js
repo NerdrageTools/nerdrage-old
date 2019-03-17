@@ -13,14 +13,14 @@ export default class Navigation extends Component {
     const { campaign } = this.context
     const { asPath } = this.context.router
 
-    if (!campaign) {
-      return null
-    }
+    if (!campaign) return null
 
     return (
       <div className="navigation">
-        {campaign.navigation.map(({ slug, text }, key) => (
-          <ArticleLink key={key} slug={slug} active={asPath === `/article/${slug}`}>{text}</ArticleLink>
+        {campaign.navigation.map(({ slug, title }, key) => (
+          <ArticleLink {...{ key, slug }} active={asPath === `/article/${slug}`}>
+            {title}
+          </ArticleLink>
         ))}
       </div>
     )
