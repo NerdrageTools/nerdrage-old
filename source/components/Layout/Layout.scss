@@ -75,6 +75,7 @@ $page-width: calc(100vw - #{$navigation-width});
         border-bottom-color: var(--color-background);
         box-shadow: 3px 10px 10px #00000055;
         color: var(--color-primary);
+        margin-bottom: -6px;
       }
       .content > .navigation {
         bottom: 0;
@@ -83,6 +84,7 @@ $page-width: calc(100vw - #{$navigation-width});
         position: absolute;
         top: 0;
         width: 85%;
+        z-index: 5;
       }
     }
 

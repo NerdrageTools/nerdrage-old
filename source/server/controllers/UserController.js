@@ -3,6 +3,7 @@ import NoAnonymous from '@/server/middleware/NoAnonymous'
 import User from '@/server/models/User'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
+import Sheet from '@/server/models/Sheet'
 
 const controller = express()
 
@@ -51,8 +52,15 @@ controller.get('/:username?', async (request, response) => {
     return response.status(200).json({ anonymous: true })
   }
 
+  const sheets = await Sheet.find({ ownedBy: currentUser._id })
+    .populate('campaign', 'domain name')
+    .exec()
+
   try {
-    return response.status(200).json(currentUser)
+    return response.status(200).json({
+      ...currentUser.toJSON(),
+      sheets,
+    })
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })
   }
