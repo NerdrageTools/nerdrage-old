@@ -1,10 +1,12 @@
 import express from 'express'
 import Campaign from '../models/Campaign'
+import defaultTheme from '@/data/defaultTheme'
+import NoAnonymous from '@/server/middleware/NoAnonymous'
 
 const controller = express()
 
-controller.get('/', async (request, response) => {
-  const { domain } = request
+controller.get('/:domain?', async (request, response) => {
+  const domain = request.params.domain || request.domain
   const campaign = await Campaign.findOne({ domain })
     .populate('editors players owners', 'name username')
     .exec()
@@ -12,22 +14,29 @@ controller.get('/', async (request, response) => {
   return response.status(200).json(campaign)
 })
 
-controller.put('/', async (request, response) => {
-  const userId = request.session._id
+controller.put('/:domain?', NoAnonymous, async (request, response) => {
+  const userId = request.user._id
+  const domain = request.params.domain || request.domain
 
   try {
     const campaign = await new Campaign({
       ...request.body,
+      domain,
+      // eslint-disable-next-line sort-keys
       createdBy: userId,
       editors: [userId],
       owners: [userId],
+      theme: {
+        ...defaultTheme,
+        ...(request.body.theme || {}),
+      },
     }).save()
     return response.status(201).send(campaign)
   } catch (error) {
     switch (error.code) {
       case 11000:
         return response.status(409).send({
-          message: `Domain '${request.body.domain}' is already in use.`,
+          message: `Domain '${domain}' is already in use.`,
         })
       default:
         console.error(`Error in PUT /api/campaigns: ${error}`) // eslint-disable-line
