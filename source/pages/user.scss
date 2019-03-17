@@ -2,6 +2,7 @@
 @import '~@/styles/breakpoint';
 
 .user.page {
+  flex-direction: column;
   padding: 1em;
 
   > .title.row {
