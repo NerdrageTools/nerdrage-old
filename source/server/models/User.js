@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     ],
   },
   username: {
-    match: [/^[a-z0-9_-]{1,}$/, 'Invalid Username: only lowercase letters/numbers, _ and -'],
+    match: [/^[a-z0-9_-]{4,}$/, 'Invalid Username: only lowercase letters/numbers, _ and -'],
     required: true,
     trim: true,
     type: String,
