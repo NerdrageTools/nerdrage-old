@@ -59,7 +59,7 @@ export default class SignupPage extends Component {
   handleValidated = () => {
     let valid = true;
 
-    ['email', 'name', 'password', 'passwordConfirm', 'username'].forEach(key => {
+    ['email', 'password', 'passwordConfirm', 'username'].forEach(key => {
       const el = this[key].current
       if (!el.value || el.matches(':invalid, .invalid')) {
         valid = false
