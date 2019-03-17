@@ -1,6 +1,7 @@
 import express from 'express'
 import Campaign from '../models/Campaign'
 import defaultTheme from '@/data/defaultTheme'
+import Campaign404 from '@/server/errors/Campaign404'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 
 const controller = express()
@@ -26,6 +27,8 @@ controller.put('/:domain?', NoAnonymous, async (request, response) => {
       createdBy: userId,
       editors: [userId],
       owners: [userId],
+      // eslint-disable-next-line sort-keys
+      navigation: request.body.navigation || [{ slug: 'home', title: 'Home' }],
       theme: {
         ...defaultTheme,
         ...(request.body.theme || {}),
@@ -52,6 +55,8 @@ controller.post('/:domain?', async (request, response) => {
     const updates = { ...request.body }
     const domain = request.params.domain || request.domain
     const campaign = await Campaign.findOne({ domain })
+    if (!campaign) return Campaign404({ domain }, response)
+
     const userId = request.session._id
 
     if (!campaign.isEditableBy(request.session._id)) {
