@@ -1,0 +1,38 @@
+@import './page';
+
+.signup.page {
+  > .container {
+    background-color: var(--color-primary);
+    border-radius: 1em;
+    border: 2px solid var(--color-secondary);
+    box-shadow: 3px 3px 3px #ccc;
+    color: var(--color-secondary);
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 2em;
+    width: 250px;
+
+    > .buttons {
+      display: flex;
+      flex-direction: row;
+      padding: .25rem;
+      justify-content: flex-end;
+    }
+  }
+
+  .validation-message {
+    display: none;
+    font-size: .6rem;
+    margin-bottom: .5rem;
+    text-align: center;
+  }
+
+  input:invalid, input.invalid {
+    background-color: lighten(pink, 5%);
+
+    + .validation-message {
+      display: inline-block;
+    }
+  }
+}
