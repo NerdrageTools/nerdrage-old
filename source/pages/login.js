@@ -41,7 +41,7 @@ export default class LoginPage extends Component {
   renderLoggedIn = () => <>
     <p>You are currently logged in as user <b>{this.context.user.username}</b>.</p>
     <div className="buttons">
-      <button className="login" onClick={this.context.logOff}>Log Off</button>
+      <button className="link" onClick={this.context.logOff}>Log Off</button>
     </div>
   </>
 
