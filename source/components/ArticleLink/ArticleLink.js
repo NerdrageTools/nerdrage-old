@@ -16,7 +16,7 @@ class ArticleLink extends Component {
 
     if (domain && domain !== currentDomain) {
       const href = `//${domain}.${rootUrl}/article/${slug}`
-      return <a {...linkProps} href={href}>{children}</a>
+      return <a {...linkProps} href={href}>{children} ({domain})</a>
     }
 
     return (
