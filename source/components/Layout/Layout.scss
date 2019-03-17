@@ -18,15 +18,34 @@ $page-width: calc(100vw - #{$navigation-width});
   padding: 0;
   width: 100vw;
 
+  &.small {
+    font-size: 10pt;
+  }
+
+  > .header {
+    .navigation.toggle {
+      background: inherit;
+      border-bottom-width: 2px;
+      border: 1px solid transparent;
+      color: inherit;
+      cursor: pointer;
+      display: none;
+      margin-bottom: -4px;
+      margin-left: .5rem;
+      padding: .5rem;
+    }
+  }
   > .content {
     display: flex;
     flex-direction: row;
     flex: 1;
+    position: relative;
     height: 100%;
     width: 100%;
 
     > .navigation {
       width: $navigation-width;
+      z-index: 1;
     }
     > .page {
       flex: 1;
@@ -35,6 +54,40 @@ $page-width: calc(100vw - #{$navigation-width});
     }
     > .navigation ~ .page {
       width: $page-width;
+    }
+  }
+
+  &.small {
+    > .header {
+      > .navigation.toggle {
+        display: flex;
+      }
+    }
+
+    &.collapse-navigation {
+      > .content > .navigation {
+        display: none;
+      }
+    }
+    &.expand-navigation {
+      > .header > .navigation.toggle {
+        background: var(--color-background);
+        border-bottom-color: var(--color-background);
+        box-shadow: 3px 10px 10px #00000055;
+        color: var(--color-primary);
+      }
+      .content > .navigation {
+        bottom: 0;
+        box-shadow: 3px 10px 10px #00000055;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 85%;
+      }
+    }
+
+    button {
+      font-size: 10pt;
     }
   }
 }

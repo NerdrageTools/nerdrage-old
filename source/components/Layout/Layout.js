@@ -10,6 +10,7 @@ export default class Layout extends Component {
   static contextType = Application
 
   state = {
+    expandNavigation: false,
     size: 'large',
   }
 
@@ -31,10 +32,19 @@ export default class Layout extends Component {
     window.removeEventListener('resize', this.handleWindowResize)
   }
 
+  handleToggleNavigation = () => {
+    this.setState({ expandNavigation: !this.state.expandNavigation })
+  }
+
   render = () => {
     const { campaign, theme } = this.context
-    const { size } = this.state
+    const { expandNavigation, size } = this.state
     const name = campaign ? campaign.name : 'Unknown Campaign'
+    const classNames = [
+      'wiki layout',
+      size,
+      expandNavigation ? 'expand-navigation' : 'collapse-navigation'
+    ].join(' ')
 
     return <>
       <Head>
@@ -46,10 +56,10 @@ export default class Layout extends Component {
           rel="stylesheet"
         />
       </Head>
-      <div className={`wiki layout ${size}`}>
-        <Header />
+      <div className={classNames}>
+        <Header onNavigationIconClick={this.handleToggleNavigation} />
         <div className="content">
-          <Navigation />
+          {<Navigation />}
           {this.props.children}
         </div>
       </div>

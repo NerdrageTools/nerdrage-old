@@ -38,6 +38,15 @@
     .nerd { color: #000; }
     .rage { color: #f00; }
   }
+  > .navigation.toggle { order: 0; }
+  > .search-box {
+    order: 1;
+
+    &:focus-within {
+      ~ * { display: none; }
+    }
+  }
+  > .user-menu { order: 2; }
 }
 
 .layout.small .header > .logo {

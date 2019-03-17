@@ -39,8 +39,8 @@
   }
 }
 
-@include breakpoint(medium) {
-  .user-page {
-    > .user-info { columns: 1; }
+.layout.small, .layout.medium {
+  .user.page {
+    .user-info { columns: 1; }
   }
 }
