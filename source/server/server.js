@@ -12,6 +12,7 @@ import CampaignController from './controllers/CampaignController'
 import SearchController from './controllers/SearchController'
 import SheetController from './controllers/SheetController'
 import UserController from './controllers/UserController'
+import Campaign404 from './errors/Campaign404'
 import ContextLoader from './middleware/ContextLoader'
 import routes from './routes'
 import './models'
@@ -46,10 +47,10 @@ app.prepare().then(async () => {
     response.status(200).sendFile(`${__dirname}/favicon.ico`)
   })
 
-  server.use('/api/article', ContextLoader, nocache(), ArticleController)
+  server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
   server.use('/api/search', ContextLoader, nocache(), SearchController)
-  server.use('/api/sheet', ContextLoader, nocache(), SheetController)
+  server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
   server.use('/api/user', ContextLoader, nocache(), UserController)
 
   server.get('/', (_, response) => {
