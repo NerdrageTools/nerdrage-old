@@ -11,7 +11,7 @@ controller.put('/', async (request, response) => {
     const user = new User({
       ...request.body,
       isAdmin: false,
-      lastLogin: undefined,
+      lastLogin: Date.now(),
     })
     const profile = (await user.save()).toProfile()
     request.session = profile

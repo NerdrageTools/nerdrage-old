@@ -60,7 +60,7 @@ export default class LoginPage extends Component {
       onKeyPress={this.handleKeyPress}
     />
     <div className="buttons">
-      <button className="login" onClick={this.handleSubmit}>Submit</button>
+      <button className="safe" onClick={this.handleSubmit}>Submit</button>
     </div>
   </>
 

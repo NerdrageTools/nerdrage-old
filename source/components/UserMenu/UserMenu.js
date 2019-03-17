@@ -13,11 +13,15 @@ export default class UserMenu extends Component {
     const { asPath, query } = this.context.router
     const redirectTo = query.redirectTo || asPath
 
-    return (
+    return <>
       <Link href={`/login?redirectTo=${redirectTo}`}>
         <a href="#" className="logon">Log In</a>
       </Link>
-    )
+      <div className="divider" />
+      <Link href="/signup">
+        <a href="#" className="signup">Sign Up</a>
+      </Link>
+    </>
   }
   renderLoggedIn = () => {
     const MenuType = this.context.campaign ? CreateMenu : FlyoutMenu
