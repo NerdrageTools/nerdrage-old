@@ -13,8 +13,12 @@ export default async (request, response, next) => {
   if (request.session.username) {
     const user = await User.findOne({ username: request.session.username })
     request.user = user
-    request.session = user.toProfile()
-    request.session.lastRequest = (new Date()).getMilliseconds()
+    if (user) {
+      request.session = user.toProfile()
+      request.session.lastRequest = (new Date()).getMilliseconds()
+    } else {
+      request.session = null
+    }
   }
 
   return next()
