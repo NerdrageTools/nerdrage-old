@@ -9,19 +9,38 @@ export default class Navigation extends Component {
     items: [],
   }
 
+  renderList = (list, title) => list.length && <>
+    <b>{title}</b>
+    <ul className="favorites">
+      {list.map(({ domain, slug, title: linkTitle }, key) => (
+        <ArticleLink
+          {...{ key, slug }}
+          active={this.context.domain === domain && this.context.router.asPath === `/article/${slug}`}
+        >
+          {linkTitle} {domain && `(${domain})`}
+        </ArticleLink>
+      ))}
+    </ul>
+  </>
+
   render = () => {
-    const { campaign } = this.context
-    const { asPath } = this.context.router
+    const { campaign, user } = this.context
+    const favorites = ((user && user.favorites) || []).map(favorite => {
+      const [domain, slug] = favorite.split(':')
+      return { domain, slug, title: slug }
+    })
+    const sheets = ((user && user.sheets) || []).map(sheet => {
+      const { campaign: { domain }, slug, title } = sheet
+      return { domain, slug, title }
+    })
 
     if (!campaign) return null
 
     return (
       <div className="navigation">
-        {campaign.navigation.map(({ slug, title }, key) => (
-          <ArticleLink {...{ key, slug }} active={asPath === `/article/${slug}`}>
-            {title}
-          </ArticleLink>
-        ))}
+        {this.renderList(campaign.navigation, 'Campaign')}
+        {this.renderList(favorites, 'My Favorites')}
+        {this.renderList(sheets, 'My Sheets')}
       </div>
     )
   }

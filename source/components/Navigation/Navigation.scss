@@ -9,4 +9,11 @@
   flex-direction: column;
   overflow: auto;
   padding: 5px;
+
+  > ul {
+    list-style: none;
+    margin: .25rem;
+    padding: .25rem;
+    padding-left: 1rem;
+  }
 }
