@@ -9,7 +9,7 @@ export default class Navigation extends Component {
     items: [],
   }
 
-  renderList = (list, title) => list.length && <>
+  renderList = (list, title) => Boolean(list.length) && <>
     <b>{title}</b>
     <ul className="favorites">
       {list.map(({ domain, slug, title: linkTitle }, key) => (
