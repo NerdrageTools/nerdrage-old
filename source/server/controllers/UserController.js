@@ -47,14 +47,15 @@ const getFavorites = async user => {
   const articles = await Article.find({ slug: slugs }, { campaign: 1, slug: 1, title: 1 })
 
   return map.map(favorite => {
-    const campaign = campaigns.find(c => c.domain === favorite.domain) || { _id: null }
+    const campaign = campaigns.find(c => c.domain === favorite.domain)
+      || { _id: null, domain: 'www', title: 'Nerdrage' }
     const article = articles.find(a => a.slug === favorite.slug && a.campaign === campaign._id)
       || articles.find(a => a.slug === favorite.slug)
       || {}
 
     return {
-      ...favorite,
-      campaignTitle: campaign.title || favorite.domain,
+      campaign,
+      slug: favorite.slug,
       title: article.title || favorite.slug,
     }
   })
