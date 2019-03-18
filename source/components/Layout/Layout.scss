@@ -18,10 +18,6 @@ $page-width: calc(100vw - #{$navigation-width});
   padding: 0;
   width: 100vw;
 
-  &.small {
-    font-size: 10pt;
-  }
-
   > .header {
     .navigation.toggle {
       background: inherit;
@@ -58,7 +54,14 @@ $page-width: calc(100vw - #{$navigation-width});
   }
 
   &.small {
+    font-size: 10pt;
+
     > .header {
+      > .logo {
+        min-width: auto;
+
+        > .nerd, > .rage { display: none; }
+      }
       > .navigation.toggle {
         display: flex;
       }
@@ -94,8 +97,13 @@ $page-width: calc(100vw - #{$navigation-width});
   }
 
   &.no-campaign {
-    > .header > .navigation.toggle {
-      display: none;
+    > .header {
+      justify-content: flex-end;
+
+      > .logo { flex: 1; }
+      > .navigation.toggle, > .search-box {
+        display: none;
+      }
     }
   }
 }

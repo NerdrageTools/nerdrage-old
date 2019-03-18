@@ -66,12 +66,12 @@ export default class Wiki extends App {
       user,
     }
 
-    const campaignError = !campaign && !['/user', '/login'].includes(router.pathname)
+    const campaignError = !campaign && !['/user', '/login', '/signup'].includes(router.pathname)
 
     return (
       <Application.Provider value={context}>
         <Container>
-          <Layout className={campaignError ? 'no-campaign' : ''}>
+          <Layout className={!campaign ? 'no-campaign' : ''}>
             {campaignError
               ? <Error
                   statusCode={404}
