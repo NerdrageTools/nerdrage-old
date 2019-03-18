@@ -54,7 +54,7 @@ export default class Wiki extends App {
   render = () => {
     const { campaign, Component, domain, pageProps, rootUrl, router } = this.props
     const { user } = this.state
-    const theme = campaign ? campaign.theme : defaultTheme
+    const theme = (campaign && campaign.theme) || defaultTheme
     const context = {
       campaign,
       domain,

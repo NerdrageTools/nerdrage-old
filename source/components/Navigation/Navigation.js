@@ -9,16 +9,16 @@ export default class Navigation extends Component {
     items: [],
   }
 
-  renderList = (list, title, type = 'article') => Boolean(list.length) && <>
-    <b>{title}</b>
+  renderList = (list = [], listTitle = '', type = 'article') => Boolean(list.length) && <>
+    <b>{listTitle}</b>
     <ul className="favorites">
       {list.map(({ domain, slug, title: linkTitle }, key) => (
-        <li>
+        <li key={key}>
           <ArticleLink
-            {...{ key, slug, type }}
+            {...{ domain, slug, type }}
             active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
           >
-            {linkTitle} {domain && `(${domain})`}
+            {linkTitle} {domain && type !== 'campaign' && `(${domain})`}
           </ArticleLink>
         </li>
       ))}
@@ -28,7 +28,7 @@ export default class Navigation extends Component {
   render = () => {
     const { campaign, user } = this.context
     const campaigns = ((user && user.campaigns) || []).map(({ domain, name }) => ({
-      slug: domain, title: name,
+      domain, title: name,
     }))
     const favorites = ((user && user.favorites) || []).map(favorite => {
       const [domain, slug] = favorite.split(':')
