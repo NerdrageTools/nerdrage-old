@@ -43,7 +43,7 @@ export default class Navigation extends Component {
 
     return (
       <div className="navigation">
-        {this.renderList(campaign.navigation, 'Campaign')}
+        {this.renderList(campaign.navigation, campaign.name)}
         {this.renderList(campaigns, 'My Campaigns', 'campaign')}
         {this.renderList(favorites, 'My Favorites')}
         {this.renderList(sheets, 'My Sheets', 'sheet')}
