@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import { CharacterModel, LayoutModel, Sheet as SfSheet } from 'sheetforge'
 import Editable from '@/components/Editable'
 import Application from '@/contexts/Application'
@@ -98,14 +99,14 @@ export default class Sheet extends Component {
             <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}
         </div>
-        <div className="sheet-container">
+        <Scrollbars className="sheet-container" autoHide universal>
           <SfSheet
             character={CharacterModel.create(data)}
             layout={LayoutModel.create(layout)}
             onChange={this.handleChange}
             readOnly={!isEditable}
           />
-        </div>
+        </Scrollbars>
       </div>
     )
   }

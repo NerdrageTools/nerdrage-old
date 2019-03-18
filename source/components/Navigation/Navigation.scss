@@ -10,15 +10,19 @@
   overflow: auto;
   padding: 5px;
 
-  > ul {
-    list-style: none;
-    margin: .25rem;
-    padding: .25rem;
-    margin-bottom: .5rem;
-    padding-left: .75rem;
+  > div > .content {
+    padding: 5px;
 
-    > li {
-      padding: .1rem;
+    > ul {
+      list-style: none;
+      margin: .25rem;
+      padding: .25rem;
+      margin-bottom: .5rem;
+      padding-left: .75rem;
+
+      > li {
+        padding: .1rem;
+      }
     }
   }
 }

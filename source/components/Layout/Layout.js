@@ -14,6 +14,8 @@ export default class Layout extends Component {
     size: 'large',
   }
 
+  navigation = React.createRef()
+
   handleWindowResize = debounce(() => {
     let size = 'large'
     if (window.matchMedia('(min-width: 551px) and (max-width: 979px)').matches) {
@@ -24,16 +26,23 @@ export default class Layout extends Component {
     if (size !== this.state.size) this.setState({ size })
   }, 250)
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.handleWindowResize()
     window.addEventListener('resize', this.handleWindowResize)
+    document.addEventListener('mousedown', this.handleOutsideNavClick)
   }
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleWindowResize)
+    document.removeEventListener('mousedown', this.handleOutsideNavClick)
   }
 
-  handleNavigationItemClicked = () => {
+  collapseNavigation = () => {
     this.setState({ expandNavigation: false })
+  }
+  handleOutsideNavClick = ({ target }) => {
+    if (this.state.expandNavigation && !this.navigation.current.contains(target)) {
+      this.collapseNavigation()
+    }
   }
   handleToggleNavigation = () => {
     this.setState({ expandNavigation: !this.state.expandNavigation })
@@ -64,7 +73,7 @@ export default class Layout extends Component {
       <div className={classNames}>
         <Header onNavigationIconClick={this.handleToggleNavigation} />
         <div className="content">
-          <Navigation onItemClick={this.handleNavigationItemClicked} />
+          <Navigation onItemClick={this.collapseNavigation} wrapperRef={this.navigation} />
           {this.props.children}
         </div>
       </div>
