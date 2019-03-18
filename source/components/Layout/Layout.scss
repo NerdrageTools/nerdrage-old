@@ -41,6 +41,7 @@ $page-width: calc(100vw - #{$navigation-width});
 
     > .navigation {
       max-height: calc(100vh - 40px);
+      max-width: $navigation-width;
       width: $navigation-width;
       z-index: 1;
     }
@@ -77,13 +78,15 @@ $page-width: calc(100vw - #{$navigation-width});
       > .header > .navigation.toggle {
         background: var(--color-background);
         border-bottom-color: var(--color-background);
+        box-shadow: 5px 0 5px #33333355;
         color: var(--color-primary);
         margin-bottom: -6px;
       }
-      .content > .navigation {
+      > .content > .navigation {
         bottom: 0;
+        box-shadow: 3px 5px 5px #33333355;
         left: 0;
-        position: absolute;
+        position: absolute !important;
         top: 0;
         width: 85%;
         z-index: 5;

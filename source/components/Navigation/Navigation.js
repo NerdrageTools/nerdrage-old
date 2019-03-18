@@ -11,6 +11,7 @@ export default class Navigation extends Component {
   static defaultProps = {
     items: [],
     onItemClick: noop,
+    wrapperRef: noop,
   }
 
   renderList = (list = [], listTitle = '', type = 'article') => (
@@ -55,7 +56,7 @@ export default class Navigation extends Component {
 
     return (
       <Scrollbars className="navigation" autoHide universal>
-        <div className="content">
+        <div className="content" ref={this.props.wrapperRef}>
           {this.renderList(navigation, campaign.title)}
           {user && <>
             {this.renderList(campaigns, 'My Campaigns', 'campaign')}
