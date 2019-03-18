@@ -24,8 +24,10 @@ export default class SignupPage extends Component {
   }
 
   handleEmail = ({ target }) => {
-    const { value } = target
-    if (value.match(EMAIL_REGEX)) {
+    // eslint-disable-next-line no-param-reassign
+    target.value = target.value.toLowerCase()
+
+    if (target.value.match(EMAIL_REGEX)) {
       target.classList.remove('invalid')
     } else {
       target.classList.add('invalid')
