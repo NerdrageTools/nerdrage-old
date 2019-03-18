@@ -21,7 +21,6 @@ const CampaignSchema = new mongoose.Schema({
   domain: { ...Slug, required: true, unique: true },
   editors: [{ ref: 'User', type: ObjectIdType }],
   lastUpdatedBy: { ref: 'User', type: ObjectIdType },
-  name: { default: 'New Campaign', trim: true, type: String },
   navigation: {
     default: [{ slug: 'home', text: 'Home' }],
     type: [NavigationSchema],
@@ -39,6 +38,7 @@ const CampaignSchema = new mongoose.Schema({
       secondary: { ...ColorCode, default: defaultTheme.secondary },
     },
   },
+  title: { default: 'New Campaign', trim: true, type: String },
 }, {
   id: false,
   timestamps: true,
@@ -46,6 +46,10 @@ const CampaignSchema = new mongoose.Schema({
 })
 
 const matchObjectId = id => vs => ObjectId(id).equals(vs)
+
+CampaignSchema.pre('save', function (next) {
+  this.domain = this.domain.toLowerCase()
+})
 
 CampaignSchema.methods.isEditableBy = function (userId) {
   const matches = matchObjectId(userId)

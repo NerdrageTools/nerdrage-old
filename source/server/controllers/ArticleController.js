@@ -6,7 +6,7 @@ import pluck from '@/utilities/pluck'
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
   const article = await Article.locate(slug, campaign._id)
-    .populate('campaign', 'domain name')
+    .populate('campaign', 'domain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
 
@@ -49,7 +49,7 @@ export const getArticle = async (request, response) => {
   if (!article) {
     article = {
       ...omit(await new Article({ slug }).render(), '_id'),
-      campaign: pluck(campaign.toJSON(), '_id', 'domain', 'name'),
+      campaign: pluck(campaign.toJSON(), '_id', 'domain', 'title'),
     }
   } else {
     article = await article.render()
@@ -84,7 +84,7 @@ export const upsertArticle = async (request, response) => {
 
   const { _id } = await article.save()
   const saved = await Article.findOne({ _id })
-    .populate('campaign', 'domain name')
+    .populate('campaign', 'domain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
   return response.status(200).json({ ...await saved.render(), isEditable, isOwner })

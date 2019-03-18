@@ -1,5 +1,6 @@
 import express from 'express'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
+import Article from '@/server/models/Article'
 import Campaign from '@/server/models/Campaign'
 import Sheet from '@/server/models/Sheet'
 import User from '@/server/models/User'
@@ -29,7 +30,41 @@ controller.put('/', async (request, response) => {
   }
 })
 
-controller.get('/:username?', async (request, response) => {
+const getFavorites = async request => {
+  const domains = [null]
+  const slugs = []
+  const map = request.user.favorites.map(favorite => {
+    const [domain, slug] = favorite.split(':')
+    if (!domain || !slug) return null
+
+    domains.push(domain)
+    slugs.push(slug)
+
+    return { domain, slug }
+  }).filter(Boolean)
+
+  const campaigns = await Campaign.find({ domain: domains }, { domain: 1, title: 1 })
+  const articles = await Article.find({ slug: slugs }, { campaign: 1, slug: 1, title: 1 })
+
+  return map.map(favorite => {
+    const campaign = campaigns.find(c => c.domain === favorite.domain) || { _id: null }
+    const article = articles.find(a => a.slug === favorite.slug && a.campaign === campaign._id)
+      || articles.find(a => a.slug === favorite.slug)
+      || {}
+
+    return {
+      ...favorite,
+      campaignTitle: campaign.title || favorite.domain,
+      title: article.title || favorite.slug,
+    }
+  })
+}
+controller.get('/favorites', NoAnonymous, async (request, response) => {
+  const favorites = await getFavorites(request)
+  return response.status(200).json(favorites)
+})
+
+const getUser = async (request, response) => {
   const { user: currentUser } = request
   const { username } = request.params
 
@@ -58,23 +93,25 @@ controller.get('/:username?', async (request, response) => {
 
   const userId = currentUser._id
   const sheets = await Sheet.find({ ownedBy: userId })
-    .populate('campaign', 'domain name')
+    .populate('campaign', 'domain title')
     .exec()
 
   const campaigns = await Campaign.find({
     $or: [{ editors: userId }, { owners: userId }, { players: userId }],
-  }, { domain: 1, name: 1 })
+  }, { domain: 1, title: 1 })
 
   try {
     return response.status(200).json({
       ...currentUser.toJSON(),
       campaigns: campaigns || [],
+      favorites: await getFavorites(request),
       sheets: sheets || [],
     })
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })
   }
-})
+}
+controller.get('/:username?', getUser)
 
 controller.post('/', NoAnonymous, async (request, response) => {
   const { user } = request
@@ -139,9 +176,9 @@ controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
   const favorite = `${domain}:${slug}`
   const verb = user.favorites.includes(favorite) ? '$pull' : '$addToSet'
 
-  await user.update({ [verb]: { favorites: favorite } })
+  await user.updateOne({ [verb]: { favorites: favorite } })
 
-  return response.status(200).json(await User.findOne({ username: user.username }))
+  return getUser(request, response)
 })
 
 controller.post('/:username', NoAnonymous, async (request, response) => {

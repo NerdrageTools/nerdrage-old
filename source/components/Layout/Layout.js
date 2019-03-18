@@ -40,7 +40,7 @@ export default class Layout extends Component {
     const { className } = this.props
     const { campaign, theme } = this.context
     const { expandNavigation, size } = this.state
-    const name = campaign ? campaign.name : 'Unknown Campaign'
+    const title = campaign ? campaign.title : 'Unknown Campaign'
     const classNames = [
       'wiki layout',
       className,
@@ -50,7 +50,7 @@ export default class Layout extends Component {
 
     return <>
       <Head>
-        <title>{name}</title>
+        <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           key="content-font"
