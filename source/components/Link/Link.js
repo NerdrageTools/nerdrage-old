@@ -6,7 +6,7 @@ export default class Link extends Component {
   static contextType = Application
 
   render = () => {
-    const { className, children, href, ...props } = this.props
+    const { className = '', children, href, ...props } = this.props
     if (className.split(' ').includes('external')) {
       return <a {...this.props}>{children}</a>
     }

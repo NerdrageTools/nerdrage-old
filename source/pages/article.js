@@ -87,9 +87,8 @@ export default class Article extends Component {
   }
 
   get isDirty() {
-    const propsToCompare = ['aliases', 'html', 'secret', 'title', 'tags']
-    const fromState = JSON.stringify(pluck(this.state, propsToCompare))
-    const fromSaved = JSON.stringify(pluck(this.state.saved, propsToCompare))
+    const fromState = JSON.stringify(pluck(this.state, STATE_FIELDS))
+    const fromSaved = JSON.stringify(pluck(this.state.saved, STATE_FIELDS))
 
     return fromState !== fromSaved
   }
