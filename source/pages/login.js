@@ -2,13 +2,17 @@ import fetch from 'isomorphic-unfetch'
 import Router from 'next/router'
 import React, { Component } from 'react'
 import Application from '@/contexts/Application'
-import './login.scss'
+import './authPages.scss'
 
 export default class LoginPage extends Component {
   static contextType = Application
 
   username = React.createRef()
   password = React.createRef()
+
+  state = {
+    message: '',
+  }
 
   componentDidMount = () => {
     this.username.current.focus()
@@ -38,7 +42,7 @@ export default class LoginPage extends Component {
       this.context.setUser(json)
       if (redirectTo) Router.push(redirectTo)
     } else {
-      this.setState(json)
+      this.setState({ message: '', ...json })
     }
   }
 
@@ -67,6 +71,8 @@ export default class LoginPage extends Component {
     <div className="buttons">
       <button className="safe" onClick={this.handleSubmit}>Submit</button>
     </div>
+
+    <center className="message-field">{this.state.message}</center>
   </>
 
   render = () => {
