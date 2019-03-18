@@ -1,24 +1,27 @@
 import express from 'express'
 import defaultTheme from '@/data/defaultTheme'
 import Campaign404 from '@/server/errors/Campaign404'
+import ContextLoader from '@/server/middleware/ContextLoader'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 import Campaign from '@/server/models/Campaign'
 import User from '@/server/models/User'
 
 const controller = express()
 
-controller.get('/:domain?', async (request, response) => {
-  const domain = request.params.domain || request.domain
-  const campaign = await Campaign.findOne({ domain })
-    .populate('editors players owners', 'name username')
-    .exec()
+controller.get('/:domain?', ContextLoader, async (request, response) => {
+  let { campaign } = request
+  if (request.params.domain) {
+    campaign = await Campaign.findOne({ domain: request.params.domain })
+      .populate('editors players owners', 'name username')
+      .exec()
+  }
 
   if (!campaign) return Campaign404({ campaign }, response)
 
   const json = campaign.toJSON()
 
-  if (request.session && request.session._id) {
-    const userId = request.session._id
+  if (request.user && request.user._id) {
+    const userId = request.user._id
     const user = await User.findOne({ _id: userId })
     if (user) {
       const { isAdmin } = user

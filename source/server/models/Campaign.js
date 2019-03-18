@@ -45,9 +45,9 @@ const CampaignSchema = new mongoose.Schema({
   versionKey: 'version',
 })
 
-const matchObjectId = id => vs => ObjectId(id).equals(vs)
+const matchObjectId = id => vs => ObjectId(id).equals(vs._id || vs)
 
-CampaignSchema.pre('save', function (next) {
+CampaignSchema.pre('save', function () {
   this.domain = this.domain.toLowerCase()
 })
 

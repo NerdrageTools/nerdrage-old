@@ -36,7 +36,7 @@ export default class CreateMenu extends Component {
 
   render = () => {
     const { children } = this.props
-    const { isEditor, isParticipant } = (this.context.campaign || {})
+    const { isEditor, isParticipant } = this.context.campaign || {}
 
     return (
       <FlyoutMenu className="create" ref={this.flyoutMenu}>
