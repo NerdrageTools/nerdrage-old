@@ -37,13 +37,15 @@ export default class Layout extends Component {
   }
 
   render = () => {
+    const { className } = this.props
     const { campaign, theme } = this.context
     const { expandNavigation, size } = this.state
     const name = campaign ? campaign.name : 'Unknown Campaign'
     const classNames = [
       'wiki layout',
+      className,
       size,
-      expandNavigation ? 'expand-navigation' : 'collapse-navigation'
+      expandNavigation ? 'expand-navigation' : 'collapse-navigation',
     ].join(' ')
 
     return <>
@@ -59,7 +61,7 @@ export default class Layout extends Component {
       <div className={classNames}>
         <Header onNavigationIconClick={this.handleToggleNavigation} />
         <div className="content">
-          {<Navigation />}
+          <Navigation />
           {this.props.children}
         </div>
       </div>

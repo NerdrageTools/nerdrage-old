@@ -70,8 +70,8 @@ export default class Wiki extends App {
 
     return (
       <Application.Provider value={context}>
-        <Container className="wiki">
-          <Layout>
+        <Container>
+          <Layout className={campaignError ? 'no-campaign' : ''}>
             {campaignError
               ? <Error
                   statusCode={404}

@@ -92,4 +92,10 @@ $page-width: calc(100vw - #{$navigation-width});
       font-size: 10pt;
     }
   }
+
+  &.no-campaign {
+    > .header > .navigation.toggle {
+      display: none;
+    }
+  }
 }
