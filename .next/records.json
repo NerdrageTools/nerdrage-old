@@ -471,7 +471,9 @@
       "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/user.scss 0": 25,
       "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/WysiwygEditor/TinyMCE.scss 0": 26,
       "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/WysiwygEditor/ArticleEditor.scss 0": 27,
-      "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/WysiwygEditor/WysiwygEditor.scss 0": 28
+      "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/WysiwygEditor/WysiwygEditor.scss 0": 28,
+      "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss 0": 21,
+      "css ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/authPages.scss 0": 24
     },
     "usedIds": {
       "0": 0,
@@ -566,7 +568,15 @@
       "static/r5NmJf6M2X8GJJKcgrs8u/pages/login.js": 7,
       "static/r5NmJf6M2X8GJJKcgrs8u/pages/sheet.js": 8,
       "static/r5NmJf6M2X8GJJKcgrs8u/pages/signup.js": 9,
-      "static/r5NmJf6M2X8GJJKcgrs8u/pages/user.js": 10
+      "static/r5NmJf6M2X8GJJKcgrs8u/pages/user.js": 10,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/_app.js": 14,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/_error.js": 15,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/article.js": 16,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/index.js": 17,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/login.js": 18,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/sheet.js": 19,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/signup.js": 20,
+      "static/~4wc3ArcTnv61vUzTcwmn/pages/user.js": 21
     },
     "bySource": {
       "0 ../node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--4!pages/article.js @/components/WysiwygEditor": 2,
@@ -576,18 +586,52 @@
     "usedIds": [
       0,
       1,
-      10,
       11,
       12,
       13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
       2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9
+      20,
+      21
     ]
-  }
+  },
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/authPages.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ]
 }
