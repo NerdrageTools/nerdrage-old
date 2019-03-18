@@ -60,9 +60,11 @@ export default class Article extends Component {
   }
   static getDerivedStateFromProps(props, state) {
     if (props.slug !== state.slug) {
+      const saved = pluck(props, STATE_FIELDS)
       return {
         activeTab: 'read',
-        ...pluck(props, STATE_FIELDS),
+        ...saved,
+        saved,
         title: props.title || new URLSearchParams(window.location.search).get('title') || '',
       }
     }
@@ -131,7 +133,7 @@ export default class Article extends Component {
     })
     const updated = pluck(await response.json(), 'secret')
     if (response.status === 200) {
-      this.setState(updated)
+      this.setState({ ...updated, saved: { ...this.state.saved, ...updated } })
     }
   }
 
