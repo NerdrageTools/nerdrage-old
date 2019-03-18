@@ -7,7 +7,9 @@ import './Toggle.scss'
 export default function Toggle({
   className = '',
   offIcon = IconOff,
+  offProps = {},
   onIcon = IconOn,
+  onProps = {},
   onToggle = noop,
   value = false,
   ...props
@@ -18,6 +20,7 @@ export default function Toggle({
       className={`toggle ${value ? 'on' : 'off'} ${className}`}
       onClick={onToggle}
       {...props}
+      {...(value ? onProps : offProps)}
     />
   )
 }

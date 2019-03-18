@@ -17,6 +17,9 @@
         stroke: $palette-gold-dark;
         stroke-width: 2%;
       }
+      &.is-admin.off {
+        color: #ddd;
+      }
     }
     > .editable {
       flex: 1;
