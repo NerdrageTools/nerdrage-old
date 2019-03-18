@@ -1,9 +1,9 @@
 import express from 'express'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
+import Sheet from '@/server/models/Sheet'
 import User from '@/server/models/User'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
-import Sheet from '@/server/models/Sheet'
 
 const controller = express()
 
@@ -91,27 +91,28 @@ controller.post('/', NoAnonymous, async (request, response) => {
   }
 })
 
+const invalidAuthentication = response => {
+  response.status(401).json({ message: 'Username/password combination is invalid.' })
+}
 controller.post('/login', async (request, response) => {
-  const { username, password } = request.body
+  const { password = '' } = request.body
+  const username = (request.body.username || '').toLowerCase().trim()
+  const query = { $or: [{ username }, { email: username }] }
 
   try {
-    const user = await User.findOne({ username }, { password: 1 })
-
-    if (!user) {
-      return response.status(401).json({ message: 'Username or password is invalid.' })
-    }
+    const user = await User.findOne(query, { password: 1 })
+    if (!user) return invalidAuthentication(response)
 
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
-      await user.updateOne({ lastLogin: Date.now() })
-      const updated = await User.findOne({ username })
+      await user.update({ lastLogin: Date.now() })
 
-      const profile = updated.toProfile()
+      const profile = (await User.findOne(query)).toProfile()
       request.session = profile
       return response.status(200).json(profile)
     }
 
-    return response.status(401).json({ message: 'Username or password is invalid.' })
+    return invalidAuthentication(response)
   } catch (error) {
     console.error(error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })

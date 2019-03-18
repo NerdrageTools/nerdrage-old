@@ -19,6 +19,10 @@ export default class LoginPage extends Component {
       this.handleSubmit()
     }
   }
+  handleUsername = ({ target }) => {
+    // eslint-disable-next-line no-param-reassign
+    target.value = target.value.toLowerCase()
+  }
 
   handleSubmit = async () => {
     const username = this.username.current.value
@@ -49,8 +53,9 @@ export default class LoginPage extends Component {
     <h3>Log In</h3>
     <input
       type="text"
-      placeholder="Username"
+      placeholder="Username or Email"
       ref={this.username}
+      onChange={this.handleUsername}
       onKeyPress={this.handleKeyPress}
     />
     <input
