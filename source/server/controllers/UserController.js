@@ -30,10 +30,10 @@ controller.put('/', async (request, response) => {
   }
 })
 
-const getFavorites = async request => {
+const getFavorites = async user => {
   const domains = [null]
   const slugs = []
-  const map = request.user.favorites.map(favorite => {
+  const map = user.favorites.map(favorite => {
     const [domain, slug] = favorite.split(':')
     if (!domain || !slug) return null
 
@@ -60,7 +60,7 @@ const getFavorites = async request => {
   })
 }
 controller.get('/favorites', NoAnonymous, async (request, response) => {
-  const favorites = await getFavorites(request)
+  const favorites = await getFavorites(request.user)
   return response.status(200).json(favorites)
 })
 
@@ -104,7 +104,7 @@ const getUser = async (request, response) => {
     return response.status(200).json({
       ...currentUser.toJSON(),
       campaigns: campaigns || [],
-      favorites: await getFavorites(request),
+      favorites: await getFavorites(request.user),
       sheets: sheets || [],
     })
   } catch (error) {
@@ -174,9 +174,20 @@ controller.use('/logoff', async (request, response) => {
 controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
   const { domain, params: { slug }, user } = request
   const favorite = `${domain}:${slug}`
-  const verb = user.favorites.includes(favorite) ? '$pull' : '$addToSet'
+  let { favorites } = user
+
+  let verb
+  if (favorites.includes(favorite)) {
+    verb = '$pull'
+    favorites = favorites.filter(f => f !== favorite)
+  } else {
+    verb = '$addToSet'
+    favorites.push(favorite)
+    favorites.sort()
+  }
 
   await user.updateOne({ [verb]: { favorites: favorite } })
+  user.favorites = favorites
 
   return getUser(request, response)
 })
