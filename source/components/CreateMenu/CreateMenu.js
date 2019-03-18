@@ -5,6 +5,7 @@ import ArticleIcon from '@/icons/read.svg'
 import SheetIcon from '@/icons/sheet.svg'
 import prompt from '@/utilities/prompt'
 import { slugify } from '@/utilities/slugs'
+import './CreateMenu.scss'
 
 export default class CreateMenu extends Component {
   static contextType = Application
@@ -35,14 +36,19 @@ export default class CreateMenu extends Component {
 
   render = () => {
     const { children } = this.props
+    const { isEditor, isParticipant } = this.props
     return (
       <FlyoutMenu className="create" ref={this.flyoutMenu}>
-        <MenuItem onClick={this.handleNew('Article')}>
-          <ArticleIcon /> New Article...
-        </MenuItem>
-        <MenuItem onClick={this.handleNew('Sheet')}>
-          <SheetIcon /> New Sheet...
-        </MenuItem>
+        {isEditor && (
+          <MenuItem onClick={this.handleNew('Article')}>
+            <ArticleIcon /> New Article...
+          </MenuItem>
+        )}
+        {isParticipant && (
+          <MenuItem onClick={this.handleNew('Sheet')}>
+            <SheetIcon /> New Sheet...
+          </MenuItem>
+        )}
         <hr />
         {children}
       </FlyoutMenu>

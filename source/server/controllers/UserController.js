@@ -1,5 +1,6 @@
 import express from 'express'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
+import Campaign from '@/server/models/Campaign'
 import Sheet from '@/server/models/Sheet'
 import User from '@/server/models/User'
 import omit from '@/utilities/omit'
@@ -39,12 +40,15 @@ controller.get('/:username?', async (request, response) => {
         message: `Unable to locate a user with username '${username}'.`,
       })
     }
+
+    const json = targetUser.toJSON()
+
     if (currentUser && currentUser.isAdmin) {
-      return response.status(200).json(targetUser)
+      return response.status(200).json(json)
     }
 
     return response.status(200).json(
-      pluck(targetUser.toJSON(), '_id', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
+      pluck(json, '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
     )
   }
 
@@ -52,14 +56,20 @@ controller.get('/:username?', async (request, response) => {
     return response.status(200).json({ anonymous: true })
   }
 
-  const sheets = await Sheet.find({ ownedBy: currentUser._id })
+  const userId = currentUser._id
+  const sheets = await Sheet.find({ ownedBy: userId })
     .populate('campaign', 'domain name')
     .exec()
+
+  const campaigns = await Campaign.find({
+    $or: [{ editors: userId }, { owners: userId }, { players: userId }],
+  }, { domain: 1, name: 1 })
 
   try {
     return response.status(200).json({
       ...currentUser.toJSON(),
-      sheets,
+      campaigns: campaigns || [],
+      sheets: sheets || [],
     })
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })

@@ -27,6 +27,9 @@ export default class Navigation extends Component {
 
   render = () => {
     const { campaign, user } = this.context
+    const campaigns = ((user && user.campaigns) || []).map(({ domain, name }) => ({
+      slug: domain, title: name,
+    }))
     const favorites = ((user && user.favorites) || []).map(favorite => {
       const [domain, slug] = favorite.split(':')
       return { domain, slug, title: slug }
@@ -41,6 +44,7 @@ export default class Navigation extends Component {
     return (
       <div className="navigation">
         {this.renderList(campaign.navigation, 'Campaign')}
+        {this.renderList(campaigns, 'My Campaigns', 'campaign')}
         {this.renderList(favorites, 'My Favorites')}
         {this.renderList(sheets, 'My Sheets', 'sheet')}
       </div>

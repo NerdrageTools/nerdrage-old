@@ -9,6 +9,8 @@ export default async (request, response, next) => {
   const domain = request.hostname.split('.').shift()
   request.domain = domain
   request.campaign = await Campaign.findOne({ domain })
+    .populate('owners editors players', 'name username')
+    .exec()
 
   if (request.session.username) {
     const user = await User.findOne({ username: request.session.username })

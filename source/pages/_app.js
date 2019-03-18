@@ -14,7 +14,7 @@ export default class Wiki extends App {
     const { Component, ctx: { req } } = context
     const headers = pluck(req && req.headers, 'cookie')
     const props = await App.getInitialProps(context)
-    const campaign = await fetch(URI(req, '/api/campaign')).then(r => r.json())
+    const campaign = await fetch(URI(req, '/api/campaign'), { headers }).then(r => r.json())
     const user = await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
     let host
 

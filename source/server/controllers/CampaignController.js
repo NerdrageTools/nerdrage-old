@@ -1,8 +1,9 @@
 import express from 'express'
-import Campaign from '../models/Campaign'
 import defaultTheme from '@/data/defaultTheme'
 import Campaign404 from '@/server/errors/Campaign404'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
+import Campaign from '@/server/models/Campaign'
+import User from '@/server/models/User'
 
 const controller = express()
 
@@ -12,7 +13,23 @@ controller.get('/:domain?', async (request, response) => {
     .populate('editors players owners', 'name username')
     .exec()
 
-  return response.status(200).json(campaign)
+  if (!campaign) return Campaign404({ campaign }, response)
+
+  const json = campaign.toJSON()
+
+  if (request.session && request.session._id) {
+    const userId = request.session._id
+    const user = await User.findOne({ _id: userId })
+    if (user) {
+      const { isAdmin } = user
+
+      json.isOwner = Boolean(isAdmin || campaign.isOwnedBy(userId))
+      json.isEditor = Boolean(isAdmin || campaign.isEditableBy(userId))
+      json.isParticipant = Boolean(isAdmin || campaign.isParticipant(userId))
+    }
+  }
+
+  return response.status(200).json(json)
 })
 
 controller.put('/:domain?', NoAnonymous, async (request, response) => {
