@@ -11,27 +11,36 @@ export default class Navigation extends Component {
     onItemClick: noop,
   }
 
-  renderList = (list = [], listTitle = '', type = 'article') => Boolean(list.length) && <>
-    <b>{listTitle}</b>
-    <ul className="favorites">
-      {list.map(({ domain, slug, title: linkTitle }, key) => (
-        <li key={key}>
-          <ArticleLink
-            {...{ domain, slug, type }}
-            active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
-            onClick={this.props.onItemClick}
-          >
-            {linkTitle} {domain && type !== 'campaign' && `(${domain})`}
-          </ArticleLink>
-        </li>
-      ))}
-    </ul>
-  </>
+  renderList = (list = [], listTitle = '', type = 'article') => (
+    Boolean(list.length) && <>
+      <b>{listTitle}</b>
+      <ul className="favorites">
+        {list.map(({ campaign = {}, slug, title }, key) => {
+          const { domain = '', title: cTitle = '' } = campaign
+          let text = title
+          if (domain && domain !== this.context.domain) {
+            text += ` (${cTitle || domain})`
+          }
+
+          return (
+            <li key={key}>
+              <ArticleLink
+                {...{ domain, slug, type }}
+                active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
+                onClick={this.props.onItemClick}
+              >
+                {text}
+              </ArticleLink>
+            </li>
+          )
+        })}
+      </ul>
+    </>
+  )
 
   render = () => {
     const { campaign, user = {} } = this.context
-    const { campaigns = [] } = user
-    const sheets = (user.sheets || []).map(({ campaign: { domain }, slug, title }) => ({ domain, slug, title }))
+    const { campaigns = [], favorites = [], sheets = [] } = user
 
     if (!campaign) return null
 
@@ -40,7 +49,7 @@ export default class Navigation extends Component {
         {this.renderList(campaign.navigation, campaign.title)}
         {user && <>
           {this.renderList(campaigns, 'My Campaigns', 'campaign')}
-          {this.renderList(user.favorites, 'My Favorites')}
+          {this.renderList(favorites, 'My Favorites')}
           {this.renderList(sheets, 'My Sheets', 'sheet')}
         </>}
       </div>
