@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1977,23 +1977,33 @@ function (_Component) {
           domain = _this$props.domain,
           _this$props$slug = _this$props.slug,
           slug = _this$props$slug === void 0 ? '' : _this$props$slug,
-          linkProps = Object(_babel_runtime_corejs2_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(_this$props, ["active", "children", "domain", "slug"]);
+          _this$props$type = _this$props.type,
+          type = _this$props$type === void 0 ? 'article' : _this$props$type,
+          linkProps = Object(_babel_runtime_corejs2_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(_this$props, ["active", "children", "domain", "slug", "type"]);
 
       var _this$context = _this.context,
           currentDomain = _this$context.domain,
           rootUrl = _this$context.rootUrl;
       if (active) return react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement("b", null, children);
 
-      if (domain && domain !== currentDomain) {
-        var href = "//".concat(domain, ".").concat(rootUrl, "/article/").concat(slug);
+      if (type === 'campaign') {
+        var href = "//".concat(domain, ".").concat(rootUrl, "/");
         return react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement("a", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, linkProps, {
           href: href
-        }), children, " (", domain, ")");
+        }), children);
+      }
+
+      if (domain && domain !== currentDomain) {
+        var _href = "//".concat(domain, ".").concat(rootUrl, "/").concat(type, "/").concat(slug);
+
+        return react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement("a", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, linkProps, {
+          href: _href
+        }), children);
       }
 
       return react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_8___default.a, {
-        as: "/article/".concat(slug),
-        href: "/article?slug=".concat(slug)
+        as: "/".concat(type, "/").concat(slug),
+        href: "/".concat(type, "?slug=").concat(slug)
       }, react__WEBPACK_IMPORTED_MODULE_9___default.a.createElement("a", linkProps, children));
     });
 
@@ -3034,19 +3044,23 @@ function Toggle(_ref) {
       className = _ref$className === void 0 ? '' : _ref$className,
       _ref$offIcon = _ref.offIcon,
       offIcon = _ref$offIcon === void 0 ? _icons_favorite_off_svg__WEBPACK_IMPORTED_MODULE_3___default.a : _ref$offIcon,
+      _ref$offProps = _ref.offProps,
+      offProps = _ref$offProps === void 0 ? {} : _ref$offProps,
       _ref$onIcon = _ref.onIcon,
       onIcon = _ref$onIcon === void 0 ? _icons_favorite_on_svg__WEBPACK_IMPORTED_MODULE_4___default.a : _ref$onIcon,
+      _ref$onProps = _ref.onProps,
+      onProps = _ref$onProps === void 0 ? {} : _ref$onProps,
       _ref$onToggle = _ref.onToggle,
       onToggle = _ref$onToggle === void 0 ? _utilities_noop__WEBPACK_IMPORTED_MODULE_5__["default"] : _ref$onToggle,
       _ref$value = _ref.value,
       value = _ref$value === void 0 ? false : _ref$value,
-      props = Object(_babel_runtime_corejs2_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(_ref, ["className", "offIcon", "onIcon", "onToggle", "value"]);
+      props = Object(_babel_runtime_corejs2_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(_ref, ["className", "offIcon", "offProps", "onIcon", "onProps", "onToggle", "value"]);
 
   var Icon = value ? onIcon : offIcon;
   return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Icon, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
     className: "toggle ".concat(value ? 'on' : 'off', " ").concat(className),
     onClick: onToggle
-  }, props));
+  }, props, value ? onProps : offProps));
 }
 
 /***/ }),
@@ -3081,7 +3095,6 @@ var CAMPAIGN_DEFAULTS = {
   editors: [],
   lastUpdatedAt: null,
   lastUpdatedBy: {},
-  name: 'New Campaign',
   navigation: [],
   owners: [],
   private: false,
@@ -3092,6 +3105,7 @@ var CAMPAIGN_DEFAULTS = {
     primary: '#42afe3',
     secondary: '#fff'
   },
+  title: 'New Campaign',
   version: 0
 };
 var USER_DEFAULTS = {
@@ -3695,7 +3709,9 @@ function (_Component) {
           slug = _this$props.slug;
       var _this$context$user$fa = _this.context.user.favorites,
           favorites = _this$context$user$fa === void 0 ? [] : _this$context$user$fa;
-      var isFavorite = favorites.includes("".concat(campaign ? campaign.domain : '', ":").concat(slug));
+      var isFavorite = favorites.find(function (f) {
+        return f.domain === campaign.domain && f.slug === slug;
+      });
 
       if (httpStatusCode !== 200) {
         return react__WEBPACK_IMPORTED_MODULE_14___default.a.createElement("div", {
@@ -4082,7 +4098,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!********************************!*\
   !*** multi ./pages/article.js ***!
   \********************************/
