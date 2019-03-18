@@ -1,7 +1,6 @@
 import url from 'url'
 import cheerio from 'cheerio'
 import Article from '@/server/models/Article'
-import { extractUrlSlug } from '@/utilities/slugs'
 import unique from '@/utilities/unique'
 
 export default async function renderLinks(html, campaignId) {
@@ -11,16 +10,18 @@ export default async function renderLinks(html, campaignId) {
   $('a').each((_, element) => {
     const $link = $(element)
     const href = $link.attr('href') || ''
-    const slug = extractUrlSlug(href)
     const parsedUrl = url.parse(href)
 
     const isInternal = !parsedUrl.hostname
     if (isInternal) {
-      if (slug.match(/\.(gif|jpg|png)$/)) {
-        $link.attr('href', `/media/${slug}`)
-      } else {
-        $link.attr('href', `/article/${slug}`)
-      }
+      const parts = parsedUrl.pathname.split('/').filter(Boolean)
+      const slug = parts.length > 1 ? parts[1] : parts[0]
+      const type = parts.length > 1 ? parts[0] : 'article'
+
+      $link.addClass(type)
+      $link.attr('href', `/${type}/${slug}`)
+      $link.attr('slug', slug)
+      $link.attr('type', type)
       links.push(slug)
     } else {
       $link.attr('target', '_new').addClass('external')
@@ -44,9 +45,9 @@ export default async function renderLinks(html, campaignId) {
 
   $('a').each((_, element) => {
     const $link = $(element)
-    const href = $link.attr('href') || ''
-    const slug = extractUrlSlug(href)
-    if (missing.includes(slug)) {
+    const slug = $link.attr('slug') || ''
+    const type = $link.attr('type') || ''
+    if (type === 'article' && missing.includes(slug)) {
       $link.addClass('missing')
     }
   })

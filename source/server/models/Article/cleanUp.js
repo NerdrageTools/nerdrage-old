@@ -8,7 +8,10 @@ export default function cleanUp(html) {
 
     $el.removeClass('missing')
       .removeClass('external')
+      .removeClass($el.attr('type'))
+      .removeAttr('slug')
       .removeAttr('target')
+      .removeAttr('type')
       .attr('href', href.replace(/^\/(article|media)\//, ''))
     if (($el.attr('class') || '').trim() === '') $el.removeAttr('class')
   })

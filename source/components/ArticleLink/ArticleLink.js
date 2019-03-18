@@ -10,17 +10,17 @@ class ArticleLink extends Component {
   }
 
   render = () => {
-    const { active, children, domain, slug = '', type = 'article', ...linkProps } = this.props
+    const { active, campaign = {}, children, slug = '', type = 'article', ...linkProps } = this.props
     const { domain: currentDomain, rootUrl } = this.context
     if (active) return <b>{children}</b>
 
     if (type === 'campaign') {
-      const href = `//${domain}.${rootUrl}/`
+      const href = `//${campaign.domain}.${rootUrl}/`
       return <a {...linkProps} href={href}>{children}</a>
     }
 
-    if (domain && domain !== currentDomain) {
-      const href = `//${domain}.${rootUrl}/${type}/${slug}`
+    if (campaign.domain !== currentDomain) {
+      const href = `//${campaign.domain}.${rootUrl}/${type}/${slug}`
       return <a {...linkProps} href={href}>{children}</a>
     }
 
