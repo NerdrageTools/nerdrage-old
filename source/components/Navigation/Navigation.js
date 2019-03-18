@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import ArticleLink from '@/components/ArticleLink'
 import Application from '@/contexts/Application'
 import noop from '@/utilities/noop'
@@ -53,14 +54,16 @@ export default class Navigation extends Component {
     const campaigns = (user.campaigns || []).map(campaign => ({ campaign, title: campaign.title }))
 
     return (
-      <div className="navigation">
-        {this.renderList(navigation, campaign.title)}
-        {user && <>
-          {this.renderList(campaigns, 'My Campaigns', 'campaign')}
-          {this.renderList(favorites, 'My Favorites')}
-          {this.renderList(sheets, 'My Sheets', 'sheet')}
-        </>}
-      </div>
+      <Scrollbars className="navigation" autoHide universal>
+        <div className="content">
+          {this.renderList(navigation, campaign.title)}
+          {user && <>
+            {this.renderList(campaigns, 'My Campaigns', 'campaign')}
+            {this.renderList(favorites, 'My Favorites')}
+            {this.renderList(sheets, 'My Sheets', 'sheet')}
+          </>}
+        </div>
+      </Scrollbars>
     )
   }
 }
