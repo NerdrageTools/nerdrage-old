@@ -7,7 +7,6 @@ const CAMPAIGN_DEFAULTS = {
   editors: [],
   lastUpdatedAt: null,
   lastUpdatedBy: {},
-  name: 'New Campaign',
   navigation: [],
   owners: [],
   private: false,
@@ -18,6 +17,7 @@ const CAMPAIGN_DEFAULTS = {
     primary: '#42afe3',
     secondary: '#fff',
   },
+  title: 'New Campaign',
   version: 0,
 }
 const USER_DEFAULTS = {

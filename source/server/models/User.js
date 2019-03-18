@@ -40,6 +40,9 @@ const UserSchema = new mongoose.Schema({
 })
 
 UserSchema.pre('save', function (next) {
+  if (this.email) this.email = this.email.toLowerCase().trim()
+  if (this.username) this.username = this.username.toLowerCase().trim()
+
   if (!this.isModified('password')) { next(); return }
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltError, salt) => {
     if (saltError) { next(saltError); return }

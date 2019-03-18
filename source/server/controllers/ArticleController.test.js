@@ -116,7 +116,7 @@ describe('server/controllers/ArticleController', () => {
       expect(response.status).toHaveBeenCalledWith(200)
       expect(response.json.mock.calls[0][0]).toMatchObject({
         aliases: [],
-        campaign: pluck(request.campaign, 'domain', 'name'),
+        campaign: pluck(request.campaign, 'domain', 'title'),
         html: '\n',
         links: [],
         missing: [],

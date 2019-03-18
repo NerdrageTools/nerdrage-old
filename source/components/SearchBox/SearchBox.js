@@ -11,17 +11,23 @@ export default class SearchBox extends Component {
   }
 
   state = {
+    message: null,
     options: [],
   }
 
   downshift = React.createRef()
 
-  handleSearch = term => {
-    if (term.length <= 3) { return }
+  handleSearch = async term => {
+    if (term.length <= 3) return undefined
 
-    fetch(`/api/search/articles/${term}`)
-      .then(response => response.json())
-      .then(options => this.setState({ options }))
+    const response = await fetch(`/api/search/articles/${term}`)
+    const json = await response.json()
+
+    if (response.status === 200) {
+      return this.setState({ options: json })
+    }
+
+    return this.setState(json)
   }
   handleSelect = article => {
     const { router } = this.context
@@ -45,9 +51,9 @@ export default class SearchBox extends Component {
     </li>
   )
 
-  render() {
+  render = () => {
     const { placeholder } = this.props
-    const { options } = this.state
+    const { message, options } = this.state
     const { theme } = this.context
 
     return (
@@ -67,7 +73,7 @@ export default class SearchBox extends Component {
                   article, index,
                   getItemProps({ index, item: article, key: article._id }))
                 )
-                : <center><i>Searching...</i></center>
+                : <center><i>{message || 'Searching...'}</i></center>
               }
             </ul>}
             <SearchIcon className="search icon" />

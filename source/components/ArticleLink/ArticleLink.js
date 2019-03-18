@@ -14,9 +14,14 @@ class ArticleLink extends Component {
     const { domain: currentDomain, rootUrl } = this.context
     if (active) return <b>{children}</b>
 
+    if (type === 'campaign') {
+      const href = `//${domain}.${rootUrl}/`
+      return <a {...linkProps} href={href}>{children}</a>
+    }
+
     if (domain && domain !== currentDomain) {
       const href = `//${domain}.${rootUrl}/${type}/${slug}`
-      return <a {...linkProps} href={href}>{children} ({domain})</a>
+      return <a {...linkProps} href={href}>{children}</a>
     }
 
     return (

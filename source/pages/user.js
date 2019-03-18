@@ -4,7 +4,7 @@ import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
-import AdminIcon from '@/icons/admin.svg'
+import AdminIcon from '@/icons/Administrator'
 import FavoriteIcon from '@/icons/favorite-on.svg'
 import Error from '@/pages/_error'
 import confirm from '@/utilities/confirm'
@@ -119,7 +119,9 @@ export default class UserPage extends Component {
               className="is-admin"
               onClick={this.handleToggleAdmin}
               offIcon={AdminIcon}
+              offProps={{ title: 'Not an Administrator' }}
               onIcon={AdminIcon}
+              onProps={{ title: 'Administrator' }}
               value={user.isAdmin}
               />
             : (user.isAdmin && <AdminIcon className="is-admin on" />)

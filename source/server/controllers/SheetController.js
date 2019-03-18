@@ -5,7 +5,7 @@ import omit from '@/utilities/omit'
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
   const sheet = await Sheet.findOne({ campaign: campaign._id, slug })
-    .populate('campaign', 'domain name')
+    .populate('campaign', 'domain title')
     .populate('ownedBy', 'name username')
     .exec()
 
@@ -77,7 +77,7 @@ export const upsertSheet = async (request, response) => {
 
   const { _id } = await sheet.save()
   const saved = await Sheet.findOne({ _id })
-    .populate('campaign', 'domain name')
+    .populate('campaign', 'domain title')
     .populate('ownedBy', 'name username')
     .exec()
   return response.status(200).json({

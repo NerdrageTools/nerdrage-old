@@ -1,3 +1,7 @@
 .create.menu {
-
+  > .flyout-panel {
+    > hr:first-child {
+      display: none;
+    }
+  }
 }

@@ -14,7 +14,7 @@ export default class Wiki extends App {
     const { Component, ctx: { req } } = context
     const headers = pluck(req && req.headers, 'cookie')
     const props = await App.getInitialProps(context)
-    const campaign = await fetch(URI(req, '/api/campaign')).then(r => r.json())
+    const campaign = await fetch(URI(req, '/api/campaign'), { headers }).then(r => r.json())
     const user = await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
     let host
 
@@ -54,7 +54,7 @@ export default class Wiki extends App {
   render = () => {
     const { campaign, Component, domain, pageProps, rootUrl, router } = this.props
     const { user } = this.state
-    const theme = campaign ? campaign.theme : defaultTheme
+    const theme = (campaign && campaign.theme) || defaultTheme
     const context = {
       campaign,
       domain,
@@ -66,12 +66,12 @@ export default class Wiki extends App {
       user,
     }
 
-    const campaignError = !campaign && !['/user', '/login'].includes(router.pathname)
+    const campaignError = !campaign && !['/user', '/login', '/signup'].includes(router.pathname)
 
     return (
       <Application.Provider value={context}>
-        <Container className="wiki">
-          <Layout>
+        <Container>
+          <Layout className={!campaign ? 'no-campaign' : ''}>
             {campaignError
               ? <Error
                   statusCode={404}

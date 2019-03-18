@@ -1,9 +1,11 @@
 import express from 'express'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
+import Article from '@/server/models/Article'
+import Campaign from '@/server/models/Campaign'
+import Sheet from '@/server/models/Sheet'
 import User from '@/server/models/User'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
-import Sheet from '@/server/models/Sheet'
 
 const controller = express()
 
@@ -28,7 +30,41 @@ controller.put('/', async (request, response) => {
   }
 })
 
-controller.get('/:username?', async (request, response) => {
+const getFavorites = async user => {
+  const domains = [null]
+  const slugs = []
+  const map = user.favorites.map(favorite => {
+    const [domain, slug] = favorite.split(':')
+    if (!domain || !slug) return null
+
+    domains.push(domain)
+    slugs.push(slug)
+
+    return { domain, slug }
+  }).filter(Boolean)
+
+  const campaigns = await Campaign.find({ domain: domains }, { domain: 1, title: 1 })
+  const articles = await Article.find({ slug: slugs }, { campaign: 1, slug: 1, title: 1 })
+
+  return map.map(favorite => {
+    const campaign = campaigns.find(c => c.domain === favorite.domain) || { _id: null }
+    const article = articles.find(a => a.slug === favorite.slug && a.campaign === campaign._id)
+      || articles.find(a => a.slug === favorite.slug)
+      || {}
+
+    return {
+      ...favorite,
+      campaignTitle: campaign.title || favorite.domain,
+      title: article.title || favorite.slug,
+    }
+  })
+}
+controller.get('/favorites', NoAnonymous, async (request, response) => {
+  const favorites = await getFavorites(request.user)
+  return response.status(200).json(favorites)
+})
+
+const getUser = async (request, response) => {
   const { user: currentUser } = request
   const { username } = request.params
 
@@ -39,12 +75,15 @@ controller.get('/:username?', async (request, response) => {
         message: `Unable to locate a user with username '${username}'.`,
       })
     }
+
+    const json = targetUser.toJSON()
+
     if (currentUser && currentUser.isAdmin) {
-      return response.status(200).json(targetUser)
+      return response.status(200).json(json)
     }
 
     return response.status(200).json(
-      pluck(targetUser.toJSON(), '_id', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
+      pluck(json, '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
     )
   }
 
@@ -52,19 +91,27 @@ controller.get('/:username?', async (request, response) => {
     return response.status(200).json({ anonymous: true })
   }
 
-  const sheets = await Sheet.find({ ownedBy: currentUser._id })
-    .populate('campaign', 'domain name')
+  const userId = currentUser._id
+  const sheets = await Sheet.find({ ownedBy: userId })
+    .populate('campaign', 'domain title')
     .exec()
+
+  const campaigns = await Campaign.find({
+    $or: [{ editors: userId }, { owners: userId }, { players: userId }],
+  }, { domain: 1, title: 1 })
 
   try {
     return response.status(200).json({
       ...currentUser.toJSON(),
-      sheets,
+      campaigns: campaigns || [],
+      favorites: await getFavorites(request.user),
+      sheets: sheets || [],
     })
   } catch (error) {
     return response.status(500).json({ message: 'Unknown error.' })
   }
-})
+}
+controller.get('/:username?', getUser)
 
 controller.post('/', NoAnonymous, async (request, response) => {
   const { user } = request
@@ -91,27 +138,28 @@ controller.post('/', NoAnonymous, async (request, response) => {
   }
 })
 
+const invalidAuthentication = response => {
+  response.status(401).json({ message: 'Username/password combination is invalid.' })
+}
 controller.post('/login', async (request, response) => {
-  const { username, password } = request.body
+  const { password = '' } = request.body
+  const username = (request.body.username || '').toLowerCase().trim()
+  const query = { $or: [{ username }, { email: username }] }
 
   try {
-    const user = await User.findOne({ username }, { password: 1 })
-
-    if (!user) {
-      return response.status(401).json({ message: 'Username or password is invalid.' })
-    }
+    const user = await User.findOne(query, { password: 1 })
+    if (!user) return invalidAuthentication(response)
 
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
-      await user.updateOne({ lastLogin: Date.now() })
-      const updated = await User.findOne({ username })
+      await user.update({ lastLogin: Date.now() })
 
-      const profile = updated.toProfile()
+      const profile = (await User.findOne(query)).toProfile()
       request.session = profile
       return response.status(200).json(profile)
     }
 
-    return response.status(401).json({ message: 'Username or password is invalid.' })
+    return invalidAuthentication(response)
   } catch (error) {
     console.error(error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
@@ -126,11 +174,22 @@ controller.use('/logoff', async (request, response) => {
 controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
   const { domain, params: { slug }, user } = request
   const favorite = `${domain}:${slug}`
-  const verb = user.favorites.includes(favorite) ? '$pull' : '$addToSet'
+  let { favorites } = user
 
-  await user.update({ [verb]: { favorites: favorite } })
+  let verb
+  if (favorites.includes(favorite)) {
+    verb = '$pull'
+    favorites = favorites.filter(f => f !== favorite)
+  } else {
+    verb = '$addToSet'
+    favorites.push(favorite)
+    favorites.sort()
+  }
 
-  return response.status(200).json(await User.findOne({ username: user.username }))
+  await user.updateOne({ [verb]: { favorites: favorite } })
+  user.favorites = favorites
+
+  return getUser(request, response)
 })
 
 controller.post('/:username', NoAnonymous, async (request, response) => {

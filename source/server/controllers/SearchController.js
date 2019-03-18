@@ -2,12 +2,13 @@ import { Deburr } from 'deburr'
 import entities from 'entities'
 import express from 'express'
 import Article from '@/server/models/Article'
+import Campaign404 from '@/server/errors/Campaign404'
 
 export const permissions = async (request, response, next) => {
   const { campaign, user } = request
 
-  const allowPrivate = user.isAdmin || campaign.isOwnedBy(user._id)
-  const allowPublic = user.isAdmin || campaign.isVisibleTo(user._id)
+  const allowPrivate = user && (user.isAdmin || campaign.isOwnedBy(user._id))
+  const allowPublic = user && (user.isAdmin || campaign.isVisibleTo(user._id))
 
   Object.assign(request, {
     allowPrivate,
@@ -22,7 +23,7 @@ export const searchArticles = async (request, response) => {
   const {
     allowPrivate,
     allowPublic,
-    campaign: { _id: campaignId },
+    campaign,
     params: { searchTerm, limit = 10 },
   } = request
 
@@ -38,7 +39,7 @@ export const searchArticles = async (request, response) => {
   const fullTextMatches = await Article.aggregate([
     { $match: {
       $and: [
-        { $or: [{ campaign: campaignId }, { campaign: null }] },
+        { $or: [{ campaign: campaign._id }, { campaign: null }] },
         !allowPrivate ? { secret: false } : {},
         { $text: { $search } },
       ],
@@ -67,7 +68,7 @@ export const searchArticles = async (request, response) => {
       { $match: {
         $and: [
           { slug: { $nin: fullTextMatches.map(match => match.slug) } },
-          { $or: [{ campaign: campaignId }, { campaign: null }] },
+          { $or: [{ campaign: campaign._id }, { campaign: null }] },
           !allowPrivate ? { secret: false } : {},
           { searchKeys: { $in: searchKeys } },
         ] },
@@ -83,9 +84,16 @@ export const searchArticles = async (request, response) => {
       { $project: { _id: 0, matchScore: { $literal: 0 }, preview: 1, slug: 1, title: 1 } },
     ]).limit(limit - fullTextMatches.length)
   }
-  return response.status(200).json([...fullTextMatches, ...partialMatches])
+
+  const results = [...fullTextMatches, ...partialMatches]
+
+  if (results.length) {
+    return response.status(200).json(results)
+  }
+
+  return response.status(404).json({ message: 'No results found.' })
 }
 
 const controller = express()
-controller.get('/articles/:searchTerm', permissions, searchArticles)
+controller.get('/articles/:searchTerm', Campaign404, permissions, searchArticles)
 export default controller

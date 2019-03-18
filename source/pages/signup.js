@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import Application from '@/contexts/Application'
-import './signup.scss'
+import './authPages.scss'
 
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const PASSWORD_REGEX = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
+const USERNAME_REGEX = /[a-zA-Z0-9_-]{4,}/
 
 export default class SignupPage extends Component {
   static contextType = Application
@@ -23,12 +24,15 @@ export default class SignupPage extends Component {
   }
 
   handleEmail = ({ target }) => {
-    const { value } = target
-    if (value.match(EMAIL_REGEX)) {
+    // eslint-disable-next-line no-param-reassign
+    target.value = target.value.toLowerCase()
+
+    if (target.value.match(EMAIL_REGEX)) {
       target.classList.remove('invalid')
     } else {
       target.classList.add('invalid')
     }
+
     this.handleValidated()
   }
   handlePassword = ({ target }) => {
@@ -38,6 +42,7 @@ export default class SignupPage extends Component {
     } else {
       target.classList.add('invalid')
     }
+
     this.handleValidated()
   }
   handlePasswordConfirm = ({ target }) => {
@@ -46,13 +51,20 @@ export default class SignupPage extends Component {
     } else {
       target.classList.add('invalid')
     }
+
     this.handleValidated()
   }
-  handleUsername = event => {
+  handleUsername = ({ target }) => {
     // eslint-disable-next-line no-param-reassign
-    event.target.value = event.target.value
+    target.value = target.value
       .toLowerCase()
       .replace(/[^a-z0-9-_]+/g, '')
+
+    if (target.value.match(USERNAME_REGEX)) {
+      target.classList.remove('invalid')
+    } else {
+      target.classList.add('invalid')
+    }
 
     this.handleValidated()
   }
@@ -165,7 +177,7 @@ export default class SignupPage extends Component {
           )}
         </div>
 
-        <span>{this.state.message}</span>
+        <center className="message-field">{this.state.message}</center>
       </div>
     </div>
   )

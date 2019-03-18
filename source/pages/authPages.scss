@@ -1,6 +1,8 @@
 @import './page';
 
-.signup.page {
+.login.page, .signup.page {
+  align-items: flex-start;
+
   > .container {
     background-color: var(--color-primary);
     border-radius: 1em;
@@ -9,15 +11,25 @@
     color: var(--color-secondary);
     display: flex;
     flex-direction: column;
-    margin: auto;
+    margin: 20px auto;
     padding: 2em;
     width: 250px;
+
+    > h3 {
+      margin-top: 0;
+    }
 
     > .buttons {
       display: flex;
       flex-direction: row;
       padding: .25rem;
       justify-content: flex-end;
+    }
+
+    > .message-field {
+      margin-top: 1em;
+
+      &:empty { display: none; }
     }
   }
 
