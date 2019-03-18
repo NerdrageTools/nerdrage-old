@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import ArticleLink from '@/components/ArticleLink'
 import Application from '@/contexts/Application'
+import noop from '@/utilities/noop'
 import './Navigation.scss'
 
 export default class Navigation extends Component {
   static contextType = Application
   static defaultProps = {
     items: [],
+    onItemClick: noop,
   }
 
   renderList = (list = [], listTitle = '', type = 'article') => Boolean(list.length) && <>
@@ -17,6 +19,7 @@ export default class Navigation extends Component {
           <ArticleLink
             {...{ domain, slug, type }}
             active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
+            onClick={this.props.onItemClick}
           >
             {linkTitle} {domain && type !== 'campaign' && `(${domain})`}
           </ArticleLink>

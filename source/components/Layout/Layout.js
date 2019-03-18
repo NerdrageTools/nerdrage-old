@@ -32,6 +32,9 @@ export default class Layout extends Component {
     window.removeEventListener('resize', this.handleWindowResize)
   }
 
+  handleNavigationItemClicked = () => {
+    this.setState({ expandNavigation: false })
+  }
   handleToggleNavigation = () => {
     this.setState({ expandNavigation: !this.state.expandNavigation })
   }
@@ -61,7 +64,7 @@ export default class Layout extends Component {
       <div className={classNames}>
         <Header onNavigationIconClick={this.handleToggleNavigation} />
         <div className="content">
-          <Navigation />
+          <Navigation onItemClick={this.handleNavigationItemClicked} />
           {this.props.children}
         </div>
       </div>
