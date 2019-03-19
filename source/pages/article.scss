@@ -4,54 +4,6 @@
   display: flex;
   flex-direction: column;
 
-  > .title-bar {
-    border-bottom: 1px solid;
-    border-bottom-color: $color-border;
-    border-bottom-color: var(--color-primary);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    > .title {
-      align-items: center;
-      display: flex;
-      flex: 1;
-      font-size: 2em;
-      font-weight: bold;
-      justify-content: flex-start;
-      margin: 0;
-      min-height: 40px;
-      padding: 10px;
-
-      &.default, &.default > input {
-        text-transform: capitalize;
-      }
-    }
-
-    > .toggle {
-      &.off { color: transparentize($palette-gray-medium, .5); }
-      &.edit-mode.on {
-        color: $palette-green;
-        stroke: $palette-green;
-        stroke-width: 5%;
-      }
-      &.in-navigation.on, &.secret.on {
-        color: $palette-green;
-        stroke: darken($palette-green, 30%);
-        stroke-width: 5%;
-      }
-      &.favorite.on {
-        stroke: $palette-gold-dark;
-        stroke-width: 5%;
-      }
-    }
-    > .redirected-from {
-      font-size: .7rem;
-      padding: .2rem .5rem;
-      opacity: .6;
-    }
-  }
-
   > .tab-set {
     .tab-contents {
       &:not(.read) { padding: 0; }
