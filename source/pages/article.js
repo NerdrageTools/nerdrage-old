@@ -75,6 +75,7 @@ export default class Article extends Component {
 
   state = {
     activeTab: 'read',
+    editMode: false,
     ...pluck(this.props, STATE_FIELDS),
     saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {},
     title: this.props.title || this.context.router.query.title,
@@ -125,6 +126,7 @@ export default class Article extends Component {
   }
   handleTagsChange = tags => this.setState({ tags })
   handleTitleChange = title => this.setState({ title })
+  handleToggleEditMode = () => this.setState({ editMode: !this.state.editMode })
   handleToggleFavorite = async () => {
     const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
       .then(r => r.json())
@@ -224,14 +226,21 @@ export default class Article extends Component {
               value={secret}
             />
           }
-          {campaign.isEditor &&
+          {campaign.isEditor && <>
             <Toggle
               className="in-navigation" value={this.isNavLink}
               offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
               onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
               onToggle={this.handleToggleNavigation}
             />
-          }
+            <Toggle
+              className="edit-mode"
+              offIcon={EditIcon}
+              onIcon={EditIcon}
+              onToggle={this.handleToggleEditMode}
+              value={this.state.editMode}
+            />
+          </>}
           <Toggle
             className="favorite"
             offIcon={FavoriteOffIcon}
@@ -246,7 +255,7 @@ export default class Article extends Component {
             {this.isDirty && <button className="safe" onClick={this.handleSave}>Save</button>}
           </>}
           onTabClicked={this.handleTabClicked}
-          showTabs={isEditable}
+          showTabs={isEditable && this.state.editMode}
           tabs={[{
             contents: this.renderReadOnlyContent(),
             id: 'read',
@@ -265,14 +274,16 @@ export default class Article extends Component {
             tab: <SettingsIcon />,
           }].filter(Boolean)}
         />
-        <TagBar
-          asLinks
-          banned={[slug, ...aliases]}
-          className="tags"
-          onChange={this.handleTagsChange}
-          tags={tags}
-          readOnly={!isEditable}
-        />
+        {(tags.length || (isEditable && this.state.editMode)) && (
+          <TagBar
+            asLinks
+            banned={[slug, ...aliases]}
+            className="tags"
+            onChange={this.handleTagsChange}
+            tags={tags}
+            readOnly={!(isEditable && this.state.editMode)}
+          />
+        )}
       </div>
     )
   }
