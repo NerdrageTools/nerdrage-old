@@ -40,6 +40,7 @@ export default class Wiki extends App {
   }
 
   state = {
+    campaign: this.props.campaign,
     user: this.props.user,
   }
 
@@ -49,11 +50,30 @@ export default class Wiki extends App {
     window.location.href = window.location.href
   }
 
+  setCampaign = campaign => this.setState({ campaign })
   setUser = user => this.setState({ user })
+  updateCampaign = async updates => {
+    const { campaign } = this.state
+    if (!campaign) { return false }
+
+    const result = await fetch(`/api/campaign/${this.state.campaign.domain}`, {
+      body: JSON.stringify(updates),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    })
+    const json = await result.json()
+
+    if (result.status === 200) {
+      this.setCampaign(json)
+      return true
+    }
+
+    return false
+  }
 
   render = () => {
-    const { campaign, Component, domain, pageProps, rootUrl, router } = this.props
-    const { user } = this.state
+    const { Component, domain, pageProps, rootUrl, router } = this.props
+    const { campaign, user } = this.state
     const theme = (campaign && campaign.theme) || defaultTheme
     const context = {
       campaign,
@@ -61,8 +81,10 @@ export default class Wiki extends App {
       logOff: this.logOff,
       rootUrl,
       router,
+      setCampaign: this.setCampaign,
       setUser: this.setUser,
       theme,
+      updateCampaign: this.updateCampaign,
       user,
     }
 

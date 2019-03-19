@@ -8,7 +8,7 @@ import User from '@/server/models/User'
 
 const controller = express()
 
-controller.get('/:domain?', ContextLoader, async (request, response) => {
+const getCampaign = async (request, response) => {
   let { campaign } = request
   if (request.params.domain) {
     campaign = await Campaign.findOne({ domain: request.params.domain })
@@ -33,9 +33,8 @@ controller.get('/:domain?', ContextLoader, async (request, response) => {
   }
 
   return response.status(200).json(json)
-})
-
-controller.put('/:domain?', NoAnonymous, async (request, response) => {
+}
+const createCampaign = async (request, response) => {
   const userId = request.user._id
   const domain = request.params.domain || request.domain
 
@@ -68,9 +67,8 @@ controller.put('/:domain?', NoAnonymous, async (request, response) => {
         })
     }
   }
-})
-
-controller.post('/:domain?', async (request, response) => {
+}
+const updateCampaign = async (request, response) => {
   try {
     const updates = { ...request.body }
     const domain = request.params.domain || request.domain
@@ -80,41 +78,47 @@ controller.post('/:domain?', async (request, response) => {
     const userId = request.session._id
 
     if (!campaign.isEditableBy(request.session._id)) {
-      return response.status(401).send({
+      return response.status(401).json({
         message: `You don't have permission to edit campaign '${domain}'.`,
       })
     }
 
-    // You cannot update the createdBy field
+    // You cannot update these fields with this API
     delete updates.createdBy
+    delete updates.domain
 
     // Only an owner can update the participant/permission fields
     if (!campaign.isOwnedBy(userId)) {
       delete updates.editors
       delete updates.owners
       delete updates.players
+      delete updates.private
     }
 
     Object.assign(campaign, {
       ...updates,
       lastUpdatedBy: userId,
     })
-    const updated = await campaign.save()
+    await campaign.save()
 
-    return response.status(200).send(updated)
+    getCampaign(request, response)
   } catch (error) {
     switch (error.code) {
       case 11000:
-        return response.status(409).send({
+        return response.status(409).json({
           message: `Domain '${request.body.domain}' is already in use.`,
         })
       default:
         console.error(`Error in POST /api/campaigns: ${error}`) // eslint-disable-line
-        return response.status(500).send({
+        return response.status(500).json({
           message: error.message || 'Unknown error.',
         })
     }
   }
-})
+}
+
+controller.get('/:domain?', ContextLoader, getCampaign)
+controller.put('/:domain?', NoAnonymous, createCampaign)
+controller.post('/:domain?', updateCampaign)
 
 export default controller

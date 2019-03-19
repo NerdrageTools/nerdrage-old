@@ -26,7 +26,7 @@
 
     > .toggle {
       &.off { color: transparentize($palette-gray-medium, .5); }
-      &.secret {
+      &.secret, &.in-navigation {
         &.on {
           color: $palette-green; // #85b12a;
           stroke: darken($palette-green, 30%);
