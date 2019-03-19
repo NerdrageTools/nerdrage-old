@@ -37,6 +37,7 @@ module.exports = {
     "react/jsx-closing-tag-location": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
     "react/jsx-indent-props": ["error", "first"],
+    "react/jsx-max-props-per-line": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/no-access-state-in-setstate": "off",
     "react/no-array-index-key": "off",

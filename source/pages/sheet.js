@@ -130,13 +130,14 @@ export default class Sheet extends Component {
             <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}
         </div>
-        <Scrollbars className="sheet-container" autoHide universal>
+        <Scrollbars
+          autoHide universal
+          className={`sheet-container ${isEditable ? 'is-editable' : 'readOnly'}`}
+        >
           <SfSheet
-            key={slug}
-            character={this.character}
-            layout={this.layout}
+            key={slug} readOnly={!isEditable}
+            character={this.character} layout={this.layout}
             onChange={this.handleSheetChange}
-            readOnly={!isEditable}
           />
         </Scrollbars>
       </div>
