@@ -9,7 +9,8 @@
       "multi private-next-pages/sheet.js": 5,
       "multi private-next-pages/signup.js": 6,
       "multi private-next-pages/user.js": 7,
-      "multi next/dist/pages/_document": 8
+      "multi next/dist/pages/_document": 8,
+      "multi private-next-pages/campaign.js": 9
     },
     "usedIds": {
       "0": 0,
@@ -20,7 +21,8 @@
       "5": 5,
       "6": 6,
       "7": 7,
-      "8": 8
+      "8": 8,
+      "9": 9
     }
   },
   "chunks": {
@@ -87,19 +89,30 @@
       "static/TLbBNK7h1hPaqLM_PsAMH/pages/login.js": 5,
       "static/TLbBNK7h1hPaqLM_PsAMH/pages/sheet.js": 6,
       "static/TLbBNK7h1hPaqLM_PsAMH/pages/signup.js": 7,
-      "static/TLbBNK7h1hPaqLM_PsAMH/pages/user.js": 8
+      "static/TLbBNK7h1hPaqLM_PsAMH/pages/user.js": 8,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/_app.js": 9,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/_document.js": 10,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/_error.js": 11,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/article.js": 12,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/campaign.js": 13,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/index.js": 14,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/login.js": 15,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/sheet.js": 16,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/signup.js": 17,
+      "static/0Ev1VE33e9unSLDLn2Ajj/pages/user.js": 18
     },
     "bySource": {},
     "usedIds": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      9
     ]
   }
 }
