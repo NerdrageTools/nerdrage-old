@@ -38,14 +38,18 @@
     .sheetforge.sheet {
       margin: 0;
 
-      button {
-        box-shadow: none;
-      }
-      .toggle.on {
-        color: inherit;
-      }
-      .toggle.off {
-        color: inherit;
+      button { box-shadow: none; }
+      .toggle.on { color: inherit; }
+      .toggle.off { color: inherit; }
+    }
+
+    &.readOnly .sheetforge.sheet {
+      button { display: none; }
+      .drag-handle { display: none; }
+      .editable {
+        background: transparent;
+        border: transparent;
+        pointer-events: none;
       }
     }
   }
