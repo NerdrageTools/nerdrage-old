@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
+import Sortable from 'sortablejs'
 import ArticleLink from '@/components/ArticleLink'
 import Application from '@/contexts/Application'
 import noop from '@/utilities/noop'
@@ -14,12 +15,39 @@ export default class Navigation extends Component {
     wrapperRef: noop,
   }
 
+  campaignNav = React.createRef()
+
+  componentDidMount() {
+    const ul = this.campaignNav.current.querySelector('ul')
+    const { navigation } = this.context.campaign
+
+    this.sortable = Sortable.create(ul, {
+      disabled: !this.isCampaignEditor,
+      dragClass: 'dragging',
+      draggable: 'li',
+      onEnd: () => {
+        const updated = [...ul.querySelectorAll('li')]
+          .map(li => li.getAttribute('data-id'))
+          .map(id => navigation.find(navLink => navLink._id === id))
+
+        this.context.updateCampaign({ navigation: updated })
+      },
+    })
+  }
+  componentDidUpdate() {
+    if (this.sortable) this.sortable.option('disabled', !this.isCampaignEditor)
+  }
+
+  get isCampaignEditor() {
+    return Boolean(this.context.campaign && this.context.campaign.isEditor)
+  }
+
   renderList = (list = [], listTitle = '', type = 'article') => (
     Boolean(list.length) && <>
       <b>{listTitle}</b>
-      <ul className="favorites">
+      <ul>
         {list.filter(item => item.campaign.domain === this.context.campaign.domain)
-          .map(({ campaign = {}, slug, title }, key) => {
+          .map(({ _id, campaign = {}, slug, title }, index) => {
             const { domain = '', title: cTitle = '' } = campaign
             let text = title
             if (type !== 'campaign' && domain && domain !== this.context.domain) {
@@ -27,7 +55,7 @@ export default class Navigation extends Component {
             }
 
             return (
-              <li key={key}>
+              <li key={_id || index} data-id={_id}>
                 <ArticleLink
                   {...{ campaign, slug, type }}
                   active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
@@ -56,7 +84,9 @@ export default class Navigation extends Component {
     return (
       <Scrollbars className="navigation" autoHide universal>
         <div className="content" ref={this.props.wrapperRef}>
-          {this.renderList(navigation, campaign.title)}
+          <div className="campaign-nav" ref={this.campaignNav}>
+            {this.renderList(navigation, campaign.title)}
+          </div>
           {user && <>
             {this.renderList(favorites, 'My Favorites')}
             {this.renderList(sheets, 'My Sheets', 'sheet')}
