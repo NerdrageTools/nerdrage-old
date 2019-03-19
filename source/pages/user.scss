@@ -1,33 +1,10 @@
 @import '~@/styles/palette';
-@import '~@/styles/breakpoint';
+@import './page';
 
 .user.page {
-  flex-direction: column;
-  padding: 1em;
-
-  > .title.row {
-    font-size: 2em;
-
-    > svg {
-      height: 2em;
-      width: 2em;
-
-      &.is-admin.on {
-        color: $palette-gold;
-        stroke: $palette-gold-dark;
-        stroke-width: 2%;
-      }
-      &.is-admin.off {
-        color: #ddd;
-      }
-    }
-    > .editable {
-      flex: 1;
-      font-weight: bold;
-      min-height: 50px;
-    }
+  > .title-bar {
+    .is-admin.toggle { padding: 0; }
   }
-
   > .user-info {
     columns: 2;
 

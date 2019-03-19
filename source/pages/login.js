@@ -15,7 +15,11 @@ export default class LoginPage extends Component {
   }
 
   componentDidMount = () => {
-    this.username.current.focus()
+    if (this.context.user.anonymous) {
+      this.username.current.focus()
+    } else {
+      this.handleRedirect()
+    }
   }
 
   handleKeyPress = event => {
@@ -28,19 +32,23 @@ export default class LoginPage extends Component {
     target.value = target.value.toLowerCase()
   }
 
+  handleRedirect = () => {
+    const { redirectTo } = this.context.router.query
+    if (redirectTo) Router.push(redirectTo)
+  }
   handleSubmit = async () => {
     const username = this.username.current.value
     const password = this.password.current.value
-    const response = await fetch('/api/user/login', {
+    const response = await fetch('/api/user/auth/login', {
       body: JSON.stringify({ password, username }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     })
     const json = await response.json()
     if (response.status === 200) {
-      const { redirectTo } = this.context.router.query
       this.context.setUser(json)
-      if (redirectTo) Router.push(redirectTo)
+      this.context.updateCampaign({})
+      this.handleRedirect()
     } else {
       this.setState({ message: '', ...json })
     }

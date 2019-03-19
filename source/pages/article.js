@@ -128,8 +128,9 @@ export default class Article extends Component {
   handleTitleChange = title => this.setState({ title })
   handleToggleEditMode = () => this.setState({ editMode: !this.state.editMode })
   handleToggleFavorite = async () => {
-    const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
-      .then(r => r.json())
+    const updated = await fetch(`/api/user/my/favorites/${this.props.slug}`, {
+      method: 'POST',
+    }).then(r => r.json())
     this.context.setUser(updated)
   }
   handleToggleNavigation = async () => {

@@ -9,6 +9,8 @@ import pluck from '@/utilities/pluck'
 
 const controller = express()
 
+const ANONYMOUS = { anonymous: true }
+
 export function invalidAuthentication(response) {
   response.status(401).json({ message: 'Username/password combination is invalid.' })
 }
@@ -64,30 +66,37 @@ export async function getUserFavorites(user) {
   })
 }
 export async function getUser(request, response) {
-  const { user: currentUser } = request
-  const { username } = request.params
+  const { freshLogin = false, params, user: currentUser } = request
+  const username = params ? params.username : freshLogin
 
   if (username) {
     const targetUser = await User.findOne({ username })
     if (!targetUser) {
-      return response.status(404).json({
+      response.status(404).json({
         message: `Unable to locate a user with username '${username}'.`,
       })
+      return ANONYMOUS
     }
 
     const json = targetUser.toJSON()
-
+    if (freshLogin) {
+      return json
+    }
     if (currentUser && currentUser.isAdmin) {
-      return response.status(200).json(json)
+      response.status(200).json(json)
+      return json
     }
 
-    return response.status(200).json(
-      pluck(json, '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
+    const user = pluck(json,
+      '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username'
     )
+    response.status(200).json(user)
+    return user
   }
 
   if (!currentUser) {
-    return response.status(200).json({ anonymous: true })
+    response.status(200).json(ANONYMOUS)
+    return ANONYMOUS
   }
 
   const userId = currentUser._id
@@ -100,13 +109,16 @@ export async function getUser(request, response) {
   }, { domain: 1, title: 1 })
 
   try {
-    return response.status(200).json({
+    const user = {
       ...currentUser.toJSON(),
       campaigns: campaigns || [],
       favorites: await getUserFavorites(request.user),
       sheets: sheets || [],
-    })
+    }
+    response.status(200).json(user)
+    return user
   } catch (error) {
+    console.error('UserController#getUser', error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
   }
 }
@@ -124,16 +136,15 @@ export async function logIn(request, response) {
 
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
-      await user.update({ lastLogin: Date.now() })
-
-      const profile = (await User.findOne(query)).toProfile()
-      request.session = profile
-      return response.status(200).json(profile)
+      await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
+      const loadedUser = await getUser({ freshLogin: username })
+      request.session = loadedUser || null
+      return response.status(200).json(loadedUser)
     }
 
     return invalidAuthentication(response)
   } catch (error) {
-    console.error(error) // eslint-disable-line no-console
+    console.error('UserController#logIn error:', error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
   }
 }

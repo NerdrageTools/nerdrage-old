@@ -24,7 +24,7 @@ export default class UserPage extends Component {
   }
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
-    const result = await (fetch(URI(req, `/api/user/${query.username}`), { headers }))
+    const result = await (fetch(URI(req, `/api/user/${query.slug}`), { headers }))
     const json = await result.json()
 
     if (result.status !== 200) {
@@ -106,64 +106,63 @@ export default class UserPage extends Component {
 
     return (
       <div className="user page">
-        <div className="title row">
+        <div className="title-bar">
           <Editable
-            className="username"
+            className="title"
             onChange={this.handleNameChange}
             placeholder="Name"
             readOnly={!isEditable}
             value={user.name}
           />
+          {isEditable && this.isDirty && (
+            <button className="update safe" onClick={this.handleSave}>Save</button>
+          )}
           {currentUser.isAdmin
             ? <Toggle
-              className="is-admin"
-              onClick={this.handleToggleAdmin}
-              offIcon={AdminIcon}
-              offProps={{ title: 'Not an Administrator' }}
-              onIcon={AdminIcon}
-              onProps={{ title: 'Administrator' }}
-              value={user.isAdmin}
+                className="is-admin"
+                onClick={this.handleToggleAdmin}
+                offIcon={AdminIcon} offProps={{ title: 'Not an Administrator' }}
+                onIcon={AdminIcon} onProps={{ title: 'Administrator' }}
+                value={user.isAdmin}
               />
             : (user.isAdmin && <AdminIcon className="is-admin on" />)
           }
-          {isEditable && this.isDirty && (
-            <button className="update safe" onClick={this.handleSave}>Save Changes</button>
-          )}
         </div>
-        <hr />
-        <div className="user-info">
-          <div className="row">
-            <b>Username:</b> <span>{user.username}</span>
+        <div className="contents">
+          <div className="user-info">
+            <div className="row">
+              <b>Username:</b> <span>{user.username}</span>
+            </div>
+            {user.email && (
+            <div className="row">
+              <b>Email Address:</b> <span>{user.email}</span>
+            </div>
+            )}
+            <div className="row">
+              <b>Joined:</b>
+              <span title={Date(user.createdAt).toLocaleString()}>{formatTime(user.createdAt)}</span>
+            </div>
+            <div className="row">
+              <b>Last Login:</b>
+              <span title={Date(user.lastLogin).toLocaleString()}>{formatTime(user.lastLogin)}</span>
+            </div>
           </div>
-          {user.email && (
-          <div className="row">
-            <b>Email Address:</b> <span>{user.email}</span>
-          </div>
-          )}
-          <div className="row">
-            <b>Joined:</b>
-            <span title={Date(user.createdAt).toLocaleString()}>{formatTime(user.createdAt)}</span>
-          </div>
-          <div className="row">
-            <b>Last Login:</b>
-            <span title={Date(user.lastLogin).toLocaleString()}>{formatTime(user.lastLogin)}</span>
-          </div>
+          {user.favorites && <>
+            <hr />
+            <ArticleChildren
+              articles={user.favorites.map(favorite => {
+                const [domain, slug] = favorite.split(':')
+                return {
+                  domain,
+                  slug,
+                  title: slug,
+                }
+              })}
+              caption="Favorites"
+              icon={<FavoriteIcon className="favorites icon" />}
+            />
+          </>}
         </div>
-        <hr />
-        {user.favorites && (
-          <ArticleChildren
-            articles={user.favorites.map(favorite => {
-              const [domain, slug] = favorite.split(':')
-              return {
-                domain,
-                slug,
-                title: slug,
-              }
-            })}
-            caption="Favorites"
-            icon={<FavoriteIcon className="favorites icon" />}
-          />
-        )}
       </div>
     )
   }
