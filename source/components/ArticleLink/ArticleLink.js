@@ -22,8 +22,11 @@ class ArticleLink extends Component {
     if (active) return <b>{children}</b>
 
     if (type === 'campaign') {
-      const href = `//${campaign.domain}.${rootUrl}/`
-      return <a {...linkProps} href={href}>{children}</a>
+      const href = `//${campaign.domain}.${rootUrl}/campaign`
+      if (campaign.domain !== this.context.campaign.domain) {
+        return <a {...linkProps} href={href}>{children}</a>
+      }
+      return <NextLink as="/campaign" href="/campaign">{children}</NextLink>
     }
 
     if (campaign.domain !== currentDomain) {
