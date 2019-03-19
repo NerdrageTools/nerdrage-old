@@ -11,11 +11,8 @@ import URI from '@/utilities/URI'
 import 'sheetforge/build/sheetforge.css'
 import './sheet.scss'
 
-const UPDATABLE_FIELDS = [
-  'data',
-  'layout',
-  'title',
-]
+const STATE_FIELDS = ['isEditable', 'isOwner', 'slug']
+const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
   static contextType = Application
@@ -23,14 +20,18 @@ export default class Sheet extends Component {
     children: [],
     data: {},
     layout: defaultLayout,
+    slug: '',
     title: '',
   }
 
   state = {
-    ...pluck(this.props, '_id', 'data', 'layout', 'isEditable', 'isOwner'),
-    saved: pluck(this.props, 'data', 'layout', 'title'),
+    ...pluck(this.props, STATE_FIELDS),
+    saved: pluck(this.props, UPDATABLE_FIELDS),
     title: this.props.title || this.context.router.query.title || 'Unnamed Character',
   }
+
+  character = CharacterModel.create({})
+  layout = LayoutModel.create(defaultLayout)
 
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
@@ -40,15 +41,33 @@ export default class Sheet extends Component {
   }
 
   get isDirty() {
-    const fromCurrent = JSON.stringify(pluck(this.state, UPDATABLE_FIELDS))
-    const fromSaved = JSON.stringify(pluck(this.state.saved, UPDATABLE_FIELDS))
-
-    return fromCurrent !== fromSaved
+    return (
+      this.state.title !== this.state.saved.title
+      || this.character.isDirty || this.layout.isDirty
+    )
   }
 
-  handleChange = (data, layout) => {
-    this.setState({ data, layout })
+  updateSheet = ({ data = {}, layout = defaultLayout }) => {
+    this.character.set(data)
+    this.character.markAsClean()
+    this.layout.set(layout)
+    this.layout.markAsClean()
   }
+
+  componentDidMount = () => {
+    this.updateSheet(this.props)
+  }
+  componentWillReceiveProps = props => {
+    if (props.slug !== this.props.slug) {
+      this.character = CharacterModel.create(props.data)
+      this.layout = LayoutModel.create(props.layout)
+      this.setState({
+        saved: pluck(props, UPDATABLE_FIELDS),
+        title: props.title || new URLSearchParams(window.location.search).get('title') || '',
+      })
+    }
+  }
+
   handleDelete = async () => {
     if (await confirm('Are you sure you want to permanently delete this sheet?')) {
       const { slug } = this.context.router.query
@@ -58,30 +77,39 @@ export default class Sheet extends Component {
       }
     }
   }
+  handleReset = () => {
+    this.character.reset()
+    this.layout.reset()
+    this.setState(this.state.saved)
+  }
   handleSave = async () => {
     const { slug } = this.context.router.query
     const response = await fetch(`/api/sheet/${slug}`, {
-      body: JSON.stringify(pluck(this.state, UPDATABLE_FIELDS)),
+      body: JSON.stringify({
+        data: this.character.toJSON(),
+        layout: this.layout.toJSON(),
+        title: this.state.title,
+      }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     })
     const json = await response.json()
     if (response.status === 200) {
+      this.updateSheet(json)
       return this.setState({
-        ...json,
-        saved: {
-          ...this.state.saved,
-          ...pluck(json, UPDATABLE_FIELDS),
-        },
+        ...pluck(json, STATE_FIELDS),
+        saved: pluck(json, UPDATABLE_FIELDS),
       })
     }
 
     return this.setState(json)
   }
+  handleSheetChange = () => this.forceUpdate()
   handleTitleChange = title => this.setState({ title })
 
   render = () => {
-    const { data, isEditable, isOwner, layout, title } = this.state
+    const { slug } = this.props
+    const { isEditable, isOwner, title } = this.state
 
     return (
       <div className="sheet page">
@@ -95,15 +123,19 @@ export default class Sheet extends Component {
           {isEditable && this.isDirty && (
             <button className="save safe" onClick={this.handleSave}>Save</button>
           )}
+          {isEditable && this.isDirty && (
+            <button className="save safe" onClick={this.handleReset}>Reset</button>
+          )}
           {isOwner && (
             <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}
         </div>
         <Scrollbars className="sheet-container" autoHide universal>
           <SfSheet
-            character={CharacterModel.create(data)}
-            layout={LayoutModel.create(layout)}
-            onChange={this.handleChange}
+            key={slug}
+            character={this.character}
+            layout={this.layout}
+            onChange={this.handleSheetChange}
             readOnly={!isEditable}
           />
         </Scrollbars>
