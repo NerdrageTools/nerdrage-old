@@ -47,15 +47,17 @@ export const getArticle = async (request, response) => {
   let { article } = request
 
   if (!article) {
-    article = {
-      ...omit(await new Article({ slug }).render(), '_id'),
-      campaign: pluck(campaign.toJSON(), '_id', 'domain', 'title'),
-    }
+    article = omit(await new Article({ slug }).render(), '_id')
   } else {
     article = await article.render()
   }
 
-  return response.status(200).json({ ...article, isEditable, isOwner })
+  return response.status(200).json({
+    ...article,
+    campaign: pluck(campaign.toJSON(), '_id', 'domain', 'title'),
+    isEditable,
+    isOwner,
+  })
 }
 export const upsertArticle = async (request, response) => {
   const {

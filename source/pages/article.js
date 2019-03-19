@@ -167,7 +167,10 @@ export default class Article extends Component {
     const { activeTab, aliases, html, redirectedFrom, secret, tags, title } = this.state
     const { campaign = {}, httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
-    const isFavorite = favorites.find(f => f.domain === campaign.domain && f.slug === slug)
+    const isFavorite = favorites.find(f => (
+      f.campaign.domain === campaign.domain
+      && f.slug === slug
+    ))
 
     if (httpStatusCode !== 200) {
       return (
