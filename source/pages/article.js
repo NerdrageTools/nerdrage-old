@@ -194,6 +194,7 @@ export default class Article extends Component {
       f.campaign.domain === campaign.domain
       && f.slug === slug
     ))
+    const readOnly = !isEditable || !this.state.editMode
 
     if (httpStatusCode !== 200) {
       return (
@@ -211,8 +212,8 @@ export default class Article extends Component {
             className={`title ${title.trim() ? '' : 'default'}`}
             onChange={this.handleTitleChange}
             placeholder={slug}
-            readOnly={!isEditable}
-            value={title}
+            readOnly={readOnly}
+            value={readOnly ? this.state.saved.title : title}
           />
           {redirectedFrom && (
             <div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
@@ -255,7 +256,7 @@ export default class Article extends Component {
             {this.isDirty && <button className="safe" onClick={this.handleSave}>Save</button>}
           </>}
           onTabClicked={this.handleTabClicked}
-          showTabs={isEditable && this.state.editMode}
+          showTabs={!readOnly}
           tabs={[{
             contents: this.renderReadOnlyContent(),
             id: 'read',
@@ -274,14 +275,14 @@ export default class Article extends Component {
             tab: <SettingsIcon />,
           }].filter(Boolean)}
         />
-        {(tags.length || (isEditable && this.state.editMode)) && (
+        {(tags.length || !readOnly) && (
           <TagBar
             asLinks
             banned={[slug, ...aliases]}
             className="tags"
             onChange={this.handleTagsChange}
             tags={tags}
-            readOnly={!(isEditable && this.state.editMode)}
+            readOnly={readOnly}
           />
         )}
       </div>
