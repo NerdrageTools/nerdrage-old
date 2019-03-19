@@ -142,16 +142,7 @@ export default class Article extends Component {
       navigation.push({ slug, title })
     }
 
-    const result = await fetch(`/api/campaign/${this.context.campaign.domain}`, {
-      body: JSON.stringify({ navigation }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-    })
-    const json = await result.json()
-
-    if (result.status === 200) {
-      this.context.setCampaign(json)
-    }
+    this.context.updateCampaign({ navigation })
   }
   handleToggleSecret = async () => {
     const payload = { secret: !this.state.secret }
