@@ -44,8 +44,9 @@ export default class Navigation extends Component {
     })
   }
 
-  renderList = (list = [], listTitle = '', type = 'article') => <>
-    {Boolean(list.length) && <b>{listTitle}</b>}
+  renderList = (list = [], listTitle = '', type = 'article', campaignLink = null) => <>
+    {campaignLink}
+    {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
     <ul>
       {list.filter(item => item.campaign.domain === this.context.campaign.domain)
         .map(({ _id, campaign = {}, slug, title }, index) => {
@@ -85,7 +86,9 @@ export default class Navigation extends Component {
       <Scrollbars className="navigation" autoHide universal>
         <div className="content" ref={this.props.wrapperRef}>
           <div className="campaign-nav" ref={this.campaignNav}>
-            {this.renderList(navigation, campaign.title)}
+            {this.renderList(navigation, campaign.title, 'article',
+              <ArticleLink domain={campaign.domain} type="campaign">{campaign.title}</ArticleLink>
+            )}
           </div>
           {user && <>
             {this.renderList(favorites, 'My Favorites')}
