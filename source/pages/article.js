@@ -10,11 +10,11 @@ import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
-import NavigationIcon from '@/icons/categorize.svg'
 import EditIcon from '@/icons/edit.svg'
 import FavoriteOffIcon from '@/icons/favorite-off.svg'
 import FavoriteOnIcon from '@/icons/favorite-on.svg'
 import HtmlIcon from '@/icons/html.svg'
+import NavigationIcon from '@/icons/Navigation'
 import SecretOnIcon from '@/icons/private.svg'
 import SecretOffIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
@@ -235,7 +235,8 @@ export default class Article extends Component {
           {campaign.isEditor &&
             <Toggle
               className="in-navigation" value={this.isNavLink}
-              offIcon={NavigationIcon} onIcon={NavigationIcon}
+              offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
+              onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
               onToggle={this.handleToggleNavigation}
             />
           }
