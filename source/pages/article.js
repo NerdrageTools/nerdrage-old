@@ -167,7 +167,7 @@ export default class Article extends Component {
   }
 
   renderReadOnlyContent = () => <>
-    <JsxParser components={{ a: Link }} jsx={this.state.html || this.props.html} />
+    <JsxParser components={{ a: Link }} jsx={(this.state.html || this.props.html || '').trim()} />
     <ArticleChildren articles={this.props.childArticles} />
   </>
   renderSettingsTab = () => <>
@@ -193,7 +193,7 @@ export default class Article extends Component {
     )}
   </>
   render = () => {
-    const { activeTab, aliases, html, redirectedFrom, secret, tags, title } = this.state
+    const { activeTab, aliases, html, redirectedFrom, secret, tags, title = '' } = this.state
     const { httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
     const { campaign = {} } = this.context
@@ -215,8 +215,9 @@ export default class Article extends Component {
         {message && <Alert>{message}</Alert>}
         <div className="title-bar">
           <Editable
-            className="title"
+            className={`title ${title.trim() ? '' : 'default'}`}
             onChange={this.handleTitleChange}
+            placeholder={slug}
             readOnly={!isEditable}
             value={title}
           />

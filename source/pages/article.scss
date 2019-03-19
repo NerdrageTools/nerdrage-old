@@ -22,6 +22,10 @@
       margin: 0;
       min-height: 40px;
       padding: 10px;
+
+      &.default, &.default > input {
+        text-transform: capitalize;
+      }
     }
 
     > .toggle {
@@ -58,7 +62,34 @@
       }
     }
 
-    > .tabs.read ~ .tab-contents { padding: .5rem; }
+    > .tabs.read ~ .tab-contents {
+      padding: .5rem;
+
+      .jsx-parser {
+        &:empty {
+          min-height: 100%;
+          position: relative;
+
+          &:before {
+            background: #00000011;
+            border-radius: 1em;
+            box-shadow: 3px 3px 3px #00000033;
+            content: 'This article has not yet been written.';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            height: 100%;
+            left: 0;
+            opacity: .25;
+            position: absolute;
+            text-shadow: 1px 1px 1px #00000066;
+            top: 0;
+            width: 100%;
+          }
+        }
+      }
+    }
     > .tabs.html {
       > .tab.html.is-active {
         background-color: #fff;

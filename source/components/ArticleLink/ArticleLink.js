@@ -10,7 +10,14 @@ class ArticleLink extends Component {
   }
 
   render = () => {
-    const { active, campaign = {}, children, slug = '', type = 'article', ...linkProps } = this.props
+    const {
+      active,
+      campaign = this.context.campaign,
+      children,
+      slug = '',
+      type = 'article',
+      ...linkProps
+    } = this.props
     const { domain: currentDomain, rootUrl } = this.context
     if (active) return <b>{children}</b>
 

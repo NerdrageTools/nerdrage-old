@@ -17,7 +17,15 @@ export default class Navigation extends Component {
 
   campaignNav = React.createRef()
 
-  componentDidMount() {
+  componentDidMount() { this.initializeSortable() }
+  componentDidUpdate() { this.initializeSortable() }
+
+  get isCampaignEditor() {
+    return Boolean(this.context.campaign && this.context.campaign.isEditor)
+  }
+
+  initializeSortable = () => {
+    if (this.sortable) this.sortable.destroy()
     const ul = this.campaignNav.current.querySelector('ul')
     const { navigation } = this.context.campaign
 
@@ -29,46 +37,38 @@ export default class Navigation extends Component {
         const updated = [...ul.querySelectorAll('li')]
           .map(li => li.getAttribute('data-id'))
           .map(id => navigation.find(navLink => navLink._id === id))
+          .filter(Boolean)
 
         this.context.updateCampaign({ navigation: updated })
       },
     })
   }
-  componentDidUpdate() {
-    if (this.sortable) this.sortable.option('disabled', !this.isCampaignEditor)
-  }
 
-  get isCampaignEditor() {
-    return Boolean(this.context.campaign && this.context.campaign.isEditor)
-  }
+  renderList = (list = [], listTitle = '', type = 'article') => <>
+    {Boolean(list.length) && <b>{listTitle}</b>}
+    <ul>
+      {list.filter(item => item.campaign.domain === this.context.campaign.domain)
+        .map(({ _id, campaign = {}, slug, title }, index) => {
+          const { domain = '', title: cTitle = '' } = campaign
+          let text = title
+          if (type !== 'campaign' && domain && domain !== this.context.domain) {
+            text += ` (${cTitle || domain})`
+          }
 
-  renderList = (list = [], listTitle = '', type = 'article') => (
-    Boolean(list.length) && <>
-      <b>{listTitle}</b>
-      <ul>
-        {list.filter(item => item.campaign.domain === this.context.campaign.domain)
-          .map(({ _id, campaign = {}, slug, title }, index) => {
-            const { domain = '', title: cTitle = '' } = campaign
-            let text = title
-            if (type !== 'campaign' && domain && domain !== this.context.domain) {
-              text += ` (${cTitle || domain})`
-            }
-
-            return (
-              <li key={_id || index} data-id={_id}>
-                <ArticleLink
-                  {...{ campaign, slug, type }}
-                  active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
-                  onClick={this.props.onItemClick}
-                >
-                  {text}
-                </ArticleLink>
-              </li>
-            )
-          })}
-      </ul>
-    </>
-  )
+          return (
+            <li key={_id || index} data-id={_id}>
+              <ArticleLink
+                {...{ campaign, slug, type }}
+                active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
+                onClick={this.props.onItemClick}
+              >
+                {text}
+              </ArticleLink>
+            </li>
+          )
+        })}
+    </ul>
+  </>
 
   render = () => {
     const { campaign, user = {} } = this.context
