@@ -50,9 +50,9 @@ const CampaignSchema = new mongoose.Schema({
   timestamps: true,
   toJSON: {
     transform(document, returnValue) {
-      returnValue.editors.sort(userSorter)
-      returnValue.owners.sort(userSorter)
-      returnValue.players.sort(userSorter)
+      if (returnValue.editors) returnValue.editors.sort(userSorter)
+      if (returnValue.owners) returnValue.owners.sort(userSorter)
+      if (returnValue.players) returnValue.players.sort(userSorter)
     },
   },
   versionKey: 'version',
