@@ -10,6 +10,7 @@ import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
+import NavigationIcon from '@/icons/categorize.svg'
 import EditIcon from '@/icons/edit.svg'
 import FavoriteOffIcon from '@/icons/favorite-off.svg'
 import FavoriteOnIcon from '@/icons/favorite-on.svg'
@@ -94,6 +95,11 @@ export default class Article extends Component {
 
     return fromState !== fromSaved
   }
+  get isNavLink() {
+    const { campaign = {} } = this.context
+    if (!campaign.navigation || !campaign.navigation.length) return false
+    return Boolean(campaign.navigation.find(n => n.slug === this.props.slug))
+  }
 
   handleAliasesChange = aliases => this.setState({ aliases })
   handleDelete = async () => {
@@ -123,6 +129,29 @@ export default class Article extends Component {
     const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
       .then(r => r.json())
     this.context.setUser(updated)
+  }
+  handleToggleNavigation = async () => {
+    const { slug, title } = this.props
+    const { campaign } = this.context
+    if (!campaign) { return }
+
+    let navigation = (campaign.navigation || [])
+    if (this.isNavLink) {
+      navigation = navigation.filter(n => n.slug !== slug)
+    } else {
+      navigation.push({ slug, title })
+    }
+
+    const result = await fetch(`/api/campaign/${this.context.campaign.domain}`, {
+      body: JSON.stringify({ navigation }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    })
+    const json = await result.json()
+
+    if (result.status === 200) {
+      this.context.setCampaign(json)
+    }
   }
   handleToggleSecret = async () => {
     const payload = { secret: !this.state.secret }
@@ -165,8 +194,9 @@ export default class Article extends Component {
   </>
   render = () => {
     const { activeTab, aliases, html, redirectedFrom, secret, tags, title } = this.state
-    const { campaign = {}, httpStatusCode, isEditable, isOwner, message, slug } = this.props
+    const { httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
+    const { campaign = {} } = this.context
     const isFavorite = favorites.find(f => (
       f.campaign.domain === campaign.domain
       && f.slug === slug
@@ -200,6 +230,13 @@ export default class Article extends Component {
               onIcon={SecretOnIcon}
               onToggle={this.handleToggleSecret}
               value={secret}
+            />
+          }
+          {campaign.isEditor &&
+            <Toggle
+              className="in-navigation" value={this.isNavLink}
+              offIcon={NavigationIcon} onIcon={NavigationIcon}
+              onToggle={this.handleToggleNavigation}
             />
           }
           <Toggle
