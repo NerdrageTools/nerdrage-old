@@ -16,7 +16,10 @@ const getCampaign = async (request, response) => {
       .exec()
   }
 
-  if (!campaign) return Campaign404({ campaign }, response)
+  if (!campaign || !campaign._id) {
+    const domain = request.params.domain || request.domain
+    return Campaign404({ campaign, domain }, response)
+  }
 
   const json = campaign.toJSON()
 

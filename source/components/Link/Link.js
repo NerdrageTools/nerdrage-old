@@ -1,5 +1,5 @@
-import NextLink from 'next/link'
 import React, { Component } from 'react'
+import PageLink from '@/components/PageLink'
 import Application from '@/contexts/Application'
 
 export default class Link extends Component {
@@ -13,9 +13,9 @@ export default class Link extends Component {
 
     const [type, slug] = href.split('/')
     return (
-      <NextLink href={`/${type}?slug=${slug}`} as={href}>
-        <a className={className} href={href} {...props}>{children}</a>
-      </NextLink>
+      <PageLink {...props} type={type} slug={slug}>
+        {children}
+      </PageLink>
     )
   }
 }

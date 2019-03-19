@@ -2,12 +2,13 @@ import NextLink from 'next/link'
 import React, { Component } from 'react'
 import Application from '@/contexts/Application'
 
-class ArticleLink extends Component {
+export default class PageLink extends Component {
   static contextType = Application
   static defaultProps = {
     domain: '',
     slug: '',
   }
+  static displayName = 'PageLink'
 
   render = () => {
     const {
@@ -29,18 +30,19 @@ class ArticleLink extends Component {
       return <NextLink as="/campaign" href="/campaign">{children}</NextLink>
     }
 
+    const slashSlug = slug ? `/${slug}` : ''
+    const queryStringSlug = slug ? `?slug=${slug}` : ''
+
     if (campaign.domain !== currentDomain) {
-      const href = `//${campaign.domain}.${rootUrl}/${type}/${slug}`
+      const href = `//${campaign.domain}.${rootUrl}/${type}${slashSlug}`
       return <a {...linkProps} href={href}>{children}</a>
     }
 
+
     return (
-      <NextLink as={`/${type}/${slug}`} href={`/${type}?slug=${slug}`}>
+      <NextLink as={`/${type}${slashSlug}`} href={`/${type}${queryStringSlug}`}>
         <a {...linkProps}>{children}</a>
       </NextLink>
     )
   }
 }
-
-ArticleLink.displayName = 'ArticleLink'
-export default ArticleLink
