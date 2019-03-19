@@ -7,8 +7,9 @@ import './SearchBox.scss'
 export default class SearchBox extends Component {
   static contextType = Application
   static defaultProps = {
-    placeholder: 'Search...',
+    placeholder: 'Search... (Ctrl+Shift+F)',
   }
+  static displayName = 'SearchBox'
 
   state = {
     message: null,
@@ -16,7 +17,25 @@ export default class SearchBox extends Component {
   }
 
   downshift = React.createRef()
+  inputBox = React.createRef()
 
+  componentDidMount = () => {
+    document.addEventListener('keydown', this.handleHotKeys)
+  }
+  componentWillUnmount = () => {
+    document.removeEventListener('keydown', this.handleHotKeys)
+  }
+
+  handleHotKeys = ({ key, ctrlKey, shiftKey }) => {
+    if (key === 'F' && ctrlKey && shiftKey) {
+      this.inputBox.current.focus()
+    }
+  }
+  handleKeyDown = event => {
+    if (event.key === 'Escape') {
+      this.inputBox.current.blur()
+    }
+  }
   handleSearch = async term => {
     if (term.length <= 3) return undefined
 
@@ -58,16 +77,20 @@ export default class SearchBox extends Component {
 
     return (
       <Downshift
-        id="search-box"
+        id="search-box" ref={this.downshift}
         itemToString={article => (article ? article.title : '')}
         onInputValueChange={this.handleSearch}
         onSelect={this.handleSelect}
-        ref={this.downshift}
-      >
-        {({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
-          <div className="search-box" style={{ color: theme.foreground }}>
-            <input {...getInputProps()} className="input" placeholder={placeholder} />
-            {isOpen && <ul {...getMenuProps()} className="search-results">
+      >{({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
+        <div className="search-box" style={{ color: theme.foreground }}>
+          <input
+            {...getInputProps()}
+            className="input" ref={this.inputBox}
+            onKeyDown={this.handleKeyDown}
+            placeholder={placeholder}
+          />
+          {isOpen && (
+            <ul {...getMenuProps()} className="search-results">
               {options.length
                 ? options.map((article, index) => this.renderSearchResult(
                   article, index,
@@ -75,10 +98,11 @@ export default class SearchBox extends Component {
                 )
                 : <center><i>{message || 'Searching...'}</i></center>
               }
-            </ul>}
-            <SearchIcon className="search icon" />
-          </div>
-        )}
+            </ul>
+          )}
+          <SearchIcon className="search icon" />
+        </div>
+      )}
       </Downshift>
     )
   }
