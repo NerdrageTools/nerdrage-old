@@ -125,7 +125,7 @@ export default class UserPage extends Component {
                 onIcon={AdminIcon} onProps={{ title: 'Administrator' }}
                 value={user.isAdmin}
               />
-            : (user.isAdmin && <AdminIcon className="is-admin on" />)
+            : (user.isAdmin && <AdminIcon className="is-admin toggle on" />)
           }
         </div>
         <div className="contents">
@@ -140,11 +140,15 @@ export default class UserPage extends Component {
             )}
             <div className="row">
               <b>Joined:</b>
-              <span title={Date(user.createdAt).toLocaleString()}>{formatTime(user.createdAt)}</span>
+              <span title={Date(user.createdAt).toLocaleString()}>
+                {formatTime(user.createdAt)}
+              </span>
             </div>
             <div className="row">
               <b>Last Login:</b>
-              <span title={Date(user.lastLogin).toLocaleString()}>{formatTime(user.lastLogin)}</span>
+              <span title={Date(user.lastLogin).toLocaleString()}>
+                {formatTime(user.lastLogin)}
+              </span>
             </div>
           </div>
           {user.favorites && <>

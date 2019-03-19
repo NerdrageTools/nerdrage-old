@@ -15,9 +15,9 @@ import FavoriteOffIcon from '@/icons/favorite-off.svg'
 import FavoriteOnIcon from '@/icons/favorite-on.svg'
 import HtmlIcon from '@/icons/html.svg'
 import NavigationIcon from '@/icons/Navigation'
-import SecretOnIcon from '@/icons/private.svg'
-import SecretOffIcon from '@/icons/public.svg'
+import PublicIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
+import SecretIcon from '@/icons/secret.svg'
 import SettingsIcon from '@/icons/settings.svg'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
@@ -222,8 +222,8 @@ export default class Article extends Component {
           {isOwner &&
             <Toggle
               className="secret"
-              offIcon={SecretOffIcon}
-              onIcon={SecretOnIcon}
+              offIcon={PublicIcon}
+              onIcon={SecretIcon}
               onToggle={this.handleToggleSecret}
               value={secret}
             />

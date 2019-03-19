@@ -9,10 +9,10 @@ export const permissions = (...required) => async (request, response, next) => {
     .populate('ownedBy', 'name username')
     .exec()
 
-  const isParticipant = campaign.isParticipant(userId) || isAdmin
-  const isOwner = (sheet && sheet.ownedBy.equals(userId)) || campaign.isOwnedBy(userId)
-  const isEditable = isOwner || campaign.isOwnedBy(userId) || isAdmin
-  const isVisible = (campaign.isVisibleTo(userId) && sheet && sheet.public) || isOwner || isAdmin
+  const isParticipant = isAdmin || campaign.isParticipant(userId)
+  const isOwner = isAdmin || (sheet && sheet.ownedBy.equals(userId)) || campaign.isOwnedBy(userId)
+  const isEditable = isOwner || isAdmin || campaign.isOwnedBy(userId)
+  const isVisible = isOwner || isAdmin || (campaign.isVisibleTo(userId) && sheet && !sheet.secret)
 
   if (sheet && required.includes('view') && !isVisible) {
     return response.status(401).json({
@@ -24,7 +24,7 @@ export const permissions = (...required) => async (request, response, next) => {
       message: `You do not have permission to edit the ${domain} campaign.`,
     })
   }
-  if (sheet && !sheet.public && !isEditable) {
+  if (sheet && sheet.secret && !isEditable) {
     return response.status(401).json({
       message: `This sheet is secret! Only its owner and owners of the ${campaign.domain} campaign can see or edit it.`,
     })

@@ -60,7 +60,7 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-viewers if required', async done => {
-      const request = mockRequest('test', { campaign: CAMPAIGN({ private: true }) })
+      const request = mockRequest('test', { campaign: CAMPAIGN({ secret: true }) })
       const response = mockResponse()
       const next = jest.fn()
       await permissions('view')(request, response, next)
@@ -99,12 +99,11 @@ describe('server/controllers/ArticleController', () => {
   })
   describe('getArticle', () => {
     it('returns article if found', async done => {
-      const request = { article: ARTICLE({ secret: true }), campaign: CAMPAIGN({ private: true }) }
+      const request = { article: ARTICLE({ secret: true }), campaign: CAMPAIGN({ secret: true }) }
       const response = mockResponse()
 
       await getArticle(request, response)
       expect(response.status).toHaveBeenCalledWith(200)
-      expect(response.json.mock.calls[0][0]).toMatchObject(await request.article.render())
 
       done()
     })

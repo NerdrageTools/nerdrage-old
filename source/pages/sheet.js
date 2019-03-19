@@ -3,15 +3,18 @@ import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { CharacterModel, LayoutModel, Sheet as SfSheet } from 'sheetforge'
 import Editable from '@/components/Editable'
+import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import defaultLayout from '@/data/defaultSheetLayout'
+import PublicIcon from '@/icons/public.svg'
+import SecretIcon from '@/icons/secret.svg'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
 import 'sheetforge/build/sheetforge.css'
 import './sheet.scss'
 
-const STATE_FIELDS = ['isEditable', 'isOwner', 'slug']
+const STATE_FIELDS = ['_id', 'isEditable', 'isOwner', 'secret', 'slug']
 const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
@@ -47,13 +50,6 @@ export default class Sheet extends Component {
     )
   }
 
-  updateSheet = ({ data = {}, layout = defaultLayout }) => {
-    this.character.set(data)
-    this.character.markAsClean()
-    this.layout.set(layout)
-    this.layout.markAsClean()
-  }
-
   componentDidMount = () => {
     this.updateSheet(this.props)
   }
@@ -66,6 +62,12 @@ export default class Sheet extends Component {
         title: props.title || new URLSearchParams(window.location.search).get('title') || '',
       })
     }
+  }
+  updateSheet = ({ data = {}, layout = defaultLayout }) => {
+    this.character.set(data)
+    this.character.markAsClean()
+    this.layout.set(layout)
+    this.layout.markAsClean()
   }
 
   handleDelete = async () => {
@@ -82,10 +84,10 @@ export default class Sheet extends Component {
     this.layout.reset()
     this.setState(this.state.saved)
   }
-  handleSave = async () => {
+  handleSave = async payload => {
     const { slug } = this.context.router.query
     const response = await fetch(`/api/sheet/${slug}`, {
-      body: JSON.stringify({
+      body: JSON.stringify(payload || {
         data: this.character.toJSON(),
         layout: this.layout.toJSON(),
         title: this.state.title,
@@ -106,10 +108,11 @@ export default class Sheet extends Component {
   }
   handleSheetChange = () => this.forceUpdate()
   handleTitleChange = title => this.setState({ title })
+  handleToggleSecret = () => this.handleSave({ secret: !this.state.secret })
 
   render = () => {
     const { slug } = this.props
-    const { isEditable, isOwner, title } = this.state
+    const { _id, isEditable, isOwner, secret, title } = this.state
 
     return (
       <div className="sheet page">
@@ -120,13 +123,20 @@ export default class Sheet extends Component {
             readOnly={!isEditable}
             value={title}
           />
-          {isEditable && this.isDirty && (
-            <button className="save safe" onClick={this.handleSave}>Save</button>
+          {isEditable && this.isDirty && <>
+            <button className="safe" onClick={() => this.handleSave()}>{_id ? 'Save' : 'Create'}</button>
+            {_id && <button className="safe" onClick={this.handleReset}>Reset</button>}
+          </>}
+          {_id && isEditable && (
+            <Toggle
+              className="secret"
+              offIcon={PublicIcon}
+              onIcon={SecretIcon}
+              onToggle={this.handleToggleSecret}
+              value={secret}
+            />
           )}
-          {isEditable && this.isDirty && (
-            <button className="save safe" onClick={this.handleReset}>Reset</button>
-          )}
-          {isOwner && (
+          {_id && isOwner && (
             <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}
         </div>

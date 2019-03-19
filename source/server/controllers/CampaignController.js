@@ -95,7 +95,7 @@ const updateCampaign = async (request, response) => {
       delete updates.editors
       delete updates.owners
       delete updates.players
-      delete updates.private
+      delete updates.secret
     }
 
     Object.assign(campaign, {

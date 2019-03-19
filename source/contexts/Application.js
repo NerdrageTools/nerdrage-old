@@ -9,7 +9,7 @@ const CAMPAIGN_DEFAULTS = {
   lastUpdatedBy: {},
   navigation: [],
   owners: [],
-  private: false,
+  secret: false,
   theme: {
     background: '#fff',
     fontFamily: 'Ubuntu',

@@ -27,7 +27,7 @@ const CampaignSchema = new mongoose.Schema({
   },
   owners: [{ ref: 'User', type: ObjectIdType }],
   players: [{ ref: 'User', type: ObjectIdType }],
-  private: { default: false, type: Boolean },
+  secret: { default: false, type: Boolean },
   theme: {
     default: defaultTheme,
     type: {
@@ -66,7 +66,7 @@ CampaignSchema.methods.isOwnedBy = function (userId) {
 
 CampaignSchema.methods.isVisibleTo = function (userId) {
   const matches = matchObjectId(userId)
-  if (!this.private) return true
+  if (!this.secret) return true
 
   return Boolean(
     this.owners.some(matches)

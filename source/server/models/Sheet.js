@@ -8,7 +8,7 @@ export const SheetSchema = new mongoose.Schema({
   data: { default: {}, type: Object },
   layout: { default: {}, type: Object },
   ownedBy: { ref: 'User', type: ObjectIdType },
-  public: { default: false, type: Boolean },
+  secret: { default: true, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
   title: { default: 'Unnamed Character', type: String },
 }, {
