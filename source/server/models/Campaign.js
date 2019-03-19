@@ -5,6 +5,12 @@ import defaultTheme from '@/data/defaultTheme'
 const { ObjectId } = mongoose.Types.ObjectId
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 
+const userSorter = (userA, userB) => {
+  const a = userA.name || userA.username || userA
+  const b = userB.name || userB.username || userB
+  return (a).localeCompare(b)
+}
+
 const ColorCode = {
   match: [/^#[0-9a-f]{3,6}/i, 'Invalid color code'],
   trim: true,
@@ -42,6 +48,13 @@ const CampaignSchema = new mongoose.Schema({
 }, {
   id: false,
   timestamps: true,
+  toJSON: {
+    transform(document, returnValue) {
+      returnValue.editors.sort(userSorter)
+      returnValue.owners.sort(userSorter)
+      returnValue.players.sort(userSorter)
+    },
+  },
   versionKey: 'version',
 })
 

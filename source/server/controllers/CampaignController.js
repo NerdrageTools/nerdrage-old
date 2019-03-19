@@ -12,7 +12,7 @@ const getCampaign = async (request, response) => {
   let { campaign } = request
   if (request.params.domain) {
     campaign = await Campaign.findOne({ domain: request.params.domain })
-      .populate('editors players owners', 'name username')
+      .populate('editors players owners', '_id name username', null, { sort: { name: 1 } })
       .exec()
   }
 
