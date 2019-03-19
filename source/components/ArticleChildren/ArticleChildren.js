@@ -1,5 +1,5 @@
 import React from 'react'
-import ArticleLink from '@/components/ArticleLink'
+import PageLink from '@/components/PageLink'
 import TagIcon from '@/icons/tag.svg'
 import './ArticleChildren.scss'
 
@@ -15,7 +15,7 @@ export default function ArticleChildren({
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(({ slug, title }) => (
       <li key={slug}>
-        <ArticleLink slug={slug}>{title}</ArticleLink>
+        <PageLink slug={slug}>{title}</PageLink>
       </li>
     ))
 

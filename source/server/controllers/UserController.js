@@ -9,7 +9,13 @@ import pluck from '@/utilities/pluck'
 
 const controller = express()
 
-controller.put('/', async (request, response) => {
+const ANONYMOUS = { anonymous: true }
+
+export function invalidAuthentication(response) {
+  response.status(401).json({ message: 'Username/password combination is invalid.' })
+}
+
+export async function createUser(request, response) {
   try {
     const user = new User({
       ...request.body,
@@ -28,9 +34,8 @@ controller.put('/', async (request, response) => {
         return response.status(500).json({ message: error.message || 'Unknown error.' })
     }
   }
-})
-
-const getFavorites = async user => {
+}
+export async function getUserFavorites(user) {
   const domains = [null]
   const slugs = []
   const map = user.favorites.map(favorite => {
@@ -60,36 +65,38 @@ const getFavorites = async user => {
     }
   })
 }
-controller.get('/favorites', NoAnonymous, async (request, response) => {
-  const favorites = await getFavorites(request.user)
-  return response.status(200).json(favorites)
-})
-
-const getUser = async (request, response) => {
-  const { user: currentUser } = request
-  const { username } = request.params
+export async function getUser(request, response) {
+  const { freshLogin = false, params, user: currentUser } = request
+  const username = params ? params.username : freshLogin
 
   if (username) {
     const targetUser = await User.findOne({ username })
     if (!targetUser) {
-      return response.status(404).json({
+      response.status(404).json({
         message: `Unable to locate a user with username '${username}'.`,
       })
+      return ANONYMOUS
     }
 
     const json = targetUser.toJSON()
-
+    if (freshLogin) {
+      return json
+    }
     if (currentUser && currentUser.isAdmin) {
-      return response.status(200).json(json)
+      response.status(200).json(json)
+      return json
     }
 
-    return response.status(200).json(
-      pluck(json, '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username')
+    const user = pluck(json,
+      '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username'
     )
+    response.status(200).json(user)
+    return user
   }
 
   if (!currentUser) {
-    return response.status(200).json({ anonymous: true })
+    response.status(200).json(ANONYMOUS)
+    return ANONYMOUS
   }
 
   const userId = currentUser._id
@@ -102,19 +109,51 @@ const getUser = async (request, response) => {
   }, { domain: 1, title: 1 })
 
   try {
-    return response.status(200).json({
+    const user = {
       ...currentUser.toJSON(),
       campaigns: campaigns || [],
-      favorites: await getFavorites(request.user),
+      favorites: await getUserFavorites(request.user),
       sheets: sheets || [],
-    })
+    }
+    response.status(200).json(user)
+    return user
   } catch (error) {
+    console.error('UserController#getUser', error) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
   }
 }
-controller.get('/:username?', getUser)
+export async function getCurrentUserFavorites(request, response) {
+  return response.status(200).json(await getUserFavorites(request.user))
+}
+export async function logIn(request, response) {
+  const { password = '' } = request.body
+  const username = (request.body.username || '').toLowerCase().trim()
+  const query = { $or: [{ username }, { email: username }] }
 
-controller.post('/', NoAnonymous, async (request, response) => {
+  try {
+    const user = await User.findOne(query, { password: 1 })
+    if (!user) return invalidAuthentication(response)
+
+    const isMatch = await user.comparePassword(password)
+    if (isMatch) {
+      await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
+      const loadedUser = await getUser({ freshLogin: username })
+      request.session = loadedUser || null
+      return response.status(200).json(loadedUser)
+    }
+
+    return invalidAuthentication(response)
+  } catch (error) {
+    console.error('UserController#logIn error:', error) // eslint-disable-line no-console
+    return response.status(500).json({ message: 'Unknown error.' })
+  }
+}
+export async function logOff(request, response) {
+  request.session = null
+  request.user = null
+  return getUser(request, response)
+}
+export async function updateCurrentUser(request, response) {
   const { user } = request
   try {
     const updates = omit(request.body, '_id', 'createdAt', 'lastLogin', 'updatedAt', 'version')
@@ -137,42 +176,8 @@ controller.post('/', NoAnonymous, async (request, response) => {
     console.error(`Error in POST /api/user: ${error.code}: ${error}`) // eslint-disable-line no-console
     return response.status(500).json({ message: 'Unknown error.' })
   }
-})
-
-const invalidAuthentication = response => {
-  response.status(401).json({ message: 'Username/password combination is invalid.' })
 }
-controller.post('/login', async (request, response) => {
-  const { password = '' } = request.body
-  const username = (request.body.username || '').toLowerCase().trim()
-  const query = { $or: [{ username }, { email: username }] }
-
-  try {
-    const user = await User.findOne(query, { password: 1 })
-    if (!user) return invalidAuthentication(response)
-
-    const isMatch = await user.comparePassword(password)
-    if (isMatch) {
-      await user.update({ lastLogin: Date.now() })
-
-      const profile = (await User.findOne(query)).toProfile()
-      request.session = profile
-      return response.status(200).json(profile)
-    }
-
-    return invalidAuthentication(response)
-  } catch (error) {
-    console.error(error) // eslint-disable-line no-console
-    return response.status(500).json({ message: 'Unknown error.' })
-  }
-})
-
-controller.use('/logoff', async (request, response) => {
-  request.session = null
-  return response.status(200).json({ message: 'Successfully logged off.' })
-})
-
-controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
+export async function updateCurrentUserFavorites(request, response) {
   const { domain, params: { slug }, user } = request
   const favorite = `${domain}:${slug}`
   let { favorites } = user
@@ -191,9 +196,8 @@ controller.post('/favorites/:slug', NoAnonymous, async (request, response) => {
   user.favorites = favorites
 
   return getUser(request, response)
-})
-
-controller.post('/:username', NoAnonymous, async (request, response) => {
+}
+export async function updateUser(request, response) {
   try {
     if (request.session.username === request.params.username) {
       return response.redirect(307, '/api/user/')
@@ -222,6 +226,15 @@ controller.post('/:username', NoAnonymous, async (request, response) => {
       message: 'Unknown error. Please try again.',
     })
   }
-})
+}
+
+controller.post('/auth/login', logIn)
+controller.use('/auth/logoff', logOff)
+controller.get('/my/favorites', NoAnonymous, getCurrentUserFavorites)
+controller.get('/:username?', getUser)
+controller.put('/', createUser)
+controller.post('/', NoAnonymous, updateCurrentUser)
+controller.post('/my/favorites/:slug', NoAnonymous, updateCurrentUserFavorites)
+controller.post('/:username', NoAnonymous, updateUser)
 
 export default controller

@@ -46,8 +46,8 @@ export default class Wiki extends App {
 
   logOff = async event => {
     event.preventDefault()
-    await fetch('/api/user/logoff', { method: 'POST' })
-    window.location.href = window.location.href
+    this.setUser(await fetch('/api/user/auth/logoff').then(r => r.json()))
+    this.updateCampaign()
   }
 
   setCampaign = campaign => this.setState({ campaign })
@@ -57,9 +57,9 @@ export default class Wiki extends App {
     if (!campaign) { return false }
 
     const result = await fetch(`/api/campaign/${this.state.campaign.domain}`, {
-      body: JSON.stringify(updates),
+      body: updates ? JSON.stringify(updates) : undefined,
       headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
+      method: updates ? 'POST' : 'GET',
     })
     const json = await result.json()
 
@@ -68,6 +68,7 @@ export default class Wiki extends App {
       return true
     }
 
+    this.setCampaign({})
     return false
   }
 

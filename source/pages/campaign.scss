@@ -1,0 +1,41 @@
+@import '~@/pages/page';
+
+.campaign.page {
+  > .contents {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > .column {
+      display: flex;
+      flex-direction: column;
+    }
+    > .left.column {
+
+    }
+    > .right.column {
+      padding: 5px;
+      width: 210px;
+
+      > .participants {
+        > b:not(:first-child) { margin-top: .75rem; }
+        > .user-list {
+          list-style: none;
+          margin: 0;
+          padding-left: .75rem;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+}
+
+.layout.small .campaign.page {
+  > .contents {
+    flex-direction: column;
+
+    > .right.column {
+      width: 100%;
+    }
+  }
+}

@@ -15,9 +15,9 @@ import FavoriteOffIcon from '@/icons/favorite-off.svg'
 import FavoriteOnIcon from '@/icons/favorite-on.svg'
 import HtmlIcon from '@/icons/html.svg'
 import NavigationIcon from '@/icons/Navigation'
-import SecretOnIcon from '@/icons/private.svg'
-import SecretOffIcon from '@/icons/public.svg'
+import PublicIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
+import SecretIcon from '@/icons/secret.svg'
 import SettingsIcon from '@/icons/settings.svg'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
@@ -75,6 +75,7 @@ export default class Article extends Component {
 
   state = {
     activeTab: 'read',
+    editMode: false,
     ...pluck(this.props, STATE_FIELDS),
     saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {},
     title: this.props.title || this.context.router.query.title,
@@ -125,9 +126,11 @@ export default class Article extends Component {
   }
   handleTagsChange = tags => this.setState({ tags })
   handleTitleChange = title => this.setState({ title })
+  handleToggleEditMode = () => this.setState({ editMode: !this.state.editMode })
   handleToggleFavorite = async () => {
-    const updated = await fetch(`/api/user/favorites/${this.props.slug}`, { method: 'POST' })
-      .then(r => r.json())
+    const updated = await fetch(`/api/user/my/favorites/${this.props.slug}`, {
+      method: 'POST',
+    }).then(r => r.json())
     this.context.setUser(updated)
   }
   handleToggleNavigation = async () => {
@@ -142,16 +145,7 @@ export default class Article extends Component {
       navigation.push({ slug, title })
     }
 
-    const result = await fetch(`/api/campaign/${this.context.campaign.domain}`, {
-      body: JSON.stringify({ navigation }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-    })
-    const json = await result.json()
-
-    if (result.status === 200) {
-      this.context.setCampaign(json)
-    }
+    this.context.updateCampaign({ navigation })
   }
   handleToggleSecret = async () => {
     const payload = { secret: !this.state.secret }
@@ -201,6 +195,7 @@ export default class Article extends Component {
       f.campaign.domain === campaign.domain
       && f.slug === slug
     ))
+    const readOnly = !isEditable || !this.state.editMode
 
     if (httpStatusCode !== 200) {
       return (
@@ -218,8 +213,8 @@ export default class Article extends Component {
             className={`title ${title.trim() ? '' : 'default'}`}
             onChange={this.handleTitleChange}
             placeholder={slug}
-            readOnly={!isEditable}
-            value={title}
+            readOnly={readOnly}
+            value={readOnly ? this.state.saved.title : title}
           />
           {redirectedFrom && (
             <div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
@@ -227,20 +222,27 @@ export default class Article extends Component {
           {isOwner &&
             <Toggle
               className="secret"
-              offIcon={SecretOffIcon}
-              onIcon={SecretOnIcon}
+              offIcon={PublicIcon}
+              onIcon={SecretIcon}
               onToggle={this.handleToggleSecret}
               value={secret}
             />
           }
-          {campaign.isEditor &&
+          {campaign.isEditor && <>
             <Toggle
               className="in-navigation" value={this.isNavLink}
               offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
               onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
               onToggle={this.handleToggleNavigation}
             />
-          }
+            <Toggle
+              className="edit-mode"
+              offIcon={EditIcon}
+              onIcon={EditIcon}
+              onToggle={this.handleToggleEditMode}
+              value={this.state.editMode}
+            />
+          </>}
           <Toggle
             className="favorite"
             offIcon={FavoriteOffIcon}
@@ -255,7 +257,7 @@ export default class Article extends Component {
             {this.isDirty && <button className="safe" onClick={this.handleSave}>Save</button>}
           </>}
           onTabClicked={this.handleTabClicked}
-          showTabs={isEditable}
+          showTabs={!readOnly}
           tabs={[{
             contents: this.renderReadOnlyContent(),
             id: 'read',
@@ -274,14 +276,16 @@ export default class Article extends Component {
             tab: <SettingsIcon />,
           }].filter(Boolean)}
         />
-        <TagBar
-          asLinks
-          banned={[slug, ...aliases]}
-          className="tags"
-          onChange={this.handleTagsChange}
-          tags={tags}
-          readOnly={!isEditable}
-        />
+        {(tags.length || !readOnly) && (
+          <TagBar
+            asLinks
+            banned={[slug, ...aliases]}
+            className="tags"
+            onChange={this.handleTagsChange}
+            tags={tags}
+            readOnly={readOnly}
+          />
+        )}
       </div>
     )
   }

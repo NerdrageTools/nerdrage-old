@@ -22,13 +22,13 @@ describe('Campaign model', () => {
     expect(campaign.isEditableBy(OTHER)).toBe(false)
   })
   it('isVisibleTo()', () => {
-    campaign.private = false
+    campaign.secret = false
     expect(campaign.isVisibleTo(OWNER)).toBe(true)
     expect(campaign.isVisibleTo(EDITOR)).toBe(true)
     expect(campaign.isVisibleTo(PLAYER)).toBe(true)
     expect(campaign.isVisibleTo(OTHER)).toBe(true)
 
-    campaign.private = true
+    campaign.secret = true
     expect(campaign.isVisibleTo(OWNER)).toBe(true)
     expect(campaign.isVisibleTo(EDITOR)).toBe(true)
     expect(campaign.isVisibleTo(PLAYER)).toBe(true)

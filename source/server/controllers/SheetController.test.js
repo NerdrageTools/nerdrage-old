@@ -28,7 +28,7 @@ const SHEET = (props = {}) => new Sheet({
   campaign: null,
   data: {},
   ownedBy: OWNER._id,
-  public: false,
+  secret: false,
   slug: 'test',
   ...props,
 })
@@ -47,7 +47,7 @@ const mockResponse = () => {
   return response
 }
 
-describe('server/controllers/ArticleController', () => {
+describe('server/controllers/SheetController', () => {
   describe('permissions', () => {
     it('passes for Admin users', async done => {
       mockingoose.Sheet.toReturn(SHEET(), 'findOne')
@@ -63,7 +63,7 @@ describe('server/controllers/ArticleController', () => {
     })
     it('returns 401 to non-viewers if required', async done => {
       mockingoose.Sheet.toReturn(SHEET(), 'findOne')
-      const request = mockRequest('test', { campaign: CAMPAIGN({ private: true }) })
+      const request = mockRequest('test', { campaign: CAMPAIGN({ secret: true }) })
       const response = mockResponse()
       const next = jest.fn()
       await permissions('view')(request, response, next)
@@ -86,11 +86,12 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('passes for non-owners if sheet is public', async done => {
-      mockingoose.Sheet.toReturn(SHEET({ public: true }), 'findOne')
+      mockingoose.Sheet.toReturn(SHEET({ secret: false }), 'findOne')
       const response = mockResponse()
       const next = jest.fn()
       await permissions('view')(mockRequest('test', { session: PLAYER }), response, next)
 
+      expect(response.json).not.toHaveBeenCalled()
       expect(response.status).not.toHaveBeenCalled()
       expect(next).toHaveBeenCalled()
 

@@ -12,11 +12,14 @@ const getCampaign = async (request, response) => {
   let { campaign } = request
   if (request.params.domain) {
     campaign = await Campaign.findOne({ domain: request.params.domain })
-      .populate('editors players owners', 'name username')
+      .populate('editors players owners', '_id name username', null, { sort: { name: 1 } })
       .exec()
   }
 
-  if (!campaign) return Campaign404({ campaign }, response)
+  if (!campaign || !campaign._id) {
+    const domain = request.params.domain || request.domain
+    return Campaign404({ campaign, domain }, response)
+  }
 
   const json = campaign.toJSON()
 
@@ -92,7 +95,7 @@ const updateCampaign = async (request, response) => {
       delete updates.editors
       delete updates.owners
       delete updates.players
-      delete updates.private
+      delete updates.secret
     }
 
     Object.assign(campaign, {

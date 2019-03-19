@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
-import ArticleLink from '@/components/ArticleLink'
+import PageLink from '@/components/PageLink'
 import Application from '@/contexts/Application'
 import noop from '@/utilities/noop'
 import pluck from '@/utilities/pluck'
@@ -25,7 +25,9 @@ export default class Navigation extends Component {
   }
 
   initializeSortable = () => {
+    if (!this.campaignNav.current) return
     if (this.sortable) this.sortable.destroy()
+
     const ul = this.campaignNav.current.querySelector('ul')
     const { navigation } = this.context.campaign
 
@@ -44,8 +46,9 @@ export default class Navigation extends Component {
     })
   }
 
-  renderList = (list = [], listTitle = '', type = 'article') => <>
-    {Boolean(list.length) && <b>{listTitle}</b>}
+  renderList = (list = [], listTitle = '', type = 'article', campaignLink = null) => <>
+    {campaignLink}
+    {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
     <ul>
       {list.filter(item => item.campaign.domain === this.context.campaign.domain)
         .map(({ _id, campaign = {}, slug, title }, index) => {
@@ -57,13 +60,13 @@ export default class Navigation extends Component {
 
           return (
             <li key={_id || index} data-id={_id}>
-              <ArticleLink
+              <PageLink
                 {...{ campaign, slug, type }}
                 active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
                 onClick={this.props.onItemClick}
               >
                 {text}
-              </ArticleLink>
+              </PageLink>
             </li>
           )
         })}
@@ -74,7 +77,7 @@ export default class Navigation extends Component {
     const { campaign, user = {} } = this.context
     const { favorites = [], sheets = [] } = user
 
-    if (!campaign) return null
+    if (!campaign || !campaign.navigation) return null
 
     const navigation = campaign.navigation.map(link => ({
       ...link,
@@ -85,7 +88,9 @@ export default class Navigation extends Component {
       <Scrollbars className="navigation" autoHide universal>
         <div className="content" ref={this.props.wrapperRef}>
           <div className="campaign-nav" ref={this.campaignNav}>
-            {this.renderList(navigation, campaign.title)}
+            {this.renderList(navigation, campaign.title, 'article',
+              <PageLink domain={campaign.domain} type="campaign">{campaign.title}</PageLink>
+            )}
           </div>
           {user && <>
             {this.renderList(favorites, 'My Favorites')}
