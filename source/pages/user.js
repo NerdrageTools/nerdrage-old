@@ -154,14 +154,7 @@ export default class UserPage extends Component {
           {user.favorites && <>
             <hr />
             <ArticleChildren
-              articles={user.favorites.map(favorite => {
-                const [domain, slug] = favorite.split(':')
-                return {
-                  domain,
-                  slug,
-                  title: slug,
-                }
-              })}
+              articles={user.favorites}
               caption="Favorites"
               icon={<FavoriteIcon className="favorites icon" />}
             />

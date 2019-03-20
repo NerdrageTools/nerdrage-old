@@ -27,7 +27,11 @@ export default class PageLink extends Component {
       if (campaign.domain !== this.context.campaign.domain) {
         return <a {...linkProps} href={href}>{children}</a>
       }
-      return <NextLink as="/campaign" href="/campaign">{children}</NextLink>
+      return (
+        <NextLink as="/campaign" href="/campaign">
+          <a {...linkProps}>{children}</a>
+        </NextLink>
+      )
     }
 
     const slashSlug = slug ? `/${slug}` : ''

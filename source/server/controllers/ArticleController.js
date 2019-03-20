@@ -4,22 +4,20 @@ import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
+  const { campaign, domain, params: { slug } } = request
   const article = await Article.locate(slug, campaign._id)
     .populate('campaign', 'domain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
 
-  const isEditable = isAdmin || campaign.isEditableBy(userId)
-  const isVisible = isAdmin || campaign.isVisibleTo(userId)
-  const isOwner = isAdmin || campaign.isOwnedBy(userId)
+  const { isEditor, isOwner, isViewer } = campaign
 
-  if (required.includes('view') && !isVisible) {
+  if (required.includes('view') && !isViewer) {
     return response.status(401).json({
       message: `This content is private to the ${domain} campaign.`,
     })
   }
-  if (required.includes('edit') && !isEditable) {
+  if (required.includes('edit') && !isEditor) {
     return response.status(401).json({
       message: `You do not have permission to edit the ${domain} campaign.`,
     })
@@ -33,9 +31,9 @@ export const permissions = (...required) => async (request, response, next) => {
   Object.assign(request, {
     article,
     campaign,
-    isEditable,
+    isEditable: isEditor,
     isOwner,
-    isVisible,
+    isVisible: isViewer,
     slug,
   })
 
@@ -54,7 +52,7 @@ export const getArticle = async (request, response) => {
 
   return response.status(200).json({
     ...article,
-    campaign: pluck(campaign.toJSON(), '_id', 'domain', 'title'),
+    campaign: pluck(campaign, '_id', 'domain', 'title'),
     isEditable,
     isOwner,
   })

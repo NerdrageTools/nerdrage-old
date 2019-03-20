@@ -56,9 +56,8 @@ app.prepare().then(async () => {
   server.get('/', (_, response) => {
     response.redirect(302, '/article/home')
   })
-  server.get('/article/:slug', ContextLoader, nocache(), routeHandler)
-  server.get('/sheet/:slug', ContextLoader, nocache(), routeHandler)
-  server.get('*', routeHandler)
+
+  server.get('*', ContextLoader, nocache(), routeHandler)
   server.listen(3000, error => {
     if (error) throw error
     console.log('~> Listening on port 3000')

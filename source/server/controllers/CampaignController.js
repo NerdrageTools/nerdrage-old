@@ -4,38 +4,43 @@ import Campaign404 from '@/server/errors/Campaign404'
 import ContextLoader from '@/server/middleware/ContextLoader'
 import NoAnonymous from '@/server/middleware/NoAnonymous'
 import Campaign from '@/server/models/Campaign'
-import User from '@/server/models/User'
 
 const controller = express()
 
-const getCampaign = async (request, response) => {
-  let { campaign } = request
-  if (request.params.domain) {
-    campaign = await Campaign.findOne({ domain: request.params.domain })
-      .populate('editors players owners', '_id name username', null, { sort: { name: 1 } })
+export async function getCampaign(domain, user) {
+  if (!domain) return null
+
+  try {
+    const campaign = await Campaign.findOne({ domain })
+      .populate('createdBy editors lastUpdatedBy players owners', '_id name username')
       .exec()
+
+    if (!campaign) return null
+
+    const json = campaign.toJSON()
+
+    if (!user.anonymous) {
+      json.isEditor = Boolean(user.isAdmin || campaign.isEditableBy(user._id))
+      json.isOwner = Boolean(user.isAdmin || campaign.isOwnedBy(user._id))
+      json.isParticipant = Boolean(user.isAdmin || campaign.isParticipant(user._id))
+      json.isViewer = Boolean(user.isAdmin || campaign.isVisibleTo(user._id))
+    }
+
+    return json
+  } catch (error) {
+    // console.error('CampaignController#getCampaign', error)
+    return null
   }
+}
+export async function getCampaignRequest(request, response) {
+  const { domain } = request.params || {}
+  const campaign = await getCampaign(domain, request.user)
 
   if (!campaign || !campaign._id) {
-    const domain = request.params.domain || request.domain
     return Campaign404({ campaign, domain }, response)
   }
 
-  const json = campaign.toJSON()
-
-  if (request.user && request.user._id) {
-    const userId = request.user._id
-    const user = await User.findOne({ _id: userId })
-    if (user) {
-      const { isAdmin } = user
-
-      json.isOwner = Boolean(isAdmin || campaign.isOwnedBy(userId))
-      json.isEditor = Boolean(isAdmin || campaign.isEditableBy(userId))
-      json.isParticipant = Boolean(isAdmin || campaign.isParticipant(userId))
-    }
-  }
-
-  return response.status(200).json(json)
+  return response.status(200).json(campaign)
 }
 const createCampaign = async (request, response) => {
   const userId = request.user._id
@@ -104,7 +109,7 @@ const updateCampaign = async (request, response) => {
     })
     await campaign.save()
 
-    getCampaign(request, response)
+    getCampaignRequest(request, response)
   } catch (error) {
     switch (error.code) {
       case 11000:
@@ -120,7 +125,7 @@ const updateCampaign = async (request, response) => {
   }
 }
 
-controller.get('/:domain?', ContextLoader, getCampaign)
+controller.get('/:domain?', ContextLoader, getCampaignRequest)
 controller.put('/:domain?', NoAnonymous, createCampaign)
 controller.post('/:domain?', updateCampaign)
 

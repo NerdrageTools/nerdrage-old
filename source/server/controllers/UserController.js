@@ -11,6 +11,7 @@ const controller = express()
 
 const ANONYMOUS = { anonymous: true }
 
+/* eslint-disable no-console */
 export function invalidAuthentication(response) {
   response.status(401).json({ message: 'Username/password combination is invalid.' })
 }
@@ -30,7 +31,7 @@ export async function createUser(request, response) {
       case 11000:
         return response.status(409).json({ message: 'Username or email is already in use.' })
       default:
-        console.error(`Error in PUT /api/user: ${error}`) // eslint-disable-line no-console
+        console.error(`Error in PUT /api/user: ${error}`)
         return response.status(500).json({ message: error.message || 'Unknown error.' })
     }
   }
@@ -65,62 +66,59 @@ export async function getUserFavorites(user) {
     }
   })
 }
-export async function getUser(request, response) {
-  const { freshLogin = false, params, user: currentUser } = request
-  const username = params ? params.username : freshLogin
+export async function getUser(username, populated = false) {
+  try {
+    const user = await User.findOne({ username })
+    if (!user) return ANONYMOUS
 
-  if (username) {
-    const targetUser = await User.findOne({ username })
-    if (!targetUser) {
-      response.status(404).json({
-        message: `Unable to locate a user with username '${username}'.`,
-      })
-      return ANONYMOUS
+    const json = user.toJSON()
+    if (!populated) {
+      return pluck(json,
+        '_id', 'campaigns', 'createdAt', 'isAdmin',
+        'lastLogin', 'name', 'username'
+      )
     }
 
-    const json = targetUser.toJSON()
-    if (freshLogin) {
-      return json
-    }
-    if (currentUser && currentUser.isAdmin) {
-      response.status(200).json(json)
-      return json
-    }
+    json.sheets = await Sheet.find({ ownedBy: json._id })
+      .populate('campaign', 'domain title').exec() || []
 
-    const user = pluck(json,
-      '_id', 'campaigns', 'createdAt', 'isAdmin', 'lastLogin', 'name', 'username'
-    )
-    response.status(200).json(user)
-    return user
-  }
+    json.campaigns = await Campaign.find({
+      $or: [
+        { editors: json._id },
+        { owners: json._id },
+        { players: json._id },
+      ],
+    }, { domain: 1, title: 1 })
 
-  if (!currentUser) {
-    response.status(200).json(ANONYMOUS)
+    json.favorites = await getUserFavorites(user) || []
+    return json
+  } catch (error) {
+    console.error('UserController#getUser', error.message)
     return ANONYMOUS
   }
+}
+export async function getUserRequest(request, response) {
+  const { params: { username }, user: currentUser = {} } = request
+  if (username && username !== currentUser.username) {
+    const populated = Boolean(currentUser.isAdmin || currentUser.username === username)
+    const user = await getUser(username, populated)
 
-  const userId = currentUser._id
-  const sheets = await Sheet.find({ ownedBy: userId })
-    .populate('campaign', 'domain title')
-    .exec()
-
-  const campaigns = await Campaign.find({
-    $or: [{ editors: userId }, { owners: userId }, { players: userId }],
-  }, { domain: 1, title: 1 })
-
-  try {
-    const user = {
-      ...currentUser.toJSON(),
-      campaigns: campaigns || [],
-      favorites: await getUserFavorites(request.user),
-      sheets: sheets || [],
+    if (!user) {
+      return response.status(404).json({
+        message: `Unable to locate a user with username '${username}'.`,
+      })
     }
-    response.status(200).json(user)
-    return user
-  } catch (error) {
-    console.error('UserController#getUser', error) // eslint-disable-line no-console
-    return response.status(500).json({ message: 'Unknown error.' })
+
+    return response.status(200).json(user)
   }
+
+  if (!currentUser || !currentUser._id) {
+    return response.status(404).json({
+      message: `Unable to locate a user with username '${username}'.`,
+    })
+  }
+
+  return response.status(200).json(currentUser)
 }
 export async function getCurrentUserFavorites(request, response) {
   return response.status(200).json(await getUserFavorites(request.user))
@@ -137,21 +135,21 @@ export async function logIn(request, response) {
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
       await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
-      const loadedUser = await getUser({ freshLogin: username })
+      const loadedUser = await getUser(username, true)
       request.session = loadedUser || null
       return response.status(200).json(loadedUser)
     }
 
     return invalidAuthentication(response)
   } catch (error) {
-    console.error('UserController#logIn error:', error) // eslint-disable-line no-console
+    console.error('UserController#logIn error:', error)
     return response.status(500).json({ message: 'Unknown error.' })
   }
 }
 export async function logOff(request, response) {
   request.session = null
   request.user = null
-  return getUser(request, response)
+  return response.status(200).json({ anonymous: true })
 }
 export async function updateCurrentUser(request, response) {
   const { user } = request
@@ -173,29 +171,19 @@ export async function updateCurrentUser(request, response) {
       return response.status(409).json({ message: error.message })
     }
 
-    console.error(`Error in POST /api/user: ${error.code}: ${error}`) // eslint-disable-line no-console
+    console.error(`Error in POST /api/user: ${error.code}: ${error}`)
     return response.status(500).json({ message: 'Unknown error.' })
   }
 }
 export async function updateCurrentUserFavorites(request, response) {
-  const { domain, params: { slug }, user } = request
+  const { domain, params: { slug }, user: { username } } = request
   const favorite = `${domain}:${slug}`
-  let { favorites } = user
+  const { favorites: rawFavorites } = await User.findOne({ username }, { favorites: 1 })
+  const verb = rawFavorites.includes(favorite) ? '$pull' : '$addToSet'
 
-  let verb
-  if (favorites.includes(favorite)) {
-    verb = '$pull'
-    favorites = favorites.filter(f => f !== favorite)
-  } else {
-    verb = '$addToSet'
-    favorites.push(favorite)
-    favorites.sort()
-  }
-
-  await user.updateOne({ [verb]: { favorites: favorite } })
-  user.favorites = favorites
-
-  return getUser(request, response)
+  await User.updateOne({ username }, { [verb]: { favorites: favorite } })
+  request.user = await getUser(username, true)
+  return getUserRequest(request, response)
 }
 export async function updateUser(request, response) {
   try {
@@ -227,11 +215,12 @@ export async function updateUser(request, response) {
     })
   }
 }
+/* eslint-enable no-console */
 
 controller.post('/auth/login', logIn)
 controller.use('/auth/logoff', logOff)
 controller.get('/my/favorites', NoAnonymous, getCurrentUserFavorites)
-controller.get('/:username?', getUser)
+controller.get('/:username?', getUserRequest)
 controller.put('/', createUser)
 controller.post('/', NoAnonymous, updateCurrentUser)
 controller.post('/my/favorites/:slug', NoAnonymous, updateCurrentUserFavorites)

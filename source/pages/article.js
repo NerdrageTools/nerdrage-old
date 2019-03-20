@@ -188,7 +188,7 @@ export default class Article extends Component {
   </>
   render = () => {
     const { activeTab, aliases, html, redirectedFrom, secret, tags, title = '' } = this.state
-    const { httpStatusCode, isEditable, isOwner, message, slug } = this.props
+    const { _id, httpStatusCode, isEditable, isOwner, message, slug } = this.props
     const { favorites = [] } = this.context.user
     const { campaign = {} } = this.context
     const isFavorite = favorites.find(f => (
@@ -219,37 +219,39 @@ export default class Article extends Component {
           {redirectedFrom && (
             <div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
           )}
-          {isOwner &&
+          {_id && <>
+            {isOwner &&
+              <Toggle
+                className="secret"
+                offIcon={PublicIcon}
+                onIcon={SecretIcon}
+                onToggle={this.handleToggleSecret}
+                value={secret}
+              />
+            }
+            {campaign.isEditor && <>
+              <Toggle
+                className="in-navigation" value={this.isNavLink}
+                offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
+                onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
+                onToggle={this.handleToggleNavigation}
+              />
+              <Toggle
+                className="edit-mode"
+                offIcon={EditIcon}
+                onIcon={EditIcon}
+                onToggle={this.handleToggleEditMode}
+                value={this.state.editMode}
+              />
+            </>}
             <Toggle
-              className="secret"
-              offIcon={PublicIcon}
-              onIcon={SecretIcon}
-              onToggle={this.handleToggleSecret}
-              value={secret}
-            />
-          }
-          {campaign.isEditor && <>
-            <Toggle
-              className="in-navigation" value={this.isNavLink}
-              offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
-              onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
-              onToggle={this.handleToggleNavigation}
-            />
-            <Toggle
-              className="edit-mode"
-              offIcon={EditIcon}
-              onIcon={EditIcon}
-              onToggle={this.handleToggleEditMode}
-              value={this.state.editMode}
+              className="favorite"
+              offIcon={FavoriteOffIcon}
+              onIcon={FavoriteOnIcon}
+              onToggle={this.handleToggleFavorite}
+              value={isFavorite}
             />
           </>}
-          <Toggle
-            className="favorite"
-            offIcon={FavoriteOffIcon}
-            onIcon={FavoriteOnIcon}
-            onToggle={this.handleToggleFavorite}
-            value={isFavorite}
-          />
         </div>
         <TabSet
           activeTabId={activeTab}
