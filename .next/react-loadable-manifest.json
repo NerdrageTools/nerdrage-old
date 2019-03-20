@@ -655,7 +655,7 @@
       "publicPath": "static/chunks/commons.83404c933b0527d00bed.js"
     }
   ],
-  "../core-js/object/set-prototype-of": [
+  "../../core-js/object/set-prototype-of": [
     {
       "id": "OKNm",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/set-prototype-of.js",
@@ -783,7 +783,7 @@
       "publicPath": "static/chunks/commons.83404c933b0527d00bed.js"
     }
   ],
-  "../modules/_core": [
+  "../../modules/_core": [
     {
       "id": "TaGV",
       "name": "../node_modules/core-js/library/modules/_core.js",
