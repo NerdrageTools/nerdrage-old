@@ -37,8 +37,9 @@ export default class PageLink extends Component {
     const slashSlug = slug ? `/${slug}` : ''
     const queryStringSlug = slug ? `?slug=${slug}` : ''
 
-    if (campaign.domain !== currentDomain) {
-      const href = `//${campaign.domain}.${rootUrl}/${type}${slashSlug}`
+    if (!campaign || campaign.domain !== currentDomain) {
+      const subdomain = campaign ? campaign.domain : currentDomain
+      const href = `//${subdomain}.${rootUrl}/${type}${slashSlug}`
       return <a {...linkProps} href={href}>{children}</a>
     }
 

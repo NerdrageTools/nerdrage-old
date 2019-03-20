@@ -3,28 +3,24 @@ import Sheet from '@/server/models/Sheet'
 import omit from '@/utilities/omit'
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, domain, session: { _id: userId, isAdmin }, params: { slug } } = request
+  const { campaign, domain, params: { slug } } = request
   const sheet = await Sheet.findOne({ campaign: campaign._id, slug })
     .populate('campaign', 'domain title')
     .populate('ownedBy', 'name username')
     .exec()
+  const { isEditor, isOwner, isParticipant, isViewer } = campaign
 
-  const isParticipant = isAdmin || campaign.isParticipant(userId)
-  const isOwner = isAdmin || (sheet && sheet.ownedBy.equals(userId)) || campaign.isOwnedBy(userId)
-  const isEditable = isOwner || isAdmin || campaign.isOwnedBy(userId)
-  const isVisible = isOwner || isAdmin || (campaign.isVisibleTo(userId) && sheet && !sheet.secret)
-
-  if (sheet && required.includes('view') && !isVisible) {
+  if (sheet && required.includes('view') && !isViewer) {
     return response.status(401).json({
       message: `This content is private to the ${domain} campaign.`,
     })
   }
-  if (sheet && required.includes('edit') && !isEditable) {
+  if (sheet && required.includes('edit') && !isEditor) {
     return response.status(401).json({
       message: `You do not have permission to edit the ${domain} campaign.`,
     })
   }
-  if (sheet && sheet.secret && !isEditable) {
+  if (sheet && sheet.secret && !isEditor) {
     return response.status(401).json({
       message: `This sheet is secret! Only its owner and owners of the ${campaign.domain} campaign can see or edit it.`,
     })
@@ -32,10 +28,10 @@ export const permissions = (...required) => async (request, response, next) => {
 
   Object.assign(request, {
     campaign,
-    isEditable,
+    isEditor,
     isOwner,
     isParticipant,
-    isVisible,
+    isViewer,
     sheet,
     slug,
   })
@@ -43,7 +39,7 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheet = async (request, response) => {
-  const { domain, isEditable, isOwner, isParticipant, sheet, slug } = request
+  const { domain, isEditor, isOwner, isParticipant, sheet, slug } = request
   if (!sheet) {
     return response.status(404).json({
       isEditable: isParticipant,
@@ -52,7 +48,12 @@ export const getSheet = async (request, response) => {
     })
   }
 
-  return response.status(200).json({ ...sheet.toJSON(), isEditable, isOwner, isParticipant })
+  return response.status(200).json({
+    ...sheet.toJSON(),
+    isEditable: isEditor,
+    isOwner,
+    isParticipant,
+  })
 }
 export const upsertSheet = async (request, response) => {
   const { body, campaign, isEditable, isOwner, session: { _id: userId }, slug } = request
