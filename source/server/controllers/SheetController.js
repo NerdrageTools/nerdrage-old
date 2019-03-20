@@ -56,7 +56,7 @@ export const getSheet = async (request, response) => {
   })
 }
 export const upsertSheet = async (request, response) => {
-  const { body, campaign, isEditable, isOwner, session: { _id: userId }, slug } = request
+  const { body, campaign, isEditable, isOwner, user, slug } = request
   let { sheet } = request
   const creating = !sheet
 
@@ -70,7 +70,7 @@ export const upsertSheet = async (request, response) => {
     sheet = new Sheet({
       ...updates,
       campaign: campaign._id,
-      ownedBy: userId,
+      ownedBy: user._id,
     })
   } else {
     sheet.set(updates)

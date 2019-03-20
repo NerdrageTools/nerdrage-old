@@ -6,6 +6,7 @@ import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import AdminIcon from '@/icons/Administrator'
 import FavoriteIcon from '@/icons/favorite-on.svg'
+import SheetIcon from '@/icons/sheet.svg'
 import Error from '@/pages/_error'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
@@ -151,12 +152,20 @@ export default class UserPage extends Component {
               </span>
             </div>
           </div>
+
           {user.favorites && <>
-            <hr />
             <ArticleChildren
               articles={user.favorites}
               caption="Favorites"
               icon={<FavoriteIcon className="favorites icon" />}
+            />
+          </>}
+
+          {user.sheets && <>
+            <ArticleChildren
+              articles={user.sheets}
+              caption="Sheets"
+              icon={<SheetIcon />}
             />
           </>}
         </div>

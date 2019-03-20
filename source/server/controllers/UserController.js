@@ -23,9 +23,10 @@ export async function createUser(request, response) {
       isAdmin: false,
       lastLogin: Date.now(),
     })
-    const profile = (await user.save()).toProfile()
-    request.session = profile
-    return response.status(200).json(profile)
+    await user.save()
+
+    request.session = user
+    return response.status(200).json(user)
   } catch (error) {
     switch (error.code) {
       case 11000:
@@ -79,8 +80,9 @@ export async function getUser(username, populated = false) {
       )
     }
 
-    json.sheets = await Sheet.find({ ownedBy: json._id })
-      .populate('campaign', 'domain title').exec() || []
+    json.sheets = await Sheet.find({ ownedBy: user._id }, { slug: 1, title: 1 })
+      .sort({ title: 1 })
+      .populate('campaign', 'domain title').exec()
 
     json.campaigns = await Campaign.find({
       $or: [
