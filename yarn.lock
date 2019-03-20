@@ -12333,10 +12333,10 @@ shebang-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
   integrity sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
 
-sheetforge@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/sheetforge/-/sheetforge-2.1.7.tgz#32ee8198daa5948b1ed7dca9b8983c4f65dd23b5"
-  integrity sha512-oAKAuKTgPv16RQpuJHH5Aw1Kfs4Xt6bOBTSciNO7BzB3qb6ffCB2obkUuBMgMaycq/vcOFt4Id68q/VKalT4FQ==
+sheetforge@^2.1.9:
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/sheetforge/-/sheetforge-2.1.9.tgz#695adca322feba0df9ad1034b181e63cf667722c"
+  integrity sha512-GzbSfQS6l5b69MmgEqQ+LCfq/9oYp7JZHdpUJkINcaFpMtQapjsNwMPUULBR0GNG1I0tFQO8Mv2QwUET1hM40w==
   dependencies:
     deep-equal "^1.0.1"
     mathjs "^5.6.0"
