@@ -6,6 +6,7 @@ import Application from '@/contexts/Application'
 import PublicIcon from '@/icons/public.svg'
 import SecretIcon from '@/icons/secret.svg'
 import ErrorPage from '@/pages/_error'
+// import Article from '@/server/models/Article'
 import pluck from '@/utilities/pluck'
 import './campaign.scss'
 
@@ -18,6 +19,12 @@ export default class CampaignPage extends Component {
 
   state = {
     ...pluck(this.context.campaign, STATE_FIELDS),
+  }
+
+  static getInitialProps = async ({ query, req }) => {
+    // console.log(req.campaign)
+    // const articles = Article.find({  })
+    return {}
   }
 
   get isDirty() {
@@ -57,8 +64,8 @@ export default class CampaignPage extends Component {
       return <ErrorPage statusCode={404} message={campaign.message} />
     }
 
-    const { secret } = campaign
-    const { editors, isOwner, owners, players, title } = this.state
+    const { isOwner, secret } = campaign
+    const { editors, owners, players, title } = this.state
 
     return (
       <div className="campaign page">

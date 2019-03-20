@@ -47,7 +47,7 @@ export default class LoginPage extends Component {
     const json = await response.json()
     if (response.status === 200) {
       this.context.setUser(json)
-      this.context.updateCampaign({})
+      this.context.updateCampaign()
       this.handleRedirect()
     } else {
       this.setState({ message: '', ...json })

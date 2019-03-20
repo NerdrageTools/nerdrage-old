@@ -13,9 +13,9 @@ export default function ArticleChildren({
 
   const links = articles
     .sort((a, b) => a.title.localeCompare(b.title))
-    .map(({ slug, title }) => (
+    .map(({ campaign, slug, title }) => (
       <li key={slug}>
-        <PageLink slug={slug}>{title}</PageLink>
+        <PageLink {...{ campaign, slug }}>{title}</PageLink>
       </li>
     ))
 

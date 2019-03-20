@@ -5,20 +5,21 @@ import Layout from '@/components/Layout'
 import Application from '@/contexts/Application'
 import defaultTheme from '@/data/defaultTheme'
 import Error from '@/pages/_error'
-import pluck from '@/utilities/pluck'
-import URI from '@/utilities/URI'
 import '@/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async context => {
-    const { Component, ctx: { req } } = context
-    const headers = pluck(req && req.headers, 'cookie')
+    const { Component, ctx: { req = {} } } = context
     const props = await App.getInitialProps(context)
-    const campaign = await fetch(URI(req, '/api/campaign'), { headers }).then(r => r.json())
-    const user = await fetch(URI(req, '/api/user'), { headers }).then(r => r.json())
-    let host
+
+    const fetchParams = { headers: { 'Content-Type': 'application/json' } }
+    const campaign = req ? req.campaign
+      : await fetch('/api/campaign', fetchParams).then(r => r.json())
+    const user = req ? req.user
+      : await fetch('/api/user', fetchParams).then(r => r.json())
 
     /* eslint-disable prefer-destructuring */
+    let host
     if (process.browser) {
       host = window.location.host
     } else {
@@ -29,14 +30,7 @@ export default class Wiki extends App {
     const domain = host.split('.').shift()
     const rootUrl = host.slice(domain.length + 1)
 
-    return {
-      ...props,
-      campaign,
-      Component,
-      domain,
-      rootUrl,
-      user,
-    }
+    return { ...props, campaign, Component, domain, rootUrl, user }
   }
 
   state = {

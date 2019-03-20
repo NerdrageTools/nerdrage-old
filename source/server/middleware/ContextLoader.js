@@ -1,27 +1,30 @@
-import Campaign from '@/server/models/Campaign'
-import User from '@/server/models/User'
+import { getCampaign } from '@/server/controllers/CampaignController'
+import { getUser } from '@/server/controllers/UserController'
 
 export default async (request, response, next) => {
   const host = request.get('host') || ''
   const sessionScope = host.split('.').slice(-2).join('.').split(':')[0]
   request.sessionOptions.domain = sessionScope
 
-  const domain = request.hostname.split('.').shift()
-  request.domain = domain
-  request.campaign = await Campaign.findOne({ domain })
-    .populate('owners editors players', 'name username')
-    .exec()
-
-  if (request.session.username) {
-    const user = await User.findOne({ username: request.session.username })
-    request.user = user
-    if (user) {
-      request.session = user.toProfile()
-      request.session.lastRequest = (new Date()).getMilliseconds()
+  if (request.session && !request.session.anonymous) {
+    const user = await getUser(request.session.username, true)
+    if (!user.anonymous) {
+      request.session = {
+        lastRequest: (new Date()).getMilliseconds(),
+        username: user.username,
+      }
+      request.user = user
     } else {
       request.session = null
+      request.user = user
     }
   }
+  request.user = request.user || { anonymous: true }
+
+  const domain = request.hostname.split('.').shift()
+  request.domain = domain
+  request.returnOnly = true
+  request.campaign = await getCampaign(domain, request.user)
 
   return next()
 }

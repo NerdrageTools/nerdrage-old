@@ -1,12 +1,14 @@
 @import '~@/styles/palette';
+@import './page';
 
 .article.page {
   display: flex;
   flex-direction: column;
 
   > .tab-set {
-    .tab-contents {
-      &:not(.read) { padding: 0; }
+    > .tab-contents {
+      padding: 0;
+
       > p { // Loading component
         align-items: center;
         display: flex;
@@ -15,7 +17,7 @@
       }
     }
 
-    > .tabs.read ~ .tab-contents {
+    > .tab-contents.read {
       padding: .5rem;
 
       .jsx-parser {
@@ -24,9 +26,6 @@
           position: relative;
 
           &:before {
-            background: #00000011;
-            border-radius: 1em;
-            box-shadow: 3px 3px 3px #00000033;
             content: 'This article has not yet been written.';
             display: flex;
             align-items: center;

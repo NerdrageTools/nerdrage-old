@@ -41,10 +41,7 @@ export default class UserMenu extends Component {
 
   render = () => (
     <div className="user-menu">
-      {this.context.user.anonymous
-        ? this.renderAnonymous()
-        : this.renderLoggedIn()
-      }
+      {this.context.user.anonymous ? this.renderAnonymous() : this.renderLoggedIn()}
     </div>
   )
 }
