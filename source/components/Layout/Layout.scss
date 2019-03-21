@@ -1,7 +1,5 @@
+@import '~@/styles/layout';
 @import '~@/styles/palette';
-
-$navigation-width: 150px;
-$page-width: calc(100vw - #{$navigation-width});
 
 .wiki.layout {
   background: $color-bg;

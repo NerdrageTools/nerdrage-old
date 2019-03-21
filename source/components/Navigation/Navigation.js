@@ -3,6 +3,8 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
 import PageLink from '@/components/PageLink'
 import Application from '@/contexts/Application'
+import FavoriteIcon from '@/icons/favorite-on.svg'
+import SheetIcon from '@/icons/sheet.svg'
 import noop from '@/utilities/noop'
 import pluck from '@/utilities/pluck'
 import './Navigation.scss'
@@ -59,7 +61,7 @@ export default class Navigation extends Component {
           }
 
           return (
-            <li key={_id || index} data-id={_id}>
+            <li key={_id || index} data-id={_id} title={title}>
               <PageLink
                 {...{ campaign, slug, type }}
                 active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
@@ -88,13 +90,15 @@ export default class Navigation extends Component {
       <Scrollbars className="navigation" autoHide universal>
         <div className="content" ref={this.props.wrapperRef}>
           <div className="campaign-nav" ref={this.campaignNav}>
-            {this.renderList(navigation, campaign.title, 'article',
-              <PageLink domain={campaign.domain} type="campaign">{campaign.title}</PageLink>
-            )}
+            {this.renderList(navigation, campaign.title, 'article', <b>
+              <PageLink domain={campaign.domain} type="campaign">
+                {campaign.title}
+              </PageLink>
+            </b>)}
           </div>
           {user && <>
-            {this.renderList(favorites, 'My Favorites')}
-            {this.renderList(sheets, 'My Sheets', 'sheet')}
+            {this.renderList(favorites, <><FavoriteIcon /> Favorites</>)}
+            {this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')}
           </>}
         </div>
       </Scrollbars>
