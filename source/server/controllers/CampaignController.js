@@ -7,6 +7,7 @@ import Campaign from '@/server/models/Campaign'
 
 const controller = express()
 
+/* eslint-disable no-console */
 export async function getCampaign(domain, user) {
   if (!domain) return null
 
@@ -28,7 +29,7 @@ export async function getCampaign(domain, user) {
 
     return json
   } catch (error) {
-    // console.error('CampaignController#getCampaign', error)
+    console.error('CampaignController#getCampaign', error)
     return null
   }
 }
@@ -79,13 +80,21 @@ const createCampaign = async (request, response) => {
 const updateCampaign = async (request, response) => {
   try {
     const updates = { ...request.body }
-    const domain = request.params.domain || request.domain
-    const campaign = await Campaign.findOne({ domain })
+    let domain
+    let campaign
+    if (request.params.domain) {
+      domain = request.params.domain // eslint-disable-line
+      campaign = await getCampaign(domain, request.user)
+    } else {
+      domain = request.domain // eslint-disable-line
+      campaign = request.campaign // eslint-disable-line
+    }
+
     if (!campaign) return Campaign404({ domain }, response)
 
     const userId = request.session._id
 
-    if (!campaign.isEditableBy(request.session._id)) {
+    if (!campaign.isEditor) {
       return response.status(401).json({
         message: `You don't have permission to edit campaign '${domain}'.`,
       })
@@ -96,7 +105,7 @@ const updateCampaign = async (request, response) => {
     delete updates.domain
 
     // Only an owner can update the participant/permission fields
-    if (!campaign.isOwnedBy(userId)) {
+    if (!campaign.isOwner) {
       delete updates.editors
       delete updates.owners
       delete updates.players
@@ -107,9 +116,9 @@ const updateCampaign = async (request, response) => {
       ...updates,
       lastUpdatedBy: userId,
     })
-    await campaign.save()
+    await Campaign.update({ domain }, { $set: updates })
 
-    getCampaignRequest(request, response)
+    return getCampaignRequest(request, response)
   } catch (error) {
     switch (error.code) {
       case 11000:
@@ -124,6 +133,7 @@ const updateCampaign = async (request, response) => {
     }
   }
 }
+/* eslint-enable no-console */
 
 controller.get('/:domain?', ContextLoader, getCampaignRequest)
 controller.put('/:domain?', NoAnonymous, createCampaign)
