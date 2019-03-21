@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "cd source && next build",
+    "postbuild": "git add ./.next && git commit -m 'Update build'",
     "develop": "nodemon -w ./source/server -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
     "start": "NODE_ENV=production babel-node source/server/server.js",
     "test": "jest"
