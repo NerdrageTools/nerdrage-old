@@ -8,6 +8,7 @@ export default function ArticleChildren({
   caption = 'Child Articles',
   className = '',
   icon = <TagIcon />,
+  type = 'article',
 }) {
   if (!articles.length) return <div className="tag-browser is-hidden" />
 
@@ -15,7 +16,7 @@ export default function ArticleChildren({
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(({ campaign, slug, title }) => (
       <li key={slug} title={`${campaign.title}: ${title}`}>
-        <PageLink {...{ campaign, slug }}>{title}</PageLink>
+        <PageLink {...{ campaign, slug, type }}>{title}</PageLink>
       </li>
     ))
 

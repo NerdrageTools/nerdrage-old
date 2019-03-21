@@ -166,6 +166,7 @@ export default class UserPage extends Component {
               articles={user.sheets}
               caption="Sheets"
               icon={<SheetIcon />}
+              type="sheet"
             />
           </>}
         </div>
