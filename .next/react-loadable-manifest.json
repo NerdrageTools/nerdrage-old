@@ -791,7 +791,7 @@
       "publicPath": "static/chunks/commons.e5d3882b6f4218f095f4.js"
     }
   ],
-  "../modules/_core": [
+  "../../modules/_core": [
     {
       "id": "TaGV",
       "name": "../node_modules/core-js/library/modules/_core.js",
