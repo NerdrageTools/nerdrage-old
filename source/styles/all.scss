@@ -2,6 +2,10 @@
 
 * { box-sizing: border-box; }
 
+@import 'mixins/dropshadow';
+@import 'mixins/ellipsis';
+@import 'mixins/glow';
+@import 'mixins/gradient';
 @import 'html';
 @import 'body';
 @import 'a';
@@ -10,8 +14,16 @@
 @import 'hr';
 @import 'input';
 @import 'svg';
+@import 'classes/callout';
 @import 'classes/danger';
+@import 'classes/dropshadow';
+@import 'classes/ellipsis';
+@import 'classes/hidden';
+@import 'classes/highlight';
+@import 'classes/info-box';
+@import 'classes/inset';
 @import 'classes/lightbox';
+@import 'classes/loading';
 @import 'classes/row';
 
 :root {

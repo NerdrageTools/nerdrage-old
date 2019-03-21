@@ -1,4 +1,3 @@
-@import '~@/styles/breakpoint';
 @import '~@/styles/classes/ellipsis';
 @import '~@/styles/palette';
 
@@ -41,7 +40,7 @@
   }
 }
 
-@include breakpoint(medium) {
+.layout.medium {
   .article-children {
     .link-list {
       columns: 3;
@@ -49,7 +48,7 @@
   }
 }
 
-@include breakpoint(small) {
+.layout.small {
   .article-children {
     .link-list {
       columns: 2;

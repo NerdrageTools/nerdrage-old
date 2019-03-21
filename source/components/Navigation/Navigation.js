@@ -52,32 +52,32 @@ export default class Navigation extends Component {
     {campaignLink}
     {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
     <ul>
-      {list.filter(item => item.campaign.domain === this.context.campaign.domain)
-        .map(({ _id, campaign = {}, slug, title }, index) => {
-          const { domain = '', title: cTitle = '' } = campaign
-          let text = title
-          if (type !== 'campaign' && domain && domain !== this.context.domain) {
-            text += ` (${cTitle || domain})`
-          }
+      {list.map(({ _id, campaign = {}, slug, title }, index) => {
+        const { domain = '', title: cTitle = '' } = campaign
+        let text = title
+        if (type !== 'campaign' && domain && domain !== this.context.domain) {
+          text += ` (${cTitle || domain})`
+        }
 
-          return (
-            <li key={_id || index} data-id={_id} title={title}>
-              <PageLink
-                {...{ campaign, slug, type }}
-                active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
-                onClick={this.props.onItemClick}
-              >
-                {text}
-              </PageLink>
-            </li>
-          )
-        })}
+        return (
+          <li key={_id || index} data-id={_id} title={title}>
+            <PageLink
+              {...{ campaign, slug, type }}
+              active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
+              onClick={this.props.onItemClick}
+            >
+              {text}
+            </PageLink>
+          </li>
+        )
+      })}
     </ul>
   </>
 
+  filterLinks = link => link.campaign.domain === this.context.campaign.domain
   render = () => {
     const { campaign, user = {} } = this.context
-    const { favorites = [], sheets = [] } = user
+    let { favorites = [], sheets = [] } = user
 
     if (!campaign || !campaign.navigation) return null
 
@@ -85,6 +85,8 @@ export default class Navigation extends Component {
       ...link,
       campaign: pluck(campaign, '_id', 'domain', 'title'),
     }))
+    favorites = favorites.filter(this.filterLinks)
+    sheets = sheets.filter(this.filterLinks)
 
     return (
       <Scrollbars className="navigation" autoHide universal>

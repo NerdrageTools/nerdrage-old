@@ -11,7 +11,7 @@
   th, td { padding: 5px; }
 }
 
-@include breakpoint(small) {
+.layout.small {
   .info-box {
     float: none;
     margin: 0 0 1em 0;
