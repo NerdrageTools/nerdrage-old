@@ -1,7 +1,3 @@
-@mixin ellipsis() {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+@import '~@/styles/mixins/ellipsis';
 
 .ellipsis { @include ellipsis; }
