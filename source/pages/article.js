@@ -111,6 +111,9 @@ export default class Article extends Component {
     }
   }
   handleHtmlChange = html => this.setState({ html })
+  handleReset = () => {
+    this.setState({ activeTab: 'read', ...this.state.saved })
+  }
   handleSave = async () => {
     const saved = await fetch(`/api/article/${this.props.slug}`, {
       body: JSON.stringify(pluck(this.state, STATE_FIELDS)),
@@ -219,45 +222,45 @@ export default class Article extends Component {
           {redirectedFrom && (
             <div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
           )}
-          {_id && <>
-            {isOwner &&
-              <Toggle
-                className="secret"
-                offIcon={PublicIcon}
-                onIcon={SecretIcon}
-                onToggle={this.handleToggleSecret}
-                value={secret}
-              />
-            }
-            {campaign.isEditor && <>
-              <Toggle
-                className="in-navigation" value={this.isNavLink}
-                offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
-                onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
-                onToggle={this.handleToggleNavigation}
-              />
-              <Toggle
-                className="edit-mode"
-                offIcon={EditIcon}
-                onIcon={EditIcon}
-                onToggle={this.handleToggleEditMode}
-                value={this.state.editMode}
-              />
-            </>}
+          {_id && isOwner && (
+            <Toggle
+              className="secret" value={secret}
+              offIcon={PublicIcon} onIcon={SecretIcon}
+              onToggle={this.handleToggleSecret}
+            />
+          )}
+          {_id && campaign.isEditor && (
+            <Toggle
+              className="in-navigation" value={this.isNavLink}
+              offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
+              onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
+              onToggle={this.handleToggleNavigation}
+            />
+          )}
+          {campaign.isEditor && (
+            <Toggle
+              className="edit-mode" value={this.state.editMode}
+              offIcon={EditIcon} onIcon={EditIcon}
+              onToggle={this.handleToggleEditMode}
+            />
+          )}
+          {_id && (
             <Toggle
               className="favorite"
-              offIcon={FavoriteOffIcon}
-              onIcon={FavoriteOnIcon}
+              offIcon={FavoriteOffIcon} onIcon={FavoriteOnIcon}
               onToggle={this.handleToggleFavorite}
               value={isFavorite}
             />
-          </>}
+          )}
+          {this.isDirty && campaign.isEditor && (
+            <button className="safe" onClick={this.handleSave}>Save</button>
+          )}
+          {_id && this.isDirty && campaign.isEditor && (
+            <button className="safe" onClick={this.handleReset}>Reset</button>
+          )}
         </div>
         <TabSet
           activeTabId={activeTab}
-          buttons={<>
-            {this.isDirty && <button className="safe" onClick={this.handleSave}>Save</button>}
-          </>}
           onTabClicked={this.handleTabClicked}
           showTabs={!readOnly}
           tabs={[{
