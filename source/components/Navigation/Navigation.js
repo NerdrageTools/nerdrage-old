@@ -97,8 +97,12 @@ export default class Navigation extends Component {
             </b>)}
           </div>
           {user && <>
-            {this.renderList(favorites, <><FavoriteIcon /> Favorites</>)}
-            {this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')}
+            {Boolean(favorites.length) && (
+              this.renderList(favorites, <><FavoriteIcon /> Favorites</>)
+            )}
+            {Boolean(sheets.length) && (
+              this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')
+            )}
           </>}
         </div>
       </Scrollbars>
