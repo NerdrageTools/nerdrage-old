@@ -53,11 +53,11 @@ app.prepare().then(async () => {
   server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
   server.use('/api/user', ContextLoader, nocache(), UserController)
 
-  server.get('/', (_, response) => {
-    response.redirect(302, '/article/home')
-  })
+  server.get('/', (_, response) => response.redirect(302, '/article/home'))
 
-  server.get('*', ContextLoader, nocache(), routeHandler)
+  server.get('/_next/*', routeHandler)
+  server.get('*', nocache(), ContextLoader, routeHandler)
+
   server.listen(3000, error => {
     if (error) throw error
     console.log('~> Listening on port 3000')
