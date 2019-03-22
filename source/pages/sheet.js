@@ -8,6 +8,7 @@ import Application from '@/contexts/Application'
 import defaultLayout from '@/data/defaultSheetLayout'
 import PublicIcon from '@/icons/public.svg'
 import SecretIcon from '@/icons/secret.svg'
+import ErrorPage from '@/pages/_error'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
@@ -111,8 +112,12 @@ export default class Sheet extends Component {
   handleToggleSecret = () => this.handleSave({ secret: !this.state.secret })
 
   render = () => {
-    const { slug } = this.props
+    const { message, statusCode, slug } = this.props
     const { _id, isEditor, isOwner, secret, title } = this.state
+
+    if (statusCode !== 200) {
+      return <ErrorPage {...{ message, statusCode }} />
+    }
 
     return (
       <div className="sheet page">
