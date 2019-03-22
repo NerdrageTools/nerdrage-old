@@ -2,13 +2,15 @@ import express from 'express'
 import Sheet from '@/server/models/Sheet'
 import omit from '@/utilities/omit'
 
+const getSheet = async (slug, campaign) => Sheet.findOne({ campaign, slug })
+  .populate('campaign', 'domain title')
+  .populate('ownedBy', 'name username')
+  .exec()
+
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, domain, params: { slug } } = request
-  const sheet = await Sheet.findOne({ campaign: campaign._id, slug })
-    .populate('campaign', 'domain title')
-    .populate('ownedBy', 'name username')
-    .exec()
   const { isEditor, isOwner, isParticipant, isViewer } = campaign
+  const sheet = await getSheet(slug, campaign._id)
 
   if (sheet && required.includes('view') && !isViewer) {
     return response.status(401).json({
@@ -38,7 +40,7 @@ export const permissions = (...required) => async (request, response, next) => {
 
   return next()
 }
-export const getSheet = async (request, response) => {
+export const getSheetRequest = async (request, response) => {
   const { domain, isEditor, isOwner, isParticipant, sheet, slug } = request
   if (!sheet) {
     return response.status(404).json({
@@ -61,8 +63,7 @@ export const upsertSheet = async (request, response) => {
   const creating = !sheet
 
   const updates = {
-    ...omit(body, '_id', 'slug'),
-    campaign: campaign._id,
+    ...omit(body, '_id', 'campaign', 'ownedBy', 'slug'),
     slug,
   }
 
@@ -76,11 +77,9 @@ export const upsertSheet = async (request, response) => {
     sheet.set(updates)
   }
 
-  const { _id } = await sheet.save()
-  const saved = await Sheet.findOne({ _id })
-    .populate('campaign', 'domain title')
-    .populate('ownedBy', 'name username')
-    .exec()
+  await sheet.save()
+  const saved = await getSheet(slug, campaign._id)
+
   return response.status(200).json({
     ...saved.toJSON(),
     isEditable: creating ? true : isEditable,
@@ -95,7 +94,7 @@ export const deleteSheet = async (request, response) => {
 }
 
 const controller = express()
-controller.get('/:slug', permissions('view'), getSheet)
+controller.get('/:slug', permissions('view'), getSheetRequest)
 controller.post('/:slug', permissions('edit'), upsertSheet)
 controller.delete('/:slug', permissions('edit'), deleteSheet)
 export default controller
