@@ -9,13 +9,15 @@ import '@/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async context => {
-    const { Component, ctx: { req = {} } } = context
+    const { Component, ctx: { req: request = {} } } = context
     const props = await App.getInitialProps(context)
 
     const fetchParams = { headers: { 'Content-Type': 'application/json' } }
-    const campaign = req ? req.campaign
+    const campaign = request
+      ? request.campaign
       : await fetch('/api/campaign', fetchParams).then(r => r.json())
-    const user = req ? req.user
+    const user = request
+      ? request.user
       : await fetch('/api/user', fetchParams).then(r => r.json())
 
     /* eslint-disable prefer-destructuring */
@@ -23,7 +25,7 @@ export default class Wiki extends App {
     if (process.browser) {
       host = window.location.host
     } else {
-      host = req.get('host')
+      host = request.get('host')
     }
     /* eslint-enable prefer-destructuring */
 
