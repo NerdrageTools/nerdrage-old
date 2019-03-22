@@ -14,7 +14,7 @@ import URI from '@/utilities/URI'
 import 'sheetforge/build/sheetforge.css'
 import './sheet.scss'
 
-const STATE_FIELDS = ['_id', 'isEditable', 'isOwner', 'secret', 'slug']
+const STATE_FIELDS = ['_id', 'isEditor', 'isOwner', 'secret', 'slug']
 const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
@@ -112,7 +112,7 @@ export default class Sheet extends Component {
 
   render = () => {
     const { slug } = this.props
-    const { _id, isEditable, isOwner, secret, title } = this.state
+    const { _id, isEditor, isOwner, secret, title } = this.state
 
     return (
       <div className="sheet page">
@@ -120,14 +120,14 @@ export default class Sheet extends Component {
           <Editable
             className="title"
             onChange={this.handleTitleChange}
-            readOnly={!isEditable}
+            readOnly={!isEditor}
             value={title}
           />
-          {isEditable && this.isDirty && <>
+          {isEditor && this.isDirty && <>
             <button className="safe" onClick={() => this.handleSave()}>{_id ? 'Save' : 'Create'}</button>
             {_id && <button className="safe" onClick={this.handleReset}>Reset</button>}
           </>}
-          {_id && isEditable && (
+          {_id && isEditor && (
             <Toggle
               className="secret"
               offIcon={PublicIcon}
@@ -142,10 +142,10 @@ export default class Sheet extends Component {
         </div>
         <Scrollbars
           autoHide universal
-          className={`sheet-container ${isEditable ? 'is-editable' : 'readOnly'}`}
+          className={`sheet-container ${isEditor ? 'is-editable' : 'readOnly'}`}
         >
           <SfSheet
-            key={slug} readOnly={!isEditable}
+            key={slug} readOnly={!isEditor}
             character={this.character} layout={this.layout}
             onChange={this.handleSheetChange}
           />

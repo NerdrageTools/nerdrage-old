@@ -8,11 +8,14 @@ const getSheet = async (slug, campaign) => Sheet.findOne({ campaign, slug })
   .exec()
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, domain, params: { slug } } = request
-  const { isEditor, isOwner, isParticipant, isViewer } = campaign
+  const { campaign, domain, params: { slug }, user } = request
   const sheet = await getSheet(slug, campaign._id)
 
-  if (sheet && required.includes('view') && !isViewer) {
+  const isOwner = campaign.isOwner || sheet.ownedBy === user._id
+  const isEditor = isOwner || campaign.isEditor
+  const isVisible = isOwner || (campaign.isViewer && !sheet.secret)
+
+  if (sheet && required.includes('view') && !isVisible) {
     return response.status(401).json({
       message: `This content is private to the ${domain} campaign.`,
     })
@@ -29,11 +32,8 @@ export const permissions = (...required) => async (request, response, next) => {
   }
 
   Object.assign(request, {
-    campaign,
     isEditor,
     isOwner,
-    isParticipant,
-    isViewer,
     sheet,
     slug,
   })
@@ -41,24 +41,21 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheetRequest = async (request, response) => {
-  const { domain, isEditor, isOwner, isParticipant, sheet, slug } = request
+  const { domain, isEditor, isOwner, sheet, slug } = request
   if (!sheet) {
     return response.status(404).json({
-      isEditable: isParticipant,
-      isOwner,
       message: `Unable to find sheet '${slug}' in the ${domain} campaign.`,
     })
   }
 
   return response.status(200).json({
     ...sheet.toJSON(),
-    isEditable: isEditor,
+    isEditor,
     isOwner,
-    isParticipant,
   })
 }
 export const upsertSheet = async (request, response) => {
-  const { body, campaign, isEditable, isOwner, user, slug } = request
+  const { body, campaign, isEditor, isOwner, slug, user } = request
   let { sheet } = request
   const creating = !sheet
 
@@ -82,7 +79,7 @@ export const upsertSheet = async (request, response) => {
 
   return response.status(200).json({
     ...saved.toJSON(),
-    isEditable: creating ? true : isEditable,
+    isEditor: creating ? true : isEditor,
     isOwner: creating ? true : isOwner,
   })
 }
