@@ -2,9 +2,8 @@ import express from 'express'
 import Sheet from '@/server/models/Sheet'
 import pluck from '@/utilities/pluck'
 
-const getSheet = async (slug, campaign, user) => {
+export const getSheet = async (slug, campaign, user = {}) => {
   const { isAdmin } = user
-  const { isParticipant } = campaign
   const sheet = await Sheet.findOne({ campaign, slug })
     .populate('campaign', 'domain title')
     .populate('ownedBy', 'name username')
@@ -12,13 +11,13 @@ const getSheet = async (slug, campaign, user) => {
 
   const isOwner = Boolean(
     isAdmin || !sheet
-    || user._id.equals(sheet.ownedBy._id)
+    || (user._id && user._id.equals(sheet.ownedBy._id))
     || campaign.isOwner
   )
   const isEditor = isOwner
   const isVisible = Boolean(
     isAdmin || isOwner
-    || (sheet && !sheet.secret && (isParticipant || !campaign.secret))
+    || (sheet && !sheet.secret && (campaign.isParticipant || !campaign.secret))
   )
 
   return {
@@ -51,15 +50,11 @@ export const permissions = (...required) => async (request, response, next) => {
     }
   }
 
-  Object.assign(request, {
-    sheet,
-    slug,
-  })
-
+  request.sheet = sheet
   return next()
 }
 export const getSheetRequest = async (request, response) => {
-  const { campaign, domain, sheet, slug } = request
+  const { campaign = {}, domain, sheet = {}, slug } = request
   if (!sheet._id && !campaign.isParticipant) {
     return response.status(404).json({
       ...sheet,
