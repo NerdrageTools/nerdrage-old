@@ -62,8 +62,8 @@ export const upsertArticle = async (request, response) => {
     campaign,
     isEditable,
     isOwner,
-    session: { _id: userId },
     slug,
+    user: { _id: userId },
   } = request
   let { article, body: updates } = request
   updates = {

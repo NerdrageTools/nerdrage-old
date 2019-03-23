@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import {
   deleteSheet,
   getSheet,
+  getSheetRequest,
   permissions,
   upsertSheet,
 } from './SheetController'
@@ -11,33 +12,42 @@ import Sheet from '@/server/models/Sheet'
 
 const { ObjectId } = mongoose.Types
 
-const ADMIN = { _id: '000000000000', isAdmin: true }
-const OWNER = { _id: '111111111111' }
-const EDITOR = { _id: '222222222222' }
-const PLAYER = { _id: '333333333333' }
-const CAMPAIGN = (props = {}) => new Campaign({
-  _id: '111111111111',
-  domain: 'test',
-  editors: [EDITOR._id],
-  owners: [OWNER._id],
-  players: [PLAYER._id],
-  ...props,
+const ADMIN = { _id: ObjectId('000000000000'), isAdmin: true }
+const OWNER = { _id: ObjectId('111111111111'), isAdmin: false }
+const EDITOR = { _id: ObjectId('222222222222'), isAdmin: false }
+const PLAYER = { _id: ObjectId('333333333333'), isAdmin: false }
+const ANY = { _id: ObjectId('444444444444'), isAdmin: false }
+
+const CAMPAIGN = (props = {}, campaignPermissions = {}) => ({
+  ...new Campaign({
+    _id: '111111111111',
+    domain: 'test',
+    ...props,
+  }).toJSON(),
+  isEditor: false,
+  isOwner: false,
+  isParticipant: false,
+  ...campaignPermissions,
 })
 const SHEET = (props = {}) => new Sheet({
   _id: '111111111111',
-  campaign: null,
   data: {},
-  ownedBy: OWNER._id,
-  secret: false,
+  ownedBy: OWNER,
   slug: 'test',
   ...props,
 })
 
-const mockRequest = (slug = 'test', { campaign = CAMPAIGN(), session = {}, body = {} } = {}) => ({
+const mockRequest = (slug = 'test', {
+  body = {},
+  campaign = CAMPAIGN(),
+  user = {},
+  ...rest
+} = {}) => ({
   body,
   campaign,
   params: { slug },
-  session,
+  user,
+  ...rest,
 })
 const mockResponse = () => {
   const response = {}
@@ -48,10 +58,95 @@ const mockResponse = () => {
 }
 
 describe('server/controllers/SheetController', () => {
+  describe('getSheet', () => {
+    it('sheet exists | secret campaign + sheet | non-participant', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: true }), 'findOne')
+      const result = await getSheet('test', CAMPAIGN({ secret: true }), ANY)
+
+      expect(result.isEditor).toBe(false)
+      expect(result.isOwner).toBe(false)
+      expect(result.isVisible).toBe(false)
+
+      done()
+    })
+    it('sheet exists | secret campaign + sheet | non-owner participant', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: true }), 'findOne')
+      const result = await getSheet('test', (
+        CAMPAIGN({ secret: true }, { isParticipant: true })
+      ), ANY)
+
+      expect(result.isEditor).toBe(false)
+      expect(result.isOwner).toBe(false)
+      expect(result.isVisible).toBe(false)
+
+      done()
+    })
+    it('sheet exists | public campaign + sheet | non-participant', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: false }), 'findOne')
+      const result = await getSheet('test', CAMPAIGN({ secret: false }), ANY)
+
+      expect(result.isEditor).toBe(false)
+      expect(result.isOwner).toBe(false)
+      expect(result.isVisible).toBe(true)
+
+      done()
+    })
+    it('sheet exists | secret campaign, public sheet | participant', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: false }), 'findOne')
+      const result = await getSheet('test', (
+        CAMPAIGN({ secret: true }, { isParticipant: true })
+      ), ANY)
+
+      expect(result.isEditor).toBe(false)
+      expect(result.isOwner).toBe(false)
+      expect(result.isVisible).toBe(true)
+
+      done()
+    })
+    it('sheet exists | secret campaign + sheet | sheet owner', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: true }), 'findOne')
+      const result = await getSheet('test', (
+        CAMPAIGN({ secret: true }, { isParticipant: true })
+      ), OWNER)
+
+      expect(result.isEditor).toBe(true)
+      expect(result.isOwner).toBe(true)
+      expect(result.isVisible).toBe(true)
+
+      done()
+    })
+    it('sheet exists | secret campaign + sheet | campaign editor', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: true }), 'findOne')
+      const result = await getSheet('test', (
+        CAMPAIGN({ secret: true }, { isEditor: true, isParticipant: true })
+      ), EDITOR)
+
+      expect(result.isEditor).toBe(false)
+      expect(result.isOwner).toBe(false)
+      expect(result.isVisible).toBe(false)
+
+      done()
+    })
+    it('sheet exists | secret campaign + sheet | campaign owner', async done => {
+      mockingoose.Sheet.toReturn(SHEET({ secret: true }), 'findOne')
+      const result = await getSheet('test', (
+        CAMPAIGN({ secret: true }, { isEditor: true, isOwner: true, isParticipant: true })
+      ), EDITOR)
+
+      expect(result.isEditor).toBe(true)
+      expect(result.isOwner).toBe(true)
+      expect(result.isVisible).toBe(true)
+
+      done()
+    })
+  })
   describe('permissions', () => {
     it('passes for Admin users', async done => {
       mockingoose.Sheet.toReturn(SHEET(), 'findOne')
-      const request = mockRequest('test', { session: ADMIN })
+      const request = mockRequest('test', {
+        campaign: CAMPAIGN({}, { isAdmin: true }),
+        user: ADMIN,
+      })
       const response = mockResponse()
       const next = jest.fn()
       await permissions('edit')(request, response, next)
@@ -77,7 +172,7 @@ describe('server/controllers/SheetController', () => {
     it('returns 401 to non-editors', async done => {
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('edit')(mockRequest('test', { session: PLAYER }), response, next)
+      await permissions('edit')(mockRequest('test', { user: PLAYER }), response, next)
 
       expect(response.status).toHaveBeenCalledWith(401)
       expect(response.json.mock.calls[0][0].message).toMatch(/You do not have permission to edit/)
@@ -89,7 +184,7 @@ describe('server/controllers/SheetController', () => {
       mockingoose.Sheet.toReturn(SHEET({ secret: false }), 'findOne')
       const response = mockResponse()
       const next = jest.fn()
-      await permissions('view')(mockRequest('test', { session: PLAYER }), response, next)
+      await permissions('view')(mockRequest('test', { user: PLAYER }), response, next)
 
       expect(response.json).not.toHaveBeenCalled()
       expect(response.status).not.toHaveBeenCalled()
@@ -98,10 +193,10 @@ describe('server/controllers/SheetController', () => {
       done()
     })
   })
-  describe('getSheet', () => {
+  describe('getSheetRequest', () => {
     it('returns 404 if sheet is not found', async done => {
       const response = mockResponse()
-      await getSheet({ domain: 'test', sheet: null, slug: 'test' }, response)
+      await getSheetRequest({ domain: 'test', sheet: {}, slug: 'test' }, response)
 
       expect(response.status).toHaveBeenCalledWith(404)
       expect(response.json.mock.calls[0][0].message).toMatch(/Unable to find sheet/)
@@ -112,7 +207,7 @@ describe('server/controllers/SheetController', () => {
       const sheet = SHEET()
       const response = mockResponse()
 
-      await getSheet({ sheet }, response)
+      await getSheetRequest({ sheet }, response)
       expect(response.status).toHaveBeenCalledWith(200)
       expect(response.json.mock.calls[0][0]).toMatchObject(sheet.toJSON())
 
@@ -125,9 +220,9 @@ describe('server/controllers/SheetController', () => {
       const request = {
         body: { data: { foo: 'bar' } },
         campaign,
-        session: OWNER,
         sheet: SHEET(),
         slug: 'foo',
+        user: OWNER,
       }
       const response = mockResponse()
 

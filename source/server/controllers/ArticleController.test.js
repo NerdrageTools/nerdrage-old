@@ -12,10 +12,10 @@ import pluck from '@/utilities/pluck'
 
 const { ObjectId } = mongoose.Types
 
-const ADMIN = { _id: '000000000000', isAdmin: true }
-const OWNER = { _id: '111111111111' }
-const EDITOR = { _id: '222222222222' }
-const PLAYER = { _id: '333333333333' }
+const ADMIN = { _id: ObjectId('000000000000'), isAdmin: true }
+const OWNER = { _id: ObjectId('111111111111') }
+const EDITOR = { _id: ObjectId('222222222222') }
+const PLAYER = { _id: ObjectId('333333333333') }
 const ARTICLE = (props = {}) => new Article({
   _id: '111111111111',
   campaign: null,
@@ -32,11 +32,17 @@ const CAMPAIGN = (props = {}) => new Campaign({
   ...props,
 })
 
-const mockRequest = (slug = '', { campaign = CAMPAIGN(), session = {}, body = {} } = {}) => ({
+const mockRequest = (slug = '', {
+  body = {},
+  campaign = CAMPAIGN(),
+  user = {},
+  ...rest
+} = {}) => ({
   body,
   campaign,
   params: { slug },
-  session,
+  user,
+  ...rest,
 })
 const mockResponse = () => {
   const response = {}
@@ -49,7 +55,7 @@ const mockResponse = () => {
 describe('server/controllers/ArticleController', () => {
   describe('permissions', () => {
     it('passes for Admin users', async done => {
-      const request = mockRequest('test', { session: ADMIN })
+      const request = mockRequest('test', { user: ADMIN })
       const response = mockResponse()
       const next = jest.fn()
       await permissions('edit')(request, response, next)
@@ -72,7 +78,7 @@ describe('server/controllers/ArticleController', () => {
       done()
     })
     it('returns 401 to non-editors if required', async done => {
-      const request = mockRequest('test', { session: PLAYER })
+      const request = mockRequest('test', { user: PLAYER })
       const response = mockResponse()
       const next = jest.fn()
       await permissions('edit')(request, response, next)
@@ -134,7 +140,7 @@ describe('server/controllers/ArticleController', () => {
         article: ARTICLE(),
         body: updates,
         campaign: CAMPAIGN(),
-        session: EDITOR,
+        user: EDITOR,
         slug: 'foo',
       }
       const response = mockResponse()
@@ -160,7 +166,7 @@ describe('server/controllers/ArticleController', () => {
         article: null,
         body: updates,
         campaign: CAMPAIGN(),
-        session: EDITOR,
+        user: EDITOR,
         slug: 'foo',
       }
       const response = mockResponse()
