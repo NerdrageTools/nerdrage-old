@@ -87,12 +87,7 @@ export const searchArticles = async (request, response) => {
   }
 
   const results = [...fullTextMatches, ...partialMatches]
-
-  if (results.length) {
-    return response.status(200).json(results)
-  }
-
-  return response.status(404).json({ message: 'No results found.' })
+  return response.status(200).json(results)
 }
 export const searchUsers = async (request, response) => {
   const { searchTerm = '.', limit = 10 } = request.params
