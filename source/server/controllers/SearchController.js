@@ -1,8 +1,9 @@
 import { Deburr } from 'deburr'
 import entities from 'entities'
 import express from 'express'
-import Article from '@/server/models/Article'
 import Campaign404 from '@/server/errors/Campaign404'
+import Article from '@/server/models/Article'
+import User from '@/server/models/User'
 
 export const permissions = async (request, response, next) => {
   const { campaign, user } = request
@@ -93,7 +94,18 @@ export const searchArticles = async (request, response) => {
 
   return response.status(404).json({ message: 'No results found.' })
 }
+export const searchUsers = async (request, response) => {
+  const { searchTerm = '.', limit = 10 } = request.params
+  const $searchRegex = new RegExp(`^${new Deburr(searchTerm.toLowerCase()).toString()}`)
+  const matches = await User.find(
+    { $or: [{ searchKeys: $searchRegex }, { email: searchTerm }] },
+    { isAdmin: 1, lastLogin: 1, name: 1, username: 1 }
+  ).limit(limit)
+
+  return response.status(200).json(matches)
+}
 
 const controller = express()
 controller.get('/articles/:searchTerm', Campaign404, permissions, searchArticles)
+controller.get('/users/:searchTerm?', Campaign404, permissions, searchUsers)
 export default controller

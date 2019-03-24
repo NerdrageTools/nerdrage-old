@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
+import computeSearchKeys from '@/utilities/computeSearchKeys'
 
 const SALT_WORK_FACTOR = 10
 
@@ -26,6 +27,7 @@ const UserSchema = new mongoose.Schema({
       'Password must be at least 8 characters long, with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.',
     ],
   },
+  searchKeys: { select: false, type: [String] },
   username: {
     match: [/^[a-z0-9_-]{4,}$/, 'Invalid Username: only lowercase letters/numbers, _ and -'],
     required: true,
@@ -39,9 +41,13 @@ const UserSchema = new mongoose.Schema({
   versionKey: 'version',
 })
 
+UserSchema.index({ username: 'text', })
 UserSchema.pre('save', function (next) {
   if (this.email) this.email = this.email.toLowerCase().trim()
   if (this.username) this.username = this.username.toLowerCase().trim()
+
+  const searchable = `${this.username} ${this.name}`
+  this.searchKeys = computeSearchKeys(searchable)
 
   if (!this.isModified('password')) { next(); return }
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltError, salt) => {
