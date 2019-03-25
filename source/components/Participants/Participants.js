@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EditableList from '@/components/EditableList'
+import PageLink from '@/components/PageLink'
 import UserSearchBox from '@/components/SearchBox/UserSearchBox'
 import NerdIcon from '@/icons/nerd.svg'
 import RemoveIcon from '@/icons/remove.svg'
@@ -32,6 +33,7 @@ export default class Participants extends Component {
     onSave: noop,
     owners: [],
     players: [],
+    readOnly: false,
     saving: false,
   }
 
@@ -96,7 +98,7 @@ export default class Participants extends Component {
   }
 
   render = () => {
-    const { className, saving } = this.props
+    const { className, readOnly, saving } = this.props
     const { participants } = this.state
 
     return (
@@ -105,30 +107,34 @@ export default class Participants extends Component {
           {participants.map(user => (
             <li className={`participant row ${user.type || ''}`} key={user._id}>
               <NerdIcon className="nerd icon" />
-              <div className="display">
+              <PageLink className="display" type="user" slug={user.username}>
                 <span className="name">{user.name}</span>
                 <span className="username">{user.username}</span>
-              </div>
-              <EditableList
-                className="role"
-                defaultValue={user.level}
-                onChange={level => this.handleSetPermission(user, level)}
-                options={['owner', 'editor', 'player']}
-              />
-              <RemoveIcon
-                className="remove icon"
-                onClick={() => this.handleToggleRemoved(user)}
-              />
+              </PageLink>
+              {!readOnly && <>
+                <EditableList
+                  className="role"
+                  defaultValue={user.level}
+                  onChange={level => this.handleSetPermission(user, level)}
+                  options={['owner', 'editor', 'player']}
+                />
+                <RemoveIcon
+                  className="remove icon"
+                  onClick={() => this.handleToggleRemoved(user)}
+                />
+              </>}
             </li>
           ))}
         </ul>
-        <UserSearchBox
-          className="add-user"
-          onSelect={this.handleAddUser}
-        />
-        {(this.state.edits.length !== 0) && (
-          <button className="safe" onClick={this.handleSave}>Save</button>
-        )}
+        {!readOnly && <>
+          <UserSearchBox
+            className="add-user"
+            onSelect={this.handleAddUser}
+          />
+          {(this.state.edits.length !== 0) && (
+            <button className="safe" onClick={this.handleSave}>Save</button>
+          )}
+        </>}
       </div>
     )
   }

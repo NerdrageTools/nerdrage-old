@@ -1,3 +1,5 @@
+@import '~@/styles/palette';
+
 .participants {
   position: relative;
 
@@ -37,23 +39,37 @@
         }
       }
 
+      > .role { display: none; }
       > .remove.icon {
         cursor: pointer;
+        display: none;
       }
 
       &.added {
-        color: green;
+        background-color: transparentize($color-safe, .8);
+        color: darken($color-safe, 20%);
       }
       &.updated {
-        color: teal;
+        background-color: darken($color-highlight, 10%);
       }
       &.removed {
-        color: red;
+        background-color: transparentize($color-danger, .8);
+        color: darken($color-danger, 20%);
         text-decoration: line-through;
+      }
+
+      &:hover {
+        > .role, > .remove.icon { display: inline-block; }
       }
     }
   }
   > .add-user {
     margin: 0;
+  }
+}
+
+.layout.small {
+  .participants > .participant-list > .participant.row {
+    > .role, > .remove.icon { display: inline-block; }
   }
 }

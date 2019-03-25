@@ -46,7 +46,7 @@ export default class PageLink extends Component {
 
     return (
       <NextLink as={`/${type}${slashSlug}`} href={`/${type}${queryStringSlug}`}>
-        <a {...linkProps}>{children}</a>
+        <a {...linkProps}>{children || `Unnamed ${type}`}</a>
       </NextLink>
     )
   }
