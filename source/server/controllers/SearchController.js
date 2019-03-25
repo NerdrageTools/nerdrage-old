@@ -95,7 +95,7 @@ export const searchUsers = async (request, response) => {
   const matches = await User.find(
     { $or: [{ searchKeys: $searchRegex }, { email: searchTerm }] },
     { isAdmin: 1, lastLogin: 1, name: 1, username: 1 }
-  ).limit(limit)
+  ).sort('name').limit(limit)
 
   return response.status(200).json(matches)
 }

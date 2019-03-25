@@ -122,9 +122,8 @@ export default class SearchBox extends Component {
           style={{ color: theme.foreground }}
         >
           <input
-            {...getInputProps()}
+            {...getInputProps({ onKeyDown: this.handleKeyDown })}
             className="input" ref={this.inputBox}
-            onKeyDown={this.handleKeyDown}
             placeholder={placeholder}
             value={this.state.searchTerm}
           />

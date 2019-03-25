@@ -1,0 +1,59 @@
+.participants {
+  position: relative;
+
+  &.loading:after {
+    content: 'Updating...';
+  }
+
+  .participant-list {
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+
+    > .participant.row {
+      justify-content: space-between;
+      margin-bottom: .25rem;
+
+      > .nerd.icon {
+        height: 2em;
+        margin: 0 .25rem 0 0;
+        width: 2em;
+      }
+
+      > .display {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        overflow: hidden;
+
+        > .name, > .username {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        > .username {
+          font-size: .8rem;
+          opacity: .6;
+        }
+      }
+
+      > .remove.icon {
+        cursor: pointer;
+      }
+
+      &.added {
+        color: green;
+      }
+      &.updated {
+        color: teal;
+      }
+      &.removed {
+        color: red;
+        text-decoration: line-through;
+      }
+    }
+  }
+  > .add-user {
+    margin: 0;
+  }
+}
