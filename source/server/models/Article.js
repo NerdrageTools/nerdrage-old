@@ -37,7 +37,15 @@ export const ArticleSchema = new mongoose.Schema({
 }, {
   id: false,
   timestamps: true,
-  toJSON: { virtuals: true },
+  toJSON: {
+    transform(_, returnValue) {
+      /* eslint-disable no-param-reassign */
+      delete returnValue.plainText
+      delete returnValue.searchKeys
+      /* eslint-enable no-param-reassign */
+    },
+    virtuals: true,
+  },
   toObject: { virtuals: true },
   versionKey: 'version',
 })
@@ -74,8 +82,6 @@ ArticleSchema.methods.render = async function () {
     ...this.toJSON(),
     childArticles,
     html,
-    links: unique([...links.links, ...includes.links]).sort(),
-    missing: unique([...links.missing, ...includes.missing]).sort(),
   })
 }
 
