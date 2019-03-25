@@ -791,7 +791,7 @@
       "publicPath": "static/chunks/commons.07c1a1add9f39187ef9e.js"
     }
   ],
-  "../modules/_core": [
+  "../../modules/_core": [
     {
       "id": "TaGV",
       "name": "../node_modules/core-js/library/modules/_core.js",
@@ -1641,366 +1641,408 @@
     {
       "id": 3,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 4,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 5,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 6,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 7,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 8,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 9,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 10,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 11,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 13,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 14,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 15,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 16,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 17,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 18,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 19,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 20,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 21,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    },
+    {
+      "id": 30,
+      "name": null,
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    },
+    {
+      "id": 31,
+      "name": null,
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    },
+    {
+      "id": 32,
+      "name": null,
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 29,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 22,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 23,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 24,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 25,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 26,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 27,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     },
     {
       "id": 28,
       "name": null,
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./SearchBox.scss": [
     {
       "id": "X+zM",
       "name": "./components/SearchBox/SearchBox.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./FlyoutMenu.scss": [
     {
       "id": "DnaX",
       "name": "./components/FlyoutMenu/FlyoutMenu.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Dialog.scss": [
     {
       "id": "JSB+",
       "name": "./components/Dialog/Dialog.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./prompt.scss": [
     {
       "id": "gyVo",
       "name": "./utilities/prompt.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./CreateMenu.scss": [
     {
       "id": "1l36",
       "name": "./components/CreateMenu/CreateMenu.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./UserMenu.scss": [
     {
       "id": "zwE9",
       "name": "./components/UserMenu/UserMenu.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Header.scss": [
     {
       "id": "1/UH",
       "name": "./components/Header/Header.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Navigation.scss": [
     {
       "id": "USCx",
       "name": "./components/Navigation/Navigation.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Layout.scss": [
     {
       "id": "wJYp",
       "name": "./components/Layout/Layout.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "@/styles/all.scss": [
     {
       "id": "mb5E",
       "name": "./styles/all.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Alert.scss": [
     {
       "id": "sILV",
       "name": "./components/Alert/Alert.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./ArticleChildren.scss": [
     {
       "id": "Apka",
       "name": "./components/ArticleChildren/ArticleChildren.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Editable.scss": [
     {
       "id": "VVQE",
       "name": "./components/Editable/Editable.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./TabSet.scss": [
     {
       "id": "+HPk",
       "name": "./components/TabSet/TabSet.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Tag.scss": [
     {
       "id": "mHXT",
       "name": "./components/Tag/Tag.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./TagBar.scss": [
     {
       "id": "DdCM",
       "name": "./components/TagBar/TagBar.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./Toggle.scss": [
     {
       "id": "/Shq",
       "name": "./components/Toggle/Toggle.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./article.scss": [
     {
       "id": "+xdt",
       "name": "./pages/article.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    }
+  ],
+  "./EditableList.scss": [
+    {
+      "id": "5sdy",
+      "name": "./components/EditableList/EditableList.scss",
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    }
+  ],
+  "./UserSearchBox.scss": [
+    {
+      "id": "7xHs",
+      "name": "./components/SearchBox/UserSearchBox/UserSearchBox.scss",
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
+    }
+  ],
+  "./Participants.scss": [
+    {
+      "id": "LIm+",
+      "name": "./components/Participants/Participants.scss",
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./campaign.scss": [
     {
       "id": "Bron",
       "name": "./pages/campaign.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./authPages.scss": [
     {
       "id": "ukGE",
       "name": "./pages/authPages.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "sheetforge/build/sheetforge.css": [
     {
       "id": "s2Sc",
       "name": "../node_modules/sheetforge/build/sheetforge.css",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./sheet.scss": [
     {
       "id": "eORY",
       "name": "./pages/sheet.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./user.scss": [
     {
       "id": "mLhc",
       "name": "./pages/user.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./TinyMCE.scss": [
     {
       "id": "K2Ra",
       "name": "./components/WysiwygEditor/TinyMCE.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./ArticleEditor.scss": [
     {
       "id": "tfSH",
       "name": "./components/WysiwygEditor/ArticleEditor.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "./WysiwygEditor.scss": [
     {
       "id": "2XQ/",
       "name": "./components/WysiwygEditor/WysiwygEditor.scss",
-      "file": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js",
-      "publicPath": "static/chunks/styles.4a4f8a608f87bf8ebfa8.js"
+      "file": "static/chunks/styles.45ba4d157c7a8760917a.js",
+      "publicPath": "static/chunks/styles.45ba4d157c7a8760917a.js"
     }
   ],
   "tinymce/plugins/paste/plugin": [
