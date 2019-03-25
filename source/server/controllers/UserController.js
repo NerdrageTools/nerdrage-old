@@ -156,7 +156,10 @@ export async function logOff(request, response) {
 export async function updateCurrentUser(request, response) {
   const { user } = request
   try {
-    const updates = omit(request.body, '_id', 'createdAt', 'lastLogin', 'updatedAt', 'version')
+    const updates = omit(
+      request.body,
+      '_id', 'createdAt', 'favorites', 'lastLogin', 'updatedAt', 'version'
+    )
     if (!user.isAdmin) {
       delete updates.isAdmin
     }
