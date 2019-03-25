@@ -51,6 +51,7 @@ export const permissions = (...required) => async (request, response, next) => {
   }
 
   request.sheet = sheet
+  request.slug = slug
   return next()
 }
 export const getSheetRequest = async (request, response) => {

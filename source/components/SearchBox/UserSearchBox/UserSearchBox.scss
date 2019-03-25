@@ -1,0 +1,7 @@
+@import '~@/styles/mixins/ellipsis';
+
+.user.search-box {
+  .search-result {
+    @include ellipsis;
+  }
+}

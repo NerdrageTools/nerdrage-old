@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Editable from '@/components/Editable'
 import PageLink from '@/components/PageLink'
+import Participants from '@/components/Participants'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import PublicIcon from '@/icons/public.svg'
@@ -10,36 +11,42 @@ import ErrorPage from '@/pages/_error'
 import pluck from '@/utilities/pluck'
 import './campaign.scss'
 
-const EDITOR_EDITABLE_FIELDS = ['title', 'theme']
-const OWNER_EDITABLE_FIELDS = [...EDITOR_EDITABLE_FIELDS, 'editors', 'owners', 'players']
-const STATE_FIELDS = [...OWNER_EDITABLE_FIELDS, 'isEditor', 'isOwner', 'isPlayer']
+const EDITABLE_FIELDS = ['title', 'theme']
+const STATE_FIELDS = [...EDITABLE_FIELDS, 'isEditor', 'isOwner', 'isPlayer']
 
 export default class CampaignPage extends Component {
   static contextType = Application
 
   state = {
     ...pluck(this.context.campaign, STATE_FIELDS),
+    savingParticipants: false,
   }
 
-  static getInitialProps = async ({ query, req }) => {
-    // console.log(req.campaign)
-    // const articles = Article.find({  })
-    return {}
-  }
+  // console.log(req.campaign)
+  // const articles = Article.find({  })
+  static getInitialProps = async ({ query, req }) => ({})
 
   get isDirty() {
     const { campaign } = this.context
-    const { isOwner, isEditor } = campaign
-    let COMPARE_FIELDS = []
-    if (isEditor) COMPARE_FIELDS = EDITOR_EDITABLE_FIELDS
-    if (isOwner) COMPARE_FIELDS = OWNER_EDITABLE_FIELDS
 
-    const fromContext = JSON.stringify(pluck(campaign, COMPARE_FIELDS))
-    const fromState = JSON.stringify(pluck(this.state, COMPARE_FIELDS))
+    const fromContext = JSON.stringify(pluck(campaign, EDITABLE_FIELDS))
+    const fromState = JSON.stringify(pluck(this.state, EDITABLE_FIELDS))
 
     return fromContext !== fromState
   }
 
+  handleParticipantsSave = ({ editors, owners, players }) => {
+    this.setState({ savingParticipants: true })
+    const update = {
+      editors: editors.map(user => user._id),
+      owners: owners.map(user => user._id),
+      players: players.map(user => user._id),
+    }
+    this.context.updateCampaign(update, () => {
+      console.log('got here')
+      this.setState({ savingParticipants: false })
+    })
+  }
   handleReset = () => this.setState(pluck(this.context.campaign, STATE_FIELDS))
   handleSave = () => this.context.updateCampaign(this.state)
   handleTitleChange = title => this.setState({ title })
@@ -64,8 +71,8 @@ export default class CampaignPage extends Component {
       return <ErrorPage statusCode={404} message={campaign.message} />
     }
 
-    const { isOwner, secret } = campaign
-    const { editors, owners, players, title } = this.state
+    const { editors, isOwner, owners, players, secret } = campaign
+    const { savingParticipants, title } = this.state
 
     return (
       <div className="campaign page">
@@ -94,14 +101,12 @@ export default class CampaignPage extends Component {
         <div className="contents">
           <div className="left column" />
           <div className="right column">
-            <div className="participants lightbox">
-              <b>Organizers</b>
-              {this.renderUserList(owners)}
-              <b>Editors</b>
-              {this.renderUserList(editors)}
-              <b>Players</b>
-              {this.renderUserList(players)}
-            </div>
+            <Participants
+              className="lightbox"
+              {...{ editors, owners, players }}
+              onSave={this.handleParticipantsSave}
+              saving={savingParticipants}
+            />
           </div>
         </div>
       </div>

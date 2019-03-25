@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import Application from '@/contexts/Application'
 import defaultTheme from '@/data/defaultTheme'
 import Error from '@/pages/_error'
+import noop from '@/utilities/noop'
 import '@/styles/all.scss'
 
 export default class Wiki extends App {
@@ -46,9 +47,9 @@ export default class Wiki extends App {
     this.updateCampaign()
   }
 
-  setCampaign = campaign => this.setState({ campaign })
-  setUser = user => this.setState({ user })
-  updateCampaign = async updates => {
+  setCampaign = (campaign, callback = noop) => this.setState({ campaign }, callback)
+  setUser = (user, callback = noop) => this.setState({ user }, callback)
+  updateCampaign = async (updates, callback = noop) => {
     const { campaign } = this.state
     if (!campaign) { return false }
 
@@ -60,11 +61,11 @@ export default class Wiki extends App {
     const json = await result.json()
 
     if (result.status === 200) {
-      this.setCampaign(json)
+      this.setCampaign(json, callback)
       return true
     }
 
-    this.setCampaign({})
+    this.setCampaign({}, callback)
     return false
   }
 

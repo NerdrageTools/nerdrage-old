@@ -1,5 +1,5 @@
 import React from 'react'
-import SearchBox from '@/components/SearchBox'
+import ArticleSearchBox from '@/components/SearchBox/ArticleSearchBox'
 import UserMenu from '@/components/UserMenu'
 import Logo from '@/icons/fist.svg'
 import NavigationIcon from '@/icons/Navigation'
@@ -16,7 +16,7 @@ export default function Header({
         <div className="nerd">Nerd</div>
         <div className="rage">RAGE</div>
       </div>
-      <SearchBox />
+      <ArticleSearchBox />
       <NavigationIcon className="navigation toggle" onClick={onNavigationIconClick} />
       <UserMenu />
     </div>
