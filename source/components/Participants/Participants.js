@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EditableList from '@/components/EditableList'
+import PageLink from '@/components/PageLink'
 import UserSearchBox from '@/components/SearchBox/UserSearchBox'
 import NerdIcon from '@/icons/nerd.svg'
 import RemoveIcon from '@/icons/remove.svg'
@@ -105,10 +106,10 @@ export default class Participants extends Component {
           {participants.map(user => (
             <li className={`participant row ${user.type || ''}`} key={user._id}>
               <NerdIcon className="nerd icon" />
-              <div className="display">
+              <PageLink className="display" type="user" slug={user.username}>
                 <span className="name">{user.name}</span>
                 <span className="username">{user.username}</span>
-              </div>
+              </PageLink>
               <EditableList
                 className="role"
                 defaultValue={user.level}
