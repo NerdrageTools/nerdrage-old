@@ -6,6 +6,7 @@ import PageLinkList from '@/components/PageLinkList'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import AdminIcon from '@/icons/Administrator'
+import DiceIcon from '@/icons/dice.svg'
 import FavoriteIcon from '@/icons/favorite-on.svg'
 import SheetIcon from '@/icons/sheet.svg'
 import Error from '@/pages/_error'
@@ -165,10 +166,8 @@ export default class UserPage extends Component {
           {user.campaigns && (
             <PageLinkList
               caption="Campaigns"
-              icon={<SheetIcon />}
-              pages={user.campaigns.map(campaign => ({
-                ...campaign, campaign,
-              }))}
+              icon={<DiceIcon />}
+              pages={user.campaigns}
               type="campaign"
             />
           )}
