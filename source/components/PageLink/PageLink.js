@@ -20,16 +20,17 @@ export default class PageLink extends Component {
       ...linkProps
     } = this.props
     const { domain: currentDomain, rootUrl } = this.context
-    if (active) return <b>{children}</b>
+    const contents = children || `Unnamed ${type}`
+    if (active) return <b>{contents}</b>
 
     if (type === 'campaign') {
       const href = `//${campaign.domain}.${rootUrl}/campaign`
       if (campaign.domain !== this.context.campaign.domain) {
-        return <a {...linkProps} href={href}>{children}</a>
+        return <a {...linkProps} href={href}>{contents}</a>
       }
       return (
         <NextLink as="/campaign" href="/campaign">
-          <a {...linkProps}>{children}</a>
+          <a {...linkProps}>{contents}</a>
         </NextLink>
       )
     }
@@ -40,13 +41,13 @@ export default class PageLink extends Component {
     if (!campaign || campaign.domain !== currentDomain) {
       const subdomain = campaign ? campaign.domain : currentDomain
       const href = `//${subdomain}.${rootUrl}/${type}${slashSlug}`
-      return <a {...linkProps} href={href}>{children}</a>
+      return <a {...linkProps} href={href}>{contents}</a>
     }
 
 
     return (
       <NextLink as={`/${type}${slashSlug}`} href={`/${type}${queryStringSlug}`}>
-        <a {...linkProps}>{children || `Unnamed ${type}`}</a>
+        <a {...linkProps}>{contents}</a>
       </NextLink>
     )
   }
