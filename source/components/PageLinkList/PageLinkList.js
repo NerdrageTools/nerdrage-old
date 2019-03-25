@@ -1,18 +1,18 @@
 import React from 'react'
 import PageLink from '@/components/PageLink'
 import TagIcon from '@/icons/tag.svg'
-import './ArticleChildren.scss'
+import './PageLinkList.scss'
 
-export default function ArticleChildren({
-  articles = [],
+export default function PageLinkList({
   caption = 'Child Articles',
   className = '',
   icon = <TagIcon />,
+  pages = [],
   type = 'article',
 }) {
-  if (!articles.length) return <div className="tag-browser is-hidden" />
+  if (!pages.length) return <div className="tag-browser is-hidden" />
 
-  const links = articles
+  const links = pages
     .sort((a, b) => a.title.localeCompare(b.title))
     .map(({ campaign, slug, title }) => (
       <li key={slug} title={`${campaign.title}: ${title}`}>
@@ -21,7 +21,7 @@ export default function ArticleChildren({
     ))
 
   return (
-    <div className={`article-children ${className}`.trim()}>
+    <div className={`page-link-list ${className}`.trim()}>
       <header>{icon} {caption}</header>
       <ul className="link-list">{links}</ul>
     </div>

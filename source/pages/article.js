@@ -3,9 +3,9 @@ import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
-import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import Link from '@/components/Link'
+import PageLinkList from '@/components/PageLinkList'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
@@ -175,7 +175,7 @@ export default class Article extends Component {
 
   renderReadOnlyContent = () => <>
     <JsxParser components={{ a: Link }} jsx={(this.state.html || this.props.html || '').trim()} />
-    <ArticleChildren articles={this.props.childArticles} />
+    <PageLinkList pages={this.props.childArticles} />
   </>
   renderSettingsTab = () => <>
     <fieldset>
