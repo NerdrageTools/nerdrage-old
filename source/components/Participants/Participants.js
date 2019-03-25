@@ -33,6 +33,7 @@ export default class Participants extends Component {
     onSave: noop,
     owners: [],
     players: [],
+    readOnly: false,
     saving: false,
   }
 
@@ -97,7 +98,7 @@ export default class Participants extends Component {
   }
 
   render = () => {
-    const { className, saving } = this.props
+    const { className, readOnly, saving } = this.props
     const { participants } = this.state
 
     return (
@@ -110,26 +111,30 @@ export default class Participants extends Component {
                 <span className="name">{user.name}</span>
                 <span className="username">{user.username}</span>
               </PageLink>
-              <EditableList
-                className="role"
-                defaultValue={user.level}
-                onChange={level => this.handleSetPermission(user, level)}
-                options={['owner', 'editor', 'player']}
-              />
-              <RemoveIcon
-                className="remove icon"
-                onClick={() => this.handleToggleRemoved(user)}
-              />
+              {!readOnly && <>
+                <EditableList
+                  className="role"
+                  defaultValue={user.level}
+                  onChange={level => this.handleSetPermission(user, level)}
+                  options={['owner', 'editor', 'player']}
+                />
+                <RemoveIcon
+                  className="remove icon"
+                  onClick={() => this.handleToggleRemoved(user)}
+                />
+              </>}
             </li>
           ))}
         </ul>
-        <UserSearchBox
-          className="add-user"
-          onSelect={this.handleAddUser}
-        />
-        {(this.state.edits.length !== 0) && (
-          <button className="safe" onClick={this.handleSave}>Save</button>
-        )}
+        {!readOnly && <>
+          <UserSearchBox
+            className="add-user"
+            onSelect={this.handleAddUser}
+          />
+          {(this.state.edits.length !== 0) && (
+            <button className="safe" onClick={this.handleSave}>Save</button>
+          )}
+        </>}
       </div>
     )
   }

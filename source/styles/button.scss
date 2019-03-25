@@ -21,10 +21,10 @@ button {
     color: $color-danger-text;
   }
   &.safe {
-    background-color: $color-success;
-    color: $color-success-text;
+    background-color: $color-safe;
+    color: $color-safe-text;
     font-weight: bold;
-    text-shadow: 1px 1px 1px darken($color-success-text, 50%);
+    text-shadow: 1px 1px 1px darken($color-safe-text, 50%);
   }
   &.link {
     border: none;
