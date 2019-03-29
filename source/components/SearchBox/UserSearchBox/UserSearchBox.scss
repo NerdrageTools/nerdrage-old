@@ -3,5 +3,9 @@
 .user.search-box {
   .search-result {
     @include ellipsis;
+    display: flex;
+    align-items: center;
+
+    > svg { height: 1.25rem; width: 1.25rem; }
   }
 }

@@ -1,7 +1,7 @@
 @import '~@/pages/page';
 
 .campaign.page {
-  > .contents {
+  > .contents > div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -9,9 +9,6 @@
     > .column {
       display: flex;
       flex-direction: column;
-    }
-    > .left.column {
-
     }
     > .right.column {
       padding: 5px;

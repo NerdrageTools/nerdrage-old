@@ -1,7 +1,21 @@
 @import '~@/styles/palette';
 
-.participants {
+.participants.lightbox {
+  height: 250px;
+  padding: 5px;
   position: relative;
+
+  > .title {
+    align-items: center;
+    background: var(--color-primary);
+    color: var(--color-secondary);
+    display: flex;
+    font-weight: bold;
+    margin: -5px -5px 0 -5px;
+    padding: 8px;
+
+    > svg { margin-right: 5px; }
+  }
 
   &.loading:after {
     content: 'Updating...';
@@ -15,6 +29,8 @@
     > .participant.row {
       justify-content: space-between;
       margin-bottom: .25rem;
+
+      &:last-child { margin-bottom: 0; }
 
       > .nerd.icon {
         height: 2em;
@@ -63,9 +79,10 @@
       }
     }
   }
-  > .add-user {
-    margin: 0;
+  > .user.search-box {
+    margin: 5px 0 0 0;
   }
+  > button.safe { margin: 5px; }
 }
 
 .layout.small {

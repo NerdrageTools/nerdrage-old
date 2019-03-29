@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import EditableList from '@/components/EditableList'
 import PageLink from '@/components/PageLink'
 import UserSearchBox from '@/components/SearchBox/UserSearchBox'
@@ -35,6 +36,7 @@ export default class Participants extends Component {
     players: [],
     readOnly: false,
     saving: false,
+    title: 'Participants',
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -98,41 +100,44 @@ export default class Participants extends Component {
   }
 
   render = () => {
-    const { className, readOnly, saving } = this.props
+    const { className, readOnly, saving, title } = this.props
     const { participants } = this.state
 
     return (
       <div className={`participants ${className} ${saving ? 'loading' : ''}`}>
-        <ul className="participant-list">
-          {participants.map(user => (
-            <li className={`participant row ${user.type || ''}`} key={user._id}>
-              <NerdIcon className="nerd icon" />
-              <PageLink className="display" type="user" slug={user.username}>
-                <span className="name">{user.name}</span>
-                <span className="username">{user.username}</span>
-              </PageLink>
-              {!readOnly && <>
-                <EditableList
-                  className="role"
-                  defaultValue={user.level}
-                  onChange={level => this.handleSetPermission(user, level)}
-                  options={['owner', 'editor', 'player']}
-                />
-                <RemoveIcon
-                  className="remove icon"
-                  onClick={() => this.handleToggleRemoved(user)}
-                />
-              </>}
-            </li>
-          ))}
-        </ul>
+        <div className="title"><NerdIcon /> {title}</div>
+        <Scrollbars className="contents" universal>
+          <ul className="participant-list">
+            {participants.map(user => (
+              <li className={`participant row ${user.type || ''}`} key={user._id}>
+                <NerdIcon className="nerd icon" />
+                <PageLink className="display" type="user" slug={user.username}>
+                  <span className="name">{user.name}</span>
+                  <span className="username">{user.username}</span>
+                </PageLink>
+                {!readOnly && <>
+                  <EditableList
+                    className="role"
+                    defaultValue={user.level}
+                    onChange={level => this.handleSetPermission(user, level)}
+                    options={['owner', 'editor', 'player']}
+                  />
+                  <RemoveIcon
+                    className="remove icon"
+                    onClick={() => this.handleToggleRemoved(user)}
+                  />
+                </>}
+              </li>
+            ))}
+          </ul>
+        </Scrollbars>
         {!readOnly && <>
           <UserSearchBox
             className="add-user"
             onSelect={this.handleAddUser}
           />
           {(this.state.edits.length !== 0) && (
-            <button className="safe" onClick={this.handleSave}>Save</button>
+            <button className="save safe" onClick={this.handleSave}>Save</button>
           )}
         </>}
       </div>
