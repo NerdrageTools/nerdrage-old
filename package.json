@@ -4,8 +4,10 @@
   "scripts": {
     "build": "cd source && next build",
     "postbuild": "git add ./.next && git commit -m 'Update build'",
+    "prebuild": "rimraf ./.next",
     "develop": "nodemon -w ./source/server -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
     "start": "NODE_ENV=production babel-node source/server/server.js",
+    "start:prod": "cd source && next start",
     "test": "jest"
   },
   "dependencies": {
