@@ -21,7 +21,7 @@ const ANY = { _id: ObjectId('444444444444'), isAdmin: false }
 const CAMPAIGN = (props = {}, campaignPermissions = {}) => ({
   ...new Campaign({
     _id: '111111111111',
-    domain: 'test',
+    subdomain: 'test',
     ...props,
   }).toJSON(),
   isEditor: false,
@@ -196,7 +196,7 @@ describe('server/controllers/SheetController', () => {
   describe('getSheetRequest', () => {
     it('returns 404 if sheet is not found', async done => {
       const response = mockResponse()
-      await getSheetRequest({ domain: 'test', sheet: {}, slug: 'test' }, response)
+      await getSheetRequest({ sheet: {}, slug: 'test', subdomain: 'test' }, response)
 
       expect(response.status).toHaveBeenCalledWith(404)
       expect(response.json.mock.calls[0][0].message).toMatch(/Unable to find sheet/)

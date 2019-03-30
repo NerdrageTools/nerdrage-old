@@ -119,8 +119,6 @@ describe('models/Article', () => {
     })
 
     const rendered = await NEW.render()
-    expect(rendered.links).toEqual(['a', 'b', 'missing-include', 'missing-link'])
-    expect(rendered.missing).toEqual(['missing-include', 'missing-link'])
     expect(rendered.html).toMatchSnapshot()
 
     done()

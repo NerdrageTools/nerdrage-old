@@ -38,24 +38,24 @@ export async function createUser(request, response) {
   }
 }
 export async function getUserFavorites(user) {
-  const domains = [null]
+  const subdomains = [null]
   const slugs = []
   const map = user.favorites.map(favorite => {
-    const [domain, slug] = favorite.split(':')
-    if (!domain || !slug) return null
+    const [subdomain, slug] = favorite.split(':')
+    if (!subdomain || !slug) return null
 
-    domains.push(domain)
     slugs.push(slug)
+    subdomains.push(subdomain)
 
-    return { domain, slug }
+    return { slug, subdomain }
   }).filter(Boolean)
 
-  const campaigns = await Campaign.find({ domain: domains }, { domain: 1, title: 1 })
+  const campaigns = await Campaign.find({ subdomain: subdomains }, { subdomain: 1, title: 1 })
   const articles = await Article.find({ slug: slugs }, { campaign: 1, slug: 1, title: 1 })
 
   return map.map(favorite => {
-    const campaign = campaigns.find(c => c.domain === favorite.domain)
-      || { _id: null, domain: 'www', title: 'Nerdrage' }
+    const campaign = campaigns.find(c => c.subdomain === favorite.subdomain)
+      || { _id: null, subdomain: 'www', title: 'Nerdrage' }
     const article = articles.find(a => a.slug === favorite.slug && a.campaign === campaign._id)
       || articles.find(a => a.slug === favorite.slug)
       || {}
@@ -82,7 +82,7 @@ export async function getUser(username, populated = false) {
 
     json.sheets = await Sheet.find({ ownedBy: user._id }, { slug: 1, title: 1 })
       .sort({ title: 1 })
-      .populate('campaign', 'domain title').exec()
+      .populate('campaign', 'subdomain title').exec()
 
     json.campaigns = await Campaign.find({
       $or: [
@@ -90,7 +90,7 @@ export async function getUser(username, populated = false) {
         { owners: json._id },
         { players: json._id },
       ],
-    }, { domain: 1, title: 1 })
+    }, { subdomain: 1, title: 1 })
 
     json.favorites = await getUserFavorites(user) || []
     return json
@@ -181,8 +181,8 @@ export async function updateCurrentUser(request, response) {
   }
 }
 export async function updateCurrentUserFavorites(request, response) {
-  const { domain, params: { slug }, user: { username } } = request
-  const favorite = `${domain}:${slug}`
+  const { params: { slug }, subdomain, user: { username } } = request
+  const favorite = `${subdomain}:${slug}`
   const { favorites: rawFavorites } = await User.findOne({ username }, { favorites: 1 })
   const verb = rawFavorites.includes(favorite) ? '$pull' : '$addToSet'
 

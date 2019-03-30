@@ -3,13 +3,13 @@ import React from 'react'
 const CAMPAIGN_DEFAULTS = {
   createdAt: null,
   createdBy: {},
-  domain: '',
   editors: [],
   lastUpdatedAt: null,
   lastUpdatedBy: {},
   navigation: [],
   owners: [],
   secret: false,
+  subdomain: '',
   theme: {
     background: '#fff',
     fontFamily: 'Ubuntu',

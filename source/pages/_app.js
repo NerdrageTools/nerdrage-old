@@ -30,10 +30,10 @@ export default class Wiki extends App {
     }
     /* eslint-enable prefer-destructuring */
 
-    const domain = host.split('.').shift()
-    const rootUrl = host.slice(domain.length + 1)
+    const subdomain = host.split('.').shift()
+    const rootUrl = host.slice(subdomain.length + 1)
 
-    return { ...props, campaign, Component, domain, rootUrl, user }
+    return { ...props, campaign, Component, rootUrl, subdomain, user }
   }
 
   state = {
@@ -53,7 +53,7 @@ export default class Wiki extends App {
     const { campaign } = this.state
     if (!campaign) { return false }
 
-    const result = await fetch(`/api/campaign/${this.state.campaign.domain}`, {
+    const result = await fetch(`/api/campaign/${this.state.campaign.subdomain}`, {
       body: updates ? JSON.stringify(updates) : undefined,
       headers: { 'Content-Type': 'application/json' },
       method: updates ? 'POST' : 'GET',
@@ -88,17 +88,17 @@ export default class Wiki extends App {
   }
 
   render = () => {
-    const { Component, domain, pageProps, rootUrl, router } = this.props
+    const { Component, pageProps, rootUrl, router, subdomain } = this.props
     const { campaign, user } = this.state
     const theme = (campaign && campaign.theme) || defaultTheme
     const context = {
       campaign,
-      domain,
       logOff: this.logOff,
       rootUrl,
       router,
       setCampaign: this.setCampaign,
       setUser: this.setUser,
+      subdomain,
       theme,
       updateCampaign: this.updateCampaign,
       updateUser: this.updateUser,

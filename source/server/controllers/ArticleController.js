@@ -4,9 +4,9 @@ import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, domain, params: { slug } } = request
+  const { campaign, subdomain, params: { slug } } = request
   const article = await Article.locate(slug, campaign._id)
-    .populate('campaign', 'domain title')
+    .populate('campaign', 'subdomain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
 
@@ -14,17 +14,17 @@ export const permissions = (...required) => async (request, response, next) => {
 
   if (required.includes('view') && !isViewer) {
     return response.status(401).json({
-      message: `This content is private to the ${domain} campaign.`,
+      message: `This content is private to the ${subdomain} campaign.`,
     })
   }
   if (required.includes('edit') && !isEditor) {
     return response.status(401).json({
-      message: `You do not have permission to edit the ${domain} campaign.`,
+      message: `You do not have permission to edit the ${subdomain} campaign.`,
     })
   }
   if (article && article.secret && !isOwner) {
     return response.status(401).json({
-      message: `This article is secret! Only owners of the ${campaign.domain} campaign can see or edit it.`,
+      message: `This article is secret! Only owners of the ${campaign.subdomain} campaign can see or edit it.`,
     })
   }
 
@@ -52,7 +52,7 @@ export const getArticle = async (request, response) => {
 
   return response.status(200).json({
     ...article,
-    campaign: pluck(campaign, '_id', 'domain', 'title'),
+    campaign: pluck(campaign, '_id', 'subdomain', 'title'),
     isEditable,
     isOwner,
   })
@@ -84,7 +84,7 @@ export const upsertArticle = async (request, response) => {
 
   const { _id } = await article.save()
   const saved = await Article.findOne({ _id })
-    .populate('campaign', 'domain title')
+    .populate('campaign', 'subdomain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
   return response.status(200).json({ ...await saved.render(), isEditable, isOwner })

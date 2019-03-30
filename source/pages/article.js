@@ -208,7 +208,7 @@ export default class Article extends Component {
     const { favorites = [] } = this.context.user
     const { campaign = {} } = this.context
     const isFavorite = favorites.find(f => (
-      f.campaign.domain === campaign.domain
+      f.campaign.subdomain === campaign.subdomain
       && f.slug === slug
     ))
     const readOnly = !isEditable || !this.state.editMode
