@@ -21,6 +21,9 @@ module.exports = {
   ],
   presets: [
     '@babel/preset-react',
-    ['@babel/env', { useBuiltIns: 'entry' }],
+    ['@babel/env', {
+      targets: { node: 'current' },
+      useBuiltIns: 'entry',
+    }],
   ],
 }

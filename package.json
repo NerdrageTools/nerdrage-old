@@ -4,10 +4,12 @@
   "scripts": {
     "build": "cd source && next build",
     "develop": "nodemon -w ./source/server -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
-    "start": "NODE_ENV=production babel-node source/server/server.js",
+    "prebuild": "rimraf ./.next",
+    "start": "NODE_ENV=production node ./source/server/index.js",
     "test": "jest"
   },
   "dependencies": {
+    "@babel/register": "^7.4.0",
     "@tinymce/tinymce-react": "^3.0.1",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
