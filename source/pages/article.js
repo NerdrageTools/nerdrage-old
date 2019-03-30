@@ -3,9 +3,9 @@ import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
-import ArticleChildren from '@/components/ArticleChildren'
 import Editable from '@/components/Editable'
 import Link from '@/components/Link'
+import PageLinkList from '@/components/PageLinkList'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
@@ -33,8 +33,11 @@ if (process.browser && window) {
 }
 
 const STATE_FIELDS = [
+  '_id',
   'aliases',
   'html',
+  'isOwner',
+  'isEditable',
   'secret',
   'slug',
   'tags',
@@ -105,10 +108,16 @@ export default class Article extends Component {
   handleAliasesChange = aliases => this.setState({ aliases })
   handleDelete = async () => {
     if (!await confirm('Are you sure you want to permanently delete this article?')) return
-    const response = await fetch(`/api/article/${this.props.slug}`, { method: 'DELETE' })
-    if (response.status === 204) {
-      this.context.router.push('/article/home')
+    await fetch(`/api/article/${this.props.slug}`, { method: 'DELETE' })
+    const article = await fetch(`/api/article/${this.props.slug}`)
+    const json = {
+      ...pluck(await article.json(), STATE_FIELDS),
+      _id: null,
+      title: this.context.router.query.title || '',
     }
+
+    this.setState({ ...json, activeTab: 'read', saved: json })
+    this.context.updateUser()
   }
   handleHtmlChange = html => this.setState({ html })
   handleReset = () => {
@@ -121,6 +130,7 @@ export default class Article extends Component {
       method: 'POST',
     }).then(r => r.json())
     this.setState({ ...saved, saved })
+    this.context.updateUser()
   }
   handleTabClicked = tab => {
     if (tab !== this.state.activeTab) {
@@ -165,7 +175,7 @@ export default class Article extends Component {
 
   renderReadOnlyContent = () => <>
     <JsxParser components={{ a: Link }} jsx={(this.state.html || this.props.html || '').trim()} />
-    <ArticleChildren articles={this.props.childArticles} />
+    <PageLinkList pages={this.props.childArticles} />
   </>
   renderSettingsTab = () => <>
     <fieldset>
@@ -190,8 +200,11 @@ export default class Article extends Component {
     )}
   </>
   render = () => {
-    const { activeTab, aliases, html, redirectedFrom, secret, tags, title = '' } = this.state
-    const { _id, httpStatusCode, isEditable, isOwner, message, slug } = this.props
+    const {
+      _id, activeTab, aliases, html, isEditable, isOwner,
+      message, redirectedFrom, secret, slug, tags, title = '',
+    } = this.state
+    const { httpStatusCode } = this.props
     const { favorites = [] } = this.context.user
     const { campaign = {} } = this.context
     const isFavorite = favorites.find(f => (

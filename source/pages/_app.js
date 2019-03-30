@@ -68,6 +68,24 @@ export default class Wiki extends App {
     this.setCampaign({}, callback)
     return false
   }
+  updateUser = async (updates, callback = noop) => {
+    const { user } = this.state
+
+    const result = await fetch(`/api/user/${user.username}`, {
+      body: updates ? JSON.stringify(updates) : undefined,
+      headers: { 'Content-Type' : 'application/json' },
+      method: updates ? 'POST' : 'GET',
+    })
+    const json = await result.json()
+
+    if (result.status === 200) {
+      this.setUser(json, callback)
+      return true
+    }
+
+    this.setUser({}, callback)
+    return false
+  }
 
   render = () => {
     const { Component, domain, pageProps, rootUrl, router } = this.props
@@ -83,6 +101,7 @@ export default class Wiki extends App {
       setUser: this.setUser,
       theme,
       updateCampaign: this.updateCampaign,
+      updateUser: this.updateUser,
       user,
     }
 

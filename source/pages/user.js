@@ -1,10 +1,12 @@
 import { distanceInWordsToNow } from 'date-fns'
 import React, { Component } from 'react'
-import ArticleChildren from '@/components/ArticleChildren'
+import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
+import PageLinkList from '@/components/PageLinkList'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import AdminIcon from '@/icons/Administrator'
+import DiceIcon from '@/icons/dice.svg'
 import FavoriteIcon from '@/icons/favorite-on.svg'
 import SheetIcon from '@/icons/sheet.svg'
 import Error from '@/pages/_error'
@@ -129,7 +131,7 @@ export default class UserPage extends Component {
             : (user.isAdmin && <AdminIcon className="is-admin toggle on" />)
           }
         </div>
-        <div className="contents">
+        <Scrollbars className="contents" universal autoHide>
           <div className="user-info">
             <div className="row">
               <b>Username:</b> <span>{user.username}</span>
@@ -153,23 +155,32 @@ export default class UserPage extends Component {
             </div>
           </div>
 
-          {user.favorites && <>
-            <ArticleChildren
-              articles={user.favorites}
+          {user.favorites && (
+            <PageLinkList
               caption="Favorites"
               icon={<FavoriteIcon className="favorites icon" />}
+              pages={user.favorites}
             />
-          </>}
+          )}
 
-          {user.sheets && <>
-            <ArticleChildren
-              articles={user.sheets}
+          {user.campaigns && (
+            <PageLinkList
+              caption="Campaigns"
+              icon={<DiceIcon />}
+              pages={user.campaigns}
+              type="campaign"
+            />
+          )}
+
+          {user.sheets && (
+            <PageLinkList
               caption="Sheets"
               icon={<SheetIcon />}
+              pages={user.sheets}
               type="sheet"
             />
-          </>}
-        </div>
+          )}
+        </Scrollbars>
       </div>
     )
   }

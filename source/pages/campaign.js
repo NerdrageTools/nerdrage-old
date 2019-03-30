@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
 import PageLink from '@/components/PageLink'
 import Participants from '@/components/Participants'
@@ -98,7 +99,7 @@ export default class CampaignPage extends Component {
             <button className="safe" onClick={this.handleReset}>Reset</button>
           </>}
         </div>
-        <div className="contents">
+        <Scrollbars className="contents" universal autoHide>
           <div className="left column" />
           <div className="right column">
             <Participants
@@ -108,7 +109,7 @@ export default class CampaignPage extends Component {
               saving={savingParticipants}
             />
           </div>
-        </div>
+        </Scrollbars>
       </div>
     )
   }
