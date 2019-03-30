@@ -18,7 +18,7 @@ export default function PageLinkList({
     links = pages
       .sort((a, b) => a.title.localeCompare(b.title))
       .map(campaign => (
-        <li key={campaign.domain} title={campaign.title}>
+        <li key={campaign.subdomain} title={campaign.title}>
           <PageLink {...{ campaign, ...campaign, type }}>
             {campaign.title}
           </PageLink>

@@ -5,8 +5,8 @@ import Application from '@/contexts/Application'
 export default class PageLink extends Component {
   static contextType = Application
   static defaultProps = {
-    domain: '',
     slug: '',
+    subdomain: '',
   }
   static displayName = 'PageLink'
 
@@ -19,13 +19,13 @@ export default class PageLink extends Component {
       type = 'article',
       ...linkProps
     } = this.props
-    const { domain: currentDomain, rootUrl } = this.context
+    const { subdomain: currentDomain, rootUrl } = this.context
     const contents = children || `Unnamed ${type}`
     if (active) return <b>{contents}</b>
 
     if (type === 'campaign') {
-      const href = `//${campaign.domain}.${rootUrl}/campaign`
-      if (campaign.domain !== this.context.campaign.domain) {
+      const href = `//${campaign.subdomain}.${rootUrl}/campaign`
+      if (campaign.subdomain !== this.context.campaign.subdomain) {
         return <a {...linkProps} href={href}>{contents}</a>
       }
       return (
@@ -38,8 +38,8 @@ export default class PageLink extends Component {
     const slashSlug = slug ? `/${slug}` : ''
     const queryStringSlug = slug ? `?slug=${slug}` : ''
 
-    if (!campaign || campaign.domain !== currentDomain) {
-      const subdomain = campaign ? campaign.domain : currentDomain
+    if (!campaign || campaign.subdomain !== currentDomain) {
+      const subdomain = campaign ? campaign.subdomain : currentDomain
       const href = `//${subdomain}.${rootUrl}/${type}${slashSlug}`
       return <a {...linkProps} href={href}>{contents}</a>
     }

@@ -24,7 +24,6 @@ NavigationSchema.add({ children: NavigationSchema })
 
 const CampaignSchema = new mongoose.Schema({
   createdBy: { ref: 'User', type: ObjectIdType },
-  domain: { ...Slug, required: true, unique: true },
   editors: [{ ref: 'User', type: ObjectIdType }],
   lastUpdatedBy: { ref: 'User', type: ObjectIdType },
   navigation: {
@@ -34,6 +33,7 @@ const CampaignSchema = new mongoose.Schema({
   owners: [{ ref: 'User', type: ObjectIdType }],
   players: [{ ref: 'User', type: ObjectIdType }],
   secret: { default: false, type: Boolean },
+  subdomain: { ...Slug, required: true, unique: true },
   theme: {
     default: defaultTheme,
     type: {
@@ -61,7 +61,7 @@ const CampaignSchema = new mongoose.Schema({
 const matchObjectId = id => vs => ObjectId(id).equals(vs._id || vs)
 
 CampaignSchema.pre('save', function () {
-  this.domain = this.domain.toLowerCase()
+  this.subdomain = this.subdomain.toLowerCase()
 })
 
 CampaignSchema.methods.isEditableBy = function (userId) {

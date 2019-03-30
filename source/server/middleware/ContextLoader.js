@@ -4,7 +4,7 @@ import { getUser } from '@/server/controllers/UserController'
 export default async (request, response, next) => {
   const host = request.get('host') || ''
   const sessionScope = host.split('.').slice(-2).join('.').split(':')[0]
-  request.sessionOptions.domain = sessionScope
+  request.sessionOptions.subdomain = sessionScope
 
   if (request.session && !request.session.anonymous) {
     const user = await getUser(request.session.username, true)
@@ -21,10 +21,10 @@ export default async (request, response, next) => {
   }
   request.user = request.user || { anonymous: true }
 
-  const domain = request.hostname.split('.').shift()
-  request.domain = domain
+  const subdomain = request.hostname.split('.').shift()
+  request.subdomain = subdomain
   request.returnOnly = true
-  request.campaign = await getCampaign(domain, request.user)
+  request.campaign = await getCampaign(subdomain, request.user)
 
   return next()
 }

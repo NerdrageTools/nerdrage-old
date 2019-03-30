@@ -5,7 +5,7 @@ import pluck from '@/utilities/pluck'
 export const getSheet = async (slug, campaign, user = {}) => {
   const { isAdmin } = user
   const sheet = await Sheet.findOne({ campaign, slug })
-    .populate('campaign', 'domain title')
+    .populate('campaign', 'subdomain title')
     .populate('ownedBy', 'name username')
     .exec()
 
@@ -29,23 +29,23 @@ export const getSheet = async (slug, campaign, user = {}) => {
 }
 
 export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, domain, params: { slug }, user } = request
+  const { campaign, params: { slug }, subdomain, user } = request
   const sheet = await getSheet(slug, campaign, user)
 
   if (sheet._id) {
     if (required.includes('view') && !sheet.isVisible) {
       return response.status(401).json({
-        message: `This content is private to the ${domain} campaign.`,
+        message: `This content is private to the ${subdomain} campaign.`,
       })
     }
     if (required.includes('edit') && !sheet.isEditor) {
       return response.status(401).json({
-        message: `You do not have permission to edit the ${domain} campaign.`,
+        message: `You do not have permission to edit the ${subdomain} campaign.`,
       })
     }
     if (sheet.secret && !sheet.isEditor) {
       return response.status(401).json({
-        message: `This sheet is secret! Only its owner and owners of the ${campaign.domain} campaign can see or edit it.`,
+        message: `This sheet is secret! Only its owner and owners of the ${campaign.subdomain} campaign can see or edit it.`,
       })
     }
   }
@@ -55,11 +55,11 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheetRequest = async (request, response) => {
-  const { campaign = {}, domain, sheet = {}, slug } = request
+  const { campaign = {}, sheet = {}, slug, subdomain } = request
   if (!sheet._id && !campaign.isParticipant) {
     return response.status(404).json({
       ...sheet,
-      message: `Unable to find sheet '${slug}' in the ${domain} campaign.`,
+      message: `Unable to find sheet '${slug}' in the ${subdomain} campaign.`,
     })
   }
 

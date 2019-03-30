@@ -8,11 +8,11 @@ import Campaign from '@/server/models/Campaign'
 const controller = express()
 
 /* eslint-disable no-console */
-export async function getCampaign(domain, user) {
-  if (!domain) return null
+export async function getCampaign(subdomain, user) {
+  if (!subdomain) return null
 
   try {
-    const campaign = await Campaign.findOne({ domain })
+    const campaign = await Campaign.findOne({ subdomain })
       .populate('createdBy editors lastUpdatedBy players owners', '_id name username')
       .exec()
 
@@ -34,23 +34,23 @@ export async function getCampaign(domain, user) {
   }
 }
 export async function getCampaignRequest(request, response) {
-  const { domain } = request.params || {}
-  const campaign = await getCampaign(domain, request.user)
+  const { subdomain } = request.params || {}
+  const campaign = await getCampaign(subdomain, request.user)
 
   if (!campaign || !campaign._id) {
-    return Campaign404({ campaign, domain }, response)
+    return Campaign404({ campaign, subdomain }, response)
   }
 
   return response.status(200).json(campaign)
 }
 const createCampaign = async (request, response) => {
   const userId = request.user._id
-  const domain = request.params.domain || request.domain
+  const subdomain = request.params.subdomain || request.subdomain
 
   try {
     const campaign = await new Campaign({
       ...request.body,
-      domain,
+      subdomain,
       // eslint-disable-next-line sort-keys
       createdBy: userId,
       editors: [userId],
@@ -67,7 +67,7 @@ const createCampaign = async (request, response) => {
     switch (error.code) {
       case 11000:
         return response.status(409).send({
-          message: `Domain '${domain}' is already in use.`,
+          message: `Subdomain '${subdomain}' is already in use.`,
         })
       default:
         console.error(`Error in PUT /api/campaigns: ${error}`) // eslint-disable-line
@@ -80,29 +80,29 @@ const createCampaign = async (request, response) => {
 const updateCampaign = async (request, response) => {
   try {
     const updates = { ...request.body }
-    let domain
     let campaign
-    if (request.params.domain) {
-      domain = request.params.domain // eslint-disable-line
-      campaign = await getCampaign(domain, request.user)
+    let subdomain
+    if (request.params.subdomain) {
+      subdomain = request.params.subdomain // eslint-disable-line
+      campaign = await getCampaign(subdomain, request.user)
     } else {
-      domain = request.domain // eslint-disable-line
+      subdomain = request.subdomain // eslint-disable-line
       campaign = request.campaign // eslint-disable-line
     }
 
-    if (!campaign) return Campaign404({ domain }, response)
+    if (!campaign) return Campaign404({ subdomain }, response)
 
     const userId = request.session._id
 
     if (!campaign.isEditor) {
       return response.status(401).json({
-        message: `You don't have permission to edit campaign '${domain}'.`,
+        message: `You don't have permission to edit campaign '${subdomain}'.`,
       })
     }
 
     // You cannot update these fields with this API
     delete updates.createdBy
-    delete updates.domain
+    delete updates.subdomain
 
     // Only an owner can update the participant/permission fields
     if (!campaign.isOwner) {
@@ -116,14 +116,14 @@ const updateCampaign = async (request, response) => {
       ...updates,
       lastUpdatedBy: userId,
     })
-    await Campaign.update({ domain }, { $set: updates })
+    await Campaign.update({ subdomain }, { $set: updates })
 
     return getCampaignRequest(request, response)
   } catch (error) {
     switch (error.code) {
       case 11000:
         return response.status(409).json({
-          message: `Domain '${request.body.domain}' is already in use.`,
+          message: `Subdomain '${request.body.subdomain}' is already in use.`,
         })
       default:
         console.error(`Error in POST /api/campaigns: ${error}`) // eslint-disable-line
@@ -135,8 +135,8 @@ const updateCampaign = async (request, response) => {
 }
 /* eslint-enable no-console */
 
-controller.get('/:domain?', ContextLoader, getCampaignRequest)
-controller.put('/:domain?', NoAnonymous, createCampaign)
-controller.post('/:domain?', updateCampaign)
+controller.get('/:subdomain?', ContextLoader, getCampaignRequest)
+controller.put('/:subdomain?', NoAnonymous, createCampaign)
+controller.post('/:subdomain?', updateCampaign)
 
 export default controller

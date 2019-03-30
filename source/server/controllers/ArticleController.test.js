@@ -25,10 +25,10 @@ const ARTICLE = (props = {}) => new Article({
 })
 const CAMPAIGN = (props = {}) => new Campaign({
   _id: '111111111111',
-  domain: 'test',
   editors: [EDITOR._id],
   owners: [OWNER._id],
   players: [PLAYER._id],
+  subdomain: 'test',
   ...props,
 })
 
@@ -121,7 +121,7 @@ describe('server/controllers/ArticleController', () => {
       expect(response.status).toHaveBeenCalledWith(200)
       expect(response.json.mock.calls[0][0]).toMatchObject({
         aliases: [],
-        campaign: pluck(request.campaign, 'domain', 'title'),
+        campaign: pluck(request.campaign, 'subdomain', 'title'),
         html: '\n',
         links: [],
         missing: [],
@@ -140,8 +140,8 @@ describe('server/controllers/ArticleController', () => {
         article: ARTICLE(),
         body: updates,
         campaign: CAMPAIGN(),
-        user: EDITOR,
         slug: 'foo',
+        user: EDITOR,
       }
       const response = mockResponse()
 
@@ -166,8 +166,8 @@ describe('server/controllers/ArticleController', () => {
         article: null,
         body: updates,
         campaign: CAMPAIGN(),
-        user: EDITOR,
         slug: 'foo',
+        user: EDITOR,
       }
       const response = mockResponse()
 

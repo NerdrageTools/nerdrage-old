@@ -53,17 +53,17 @@ export default class Navigation extends Component {
     {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
     <ul>
       {list.map(({ _id, campaign = {}, slug, title }, index) => {
-        const { domain = '', title: cTitle = '' } = campaign
+        const { subdomain = '', title: cTitle = '' } = campaign
         let text = title
-        if (type !== 'campaign' && domain && domain !== this.context.domain) {
-          text += ` (${cTitle || domain})`
+        if (type !== 'campaign' && subdomain && subdomain !== this.context.subdomain) {
+          text += ` (${cTitle || subdomain})`
         }
 
         return (
           <li key={_id || index} data-id={_id} title={title}>
             <PageLink
               {...{ campaign, slug, type }}
-              active={this.context.domain === domain && this.context.router.asPath === `/${type}/${slug}`}
+              active={this.context.subdomain === subdomain && this.context.router.asPath === `/${type}/${slug}`}
               onClick={this.props.onItemClick}
             >
               {text}
@@ -74,7 +74,7 @@ export default class Navigation extends Component {
     </ul>
   </>
 
-  filterLinks = link => link.campaign.domain === this.context.campaign.domain
+  filterLinks = link => link.campaign.subdomain === this.context.campaign.subdomain
   render = () => {
     const { campaign, user = {} } = this.context
     let { favorites = [], sheets = [] } = user
@@ -83,7 +83,7 @@ export default class Navigation extends Component {
 
     const navigation = campaign.navigation.map(link => ({
       ...link,
-      campaign: pluck(campaign, '_id', 'domain', 'title'),
+      campaign: pluck(campaign, '_id', 'subdomain', 'title'),
     }))
     favorites = favorites.filter(this.filterLinks)
     sheets = sheets.filter(this.filterLinks)
@@ -93,7 +93,7 @@ export default class Navigation extends Component {
         <div className="content" ref={this.props.wrapperRef}>
           <div className="campaign-nav" ref={this.campaignNav}>
             {this.renderList(navigation, campaign.title, 'article', <b>
-              <PageLink domain={campaign.domain} type="campaign">
+              <PageLink subdomain={campaign.subdomain} type="campaign">
                 {campaign.title}
               </PageLink>
             </b>)}
