@@ -4,9 +4,15 @@ import React from 'react'
 import Layout from '@/components/Layout'
 import Application from '@/contexts/Application'
 import defaultTheme from '@/data/defaultTheme'
+import '@/styles/all.scss'
+/* eslint-disable import/extensions */
+import imageBook from '@/icons/book.png'
+import imageCombo from '@/icons/combo.png'
+import imageSystem from '@/icons/dice.gif'
+import imageInfo from '@/icons/info.png'
+/* eslint-enable import/extensions */
 import Error from '@/pages/_error'
 import noop from '@/utilities/noop'
-import '@/styles/all.scss'
 
 export default class Wiki extends App {
   static getInitialProps = async context => {
@@ -73,7 +79,7 @@ export default class Wiki extends App {
 
     const result = await fetch(`/api/user/${user.username}`, {
       body: updates ? JSON.stringify(updates) : undefined,
-      headers: { 'Content-Type' : 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       method: updates ? 'POST' : 'GET',
     })
     const json = await result.json()
@@ -131,6 +137,11 @@ export default class Wiki extends App {
               --font-size:        ${theme.fontSize};
               font-family:        ${theme.fontForText};
               font-size:          ${theme.fontSize};
+
+              --image-book:       url(${imageBook});
+              --image-combo:      url(${imageCombo});
+              --image-system:     url(${imageSystem});
+              --image-info:       url(${imageInfo});
             }
           `}</style>
         </Container>
