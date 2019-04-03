@@ -789,6 +789,17 @@ a {
   a.missing {
     color: #c44; }
 
+blockquote {
+  background: oldlace;
+  border-color: #f5cf88;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 0 0 0 4px;
+  box-shadow: 3px 3px 3px #00000033;
+  margin: 1rem 1.5rem;
+  padding: .5rem .75rem;
+  text-align: justify; }
+
 button {
   border: 1px outset #66666655;
   border-radius: .25rem;
