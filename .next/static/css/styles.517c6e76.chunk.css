@@ -759,6 +759,27 @@ svg {
     height: 2rem;
     width: 2rem; }
 
+table {
+  border-collapse: separate;
+  border-spacing: 1px; }
+  table th {
+    color: var(--color-secondary);
+    font-family: var(--font-for-titles);
+    position: relative;
+    z-index: 0; }
+    table th:before {
+      background: var(--color-primary);
+      content: '';
+      height: 100%;
+      opacity: .7;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: 0;
+      z-index: -1; }
+  table thead th:before {
+    opacity: 1; }
+
 .callout, [class*="callout-"] {
   background-color: #fff;
   border-color: #d3d6db;
@@ -846,10 +867,12 @@ table[class*="callout-"] {
   box-shadow: 2px 2px 5px #d3d6db;
   box-shadow: 2px 2px 5px var(--color-shadow);
   border: 2px solid #42afe3;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--color-primary);
+  border-radius: 5px;
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
+  overflow: hidden;
   width: 275px; }
   .info-box th, .info-box td {
     padding: 5px; }
