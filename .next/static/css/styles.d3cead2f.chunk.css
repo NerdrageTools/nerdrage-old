@@ -734,6 +734,12 @@ fieldset {
   fieldset > legend {
     font-weight: bold; }
 
+h1, h2, h3, h4, h5, h6 {
+  border-bottom: 1px solid var(--color-primary);
+  font-family: var(--font-for-titles);
+  margin-bottom: .25rem;
+  padding-bottom: .25rem; }
+
 hr {
   border-color: var(--color-primary);
   border-style: solid;
@@ -749,6 +755,9 @@ input, textarea {
   padding: .25rem; }
   input:focus, textarea:focus {
     border: 1px inset; }
+
+p {
+  text-align: justify; }
 
 svg {
   fill: currentColor;
@@ -812,28 +821,28 @@ table {
       background-color: #e2fbfb; }
     .callout[class*="-book"]:before, [class*="callout-"][class*="-book"]:before {
       background-color: #d7f9f9;
-      background-image: #e2fbfb; }
+      background-image: var(--image-book); }
   .callout[class*="-combo"], [class*="callout-"][class*="-combo"] {
     background-color: #e5f3dd; }
     .callout[class*="-combo"] th, [class*="callout-"][class*="-combo"] th {
       background-color: #deefd3; }
     .callout[class*="-combo"]:before, [class*="callout-"][class*="-combo"]:before {
       background-color: #d7ecca;
-      background-image: #deefd3; }
+      background-image: var(--image-combo); }
   .callout[class*="-info"], [class*="callout-"][class*="-info"] {
     background-color: #edfdfd; }
     .callout[class*="-info"] th, [class*="callout-"][class*="-info"] th {
       background-color: #e2fbfb; }
     .callout[class*="-info"]:before, [class*="callout-"][class*="-info"]:before {
       background-color: #d7f9f9;
-      background-image: #e2fbfb; }
+      background-image: var(--image-info); }
   .callout[class*="-system"], [class*="callout-"][class*="-system"] {
     background-color: #fefaf2; }
     .callout[class*="-system"] th, [class*="callout-"][class*="-system"] th {
       background-color: #fdf5e6; }
     .callout[class*="-system"]:before, [class*="callout-"][class*="-system"]:before {
       background-color: #fcf0da;
-      background-image: #fdf5e6; }
+      background-image: var(--image-system); }
 
 table[class*="callout-"] {
   border-width: 1px;
@@ -866,14 +875,17 @@ table[class*="callout-"] {
 .info-box {
   box-shadow: 2px 2px 5px #d3d6db;
   box-shadow: 2px 2px 5px var(--color-shadow);
+  background: var(--color-background);
   border: 2px solid #42afe3;
   border: 2px solid var(--color-primary);
+  box-shadow: 0 0.75em 0 var(--color-background), -0.75em 0 0 var(--color-background);
   border-radius: 5px;
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
   overflow: hidden;
-  width: 275px; }
+  width: 275px;
+  z-index: 1; }
   .info-box th, .info-box td {
     padding: 5px; }
 
