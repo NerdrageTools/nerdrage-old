@@ -9,6 +9,7 @@ import PageLinkList from '@/components/PageLinkList'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
+import Warning from '@/components/Warning'
 import Application from '@/contexts/Application'
 import EditIcon from '@/icons/edit.svg'
 import FavoriteOffIcon from '@/icons/favorite-off.svg'
@@ -175,9 +176,13 @@ export default class Article extends Component {
 
   renderReadOnlyContent = () => {
     const jsx = (this.state.html || this.props.html || '').trim()
+    const components = {
+      a: Link,
+      Warning,
+    }
 
     return <>
-      {jsx ? <JsxParser components={{ a: Link }} jsx={jsx} /> : ''}
+      {jsx ? <JsxParser {...{ components, jsx }} /> : ''}
       <PageLinkList pages={this.props.childArticles} />
     </>
   }

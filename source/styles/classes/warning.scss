@@ -1,0 +1,16 @@
+@import '~@/styles/palette';
+
+.warning {
+  align-items: center;
+  background: var(--color-warning-bg);
+  border-radius: 5px;
+  border: 2px solid var(--color-warning);
+  color: var(--color-warning-text);
+  display: flex;
+  margin: 0.5rem 0;
+  padding: 5px;
+
+  > svg {
+    margin-right: .25rem;
+  }
+}

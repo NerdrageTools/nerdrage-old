@@ -18,6 +18,7 @@
 @import 'tags/svg';
 @import 'tags/table';
 @import 'classes/callout';
+@import 'classes/center';
 @import 'classes/danger';
 @import 'classes/dropshadow';
 @import 'classes/ellipsis';
@@ -28,6 +29,7 @@
 @import 'classes/lightbox';
 @import 'classes/loading';
 @import 'classes/row';
+@import 'classes/warning';
 
 :root {
   // Colors by name
@@ -49,7 +51,6 @@
   --color-bg-button:     #{$color-bg-button};
   --color-bg-inverse:    #{$color-bg-inverse};
   --color-bg-modal:      #{$color-bg-modal};
-  --color-bg-warning:    #{$color-bg-warning};
   --color-bg:            #{$color-bg};
   --color-book:          #{$color-book};
   --color-border:        #{$color-border};
@@ -69,4 +70,6 @@
   --color-text-inverse:  #{$color-text-inverse};
   --color-text:          #{$color-text};
   --color-warning:       #{$color-warning};
+  --color-warning-bg:    #{$color-warning-bg};
+  --color-warning-text:  #{$color-warning-text};
 }
