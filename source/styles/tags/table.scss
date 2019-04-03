@@ -1,6 +1,8 @@
 table {
-  border-collapse: separate;
-  border-spacing: 1px;
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  box-shadow: 3px 3px 3px #00000033;
 
   th {
     color: var(--color-secondary);
@@ -19,6 +21,11 @@ table {
       top: 0;
       z-index: -1;
     }
+  }
+
+  th, td {
+    border: 1px solid #00000033;
+    padding: .2rem;
   }
 
   thead th {
