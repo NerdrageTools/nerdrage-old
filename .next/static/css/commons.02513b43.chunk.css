@@ -5,6 +5,7 @@
   flex: 1;
   justify-content: center; }
   .error.page > .status-code {
+    border: none;
     border-right: 2px solid;
     margin: 0 .5em 0 0;
     padding: 0 .5em 0 0; }
