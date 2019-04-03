@@ -1,6 +1,8 @@
 export default {
   background: '#fff',
-  fontFamily: 'Ubuntu',
+  fontForText: 'Ubuntu',
+  fontForTitles: 'Ubuntu',
+  fontSize: '16px',
   foreground: '#333',
   primary: '#f00',
   secondary: '#fff',

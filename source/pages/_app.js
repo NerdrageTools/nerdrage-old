@@ -90,7 +90,7 @@ export default class Wiki extends App {
   render = () => {
     const { Component, pageProps, rootUrl, router, subdomain } = this.props
     const { campaign, user } = this.state
-    const theme = (campaign && campaign.theme) || defaultTheme
+    const theme = Object.assign(defaultTheme, (campaign && campaign.theme) || {})
     const context = {
       campaign,
       logOff: this.logOff,
@@ -121,12 +121,16 @@ export default class Wiki extends App {
           </Layout>
           <style>{`
             :root {
-              --font-primary:     ${theme.fontFamily};
               --color-background: ${theme.background};
               --color-borders:    ${theme.primary};
               --color-foreground: ${theme.foreground};
               --color-primary:    ${theme.primary};
               --color-secondary:  ${theme.secondary};
+              --font-for-text:    ${theme.fontForText};
+              --font-for-titles:  ${theme.fontForTitles};
+              --font-size:        ${theme.fontSize};
+              font-family:        ${theme.fontForText};
+              font-size:          ${theme.fontSize};
             }
           `}</style>
         </Container>
