@@ -27,8 +27,8 @@ export default function PageLinkList({
   } else {
     links = pages
       .sort((a, b) => a.title.localeCompare(b.title))
-      .map(({ campaign, slug, title }) => (
-        <li key={slug} title={`${campaign.title}: ${title}`}>
+      .map(({ campaign = {}, slug, title }) => (
+        <li key={slug} title={`${campaign.title ? `${campaign.title}: ` : ''}${title}`}>
           <PageLink {...{ campaign, slug, type }}>{title}</PageLink>
         </li>
       ))
