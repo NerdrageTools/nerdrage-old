@@ -173,10 +173,14 @@ export default class Article extends Component {
     }
   }
 
-  renderReadOnlyContent = () => <>
-    <JsxParser components={{ a: Link }} jsx={(this.state.html || this.props.html || '').trim()} />
-    <PageLinkList pages={this.props.childArticles} />
-  </>
+  renderReadOnlyContent = () => {
+    const jsx = (this.state.html || this.props.html || '').trim()
+
+    return <>
+      {jsx ? <JsxParser components={{ a: Link }} jsx={jsx} /> : ''}
+      <PageLinkList pages={this.props.childArticles} />
+    </>
+  }
   renderSettingsTab = () => <>
     <fieldset>
       <legend>Aliases</legend>
@@ -204,7 +208,7 @@ export default class Article extends Component {
       _id, activeTab, aliases, html, isEditable, isOwner,
       message, redirectedFrom, secret, slug, tags, title = '',
     } = this.state
-    const { httpStatusCode } = this.props
+    const { childArticles, httpStatusCode } = this.props
     const { favorites = [] } = this.context.user
     const { campaign = {} } = this.context
     const isFavorite = favorites.find(f => (
@@ -212,17 +216,22 @@ export default class Article extends Component {
       && f.slug === slug
     ))
     const readOnly = !isEditable || !this.state.editMode
+    const classNames = [
+      'article page',
+      childArticles.length ? '' : 'no-child-articles',
+    ].filter(Boolean).join(' ')
 
     if (httpStatusCode !== 200) {
       return (
-        <div className="article page">
+        <div className={classNames}>
           <Alert type="error">{message}</Alert>
+          {this.renderReadOnlyContent()}
         </div>
       )
     }
 
     return (
-      <div className="article page">
+      <div className={classNames}>
         {message && <Alert>{message}</Alert>}
         <div className="title-bar">
           <Editable
