@@ -27,7 +27,7 @@ export default function transclude(html, campaignId) {
 
     return includes[from].then(article => {
       if (!article) {
-        $include.html(`\n<div class="warning">Included Article '${from}' does not exist</div>\n`)
+        $include.html(`\n<Warning>Transcluded Article '${from}' does not exist.</Warning>\n`)
         links.push(from)
         missing.push(from)
         return Promise.resolve()

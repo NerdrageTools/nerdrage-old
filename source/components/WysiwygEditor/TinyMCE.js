@@ -29,7 +29,7 @@ Editor.defaultProps = Object.assign(Editor.defaultProps || {}, {
     convert_urls: false,
     custom_elements: 'include,tengwar',
     entity_encoding: 'raw',
-    extended_valid_elements: 'include[class|from|sections],tengwar',
+    extended_valid_elements: 'include[class|from|sections],tengwar,Warning',
     fixed_toolbar_container: '.wysiwyg-editor > .menubar',
     formats: {
       aligncenter: {
