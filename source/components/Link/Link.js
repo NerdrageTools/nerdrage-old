@@ -24,7 +24,7 @@ export default class Link extends Component {
     }
 
     return (
-      <PageLink {...Link.parseHref(href)} {...props}>
+      <PageLink {...{ className, ...Link.parseHref(href), ...props }}>
         {children}
       </PageLink>
     )
