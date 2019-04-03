@@ -1,14 +1,20 @@
 .info-box {
   @include dropshadow();
 
+  background: var(--color-background);
   border: 2px solid $color-border;
   border: 2px solid var(--color-primary);
+  box-shadow:
+     0 .75em 0 var(--color-background),
+    -.75em 0 0 var(--color-background)
+  ;
   border-radius: 5px;
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
   overflow: hidden;
   width: 275px;
+  z-index: 1;
 
   th, td { padding: 5px; }
 }

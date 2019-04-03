@@ -27,7 +27,17 @@ module.exports = withPlugins([withSass, withCSS], {
         outputPath: 'static/fonts/',
         publicPath: '/_next/static/fonts/',
       },
-      test: /\.(gif|png|woff2?|eot|ttf)$/,
+      test: /\.(woff2?|eot|ttf)$/,
+    }, {
+      loader: 'url-loader',
+      options: {
+        fallback: 'file-loader',
+        limit: 100000,
+        name: '[name].[ext]',
+        outputPath: 'static/images',
+        publicPath: '/_next/static/images/',
+      },
+      test: /\.(gif|jpe?g|png)$/,
     }, {
       loader: 'svg-react-loader',
       test: /\.svg$/,

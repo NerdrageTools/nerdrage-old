@@ -44,7 +44,6 @@ export default class CampaignPage extends Component {
       players: players.map(user => user._id),
     }
     this.context.updateCampaign(update, () => {
-      console.log('got here')
       this.setState({ savingParticipants: false })
     })
   }

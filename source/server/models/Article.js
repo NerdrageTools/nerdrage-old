@@ -69,14 +69,14 @@ ArticleSchema.pre('save', function (next) {
 })
 
 ArticleSchema.methods.render = async function () {
-  const links = await renderLinks(this.html, this.campaign)
-  const includes = await transclude(links.html, this.campaign)
+  const includes = await transclude(this.html, this.campaign)
+  const links = await renderLinks(includes.html, this.campaign)
   const childArticles = await mongoose.models.Article
     .find({ tags: { $in: [this.slug, ...this.aliases] } })
     .select('slug title')
     .exec()
 
-  const html = beautify(includes.html, BEAUTIFY_OPTIONS)
+  const html = beautify(links.html, BEAUTIFY_OPTIONS)
 
   return Promise.resolve({
     ...this.toJSON(),
