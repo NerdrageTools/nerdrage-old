@@ -2,10 +2,12 @@
   @include dropshadow();
 
   border: 2px solid $color-border;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--color-primary);
+  border-radius: 5px;
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
+  overflow: hidden;
   width: 275px;
 
   th, td { padding: 5px; }
