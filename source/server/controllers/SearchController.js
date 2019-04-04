@@ -37,10 +37,22 @@ export const searchArticles = async (request, response) => {
 
   const $search = new Deburr(entities.decodeHTML(searchTerm)).toString()
 
+  const exactMatches = await Article.aggregate([
+    { $match: { $or: [{ title: $search }, { aliases: $search }, { slug: $search }] } },
+    { $project: {
+      _id: '$slug',
+      matchScore: { $literal: 0 },
+      preview: { $substr: ['$plainText', 0, 100] },
+      slug: '$slug',
+      title: '$title',
+    } },
+  ])
+
   let partialMatches = []
   const fullTextMatches = await Article.aggregate([
     { $match: {
       $and: [
+        { slug: { $nin: exactMatches.map(match => match.slug) } },
         { $or: [{ campaign: campaign._id }, { campaign: null }] },
         !allowPrivate ? { secret: false } : {},
         { $text: { $search } },
@@ -61,7 +73,7 @@ export const searchArticles = async (request, response) => {
       title: { $first: '$title' },
     } },
     { $project: { _id: 0, matchScore: 1, preview: 1, slug: 1, title: 1 } },
-  ]).limit(bound(limit, { min: 1 }))
+  ]).limit(bound(limit - exactMatches.length, { min: 1 }))
 
   if (fullTextMatches.length <= 10) {
     const searchKeys = $search.split(/\s/).map(term => new RegExp(`^${term}`))
@@ -70,6 +82,7 @@ export const searchArticles = async (request, response) => {
       { $match: {
         $and: [
           { slug: { $nin: fullTextMatches.map(match => match.slug) } },
+          { slug: { $nin: exactMatches.map(match => match.slug) } },
           { $or: [{ campaign: campaign._id }, { campaign: null }] },
           !allowPrivate ? { secret: false } : {},
           { searchKeys: { $in: searchKeys } },
@@ -87,7 +100,9 @@ export const searchArticles = async (request, response) => {
     ]).limit(bound(limit - fullTextMatches.length, { min: 1 }))
   }
 
-  const results = [...fullTextMatches, ...partialMatches]
+  const results = [...exactMatches, ...fullTextMatches, ...partialMatches]
+    .slice(0, bound(limit, { min: 0 }))
+
   return response.status(200).json(results)
 }
 export const searchUsers = async (request, response) => {
