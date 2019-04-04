@@ -672,7 +672,7 @@
   .navigation > div > .content {
     padding: 8px;
     width: 175px; }
-    .navigation > div > .content > b {
+    .navigation > div > .content > .active {
       align-items: center;
       display: flex;
       justify-content: space-between;
@@ -680,19 +680,44 @@
       padding: .1rem;
       text-overflow: ellipsis;
       white-space: nowrap; }
-      .navigation > div > .content > b > svg {
+      .navigation > div > .content > .active > svg {
         margin-right: .25rem;
         order: 1; }
     .navigation > div > .content > .campaign-nav > ul, .navigation > div > .content > ul {
       list-style: none;
       margin: 0;
       padding: .1rem 0 1rem .75rem; }
-      .navigation > div > .content > .campaign-nav > ul > li, .navigation > div > .content > ul > li {
-        max-width: 100%;
-        overflow: hidden;
-        padding: .1rem;
-        text-overflow: ellipsis;
-        white-space: nowrap; }
+    .navigation > div > .content li {
+      overflow: hidden;
+      padding: .1rem;
+      position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      .navigation > div > .content li.section {
+        margin-left: -.75rem; }
+      .navigation > div > .content li > .controls {
+        background: #ffffff;
+        display: none;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0; }
+        .navigation > div > .content li > .controls > .delete, .navigation > div > .content li > .controls > .edit {
+          cursor: pointer;
+          margin: 0 .25rem; }
+        .navigation > div > .content li > .controls > .delete {
+          color: var(--color-danger); }
+      .navigation > div > .content li:hover > .controls {
+        align-items: center;
+        display: flex;
+        justify-content: center; }
+    .navigation > div > .content > .add-navigation {
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      margin: 5px;
+      max-width: calc(100% - 10px); }
 
 .wiki.layout {
   background: #f6f6f6;
@@ -1951,10 +1976,11 @@ div.mce-tinymce-inline {
   border: 0 solid #c5c5c5; }
 
 .mce-floatpanel {
-  position: absolute;
+  background: #fff;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  position: absolute; }
   .mce-floatpanel.mce-fixed {
     position: fixed; }
   .mce-floatpanel .mce-arrow {
