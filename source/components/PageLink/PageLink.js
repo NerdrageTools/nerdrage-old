@@ -21,7 +21,7 @@ export default class PageLink extends Component {
     } = this.props
     const { subdomain: currentDomain, rootUrl } = this.context
     const contents = children || `Unnamed ${type}`
-    if (active) return <b>{contents}</b>
+    if (active) return <span className="active" title={contents}>{contents}</span>
 
     if (type === 'campaign') {
       const href = `//${campaign.subdomain}.${rootUrl}/campaign`

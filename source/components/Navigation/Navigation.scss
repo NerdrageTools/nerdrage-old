@@ -14,7 +14,7 @@
     padding: 8px;
     width: $navigation-width;
 
-    > b {
+    > .active {
       align-items: center;
       display: flex;
       justify-content: space-between;
@@ -30,14 +30,47 @@
       list-style: none;
       margin: 0;
       padding: .1rem 0 1rem .75rem;
+    }
 
-      > li {
-        max-width: 100%;
-        overflow: hidden;
-        padding: .1rem;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    li {
+      overflow: hidden;
+      padding: .1rem;
+      position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &.section {
+        margin-left: -.75rem;
       }
+
+      > .controls {
+        background: #ffffff;
+        display: none;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        > .delete, > .edit {
+          cursor: pointer;
+          margin: 0 .25rem;
+        }
+        > .delete { color: var(--color-danger); }
+      }
+      &:hover > .controls {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    > .add-navigation {
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      margin: 5px;
+      max-width: calc(100% - 10px);
     }
   }
 }

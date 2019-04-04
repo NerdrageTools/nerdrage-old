@@ -3,10 +3,13 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
 import PageLink from '@/components/PageLink'
 import Application from '@/contexts/Application'
+import EditIcon from '@/icons/edit.svg'
 import FavoriteIcon from '@/icons/favorite-on.svg'
+import DeleteIcon from '@/icons/remove.svg'
 import SheetIcon from '@/icons/sheet.svg'
 import noop from '@/utilities/noop'
 import pluck from '@/utilities/pluck'
+import prompt from '@/utilities/prompt'
 import './Navigation.scss'
 
 export default class Navigation extends Component {
@@ -48,15 +51,67 @@ export default class Navigation extends Component {
     })
   }
 
+  handleAddKeyDown = event => {
+    const title = event.target.value.trim()
+    const { navigation } = this.context.campaign
+
+    if (event.key === 'Enter' && title !== '') {
+      event.target.value = ''
+      this.context.updateCampaign({
+        navigation: [...navigation, { title }],
+      })
+    }
+  }
+  handleDelete = ({ currentTarget }) => {
+    const id = currentTarget.getAttribute('data-id')
+    const { navigation } = this.context.campaign
+
+    this.context.updateCampaign({
+      navigation: navigation.filter(item => item._id !== id),
+    })
+  }
+  handleEdit = async ({ currentTarget }) => {
+    const id = currentTarget.getAttribute('data-id')
+    const navigation = [...this.context.campaign.navigation]
+    const item = navigation.find(navItem => navItem._id === id)
+    if (!item) return undefined
+
+    try {
+      const title = await prompt('New Title?', { defaultValue: item.title, title: 'Set Title' })
+      if (!title) return undefined
+
+      const slug = await prompt('Slug to link to?', { defaultValue: item.slug, title: 'Set Slug' })
+
+      navigation.splice(navigation.indexOf(item), 1, { slug, title })
+      this.context.updateCampaign({ navigation })
+    } catch (_) {}
+
+    return undefined
+  }
+
   renderList = (list = [], listTitle = '', type = 'article', campaignLink = null) => <>
     {campaignLink}
     {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
     <ul>
-      {list.map(({ _id, campaign = {}, slug, title }, index) => {
-        const { subdomain = '', title: cTitle = '' } = campaign
+      {list.map(({ _id, campaign, slug, title }, index) => {
+        const { subdomain = '', title: cTitle = '' } = (campaign || this.context.campaign || {})
         let text = title
         if (type !== 'campaign' && subdomain && subdomain !== this.context.subdomain) {
           text += ` (${cTitle || subdomain})`
+        }
+
+        if (!slug) {
+          return (
+            <li key={_id || index} className="section" data-id={_id} title={title}>
+              <b>{text}</b>
+              {this.context.campaign.isEditor && (
+                <div className="controls">
+                  <EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
+                  <DeleteIcon className="delete" data-id={_id} onClick={this.handleDelete} />
+                </div>
+              )}
+            </li>
+          )
         }
 
         return (
@@ -68,6 +123,12 @@ export default class Navigation extends Component {
             >
               {text}
             </PageLink>
+            {this.context.campaign.isEditor && (
+              <div className="controls">
+                <EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
+                <DeleteIcon className="delete" data-id={_id} onClick={this.handleDelete} />
+              </div>
+            )}
           </li>
         )
       })}
@@ -106,6 +167,14 @@ export default class Navigation extends Component {
               this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')
             )}
           </>}
+          {campaign.isEditor && (
+            <input
+              type="text"
+              className="add-navigation"
+              onKeyDown={this.handleAddKeyDown}
+              placeholder="Add..."
+            />
+          )}
         </div>
       </Scrollbars>
     )
