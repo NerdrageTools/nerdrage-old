@@ -739,7 +739,7 @@
       "publicPath": "static/chunks/commons.1c0d8472488c121dd15d.js"
     }
   ],
-  "../../core-js/object/set-prototype-of": [
+  "../core-js/object/set-prototype-of": [
     {
       "id": "OKNm",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/set-prototype-of.js",
@@ -2225,184 +2225,184 @@
     {
       "id": "2GC8",
       "name": "../node_modules/tinymce/plugins/paste/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/image/plugin": [
     {
       "id": "Ad0K",
       "name": "../node_modules/tinymce/plugins/image/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "../Utils": [
     {
       "id": "B6MN",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/Utils.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "./components/Editor": [
     {
       "id": "BHTI",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/components/Editor.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/table/plugin": [
     {
       "id": "COLo",
       "name": "../node_modules/tinymce/plugins/table/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/code/plugin": [
     {
       "id": "E85r",
       "name": "../node_modules/tinymce/plugins/code/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/anchor/plugin": [
     {
       "id": "H1Z+",
       "name": "../node_modules/tinymce/plugins/anchor/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/hr/plugin": [
     {
       "id": "KZ1N",
       "name": "../node_modules/tinymce/plugins/hr/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/noneditable/plugin": [
     {
       "id": "Rq/h",
       "name": "../node_modules/tinymce/plugins/noneditable/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "../TinyMCE": [
     {
       "id": "Tdj8",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/TinyMCE.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/lists/plugin": [
     {
       "id": "UqOZ",
       "name": "../node_modules/tinymce/plugins/lists/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/autosave/plugin": [
     {
       "id": "Vdx6",
       "name": "../node_modules/tinymce/plugins/autosave/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "./EditorPropTypes": [
     {
       "id": "Yr7X",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/components/EditorPropTypes.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "@/components/WysiwygEditor": [
     {
       "id": "a7r4",
       "name": "./components/WysiwygEditor/WysiwygEditor.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/link/plugin": [
     {
       "id": "cE1G",
       "name": "../node_modules/tinymce/plugins/link/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/themes/modern/theme": [
     {
       "id": "dQZu",
       "name": "../node_modules/tinymce/themes/modern/theme.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "@tinymce/tinymce-react": [
     {
       "id": "gOdH",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/index.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "setimmediate": [
     {
       "id": "heVN",
       "name": "../node_modules/setimmediate/setImmediate.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/tinymce": [
     {
       "id": "jlzH",
       "name": "../node_modules/tinymce/tinymce.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/advlist/plugin": [
     {
       "id": "jmUV",
       "name": "../node_modules/tinymce/plugins/advlist/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "../ScriptLoader": [
     {
       "id": "oIcf",
       "name": "../node_modules/@tinymce/tinymce-react/lib/cjs/ScriptLoader.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "./../../timers-browserify/main.js": [
     {
       "id": "oPUo",
       "name": "../node_modules/timers-browserify/main.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "tinymce/plugins/fullscreen/plugin": [
     {
       "id": "vSUj",
       "name": "../node_modules/tinymce/plugins/fullscreen/plugin.js",
-      "file": "static/chunks/13.ee4b2057c61280c5a243.js",
-      "publicPath": "static/chunks/13.ee4b2057c61280c5a243.js"
+      "file": "static/chunks/13.7ffad738bd5068e9a165.js",
+      "publicPath": "static/chunks/13.7ffad738bd5068e9a165.js"
     }
   ],
   "../worker/css": [
