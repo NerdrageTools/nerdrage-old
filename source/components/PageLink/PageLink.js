@@ -11,15 +11,15 @@ export default class PageLink extends Component {
   static displayName = 'PageLink'
 
   render = () => {
+    const { campaign, subdomain: currentDomain, rootUrl } = this.context
     const {
       active,
-      campaign = this.context.campaign,
       children,
       slug = '',
+      subdomain,
       type = 'article',
       ...linkProps
     } = this.props
-    const { subdomain: currentDomain, rootUrl } = this.context
     const contents = children || `Unnamed ${type}`
     if (active) return <span className="active" title={contents}>{contents}</span>
 
@@ -38,10 +38,9 @@ export default class PageLink extends Component {
     const slashSlug = slug ? `/${slug}` : ''
     const queryStringSlug = slug ? `?slug=${slug}` : ''
 
-    if (!campaign || campaign.subdomain !== currentDomain) {
-      const subdomain = campaign ? campaign.subdomain : currentDomain
+    if (subdomain && subdomain !== currentDomain) {
       const href = `//${subdomain}.${rootUrl}/${type}${slashSlug}`
-      return <a {...linkProps} href={href}>{contents}</a>
+      return <a {...linkProps} {...{ href, subdomain }}>{contents}</a>
     }
 
 
