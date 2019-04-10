@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "cd source && next build",
-    "develop": "nodemon -w ./source/server -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
+    "develop": "nodemon -w ./source/server -w ./source/utilities -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
     "prebuild": "rimraf ./.next",
     "start": "NODE_ENV=production node ./source/server/index.js",
     "test": "jest"
