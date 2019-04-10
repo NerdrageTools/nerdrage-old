@@ -50,7 +50,7 @@ Editor.defaultProps = Object.assign(Editor.defaultProps || {}, {
       'formatselect | bold italic underline | alignleft aligncenter alignright alignjustify ' +
       '| indent outdent | bullist numlist | hr link | image table | removeformat',
     valid_elements:
-      'a[id|href|target|class|style],' +
+      'a[id|href|target|class|style|subdomain],' +
       'img[id|src|class|style|height|width],' +
       '@[id|class|colspan|rowspan|style],#th,#td,' +
       '@[id|class|style],' +

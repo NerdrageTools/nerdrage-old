@@ -59,7 +59,8 @@ ArticleSchema.pre('save', function (next) {
   this.tags = slugifyArray(this.tags)
 
   const $ = cheerio.load(this.html, { decodeEntities: false, xmlMode: true })
-  this.plainText = entities.decodeHTML($.text().replace(/(\s\s+)|\n/g, ' '))
+  $('br').replaceWith('\r\n')
+  this.plainText = entities.decodeHTML($.text().replace(/[\r\n]/g, ' ').replace(/\s+/g, ' '))
   this.searchKeys = computeSearchKeys(this.plainText)
 
   mongoose.models.Article.updateMany(

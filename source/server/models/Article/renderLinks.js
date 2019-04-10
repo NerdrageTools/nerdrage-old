@@ -15,14 +15,21 @@ export default async function renderLinks(html, campaignId) {
     const isInternal = !parsedUrl.hostname
     if (isInternal) {
       const parts = parsedUrl.pathname.split('/').filter(Boolean)
-      const slug = parts.length > 1 ? parts[1] : parts[0]
-      const type = parts.length > 1 ? parts[0] : 'article'
+      const slug = parts.pop()
+      const type = parts.pop() || 'article'
+      const subdomain = parts.pop() || ''
 
       $link.addClass(type)
       $link.attr('href', `/${type}/${slug}`)
       $link.attr('slug', slug)
+      $link.attr('subdomain', subdomain)
       $link.attr('type', type)
-      links.push(slug)
+
+      if (subdomain) {
+        $link.addClass('cross-campaign')
+      } else {
+        links.push(slug)
+      }
     } else {
       $link.attr('target', '_new').addClass('external')
     }
