@@ -3,6 +3,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
 import PageLink from '@/components/PageLink'
 import Application from '@/contexts/Application'
+import CampaignIcon from '@/icons/campaign.svg'
 import EditIcon from '@/icons/edit.svg'
 import FavoriteIcon from '@/icons/favorite-on.svg'
 import DeleteIcon from '@/icons/remove.svg'
@@ -51,16 +52,30 @@ export default class Navigation extends Component {
     })
   }
 
-  handleAddKeyDown = event => {
-    const title = event.target.value.trim()
-    const { navigation } = this.context.campaign
+  promptForLinkDetails = async (item = {}) => {
+    try {
+      const title = await prompt('New Title?', { defaultValue: item.title, title: 'Set Title' })
+      if (!title) return undefined
 
-    if (event.key === 'Enter' && title !== '') {
-      event.target.value = ''
-      this.context.updateCampaign({
-        navigation: [...navigation, { title }],
+      const slug = await prompt('Slug to link to?', {
+        defaultValue: item.slug,
+        placeholder: 'Leave blank to create a header...',
+        title: 'Set Slug',
       })
+
+      return { slug, title }
+    } catch (_) {
+      return null
     }
+  }
+
+  handleAddLink = async () => {
+    const newLink = await this.promptForLinkDetails()
+    if (!newLink) { return }
+
+    this.context.updateCampaign({
+      navigation: [...this.context.campaign.navigation, newLink],
+    })
   }
   handleDelete = ({ currentTarget }) => {
     const id = currentTarget.getAttribute('data-id')
@@ -74,24 +89,20 @@ export default class Navigation extends Component {
     const id = currentTarget.getAttribute('data-id')
     const navigation = [...this.context.campaign.navigation]
     const item = navigation.find(navItem => navItem._id === id)
-    if (!item) return undefined
+    if (!item) { return }
 
-    try {
-      const title = await prompt('New Title?', { defaultValue: item.title, title: 'Set Title' })
-      if (!title) return undefined
+    const edited = await this.promptForLinkDetails(item)
 
-      const slug = await prompt('Slug to link to?', { defaultValue: item.slug, title: 'Set Slug' })
+    if (!edited) { return }
 
-      navigation.splice(navigation.indexOf(item), 1, { slug, title })
-      this.context.updateCampaign({ navigation })
-    } catch (_) {}
-
-    return undefined
+    navigation.splice(navigation.indexOf(item), 1, edited)
+    this.context.updateCampaign({ navigation })
   }
 
   renderList = (list = [], listTitle = '', type = 'article', campaignLink = null) => <>
-    {campaignLink}
-    {!campaignLink && Boolean(list.length) && <b>{listTitle}</b>}
+    {(campaignLink || Boolean(list.length)) &&
+      <div className="list-title">{campaignLink || listTitle}</div>
+    }
     <ul>
       {list.map(({ _id, campaign, slug, title }, index) => {
         const { subdomain = '', title: cTitle = '' } = (campaign || this.context.campaign || {})
@@ -150,33 +161,36 @@ export default class Navigation extends Component {
     sheets = sheets.filter(this.filterLinks)
 
     return (
-      <Scrollbars className="navigation" autoHide universal>
-        <div className="content" ref={this.props.wrapperRef}>
-          <div className="campaign-nav" ref={this.campaignNav}>
-            {this.renderList(navigation, campaign.title, 'article', <b>
-              <PageLink subdomain={campaign.subdomain} type="campaign">
-                {campaign.title}
-              </PageLink>
-            </b>)}
+      <div className="navigation">
+        <Scrollbars className="link-sections" autoHide universal>
+          <div className="content" ref={this.props.wrapperRef}>
+            <div className="campaign-nav" ref={this.campaignNav}>
+              {this.renderList(navigation, campaign.title, 'article', <>
+                <CampaignIcon />
+                <PageLink subdomain={campaign.subdomain} type="campaign">
+                  {campaign.title}
+                </PageLink>
+              </>)}
+            </div>
+            {user && <>
+              {Boolean(favorites.length) && (
+                this.renderList(favorites, <><FavoriteIcon /> Favorites</>)
+              )}
+              {Boolean(sheets.length) && (
+                this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')
+              )}
+            </>}
           </div>
-          {user && <>
-            {Boolean(favorites.length) && (
-              this.renderList(favorites, <><FavoriteIcon /> Favorites</>)
-            )}
-            {Boolean(sheets.length) && (
-              this.renderList(sheets, <><SheetIcon /> Sheets</>, 'sheet')
-            )}
-          </>}
+        </Scrollbars>
+        <div className="footer">
           {campaign.isEditor && (
-            <input
-              type="text"
-              className="add-navigation"
-              onKeyDown={this.handleAddKeyDown}
-              placeholder="Add..."
-            />
+            <div className="buttons">
+              <button className="add safe" onClick={this.handleAddLink}>Add Link</button>
+            </div>
           )}
+          <PageLink subdomain="www" slug="tos" type="article">Terms of Service</PageLink>
         </div>
-      </Scrollbars>
+      </div>
     )
   }
 }

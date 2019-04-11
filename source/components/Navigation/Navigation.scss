@@ -10,7 +10,7 @@
   flex-direction: column;
   overflow: auto;
 
-  > div > .content {
+  > .link-sections > div > .content {
     padding: 8px;
     width: $navigation-width;
 
@@ -26,6 +26,16 @@
       > svg { margin-right: .25rem; order: 1 }
     }
 
+    .list-title {
+      align-items: center;
+      display: flex;
+      justify-content: flex-start;
+
+      > svg {
+        margin-right: .25rem;
+        margin-left: -.35rem;
+      }
+    }
     > .campaign-nav > ul, > ul {
       list-style: none;
       margin: 0;
@@ -64,11 +74,15 @@
       }
     }
 
-    > .add-navigation {
-      bottom: 0;
-      left: 0;
-      position: absolute;
-      right: 0;
+  }
+  > .footer {
+    padding: 5px;
+    text-align: center;
+
+    > .buttons {
+      margin: 5px 0;
+    }
+    > .add {
       margin: 5px;
       max-width: calc(100% - 10px);
     }
