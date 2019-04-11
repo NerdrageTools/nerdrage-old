@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import Slug from './Slug'
 import defaultTheme from '@/data/defaultTheme'
+import unique from '@/utilities/unique'
 
 const { ObjectId } = mongoose.Types.ObjectId
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
@@ -33,6 +34,7 @@ const CampaignSchema = new mongoose.Schema({
   owners: [{ ref: 'User', type: ObjectIdType }],
   players: [{ ref: 'User', type: ObjectIdType }],
   secret: { default: false, type: Boolean },
+  sources: [{ ref: 'Campaign', type: ObjectIdType }],
   subdomain: { ...Slug, required: true, unique: true },
   theme: {
     default: defaultTheme,
@@ -62,6 +64,9 @@ const matchObjectId = id => vs => ObjectId(id).equals(vs._id || vs)
 
 CampaignSchema.pre('save', function () {
   this.subdomain = this.subdomain.toLowerCase()
+  if (this.sources && this.sources.length) {
+    this.sources = unique(this.sources)
+  }
 })
 
 CampaignSchema.methods.isEditableBy = function (userId) {

@@ -105,15 +105,15 @@ export default class Participants extends Component {
 
     return (
       <div className={`participants ${className} ${saving ? 'loading' : ''}`}>
-        <div className="title"><NerdIcon /> {title}</div>
+        <div className="title">{title}</div>
         <Scrollbars className="contents" universal>
           <ul className="participant-list">
             {participants.map(user => (
               <li className={`participant row ${user.type || ''}`} key={user._id}>
                 <NerdIcon className="nerd icon" />
                 <PageLink className="display" type="user" slug={user.username}>
-                  <span className="name">{user.name}</span>
-                  <span className="username">{user.username}</span>
+                  <span className="name" title={user.name}>{user.name}</span>
+                  <span className="username" title={user.username}>({user.username})</span>
                 </PageLink>
                 {!readOnly && <>
                   <EditableList

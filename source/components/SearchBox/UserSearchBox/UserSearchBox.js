@@ -16,6 +16,7 @@ const UserSearchBox = ({ onSelect = noop }) => (
     className="user"
     limit={5}
     onSelect={onSelect}
+    placeholder="Search Users..."
     renderOption={renderOption}
     url="/api/search/users/:searchTerm"
   />

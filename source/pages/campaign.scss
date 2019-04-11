@@ -4,14 +4,18 @@
   > .contents > div {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: stretch;
 
     > .column {
       display: flex;
       flex-direction: column;
+      max-width: 100vw;
+      padding: 5px;
+    }
+    > .left.column {
+      flex: 1;
     }
     > .right.column {
-      padding: 5px;
       width: 250px;
 
       > .participants {
@@ -28,10 +32,11 @@
 }
 
 .layout.small .campaign.page {
-  > .contents {
-    flex-direction: column;
+  > .contents > div {
+    display: block;
 
-    > .right.column {
+    > .column {
+      flex: auto;
       width: 100%;
     }
   }

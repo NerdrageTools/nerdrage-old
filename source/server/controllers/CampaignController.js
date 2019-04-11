@@ -14,6 +14,7 @@ export async function getCampaign(subdomain, user) {
   try {
     const campaign = await Campaign.findOne({ subdomain })
       .populate('createdBy editors lastUpdatedBy players owners', '_id name username')
+      .populate('sources', '_id subdomain title')
       .exec()
 
     if (!campaign) return null
@@ -57,6 +58,7 @@ const createCampaign = async (request, response) => {
       owners: [userId],
       // eslint-disable-next-line sort-keys
       navigation: request.body.navigation || [{ slug: 'home', title: 'Home' }],
+      sources: [],
       theme: {
         ...defaultTheme,
         ...(request.body.theme || {}),

@@ -2,20 +2,7 @@
 
 .participants.lightbox {
   height: 250px;
-  padding: 5px;
   position: relative;
-
-  > .title {
-    align-items: center;
-    background: var(--color-primary);
-    color: var(--color-secondary);
-    display: flex;
-    font-weight: bold;
-    margin: -5px -5px 0 -5px;
-    padding: 8px;
-
-    > svg { margin-right: 5px; }
-  }
 
   &.loading:after {
     content: 'Updating...';
@@ -24,6 +11,7 @@
   .participant-list {
     list-style: none;
     margin: 0;
+    max-width: calc(100% - 15px); // account for scrollbar
     padding: 5px;
 
     > .participant.row {
@@ -39,9 +27,9 @@
       }
 
       > .display {
+        align-items: flex-end;
         display: flex;
         flex: 1;
-        flex-direction: column;
         overflow: hidden;
 
         > .name, > .username {
@@ -51,14 +39,15 @@
         }
         > .username {
           font-size: .8rem;
+          margin-left: .5rem;
           opacity: .6;
         }
       }
 
-      > .role { display: none; }
+      > .role { opacity: .5; }
       > .remove.icon {
         cursor: pointer;
-        display: none;
+        opacity: .5;
       }
 
       &.added {
@@ -75,7 +64,7 @@
       }
 
       &:hover {
-        > .role, > .remove.icon { display: inline-block; }
+        > .role, > .remove.icon { opacity: 1; }
       }
     }
   }
