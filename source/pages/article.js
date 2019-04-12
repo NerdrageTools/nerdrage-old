@@ -88,7 +88,7 @@ export default class Article extends Component {
   componentDidMount() {
     const { slug } = this.props
     const { router } = this.context
-    if (router.query.slug !== slug) {
+    if (slug && router.query.slug !== slug) {
       this.setState({ redirectedFrom: router.query.slug })
       router.push(`/article?slug=${slug}`, `/article/${slug}`, { shallow: true })
     }

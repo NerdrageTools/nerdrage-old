@@ -1,0 +1,15 @@
+@import '~@/styles/mixins/ellipsis';
+
+.campaign.search-box {
+  .search-result {
+    @include ellipsis;
+    display: flex;
+    align-items: center;
+
+    > svg {
+      height: 1rem;
+      margin-right: .25rem;
+      width: 1rem;
+    }
+  }
+}

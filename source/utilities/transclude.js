@@ -2,7 +2,7 @@ import cheerio from 'cheerio'
 import Article from '@/server/models/Article'
 import unique from '@/utilities/unique'
 
-export default function transclude(html, campaignId) {
+export default function transclude(html, campaignFilter) {
   const $ = cheerio.load(html, { decodeEntities: false, xmlMode: true })
   const links = []
   const missing = []
@@ -19,10 +19,10 @@ export default function transclude(html, campaignId) {
     if (!includes[from]) {
       includes[from] = Article.findOne({
         $and: [
-          { $or: [{ campaign: null }, { campaign: campaignId }] },
           { $or: [{ slug: from }, { aliases: from }] },
+          campaignFilter,
         ],
-      }).sort({ campaign: -1 }).exec()
+      })
     }
 
     return includes[from].then(article => {
@@ -47,7 +47,7 @@ export default function transclude(html, campaignId) {
       }
 
       const firstPass = `\n${transclusions.map(line => `  ${line}`).join('\n')}\n`
-      return transclude(firstPass).then(transcluded => {
+      return transclude(firstPass, campaignFilter).then(transcluded => {
         $include.html(transcluded.html)
         links.push(...transcluded.links)
         missing.push(...transcluded.missing)

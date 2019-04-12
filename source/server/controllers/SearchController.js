@@ -3,8 +3,10 @@ import entities from 'entities'
 import express from 'express'
 import Campaign404 from '@/server/errors/Campaign404'
 import Article from '@/server/models/Article'
+import Campaign from '@/server/models/Campaign'
 import User from '@/server/models/User'
 import bound from '@/utilities/bound'
+import createCampaignFilter from '@/utilities/createCampaignFilter'
 
 export const permissions = async (request, response, next) => {
   const { campaign, user } = request
@@ -35,6 +37,7 @@ export const searchArticles = async (request, response) => {
     })
   }
 
+  const campaignFilter = createCampaignFilter(campaign)
   const $search = new Deburr(entities.decodeHTML(searchTerm)).toString()
 
   const exactMatches = await Article.aggregate([
@@ -52,8 +55,8 @@ export const searchArticles = async (request, response) => {
   const fullTextMatches = await Article.aggregate([
     { $match: {
       $and: [
+        campaignFilter,
         { slug: { $nin: exactMatches.map(match => match.slug) } },
-        { $or: [{ campaign: campaign._id }, { campaign: null }] },
         !allowPrivate ? { secret: false } : {},
         { $text: { $search } },
       ],
@@ -64,7 +67,7 @@ export const searchArticles = async (request, response) => {
       slug: '$slug',
       title: '$title',
     } },
-    { $sort: { campaign: -1, matchScore: { $meta: 'textScore' } } },
+    { $sort: { matchScore: { $meta: 'textScore' } } },
     { $group: {
       _id: '$slug',
       matchScore: { $first: '$matchScore' },
@@ -81,15 +84,14 @@ export const searchArticles = async (request, response) => {
     partialMatches = await Article.aggregate([
       { $match: {
         $and: [
+          campaignFilter,
           { slug: { $nin: fullTextMatches.map(match => match.slug) } },
           { slug: { $nin: exactMatches.map(match => match.slug) } },
-          { $or: [{ campaign: campaign._id }, { campaign: null }] },
           !allowPrivate ? { secret: false } : {},
           { searchKeys: { $in: searchKeys } },
-        ] },
-      },
+        ],
+      } },
       { $project: { preview: { $substr: ['$plainText', 0, 100] }, slug: '$slug', title: '$title' } },
-      { $sort: { campaign: -1 } },
       { $group: {
         _id: '$slug',
         preview: { $first: '$preview' },
@@ -105,6 +107,24 @@ export const searchArticles = async (request, response) => {
 
   return response.status(200).json(results)
 }
+export const searchCampaigns = async (request, response) => {
+  const { searchTerm = '', limit = 10 } = request.params
+  const $searchRegex = new RegExp(`${new Deburr(searchTerm.toLowerCase()).toString()}`, 'i')
+  const matches = await Campaign.find(
+    { $and: [
+      { $or: [
+        { secret: false },
+        { editors: request.user._id },
+        { owners: request.user._id },
+        { players: request.user._id },
+      ] },
+      { $or: [{ slug: $searchRegex }, { title: $searchRegex }] },
+    ] },
+    { subdomain: 1, title: 1 }
+  ).sort('title').limit(bound(limit, { min: 1 }))
+
+  return response.status(200).json(matches)
+}
 export const searchUsers = async (request, response) => {
   const { searchTerm = '.', limit = 10 } = request.params
   const $searchRegex = new RegExp(`^${new Deburr(searchTerm.toLowerCase()).toString()}`)
@@ -118,5 +138,6 @@ export const searchUsers = async (request, response) => {
 
 const controller = express()
 controller.get('/articles/:searchTerm', Campaign404, permissions, searchArticles)
-controller.get('/users/:searchTerm?', Campaign404, permissions, searchUsers)
+controller.get('/campaigns/:searchTerm', searchCampaigns)
+controller.get('/users/:searchTerm?', searchUsers)
 export default controller

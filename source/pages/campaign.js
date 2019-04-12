@@ -3,12 +3,12 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
 import PageLink from '@/components/PageLink'
 import Participants from '@/components/Participants'
+import Sources from '@/components/Sources'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import PublicIcon from '@/icons/public.svg'
 import SecretIcon from '@/icons/secret.svg'
 import ErrorPage from '@/pages/_error'
-// import Article from '@/server/models/Article'
 import pluck from '@/utilities/pluck'
 import './campaign.scss'
 
@@ -49,6 +49,9 @@ export default class CampaignPage extends Component {
   }
   handleReset = () => this.setState(pluck(this.context.campaign, STATE_FIELDS))
   handleSave = () => this.context.updateCampaign(this.state)
+  handleSourcesChange = sources => {
+    this.context.updateCampaign({ sources: sources.map(s => s._id) })
+  }
   handleTitleChange = title => this.setState({ title })
   handleToggleSecret = () => {
     const { secret } = this.context.campaign
@@ -71,7 +74,7 @@ export default class CampaignPage extends Component {
       return <ErrorPage statusCode={404} message={campaign.message} />
     }
 
-    const { editors, isOwner, owners, players, secret } = campaign
+    const { editors, isEditor, isOwner, owners, players, secret, sources } = campaign
     const { savingParticipants, title } = this.state
 
     return (
@@ -99,13 +102,21 @@ export default class CampaignPage extends Component {
           </>}
         </div>
         <Scrollbars className="contents" universal autoHide>
-          <div className="left column" />
-          <div className="right column">
+          <div className="left column">
             <Participants
               className="lightbox"
               {...{ editors, owners, players }}
               onSave={this.handleParticipantsSave}
               saving={savingParticipants}
+              readOnly={!isEditor}
+            />
+          </div>
+          <div className="right column">
+            <Sources
+              className="lightbox"
+              onSave={this.handleSourcesChange}
+              readOnly={!isEditor}
+              sources={sources}
             />
           </div>
         </Scrollbars>
