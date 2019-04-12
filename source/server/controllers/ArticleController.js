@@ -1,12 +1,18 @@
 import express from 'express'
 import Article from '@/server/models/Article'
+import createCampaignFilter from '@/utilities/createCampaignFilter'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, subdomain, params: { slug } } = request
-  const article = await Article.locate(slug, campaign._id)
-    .populate('campaign', 'subdomain title')
+  const campaignFilter = createCampaignFilter(campaign)
+  const article = await Article.findOne({
+    $and: [
+      campaignFilter,
+      { $or: [{ aliases: slug }, { slug }] },
+    ],
+  }).populate('campaign', 'subdomain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
 
@@ -45,9 +51,9 @@ export const getArticle = async (request, response) => {
   let { article } = request
 
   if (!article) {
-    article = omit(await new Article({ slug }).render(), '_id')
+    article = omit(await new Article({ slug }).render(campaign), '_id')
   } else {
-    article = await article.render()
+    article = await article.render(campaign)
   }
 
   return response.status(200).json({

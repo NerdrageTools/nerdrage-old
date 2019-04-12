@@ -3,7 +3,7 @@ import cheerio from 'cheerio'
 import Article from '@/server/models/Article'
 import unique from '@/utilities/unique'
 
-export default async function renderLinks(html, campaignId) {
+export default async function renderLinks(html, campaignFilter = { campaign: null }) {
   const $ = cheerio.load(html || '', { decodeEntities: false, xmlMode: true })
   const links = []
 
@@ -19,7 +19,6 @@ export default async function renderLinks(html, campaignId) {
       const type = parts.pop() || 'article'
       const subdomain = parts.pop() || ''
 
-      $link.addClass(type)
       $link.attr('href', `/${type}/${slug}`)
       $link.attr('slug', slug)
       $link.attr('subdomain', subdomain)
@@ -37,12 +36,10 @@ export default async function renderLinks(html, campaignId) {
 
   const linked = await Article.find({
     $and: [
-      { $or: [{ campaign: null }, { campaign: campaignId }] },
       { $or: [{ slug: { $in: links } }, { aliases: { $in: links } }] },
+      campaignFilter,
     ],
-  })
-    .select('slug aliases')
-    .sort({ campaign: -1 })
+  }).select('slug aliases')
     .exec()
   const foundLinks = (linked || []).reduce((all, { aliases, slug }) => (
     [...all, slug, ...aliases]

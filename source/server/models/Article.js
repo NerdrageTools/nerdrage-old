@@ -6,6 +6,7 @@ import cleanUp from './Article/cleanUp'
 import renderLinks from './Article/renderLinks'
 import Slug from '@/server/models/Slug'
 import computeSearchKeys from '@/utilities/computeSearchKeys'
+import createCampaignFilter from '@/utilities/createCampaignFilter'
 import transclude from '@/utilities/transclude'
 import unique from '@/utilities/unique'
 
@@ -69,11 +70,15 @@ ArticleSchema.pre('save', function (next) {
   ).then(() => next())
 })
 
-ArticleSchema.methods.render = async function () {
-  const includes = await transclude(this.html, this.campaign)
-  const links = await renderLinks(includes.html, this.campaign)
+ArticleSchema.methods.render = async function (campaign) {
+  const campaignFilter = createCampaignFilter(campaign)
+  const includes = await transclude(this.html, campaignFilter)
+  const links = await renderLinks(includes.html, campaignFilter)
   const childArticles = await mongoose.models.Article
-    .find({ tags: { $in: [this.slug, ...this.aliases] } })
+    .find({
+      ...campaignFilter,
+      tags: { $in: [this.slug, ...this.aliases] },
+    })
     .select('slug title')
     .exec()
 
@@ -84,17 +89,6 @@ ArticleSchema.methods.render = async function () {
     childArticles,
     html,
   })
-}
-
-ArticleSchema.statics.locate = function (slug, campaignId) {
-  return this.findOne({
-    /* eslint-disable sort-keys */
-    $and: [
-      { $or: [{ campaign: campaignId }, { campaign: null }] },
-      { $or: [{ aliases: slug }, { slug }] },
-    ],
-  /* eslint-ensable sort-keys */
-  }).sort({ campaign: -1 })
 }
 
 const Article = mongoose.model('Article', ArticleSchema)
