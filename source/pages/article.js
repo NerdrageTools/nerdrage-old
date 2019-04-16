@@ -213,9 +213,8 @@ export default class Article extends Component {
       _id, activeTab, aliases, html, isEditable, isOwner,
       message, redirectedFrom, secret, slug, tags, title = '',
     } = this.state
-    const { childArticles, httpStatusCode } = this.props
-    const { favorites = [] } = this.context.user
-    const { campaign = {} } = this.context
+    const { campaign: source, childArticles, httpStatusCode } = this.props
+    const { campaign = {}, user: { favorites = [] } } = this.context
     const isFavorite = favorites.find(f => (
       f.campaign.subdomain === campaign.subdomain
       && f.slug === slug
@@ -288,6 +287,13 @@ export default class Article extends Component {
         </div>
         <TabSet
           activeTabId={activeTab}
+          buttons={<>
+            {(source.subdomain && source.subdomain !== campaign.subdomain) && (
+              <div className="source">
+                Source: <Link subdomain={source.subdomain} slug={slug}>{source.title}</Link>
+              </div>
+            )}
+          </>}
           onTabClicked={this.handleTabClicked}
           showTabs={!readOnly}
           tabs={[{

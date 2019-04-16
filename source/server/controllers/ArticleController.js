@@ -58,7 +58,7 @@ export const getArticle = async (request, response) => {
 
   return response.status(200).json({
     ...article,
-    campaign: pluck(campaign, '_id', 'subdomain', 'title'),
+    campaign: pluck(article.campaign, '_id', 'subdomain', 'title'),
     isEditable,
     isOwner,
   })
