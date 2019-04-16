@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
-import PageLink from '@/components/PageLink'
+import Link from '@/components/Link'
 import Participants from '@/components/Participants'
 import Sources from '@/components/Sources'
 import Toggle from '@/components/Toggle'
@@ -22,10 +22,6 @@ export default class CampaignPage extends Component {
     ...pluck(this.context.campaign, STATE_FIELDS),
     savingParticipants: false,
   }
-
-  // console.log(req.campaign)
-  // const articles = Article.find({  })
-  static getInitialProps = async ({ query, req }) => ({})
 
   get isDirty() {
     const { campaign } = this.context
@@ -61,9 +57,7 @@ export default class CampaignPage extends Component {
     <ul className="user-list">{list
       .map(({ _id, name, username }) => (
         <li key={_id}>
-          <PageLink type="user" slug={username}>
-            {name || username}
-          </PageLink>
+          <Link type="user" slug={username}>{name || username}</Link>
         </li>
       ))}
     </ul>

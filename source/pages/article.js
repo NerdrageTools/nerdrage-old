@@ -5,7 +5,7 @@ import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
 import Editable from '@/components/Editable'
 import Link from '@/components/Link'
-import PageLinkList from '@/components/PageLinkList'
+import Links from '@/components/Links'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
@@ -183,7 +183,7 @@ export default class Article extends Component {
 
     return <>
       {jsx ? <JsxParser {...{ components, jsx }} /> : ''}
-      <PageLinkList pages={this.props.childArticles} />
+      <Links pages={this.props.childArticles} />
     </>
   }
   renderSettingsTab = () => <>

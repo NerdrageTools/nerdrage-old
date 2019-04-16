@@ -1,22 +1,41 @@
-import React, { Component } from 'react'
-import PageLink from '@/components/PageLink/PageLink'
+import NextLink from 'next/link'
+import React, { useContext } from 'react'
 import Application from '@/contexts/Application'
-import parseHref from '@/utilities/parseHref'
 
-export default class Link extends Component {
-  static contextType = Application
+export default function Link({
+  active,
+  children,
+  slug = '',
+  type = 'article',
+  ...props
+}) {
+  const context = useContext(Application)
+  const campaign = props.campaign || context.campaign
+  const subdomain = props.subdomain || context.subdomain
+  const { rootUrl } = useContext(Application)
+  const contents = children || type
 
-  render = () => {
-    const { className = '', children, href = '', subdomain, ...props } = this.props
-
-    if (className.split(' ').includes('external')) {
-      return <a {...{ className, href }} {...props}>{children}</a>
-    }
-
-    return (
-      <PageLink {...{ className, ...parseHref(href), subdomain, ...props }}>
-        {children}
-      </PageLink>
-    )
+  if (active) {
+    return <span className="active link" title={contents}>{contents}</span>
   }
+
+  if (subdomain && subdomain !== campaign.subdomain) {
+    let href = `//${subdomain}.${rootUrl}/${type}`
+    if (type !== 'campaign') href += `/${slug}`
+
+    return <a {...{ ...props, href, subdomain }}>{contents}</a>
+  }
+
+  let as = `/${type}`
+  let href = `/${type}`
+  if (type !== 'campaign') {
+    as += `/${slug}`
+    href += `?slug=${slug}`
+  }
+
+  return (
+    <NextLink {...{ as, href }}>
+      <a {...props}>{contents}</a>
+    </NextLink>
+  )
 }
