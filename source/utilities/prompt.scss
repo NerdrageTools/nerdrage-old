@@ -4,16 +4,8 @@
     flex-direction: column;
 
     > .text {
-      max-width: 3000px;
+      max-width: 300px;
       padding: .5rem;
-    }
-    > .input {
-      display: flex;
-      flex-direction: row;
-
-      > input {
-        flex: 1;
-      }
     }
   }
 }

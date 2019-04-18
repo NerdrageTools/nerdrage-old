@@ -1,0 +1,10 @@
+.input-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  font-weight: bold;
+
+  > label { font-size: .8rem; }
+  > input { flex: 1; }
+}

@@ -32,7 +32,7 @@ export default async function prompt(text = '', { defaultValue = '', title = 'Pr
         title={title}
       >
         <div className="text">{text}</div>
-        <div className="input">
+        <div className="input-wrapper">
           <input
             defaultValue={defaultValue}
             onKeyDown={handleKeyDown}
