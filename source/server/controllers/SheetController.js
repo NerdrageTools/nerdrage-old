@@ -55,12 +55,17 @@ export const permissions = (...required) => async (request, response, next) => {
   return next()
 }
 export const getSheetRequest = async (request, response) => {
-  const { campaign = {}, sheet = {}, slug, subdomain } = request
+  const { campaign = {}, query, sheet = {}, slug, subdomain } = request
   if (!sheet._id && !campaign.isParticipant) {
     return response.status(404).json({
       ...sheet,
       message: `Unable to find sheet '${slug}' in the ${subdomain} campaign.`,
     })
+  }
+
+  if (!sheet._id && query.template) {
+    const template = await getSheet(query.template, campaign)
+    if (template._id) Object.assign(sheet, pluck(template, 'data', 'layout'))
   }
 
   return response.status(200).json(sheet)
@@ -70,7 +75,7 @@ export const upsertSheet = async (request, response) => {
   const creating = !sheet._id
 
   const updates = {
-    ...pluck(body, 'data', 'layout', 'secret', 'title'),
+    ...pluck(body, 'data', 'layout', 'secret', 'template', 'title'),
   }
 
   if (creating) {
