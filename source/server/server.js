@@ -11,6 +11,7 @@ import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
 import SearchController from './controllers/SearchController'
 import SheetController from './controllers/SheetController'
+import TemplateController from './controllers/TemplateController'
 import UserController from './controllers/UserController'
 import Campaign404 from './errors/Campaign404'
 import ContextLoader from './middleware/ContextLoader'
@@ -51,6 +52,7 @@ app.prepare().then(async () => {
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
   server.use('/api/search', ContextLoader, nocache(), SearchController)
   server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
+  server.use('/api/template', ContextLoader, nocache(), TemplateController)
   server.use('/api/user', ContextLoader, nocache(), UserController)
 
   server.get('/', (_, response) => response.redirect(302, '/article/home'))
