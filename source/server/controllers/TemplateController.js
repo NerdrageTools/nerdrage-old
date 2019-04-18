@@ -33,7 +33,7 @@ export const createTemplateRequest = Type => async (request, response) => {
 }
 /* eslint-enable no-console */
 
-controller.get('/articles', createTemplateRequest(Article))
-controller.get('/sheets', createTemplateRequest(Sheet))
+controller.get('/article', createTemplateRequest(Article))
+controller.get('/sheet', createTemplateRequest(Sheet))
 
 export default controller
