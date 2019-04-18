@@ -2,7 +2,7 @@ import { distanceInWordsToNow } from 'date-fns'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
-import PageLinkList from '@/components/PageLinkList'
+import Links from '@/components/Links'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import AdminIcon from '@/icons/Administrator'
@@ -156,7 +156,7 @@ export default class UserPage extends Component {
           </div>
 
           {user.favorites && (
-            <PageLinkList
+            <Links
               caption="Favorites"
               icon={<FavoriteIcon className="favorites icon" />}
               pages={user.favorites}
@@ -164,7 +164,7 @@ export default class UserPage extends Component {
           )}
 
           {user.campaigns && (
-            <PageLinkList
+            <Links
               caption="Campaigns"
               icon={<DiceIcon />}
               pages={user.campaigns}
@@ -173,7 +173,7 @@ export default class UserPage extends Component {
           )}
 
           {user.sheets && (
-            <PageLinkList
+            <Links
               caption="Sheets"
               icon={<SheetIcon />}
               pages={user.sheets}

@@ -8,6 +8,7 @@ import Application from '@/contexts/Application'
 import defaultLayout from '@/data/defaultSheetLayout'
 import PublicIcon from '@/icons/public.svg'
 import SecretIcon from '@/icons/secret.svg'
+import TemplateIcon from '@/icons/template.svg'
 import ErrorPage from '@/pages/_error'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
@@ -15,7 +16,7 @@ import URI from '@/utilities/URI'
 import 'sheetforge/build/sheetforge.css'
 import './sheet.scss'
 
-const STATE_FIELDS = ['_id', 'isEditor', 'isOwner', 'secret', 'slug']
+const STATE_FIELDS = ['_id', 'isEditor', 'isOwner', 'secret', 'slug', 'template']
 const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
@@ -39,7 +40,9 @@ export default class Sheet extends Component {
 
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
-    const response = await fetch(URI(req, `/api/sheet/${query.slug}`), { headers })
+    let url = `/api/sheet/${query.slug}`
+    if (query.template) url += `?template=${query.template}`
+    const response = await fetch(URI(req, url), { headers })
     const json = await response.json()
     return { statusCode: response.status, ...json }
   }
@@ -110,10 +113,11 @@ export default class Sheet extends Component {
   handleSheetChange = () => this.forceUpdate()
   handleTitleChange = title => this.setState({ title })
   handleToggleSecret = () => this.handleSave({ secret: !this.state.secret })
+  handleToggleTemplate = () => this.handleSave({ template: !this.state.template })
 
   render = () => {
     const { message, statusCode, slug } = this.props
-    const { _id, isEditor, isOwner, secret, title } = this.state
+    const { _id, isEditor, isOwner, secret, template, title } = this.state
 
     if (statusCode !== 200) {
       return <ErrorPage {...{ message, statusCode }} />
@@ -132,7 +136,7 @@ export default class Sheet extends Component {
             <button className="safe" onClick={() => this.handleSave()}>{_id ? 'Save' : 'Create'}</button>
             {_id && <button className="safe" onClick={this.handleReset}>Reset</button>}
           </>}
-          {_id && isEditor && (
+          {_id && isEditor && <>
             <Toggle
               className="secret"
               offIcon={PublicIcon}
@@ -140,7 +144,12 @@ export default class Sheet extends Component {
               onToggle={this.handleToggleSecret}
               value={secret}
             />
-          )}
+            <Toggle
+              className="template" value={template}
+              offIcon={TemplateIcon} onIcon={TemplateIcon}
+              onToggle={this.handleToggleTemplate}
+            />
+          </>}
           {_id && isOwner && (
             <button className="delete danger" onClick={this.handleDelete}>Delete</button>
           )}

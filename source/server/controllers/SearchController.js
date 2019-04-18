@@ -8,7 +8,7 @@ import User from '@/server/models/User'
 import bound from '@/utilities/bound'
 import createCampaignFilter from '@/utilities/createCampaignFilter'
 
-export const permissions = async (request, response, next) => {
+export const campaignPermissions = async (request, response, next) => {
   const { campaign, user } = request
 
   const allowPrivate = user && (user.isAdmin || campaign.isOwnedBy(user._id))
@@ -28,7 +28,7 @@ export const searchArticles = async (request, response) => {
     allowPrivate,
     allowPublic,
     campaign,
-    params: { searchTerm, limit = 10 },
+    params: { searchTerm = '', limit = 10 },
   } = request
 
   if (!allowPublic) {
@@ -137,7 +137,7 @@ export const searchUsers = async (request, response) => {
 }
 
 const controller = express()
-controller.get('/articles/:searchTerm', Campaign404, permissions, searchArticles)
+controller.get('/articles/:searchTerm', Campaign404, campaignPermissions, searchArticles)
 controller.get('/campaigns/:searchTerm', searchCampaigns)
 controller.get('/users/:searchTerm?', searchUsers)
 export default controller

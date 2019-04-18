@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import EditableList from '@/components/EditableList'
-import PageLink from '@/components/PageLink'
+import Link from '@/components/Link'
 import UserSearchBox from '@/components/SearchBox/UserSearchBox'
 import NerdIcon from '@/icons/nerd.svg'
 import RemoveIcon from '@/icons/remove.svg'
@@ -111,10 +111,10 @@ export default class Participants extends Component {
             {participants.map(user => (
               <li className={`participant row ${user.type || ''}`} key={user._id}>
                 <NerdIcon className="nerd icon" />
-                <PageLink className="display" type="user" slug={user.username}>
+                <Link className="display" type="user" slug={user.username}>
                   <span className="name" title={user.name}>{user.name}</span>
                   <span className="username" title={user.username}>({user.username})</span>
-                </PageLink>
+                </Link>
                 {!readOnly && <>
                   <EditableList
                     className="role"

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
-import PageLink from '@/components/PageLink'
+import Link from '@/components/Link'
 import Application from '@/contexts/Application'
 import CampaignIcon from '@/icons/campaign.svg'
 import EditIcon from '@/icons/edit.svg'
@@ -127,13 +127,13 @@ export default class Navigation extends Component {
 
         return (
           <li key={_id || index} data-id={_id} title={title}>
-            <PageLink
+            <Link
               {...{ campaign, slug, type }}
               active={this.context.subdomain === subdomain && this.context.router.asPath === `/${type}/${slug}`}
               onClick={this.props.onItemClick}
             >
               {text}
-            </PageLink>
+            </Link>
             {this.context.campaign.isEditor && (
               <div className="controls">
                 <EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
@@ -167,9 +167,7 @@ export default class Navigation extends Component {
             <div className="campaign-nav" ref={this.campaignNav}>
               {this.renderList(navigation, campaign.title, 'article', <>
                 <CampaignIcon />
-                <PageLink subdomain={campaign.subdomain} type="campaign">
-                  {campaign.title}
-                </PageLink>
+                <Link subdomain={campaign.subdomain} type="campaign">{campaign.title}</Link>
               </>)}
             </div>
             {user && <>
@@ -188,7 +186,7 @@ export default class Navigation extends Component {
               <button className="add safe" onClick={this.handleAddLink}>Add Link</button>
             </div>
           )}
-          <PageLink subdomain="www" slug="tos" type="article">Terms of Service</PageLink>
+          <Link subdomain="www" slug="tos" type="article">Terms of Service</Link>
         </div>
       </div>
     )

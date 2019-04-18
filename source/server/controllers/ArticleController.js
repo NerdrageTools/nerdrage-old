@@ -4,18 +4,22 @@ import createCampaignFilter from '@/utilities/createCampaignFilter'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
-export const permissions = (...required) => async (request, response, next) => {
-  const { campaign, subdomain, params: { slug } } = request
+const loadArticle = (slug, campaign) => {
   const campaignFilter = createCampaignFilter(campaign)
-  const article = await Article.findOne({
+  return Article.findOne({
     $and: [
       campaignFilter,
       { $or: [{ aliases: slug }, { slug }] },
     ],
-  }).populate('campaign', 'subdomain title')
+  })
+}
+
+export const permissions = (...required) => async (request, response, next) => {
+  const { campaign, subdomain, params: { slug } } = request
+  const article = await loadArticle(slug, campaign)
+    .populate('campaign', 'subdomain title')
     .populate('createdBy lastUpdatedBy', 'name username')
     .exec()
-
   const { isEditor, isOwner, isViewer } = campaign
 
   if (required.includes('view') && !isViewer) {
@@ -47,18 +51,23 @@ export const permissions = (...required) => async (request, response, next) => {
 }
 
 export const getArticle = async (request, response) => {
+  const { template: templateSlug } = request.query
   const { campaign, isEditable, isOwner, slug } = request
   let { article } = request
 
   if (!article) {
     article = omit(await new Article({ slug }).render(campaign), '_id')
+    if (templateSlug) {
+      const template = await loadArticle(templateSlug, campaign).select('html tags').exec()
+      Object.assign(article, pluck(template ? template.toJSON() : {}, 'html', 'tags'))
+    }
   } else {
     article = await article.render(campaign)
   }
 
   return response.status(200).json({
     ...article,
-    campaign: pluck(campaign, '_id', 'subdomain', 'title'),
+    campaign: pluck(article.campaign, '_id', 'subdomain', 'title'),
     isEditable,
     isOwner,
   })

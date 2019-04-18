@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PageLink from '@/components/PageLink'
+import Link from '@/components/Link'
 import CampaignSearchBox from '@/components/SearchBox/CampaignSearchBox'
 import CampaignIcon from '@/icons/campaign.svg'
 import RemoveIcon from '@/icons/remove.svg'
@@ -32,14 +32,14 @@ export default class Sources extends Component {
           {sources.map(source => (
             <li className="campaign row" key={source._id}>
               <CampaignIcon />
-              <PageLink
+              <Link
                 campaign={source}
                 className="display"
                 subdomain={source.subdomain}
                 type="campaign"
               >
                 <span className="title" title={source.title}>{source.title}</span>
-              </PageLink>
+              </Link>
               {!readOnly && <>
                 <RemoveIcon
                   className="remove icon"

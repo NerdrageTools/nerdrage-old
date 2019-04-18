@@ -5,7 +5,7 @@ import JsxParser from 'react-jsx-parser'
 import Alert from '@/components/Alert'
 import Editable from '@/components/Editable'
 import Link from '@/components/Link'
-import PageLinkList from '@/components/PageLinkList'
+import Links from '@/components/Links'
 import TabSet from '@/components/TabSet'
 import TagBar from '@/components/TagBar'
 import Toggle from '@/components/Toggle'
@@ -20,6 +20,7 @@ import PublicIcon from '@/icons/public.svg'
 import ReadIcon from '@/icons/read.svg'
 import SecretIcon from '@/icons/secret.svg'
 import SettingsIcon from '@/icons/settings.svg'
+import TemplateIcon from '@/icons/template.svg'
 import confirm from '@/utilities/confirm'
 import pluck from '@/utilities/pluck'
 import URI from '@/utilities/URI'
@@ -42,6 +43,7 @@ const STATE_FIELDS = [
   'secret',
   'slug',
   'tags',
+  'template',
   'title',
 ]
 
@@ -56,8 +58,11 @@ export default class Article extends Component {
   }
   static getInitialProps = async ({ query, req }) => {
     const headers = pluck(req && req.headers, 'cookie')
-    const result = await fetch(URI(req, `/api/article/${query.slug}`), { headers })
+    let url = `/api/article/${query.slug}`
+    if (query.template) url += `?template=${query.template}`
+    const result = await fetch(URI(req, url), { headers })
     const json = await result.json()
+
     return {
       httpStatusCode: result.status,
       ...json,
@@ -66,11 +71,12 @@ export default class Article extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.slug !== state.slug) {
       const saved = pluck(props, STATE_FIELDS)
+      const title = props.title || new URLSearchParams(window.location.search).get('title') || ''
       return {
         activeTab: 'read',
         ...saved,
-        saved,
-        title: props.title || new URLSearchParams(window.location.search).get('title') || '',
+        saved: { ...saved, title },
+        title,
       }
     }
 
@@ -81,7 +87,9 @@ export default class Article extends Component {
     activeTab: 'read',
     editMode: false,
     ...pluck(this.props, STATE_FIELDS),
-    saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {},
+    saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {
+      title: this.props.title || this.context.router.query.title,
+    },
     title: this.props.title || this.context.router.query.title,
   }
 
@@ -162,13 +170,19 @@ export default class Article extends Component {
     this.context.updateCampaign({ navigation })
   }
   handleToggleSecret = async () => {
-    const payload = { secret: !this.state.secret }
+    this.handleUpdate({ secret: !this.state.secret })
+  }
+  handleToggleTemplate = async () => {
+    this.handleUpdate({ template: !this.state.template })
+  }
+  handleUpdate = async payload => {
+    const keys = Object.keys(payload)
     const response = await fetch(`/api/article/${this.props.slug}`, {
       body: JSON.stringify(payload),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     })
-    const updated = pluck(await response.json(), 'secret')
+    const updated = pluck(await response.json(), ...keys)
     if (response.status === 200) {
       this.setState({ ...updated, saved: { ...this.state.saved, ...updated } })
     }
@@ -183,7 +197,7 @@ export default class Article extends Component {
 
     return <>
       {jsx ? <JsxParser {...{ components, jsx }} /> : ''}
-      <PageLinkList pages={this.props.childArticles} />
+      <Links pages={this.props.childArticles} />
     </>
   }
   renderSettingsTab = () => <>
@@ -210,12 +224,11 @@ export default class Article extends Component {
   </>
   render = () => {
     const {
-      _id, activeTab, aliases, html, isEditable, isOwner,
-      message, redirectedFrom, secret, slug, tags, title = '',
+      _id, activeTab, aliases, html, isEditable, isOwner, message,
+      redirectedFrom, secret, slug, tags, template = false, title = '',
     } = this.state
-    const { childArticles, httpStatusCode } = this.props
-    const { favorites = [] } = this.context.user
-    const { campaign = {} } = this.context
+    const { campaign: source, childArticles, httpStatusCode } = this.props
+    const { campaign = {}, user: { favorites = [] } } = this.context
     const isFavorite = favorites.find(f => (
       f.campaign.subdomain === campaign.subdomain
       && f.slug === slug
@@ -256,14 +269,19 @@ export default class Article extends Component {
               onToggle={this.handleToggleSecret}
             />
           )}
-          {_id && campaign.isEditor && (
+          {_id && campaign.isEditor && <>
+            <Toggle
+              className="template" value={template}
+              offIcon={TemplateIcon} onIcon={TemplateIcon}
+              onToggle={this.handleToggleTemplate}
+            />
             <Toggle
               className="in-navigation" value={this.isNavLink}
               offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
               onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
               onToggle={this.handleToggleNavigation}
             />
-          )}
+          </>}
           {campaign.isEditor && (
             <Toggle
               className="edit-mode" value={this.state.editMode}
@@ -288,6 +306,13 @@ export default class Article extends Component {
         </div>
         <TabSet
           activeTabId={activeTab}
+          buttons={<>
+            {(source.subdomain && source.subdomain !== campaign.subdomain) && (
+              <div className="source">
+                Source: <Link subdomain={source.subdomain} slug={slug}>{source.title}</Link>
+              </div>
+            )}
+          </>}
           onTabClicked={this.handleTabClicked}
           showTabs={!readOnly}
           tabs={[{

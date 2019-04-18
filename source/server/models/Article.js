@@ -34,6 +34,7 @@ export const ArticleSchema = new mongoose.Schema({
   secret: { default: false, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
   tags: [Slug],
+  template: { default: false, type: Boolean },
   title: { required: true, type: String },
 }, {
   id: false,

@@ -1,7 +1,7 @@
 import flatten from '@/utilities/flatten'
 
 export default (object, ...keys) => {
-  if (typeof object !== 'object') return {}
+  if (!object || typeof object !== 'object') return {}
 
   return flatten(keys).reduce((out, key) => {
     // eslint-disable-next-line no-prototype-builtins

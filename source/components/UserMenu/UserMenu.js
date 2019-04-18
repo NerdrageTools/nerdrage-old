@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import CreateMenu from '@/components/CreateMenu'
 import FlyoutMenu, { MenuItem } from '@/components/FlyoutMenu'
-import PageLink from '@/components/PageLink'
+import Link from '@/components/Link'
 import Application from '@/contexts/Application'
 import LogOutIcon from '@/icons/logout.svg'
 import './UserMenu.scss'
@@ -14,9 +14,9 @@ export default class UserMenu extends Component {
     const redirectTo = query.redirectTo || asPath
 
     return <>
-      <PageLink type={`login?redirectTo=${redirectTo}`}>Log In</PageLink>
+      <Link type={`login?redirectTo=${redirectTo}`}>Log In</Link>
       <div className="divider" />
-      <PageLink type="signup">Sign Up</PageLink>
+      <Link type="signup">Sign Up</Link>
     </>
   }
   renderLoggedIn = () => {
@@ -27,7 +27,7 @@ export default class UserMenu extends Component {
       <Fragment>
         <div className="username">
           <span>logged in as</span>
-          <PageLink type="user" slug={username}>{username}</PageLink>
+          <Link type="user" slug={username}>{username}</Link>
         </div>
         <div className="divider" />
         <MenuType>
