@@ -1,5 +1,6 @@
 import express from 'express'
 import Sheet from '@/server/models/Sheet'
+import createCampaignFilter from '@/utilities/createCampaignFilter'
 import pluck from '@/utilities/pluck'
 
 export const getSheet = async (slug, campaign, user = {}) => {
@@ -64,7 +65,12 @@ export const getSheetRequest = async (request, response) => {
   }
 
   if (!sheet._id && query.template) {
-    const template = await getSheet(query.template, campaign)
+    const campaignFilter = createCampaignFilter(campaign)
+    const template = (
+      await Sheet.findOne({
+        $and: [campaignFilter, { slug: query.template }],
+      }, 'data layout')
+    ).toJSON()
     if (template._id) Object.assign(sheet, pluck(template, 'data', 'layout'))
   }
 
