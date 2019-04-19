@@ -14,7 +14,7 @@ export default class UserMenu extends Component {
     const redirectTo = query.redirectTo || asPath
 
     return <>
-      <Link type={`login?redirectTo=${redirectTo}`}>Log In</Link>
+      <Link type="login" query={{ redirectTo }}>Log In</Link>
       <div className="divider" />
       <Link type="signup">Sign Up</Link>
     </>
