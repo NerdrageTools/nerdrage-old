@@ -412,6 +412,7 @@
   justify-content: space-between;
   margin: 3px;
   padding: 3px;
+  white-space: nowrap;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

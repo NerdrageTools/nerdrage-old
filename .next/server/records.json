@@ -27,16 +27,16 @@
   },
   "chunks": {
     "byName": {
-      "static/HVJoTCmUt8PHdna~ezKja/pages/_app.js": 0,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/_document.js": 1,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/_error.js": 2,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/article.js": 3,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/campaign.js": 4,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/index.js": 5,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/login.js": 6,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/sheet.js": 7,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/signup.js": 8,
-      "static/HVJoTCmUt8PHdna~ezKja/pages/user.js": 9
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/_app.js": 0,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/_document.js": 1,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/_error.js": 2,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/article.js": 3,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/campaign.js": 4,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/index.js": 5,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/login.js": 6,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/sheet.js": 7,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/signup.js": 8,
+      "static/PW~uLiDLBNa22NMz1pJjx/pages/user.js": 9
     },
     "bySource": {},
     "usedIds": [

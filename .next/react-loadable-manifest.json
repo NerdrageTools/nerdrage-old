@@ -739,7 +739,7 @@
       "publicPath": "static/chunks/commons.9f21b91266db155c962b.js"
     }
   ],
-  "../../core-js/object/set-prototype-of": [
+  "../core-js/object/set-prototype-of": [
     {
       "id": "OKNm",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/set-prototype-of.js",
@@ -1057,7 +1057,7 @@
       "publicPath": "static/chunks/commons.9f21b91266db155c962b.js"
     }
   ],
-  "../core-js/symbol": [
+  "../../core-js/symbol": [
     {
       "id": "XzKa",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/symbol.js",
