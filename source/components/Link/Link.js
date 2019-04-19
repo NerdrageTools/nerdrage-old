@@ -5,15 +5,18 @@ import Application from '@/contexts/Application'
 export default function Link({
   active,
   children,
+  query = null,
   slug = '',
   type = 'article',
   ...props
 }) {
   const context = useContext(Application)
-  const campaign = props.campaign || context.campaign
+  const campaign = props.campaign || context.campaign || {}
   const subdomain = props.subdomain || context.subdomain
   const { rootUrl } = useContext(Application)
   const contents = children || type
+
+  const queryString = !query ? '' : `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
 
   if (active) {
     return <span className="active link" title={contents}>{contents}</span>
@@ -31,6 +34,13 @@ export default function Link({
   if (type !== 'campaign') {
     as += `/${slug}`
     href += `?slug=${slug}`
+    if (queryString) {
+      as += `?${queryString}`
+      href += `&${queryString}`
+    }
+  } else if (queryString) {
+    as += `?${queryString}`
+    href += `?${queryString}`
   }
 
   return (
