@@ -34,11 +34,15 @@ app.prepare().then(async () => {
 
   const server = express()
     .use(compression())
-    .use(cookieSession({
-      httpOnly: true,
-      keys: ['name', 'username'],
-      name: 'session',
-    }))
+    .use((request, response, next) => {
+      const host = request.get('host') || ''
+      cookieSession({
+        domain: host.split('.').slice(-2).join('.').split(':')[0],
+        httpOnly: true,
+        keys: ['name', 'username'],
+        name: 'session',
+      })(request, response, next)
+    })
     .use(cors())
     .use(express.urlencoded({ extended: true }))
     .use(express.json())

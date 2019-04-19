@@ -29,7 +29,7 @@ export default class Tag extends Component {
       <span className={classNames}>
         <TagIcon className="tag-icon" />
         {asLink
-          ? <Link className="link" href={`/article/${tag}`}>{tag}</Link>
+          ? <Link type="article" slug={tag}>{tag}</Link>
           : <span className="text">{tag}</span>
         }
         {removable && <Remove className="remove" onClick={this.handleRemove} />}

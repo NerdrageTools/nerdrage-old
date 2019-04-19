@@ -1,11 +1,10 @@
 import kebabCase from '@/utilities/kebabCase'
 import unique from '@/utilities/unique'
 
-function strip(string) {
-  return string
-    .replace(/\s/g, ' ')
-    .replace(/[^a-z0-9_.-]/gi, '-')
-}
+const strip = string => string
+  .replace(/\s|\r|\n/g, '-')
+  .replace(/-{2,}/g, '-')
+  .replace(/[^a-z0-9._-]/gi, '')
 
 export function slugify(input) {
   if (Array.isArray(input)) {
