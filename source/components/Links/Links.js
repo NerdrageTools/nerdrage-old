@@ -25,7 +25,7 @@ export default function Links({
   if (!pages.length) return null
 
   let links = pages.sort((a, b) => a.title.localeCompare(b.title))
-    .map(({ campaign = {}, ...props }) => ({ ...campaign, ...props }))
+    .map(({ campaign = {}, ...props }) => ({ ...campaign, type, ...props }))
 
   if (type === 'campaign') {
     links = links.map(renderCampaignLink)
