@@ -924,9 +924,10 @@ svg {
 
 table {
   border: none;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-spacing: 0;
-  box-shadow: 3px 3px 3px #00000033; }
+  box-shadow: 3px 3px 3px #00000033;
+  padding: 0; }
   table th {
     color: var(--color-secondary);
     font-family: var(--font-for-titles);
@@ -943,8 +944,14 @@ table {
       top: 0;
       z-index: -1; }
   table th, table td {
-    border: 1px solid #00000033;
+    border-color: #00000033;
+    border-style: groove;
+    border-width: 1px 1px 0 0;
     padding: .2rem; }
+    table th:first-child, table td:first-child {
+      border-left-width: 1px; }
+  table > thead:last-child > tr:last-child > th, table > thead:last-child > tr:last-child > td, table > thead:last-child > th, table > thead:last-child > td, table > tbody:last-child > tr:last-child > th, table > tbody:last-child > tr:last-child > td, table > tbody:last-child > th, table > tbody:last-child > td, table > tfoot:last-child > tr:last-child > th, table > tfoot:last-child > tr:last-child > td, table > tfoot:last-child > th, table > tfoot:last-child > td, table > tr:last-child > tr:last-child > th, table > tr:last-child > tr:last-child > td, table > tr:last-child > th, table > tr:last-child > td {
+    border-bottom-width: 1px; }
   table thead th:before {
     opacity: 1; }
 
@@ -956,6 +963,9 @@ table {
   margin: 1em 0 1em 25px;
   padding: .25rem;
   position: relative; }
+  .callout.centered, [class*="callout-"].centered {
+    left: 13px;
+    margin: auto; }
   .callout:first-child, [class*="callout-"]:first-child {
     margin-top: 0; }
   .callout:before, [class*="callout-"]:before {
@@ -1014,14 +1024,19 @@ table {
 table[class*="callout-"] {
   border: none;
   box-shadow: 1px 3px 3px #00000022, 3px 1px 3px #00000022;
-  z-index: 0; }
+  padding: 0; }
   table[class*="callout-"]:before {
     box-shadow: 0 3px 3px #00000033;
     border-right: none;
     border-radius: 5px 0 0 5px;
-    top: 0;
-    height: calc(100% - 1px);
-    z-index: -1; }
+    height: calc(100% - 2px);
+    top: 0; }
+
+.layout.small .callout, .layout.small [class*="callout-"] {
+  box-shadow: none;
+  max-width: calc(100% - 30px); }
+  .layout.small .callout:before, .layout.small [class*="callout-"]:before {
+    box-shadow: none; }
 
 .center {
   justify-content: center;
@@ -1079,6 +1094,8 @@ table.info-box {
       background: #00000022; }
   table.info-box th, table.info-box td {
     border: 1px groove #00000033; }
+  table.info-box img {
+    width: 100%; }
 
 .layout.small .info-box {
   float: none;
