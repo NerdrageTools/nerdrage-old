@@ -156,7 +156,7 @@ export default class Sheet extends Component {
         </div>
         <Scrollbars
           autoHide universal
-          className={`sheet-container ${isEditor ? 'is-editable' : 'readOnly'}`}
+          className={`sheet-container scrollbars ${isEditor ? 'is-editable' : 'readOnly'}`}
         >
           <SfSheet
             key={slug} readOnly={!isEditor}

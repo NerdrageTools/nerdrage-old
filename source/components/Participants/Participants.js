@@ -106,7 +106,7 @@ export default class Participants extends Component {
     return (
       <div className={`participants ${className} ${saving ? 'loading' : ''}`}>
         <div className="title">{title}</div>
-        <Scrollbars className="contents" universal>
+        <Scrollbars className="contents scrollbars" universal>
           <ul className="participant-list">
             {participants.map(user => (
               <li className={`participant row ${user.type || ''}`} key={user._id}>

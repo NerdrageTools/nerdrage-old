@@ -1,8 +1,9 @@
 table {
   border: none;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-spacing: 0;
   box-shadow: 3px 3px 3px #00000033;
+  padding: 0;
 
   th {
     color: var(--color-secondary);
@@ -24,8 +25,19 @@ table {
   }
 
   th, td {
-    border: 1px solid #00000033;
+    border-color: #00000033;
+    border-style: groove;
+    border-width: 1px 1px 0 0;
     padding: .2rem;
+
+    &:first-child {
+      border-left-width: 1px;
+    }
+  }
+  > thead:last-child, > tbody:last-child, > tfoot:last-child, > tr:last-child {
+    > tr:last-child > th, > tr:last-child > td, > th, > td {
+      border-bottom-width: 1px;
+    }
   }
 
   thead th {
