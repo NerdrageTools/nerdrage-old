@@ -20,13 +20,10 @@ export async function getCampaign(subdomain, user) {
     if (!campaign) return null
 
     const json = campaign.toJSON()
-
-    if (!user.anonymous) {
-      json.isEditor = Boolean(user.isAdmin || campaign.isEditableBy(user._id))
-      json.isOwner = Boolean(user.isAdmin || campaign.isOwnedBy(user._id))
-      json.isParticipant = Boolean(user.isAdmin || campaign.isParticipant(user._id))
-      json.isViewer = Boolean(user.isAdmin || campaign.isVisibleTo(user._id))
-    }
+    json.isEditor = Boolean(user.isAdmin || campaign.isEditableBy(user._id))
+    json.isOwner = Boolean(user.isAdmin || campaign.isOwnedBy(user._id))
+    json.isParticipant = Boolean(user.isAdmin || campaign.isParticipant(user._id))
+    json.isViewer = Boolean(user.isAdmin || campaign.isVisibleTo(user._id))
 
     return json
   } catch (error) {

@@ -83,9 +83,9 @@ CampaignSchema.methods.isOwnedBy = function (userId) {
 }
 
 CampaignSchema.methods.isVisibleTo = function (userId) {
-  const matches = matchObjectId(userId)
   if (!this.secret) return true
 
+  const matches = matchObjectId(userId)
   return Boolean(
     this.owners.some(matches)
     || this.editors.some(matches)
