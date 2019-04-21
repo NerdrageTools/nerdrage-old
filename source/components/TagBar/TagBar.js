@@ -57,7 +57,7 @@ export default class TagBar extends Component {
       : null
   )
   renderLayout = (tags, input) => (
-    <Scrollbars autoHide universal>{tags}{input}</Scrollbars>
+    <Scrollbars autoHide className="scrollbars" universal>{tags}{input}</Scrollbars>
   )
   renderTag = ({ className, key, tag }) => (
     <Tag

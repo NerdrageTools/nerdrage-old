@@ -25,6 +25,11 @@
   padding: .25rem;
   position: relative;
 
+  &.centered {
+    left: 13px;
+    margin: auto;
+  }
+
   &:first-child { margin-top: 0; }
 
   &:before {
@@ -47,14 +52,24 @@
 table[class*="callout-"] {
   border: none;
   box-shadow: 1px 3px 3px #00000022, 3px 1px 3px #00000022;
-  z-index: 0;
+  padding: 0;
 
   &:before {
     box-shadow: 0 3px 3px #00000033;
     border-right: none;
     border-radius: 5px 0 0 5px;
+    height: calc(100% - 2px);
     top: 0;
-    height: calc(100% - 1px);
-    z-index: -1;
+  }
+}
+
+.layout.small {
+  .callout, [class*="callout-"] {
+    box-shadow: none;
+    max-width: calc(100% - 30px);
+
+    &:before {
+      box-shadow: none;
+    }
   }
 }

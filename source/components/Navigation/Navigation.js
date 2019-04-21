@@ -162,7 +162,7 @@ export default class Navigation extends Component {
 
     return (
       <div className="navigation">
-        <Scrollbars className="link-sections" autoHide universal>
+        <Scrollbars className="scrollbars link-sections" autoHide universal>
           <div className="content" ref={this.props.wrapperRef}>
             <div className="campaign-nav" ref={this.campaignNav}>
               {this.renderList(navigation, campaign.title, 'article', <>

@@ -131,7 +131,7 @@ export default class UserPage extends Component {
             : (user.isAdmin && <AdminIcon className="is-admin toggle on" />)
           }
         </div>
-        <Scrollbars className="contents" universal autoHide>
+        <Scrollbars className="contents scrollbars" universal autoHide>
           <div className="user-info">
             <div className="row">
               <b>Username:</b> <span>{user.username}</span>

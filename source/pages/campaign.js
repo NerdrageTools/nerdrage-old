@@ -95,7 +95,7 @@ export default class CampaignPage extends Component {
             <button className="safe" onClick={this.handleReset}>Reset</button>
           </>}
         </div>
-        <Scrollbars className="contents" universal autoHide>
+        <Scrollbars className="contents scrollbars" universal autoHide>
           <div className="left column">
             <Participants
               className="lightbox"

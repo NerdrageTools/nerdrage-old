@@ -46,7 +46,12 @@ export default function TabSet({
           <li className="buttons">{buttons}</li>
         </ul>
       )}
-      <Scrollbars autoHide hideTracksWhenNotNeeded className={`tab-contents ${activeTabId}`} universal>
+      <Scrollbars
+        autoHide
+        className={`scrollbars tab-contents ${activeTabId}`}
+        hideTracksWhenNotNeeded
+        universal
+      >
         {activeTab.contents}
       </Scrollbars>
     </div>
