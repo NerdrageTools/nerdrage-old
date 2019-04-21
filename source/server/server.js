@@ -5,7 +5,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
-import next from 'next'
+import nextApp from 'next'
 import nocache from 'nocache'
 import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
@@ -21,7 +21,7 @@ import './models'
 dotenv.config()
 
 const PRODUCTION = process.env.NODE_ENV === 'production'
-const app = next({ dev: !PRODUCTION, dir: './source' })
+const app = nextApp({ dev: !PRODUCTION, dir: './source' })
 const routeHandler = routes.getRequestHandler(app)
 const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 
