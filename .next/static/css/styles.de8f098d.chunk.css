@@ -1260,7 +1260,8 @@ table.info-box {
   display: flex;
   flex-direction: column; }
   .article.page > .tab-set > .tab-contents {
-    padding: 0; }
+    padding: 0;
+    text-align: justify; }
     .article.page > .tab-set > .tab-contents > p {
       align-items: center;
       display: flex;
