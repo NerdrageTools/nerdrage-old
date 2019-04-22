@@ -24,10 +24,15 @@ export default class CreateMenu extends Component {
         title: `New ${type}...`,
       })
 
-      this.context.router.push(
-        `/${lowered}?slug=${slug}&title=${text}&template=${templateSlug}`,
-        `/${lowered}/${slug}?title=${text}&template=${templateSlug}`
-      )
+      let href = `/${lowered}?slug=${slug}&title=${text}`
+      let asUrl = `/${lowered}/${slug}?title=${text}`
+
+      if (templateSlug) {
+        href += `&template=${templateSlug}`
+        asUrl += `&template=${templateSlug}`
+      }
+
+      this.context.router.push(href, asUrl)
     } catch (error) { }
   }
   handleNewCampaign = async () => {
