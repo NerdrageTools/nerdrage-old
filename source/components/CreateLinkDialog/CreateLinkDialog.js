@@ -43,7 +43,7 @@ export default function CreateLinkDialog({
       case 'Escape':
         return onCancel()
       case 'Enter':
-        return onOk()
+        return onOk({ slug, templateSlug, text })
       default:
         return undefined
     }
