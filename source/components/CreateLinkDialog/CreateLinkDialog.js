@@ -16,7 +16,9 @@ export default function CreateLinkDialog({
   defaultText = '',
   onCancel = noop,
   onOk = noop,
+  slugLabel = 'Slug',
   templateType = null,
+  textLabel = 'Text',
   title = 'Create Link',
 }) {
   const [text, setText] = useState(defaultText)
@@ -31,7 +33,21 @@ export default function CreateLinkDialog({
   useEffect(() => {
     if (templateType) getTemplates(templateType).then(setTemplates)
   }, [templateType])
+  useEffect(() => {
+    textInput.current.focus()
+    textInput.current.select()
+  }, [true])
 
+  const handleKeyDown = ({ key }) => {
+    switch (key) {
+      case 'Escape':
+        return onCancel()
+      case 'Enter':
+        return onOk()
+      default:
+        return undefined
+    }
+  }
   const handleSlug = ({ target }) => {
     if (auto) setAuto(false)
     setSlug(slugify(target.value))
@@ -47,15 +63,16 @@ export default function CreateLinkDialog({
       className="create-link"
       modal
       onCancel={onCancel}
+      onKeyDown={handleKeyDown}
       onOk={() => onOk({ slug, templateSlug, text })}
       title={title}
     >
       <div className="input-wrapper">
-        <label>Text</label>
+        <label>{textLabel}</label>
         <input value={text} onChange={handleText} ref={textInput} type="text" />
       </div>
       <div className="input-wrapper">
-        <label>Slug</label>
+        <label>{slugLabel}</label>
         <input value={slug} onChange={handleSlug} ref={slugInput} type="text" />
       </div>
       {templateType && (

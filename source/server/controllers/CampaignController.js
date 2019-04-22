@@ -43,6 +43,11 @@ export async function getCampaignRequest(request, response) {
 }
 const createCampaign = async (request, response) => {
   const userId = request.user._id
+  if (!userId) {
+    return response.status(401).send({
+      message: 'Your account is not authorized to create campaigns.',
+    })
+  }
   const subdomain = request.params.subdomain || request.subdomain
 
   try {
