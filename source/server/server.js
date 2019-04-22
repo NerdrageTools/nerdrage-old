@@ -33,6 +33,16 @@ app.prepare().then(async () => {
   mongoose.Promise = global.Promise
 
   const server = express()
+    .use((request, response, next) => {
+      response.header('Access-Control-Allow-Origin', '*')
+      response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+      response.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+      if (request.method === 'OPTIONS') {
+        response.status(200).send()
+      } else {
+        next()
+      }
+    })
     .use(compression())
     .use((request, response, next) => {
       const host = request.get('host') || ''
@@ -48,7 +58,7 @@ app.prepare().then(async () => {
     .use(express.json())
     .options('*', cors())
 
-  server.get('/favicon.ico', (request, response) => {
+  server.get('/favicon.ico', (_, response) => {
     response.status(200).sendFile(`${__dirname}/favicon.ico`)
   })
 
