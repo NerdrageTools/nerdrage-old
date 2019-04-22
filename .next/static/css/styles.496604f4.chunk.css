@@ -599,15 +599,15 @@
       .dialog-wrapper .dialog > .buttons > button, .dialog-wrapper .dialog > .buttons > .button {
         margin: 0 .1em; }
 
-.create-link.dialog .input-wrapper label {
-  min-width: 60px; }
-
 .prompt.dialog > .body {
   display: flex;
   flex-direction: column; }
   .prompt.dialog > .body > .text {
     max-width: 300px;
     padding: .5rem; }
+
+.create-link.dialog .input-wrapper label {
+  min-width: 60px; }
 
 .create.menu > .flyout-panel > hr:first-child {
   display: none; }
