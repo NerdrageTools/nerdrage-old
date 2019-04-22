@@ -9,11 +9,13 @@ export default function Dialog({
   className = '',
   modal = false,
   onCancel = noop,
+  onKeyDown = noop,
   onOk = noop,
+  showCancel = true,
   title = 'Dialog',
 }) {
   return (
-    <div className={`dialog-wrapper ${modal ? 'modal' : ''}`}>
+    <div className={`dialog-wrapper ${modal ? 'modal' : ''}`} onKeyDown={onKeyDown}>
       <Draggable handle=".dialog > .title">
         <div className={`dialog ${className}`}>
           <div className="title">{title}</div>
@@ -21,7 +23,7 @@ export default function Dialog({
           <div className="buttons">
             {buttons || <>
               <button className="ok button safe" onClick={onOk}>Ok</button>
-              <button className="cancel button link" onClick={onCancel}>Cancel</button>
+              {showCancel && <button className="cancel button link" onClick={onCancel}>Cancel</button>}
             </>}
           </div>
         </div>
