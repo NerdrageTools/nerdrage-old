@@ -1,21 +1,4 @@
 {
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/campaign.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/_error.scss": [
     {
       "modules": {
@@ -33,7 +16,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/authPages.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/campaign.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -50,7 +33,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/sheet.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/authPages.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -102,6 +85,23 @@
     }
   ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/article.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/sheet.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -186,7 +186,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Toggle/Toggle.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Sources/Sources.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -203,7 +203,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Sources/Sources.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Toggle/Toggle.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -373,7 +373,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/EditableList/EditableList.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Header/Header.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -390,7 +390,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Header/Header.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/EditableList/EditableList.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -424,7 +424,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/CampaignSearchBox/CampaignSearchBox.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/UserSearchBox/UserSearchBox.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -441,7 +441,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/UserSearchBox/UserSearchBox.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/CampaignSearchBox/CampaignSearchBox.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -526,7 +526,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/FlyoutMenu/FlyoutMenu.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -543,7 +543,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/FlyoutMenu/FlyoutMenu.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -662,15 +662,15 @@
       "commons": 0,
       "static/runtime/webpack.js": 1,
       "styles": 2,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/_app.js": 3,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/_error.js": 4,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/article.js": 5,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/campaign.js": 6,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/index.js": 7,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/login.js": 8,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/sheet.js": 9,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/signup.js": 10,
-      "static/0v3WQtVAThqoE6KLbXtfd/pages/user.js": 11,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/_app.js": 3,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/_error.js": 4,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/article.js": 5,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/campaign.js": 6,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/index.js": 7,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/login.js": 8,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/sheet.js": 9,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/signup.js": 10,
+      "static/ciw2JcyEqBxFQjILjTRcJ/pages/user.js": 11,
       "static/runtime/main.js": 12
     },
     "bySource": {
