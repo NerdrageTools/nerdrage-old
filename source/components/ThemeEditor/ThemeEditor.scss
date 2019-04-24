@@ -1,0 +1,15 @@
+.theme-editor {
+  &.lightbox > .title {
+    margin-bottom: 5px;
+  }
+
+  > .input-wrapper {
+    > label {
+      padding: .5rem;
+      width: 80px;
+    }
+    > .search-box {
+      margin: 0;
+    }
+  }
+}

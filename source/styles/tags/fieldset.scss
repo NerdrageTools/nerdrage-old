@@ -1,7 +1,9 @@
 fieldset {
-  border-style: solid;
+  border: 1px solid currentColor;
+  margin: 5px;
 
   > legend {
+    text-shadow: 2px 2px 3px #00000033;
     font-weight: bold;
   }
 }

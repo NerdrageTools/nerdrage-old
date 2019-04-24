@@ -1,0 +1,20 @@
+.color-picker.input {
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: center;
+  padding: .25rem;
+  position: relative;
+
+  > .swatch {
+    height: 100%;
+    width: 100%;
+  }
+  > .github-picker {
+    left: 0;
+    margin-top: 8px;
+    position: absolute !important;
+    right: 0;
+    z-index: 1;
+  }
+}

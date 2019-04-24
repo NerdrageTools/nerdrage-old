@@ -4,13 +4,17 @@
   > .contents > div {
     display: flex;
     flex-direction: row;
+    padding: 5px;
     justify-content: stretch;
 
     > .column {
       display: flex;
       flex-direction: column;
       max-width: 100vw;
-      padding: 5px;
+
+      > * {
+        margin: 5px;
+      }
     }
     > .left.column {
       flex: 1;

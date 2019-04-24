@@ -1,12 +1,24 @@
 import { Deburr } from 'deburr'
 import entities from 'entities'
 import express from 'express'
+import fetch from 'isomorphic-unfetch'
 import Campaign404 from '@/server/errors/Campaign404'
 import Article from '@/server/models/Article'
 import Campaign from '@/server/models/Campaign'
 import User from '@/server/models/User'
 import bound from '@/utilities/bound'
 import createCampaignFilter from '@/utilities/createCampaignFilter'
+
+const FONTS = fetch('https://fonts.google.com/metadata/fonts')
+  .then(async response => {
+    if (response.status === 200) {
+      const text = await response.text()
+      const { familyMetadataList: fonts } = JSON.parse(text.slice(text.indexOf('{')))
+      return fonts
+    }
+
+    return []
+  })
 
 export const campaignPermissions = async (request, response, next) => {
   const { campaign, user } = request
@@ -125,6 +137,13 @@ export const searchCampaigns = async (request, response) => {
 
   return response.status(200).json(matches)
 }
+export const searchFonts = async (request, response) => {
+  const { limit = 10, searchTerm = '' } = request.params
+  const matcher = searchTerm ? new RegExp(searchTerm, 'i') : /./
+  response.status(200).json(
+    (await FONTS).filter(font => font.family.match(matcher)).slice(0, limit)
+  )
+}
 export const searchUsers = async (request, response) => {
   const { searchTerm = '.', limit = 10 } = request.params
   const $searchRegex = new RegExp(`^${new Deburr(searchTerm.toLowerCase()).toString()}`)
@@ -139,5 +158,6 @@ export const searchUsers = async (request, response) => {
 const controller = express()
 controller.get('/articles/:searchTerm', Campaign404, campaignPermissions, searchArticles)
 controller.get('/campaigns/:searchTerm', searchCampaigns)
+controller.get('/fonts/:searchTerm?', searchFonts)
 controller.get('/users/:searchTerm?', searchUsers)
 export default controller
