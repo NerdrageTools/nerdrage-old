@@ -15,7 +15,7 @@ const CAMPAIGN_DEFAULTS = {
     fontFamily: 'Ubuntu',
     foreground: '#333',
     primary: '#42afe3',
-    secondary: '#fff',
+    primaryText: '#fff',
   },
   title: 'New Campaign',
   version: 0,

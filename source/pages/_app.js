@@ -127,21 +127,21 @@ export default class Wiki extends App {
           </Layout>
           <style>{`
             :root {
-              --color-background: ${theme.background};
-              --color-borders:    ${theme.primary};
-              --color-foreground: ${theme.foreground};
-              --color-primary:    ${theme.primary};
-              --color-secondary:  ${theme.secondary};
-              --font-for-text:    ${theme.fontForText};
-              --font-for-titles:  ${theme.fontForTitles};
-              --font-size:        ${theme.fontSize};
-              font-family:        ${theme.fontForText};
-              font-size:          ${theme.fontSize};
+              --color-background:    ${theme.background};
+              --color-borders:       ${theme.primary};
+              --color-foreground:    ${theme.foreground};
+              --color-primary:       ${theme.primary};
+              --color-primary-text:  ${theme.primaryText};
+              --font-for-text:       ${theme.fontForText};
+              --font-for-titles:     ${theme.fontForTitles};
+              --font-size:           ${theme.fontSize};
+              font-family:           ${theme.fontForText};
+              font-size:             ${theme.fontSize};
 
-              --image-book:       url(${imageBook});
-              --image-combo:      url(${imageCombo});
-              --image-system:     url(${imageSystem});
-              --image-info:       url(${imageInfo});
+              --image-book:          url(${imageBook});
+              --image-combo:         url(${imageCombo});
+              --image-system:        url(${imageSystem});
+              --image-info:          url(${imageInfo});
             }
           `}</style>
         </Container>
