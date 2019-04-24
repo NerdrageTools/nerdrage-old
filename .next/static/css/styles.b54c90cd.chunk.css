@@ -275,6 +275,34 @@
 .sources .campaign.row > .display {
   flex: 1; }
 
+.color-picker.input {
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: center;
+  padding: .25rem;
+  position: relative; }
+  .color-picker.input > .swatch {
+    height: 100%;
+    width: 100%; }
+  .color-picker.input > .github-picker {
+    left: 0;
+    margin-top: 8px;
+    position: absolute !important;
+    right: 0;
+    z-index: 1; }
+
+
+.theme-editor.lightbox > .title {
+  margin-bottom: 5px; }
+
+.theme-editor > .input-wrapper > label {
+  padding: .5rem;
+  width: 80px; }
+
+.theme-editor > .input-wrapper > .search-box {
+  margin: 0; }
+
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -516,12 +544,14 @@
 .campaign.page > .contents > div {
   display: flex;
   flex-direction: row;
+  padding: 5px;
   justify-content: stretch; }
   .campaign.page > .contents > div > .column {
     display: flex;
     flex-direction: column;
-    max-width: 100vw;
-    padding: 5px; }
+    max-width: 100vw; }
+    .campaign.page > .contents > div > .column > * {
+      margin: 5px; }
   .campaign.page > .contents > div > .left.column {
     flex: 1; }
   .campaign.page > .contents > div > .right.column {
@@ -584,7 +614,7 @@
     min-width: 200px; }
     .dialog-wrapper .dialog > .title {
       background: var(--color-primary);
-      color: var(--color-secondary);
+      color: var(--color-primary-text);
       height: 2em;
       padding: .5em; }
     .dialog-wrapper .dialog > .body {
@@ -637,7 +667,7 @@
       font-size: .6rem;
       opacity: .7; }
   .user-menu a {
-    color: var(--color-secondary);
+    color: var(--color-primary-text);
     font-size: .8rem;
     font-weight: bold; }
 
@@ -649,7 +679,7 @@
   box-shadow: 0px 2px 5px rgba(211, 214, 219, 0.75);
   box-shadow: 0px 2px 5px var(--color-shadow);
   color: black;
-  color: var(--color-secondary);
+  color: var(--color-primary-text);
   display: flex;
   justify-content: flex-start;
   min-height: 40px;
@@ -874,8 +904,10 @@ button {
     box-shadow: none; }
 
 fieldset {
-  border-style: solid; }
+  border: 1px solid currentColor;
+  margin: 5px; }
   fieldset > legend {
+    text-shadow: 2px 2px 3px #00000033;
     font-weight: bold; }
 
 h1, h2, h3, h4, h5, h6 {
@@ -929,8 +961,8 @@ table {
   box-shadow: 3px 3px 3px #00000033;
   padding: 0; }
   table th {
-    color: var(--color-secondary);
-    font-family: var(--font-for-titles);
+    color: var(--color-primary-text);
+    font-family: var(--font-for-text);
     position: relative;
     z-index: 0; }
     table th:before {
@@ -1055,6 +1087,12 @@ table[class*="callout-"] {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
+.font-for-titles {
+  font-family: var(--font-for-titles); }
+
+.font-for-text {
+  font-family: var(--font-for-text); }
+
 .hidden {
   display: none !important; }
 
@@ -1068,7 +1106,8 @@ table[class*="callout-"] {
   display: flex;
   flex: 1;
   flex-direction: row;
-  font-weight: bold; }
+  font-weight: bold;
+  padding: 0 .25rem; }
   .input-wrapper > label {
     font-size: .8rem; }
   .input-wrapper > input {
@@ -1120,7 +1159,7 @@ table.info-box {
   .lightbox > .title {
     align-items: center;
     background: var(--color-primary);
-    color: var(--color-secondary);
+    color: var(--color-primary-text);
     display: flex;
     font-weight: bold;
     margin: -5px -5px 0 -5px;
@@ -1491,9 +1530,9 @@ table.info-box {
   .login.page > .container, .signup.page > .container {
     background-color: var(--color-primary);
     border-radius: 1em;
-    border: 2px solid var(--color-secondary);
+    border: 2px solid var(--color-primary-text);
     box-shadow: 3px 3px 3px #ccc;
-    color: var(--color-secondary);
+    color: var(--color-primary-text);
     display: flex;
     flex-direction: column;
     margin: 20px auto;
@@ -4257,7 +4296,7 @@ th[data-mce-selected] {
       display: block !important; }
     .wysiwyg-editor .menubar .mce-btn.mce-active {
       background: var(--color-primary);
-      color: var(--color-secondary); }
+      color: var(--color-primary-text); }
     .wysiwyg-editor .menubar button {
       background: transparent;
       border: none;
