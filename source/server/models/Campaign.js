@@ -43,7 +43,7 @@ const CampaignSchema = new mongoose.Schema({
       fontFamily: { default: defaultTheme.fontFamily, type: String },
       foreground: { ...ColorCode, default: defaultTheme.foreground },
       primary: { ...ColorCode, default: defaultTheme.primary },
-      secondary: { ...ColorCode, default: defaultTheme.secondary },
+      primaryText: { ...ColorCode, default: defaultTheme.primaryText },
     },
   },
   title: { default: 'New Campaign', trim: true, type: String },

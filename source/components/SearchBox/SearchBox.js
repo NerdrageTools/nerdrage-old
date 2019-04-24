@@ -19,14 +19,16 @@ export default class SearchBox extends Component {
     onSelect: noop,
     placeholder: 'Search...',
     renderOption: null,
+    selectOnFocus: true,
     url: '',
+    valueGetter: option => option,
   }
   static displayName = 'SearchBox'
 
   state = {
     message: null,
     options: [],
-    searchTerm: '',
+    searchTerm: this.props.defaultInputValue,
   }
 
   downshift = React.createRef()
@@ -71,6 +73,11 @@ export default class SearchBox extends Component {
     document.removeEventListener('keydown', this.handleHotKeys)
   }
 
+  handleFocus = () => {
+    if (this.props.selectOnFocus) {
+      this.inputBox.current.select()
+    }
+  }
   handleHotKeys = event => {
     Object.entries(this.props.hotkeys).forEach(([name, keyCombo]) => {
       if (objectMatch(event, keyCombo)) {
@@ -84,16 +91,20 @@ export default class SearchBox extends Component {
     }
   }
   handleSearch = async (searchTerm = '') => {
+    if (!searchTerm) return
+
     this.setState({ message: 'Searching...', searching: true, searchTerm })
     this.debouncedSearch(searchTerm)
   }
   handleSelect = option => {
-    const { clearOnSelect, onSelect } = this.props
+    const { clearOnSelect, onSelect, valueGetter } = this.props
 
     onSelect(option)
 
     if (clearOnSelect && !this.clearing) {
       this.setState({ searchTerm: '' })
+    } else {
+      this.setState({ searching: false, searchTerm: valueGetter(option) })
     }
   }
 
@@ -104,7 +115,7 @@ export default class SearchBox extends Component {
     </li>
   )
   render = () => {
-    const { className, placeholder } = this.props
+    const { className, placeholder, ...props } = this.props
     const { message, options, searching } = this.state
     const { theme } = this.context
     const renderOption = this.props.renderOption || this.renderOption
@@ -113,6 +124,7 @@ export default class SearchBox extends Component {
     return (
       <Downshift
         id="search-box" ref={this.downshift}
+        {...props}
         itemToString={article => (article ? article.title : '')}
         onInputValueChange={this.handleSearch}
         onSelect={this.handleSelect}
@@ -124,6 +136,7 @@ export default class SearchBox extends Component {
           <input
             {...getInputProps({ onKeyDown: this.handleKeyDown })}
             className="input" ref={this.inputBox}
+            onFocus={this.handleFocus}
             placeholder={placeholder}
             value={this.state.searchTerm}
           />

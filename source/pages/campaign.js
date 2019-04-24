@@ -4,6 +4,7 @@ import Editable from '@/components/Editable'
 import Link from '@/components/Link'
 import Participants from '@/components/Participants'
 import Sources from '@/components/Sources'
+import ThemeEditor from '@/components/ThemeEditor'
 import Toggle from '@/components/Toggle'
 import Application from '@/contexts/Application'
 import PublicIcon from '@/icons/public.svg'
@@ -112,6 +113,7 @@ export default class CampaignPage extends Component {
               readOnly={!isEditor}
               sources={sources}
             />
+            <ThemeEditor className="lightbox" readOnly={!isEditor} />
           </div>
         </Scrollbars>
       </div>
