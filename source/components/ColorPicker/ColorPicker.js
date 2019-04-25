@@ -4,23 +4,21 @@ import './ColorPicker.scss'
 import noop from '@/utilities/noop'
 
 const defaultColors = [
-  '#000000',
-  '#FFFFFF',
-  '#B80000',
-  '#DB3E00',
-  '#FCCB00',
-  '#008B02',
-  '#006B76',
-  '#1273DE',
-  '#004DCF',
-  '#5300EB',
+  '#000000', '#FFFFFF',
+  '#A6808C', '#D6CFCB',
+  '#6E0E0A', '#60594D',
+  '#006B76', '#042A2B',
+  '#124E78', '#5EB1BF',
 ]
 
 function ColorPicker({
+  className = '',
   colors = defaultColors,
   hex = defaultColors[0],
   onChange = noop,
   popover = true,
+  text = '',
+  textColor = 'inherit',
   triangle = 'top-right',
   width = 'auto',
 }) {
@@ -40,12 +38,12 @@ function ColorPicker({
   }, [true])
 
   return (
-    <div className="color-picker input" ref={wrapper}>
+    <div className={`color-picker input ${className}`} ref={wrapper}>
       <button
         className="swatch"
         onClick={() => setOpen(!open)}
-        style={{ background: hex }}
-      />
+        style={{ background: hex, color: textColor }}
+      >{text}</button>
       {open && <GithubPicker {...{ colors, hex, onChange, popover, triangle, width }} />}
     </div>
   )

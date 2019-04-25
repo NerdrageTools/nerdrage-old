@@ -5,11 +5,26 @@
 
   > .input-wrapper {
     > label {
+      font-weight: normal;
       padding: .5rem;
-      width: 80px;
+      text-align: right;
+      width: 85px;
     }
     > .search-box {
       margin: 0;
+    }
+
+    .swatch {
+      border: none;
+      font-weight: bold;
+    }
+    .primary > .swatch {
+      color: var(--color-primary-text);
+    }
+
+    &.font-for-titles > label {
+      font-size: 1rem;
+      font-weight: bold;
     }
   }
 }

@@ -20,20 +20,6 @@ export default function ThemeEditor({
   return (
     <div className={`theme-editor ${className}`}>
       <div className="title">Theme</div>
-      <div className="input-wrapper">
-        <label>Primary Color</label>
-        <ColorPicker
-          color={theme.primary}
-          onChange={onUpdateColor('primary')}
-        />
-      </div>
-      <div className="input-wrapper">
-        <label>Text Color</label>
-        <ColorPicker
-          color={theme.primaryText}
-          onChange={onUpdateColor('primaryText')}
-        />
-      </div>
       <div className="input-wrapper font-for-titles">
         <label>Title Font</label>
         <FontSearchBox
@@ -46,6 +32,40 @@ export default function ThemeEditor({
         <FontSearchBox
           defaultInputValue={theme.fontForText}
           onSelect={onUpdateFont('fontForText')}
+        />
+      </div>
+      <div className="input-wrapper">
+        <label>UI Color</label>
+        <ColorPicker
+          className="primary"
+          color={theme.primary}
+          onChange={onUpdateColor('primary')}
+          text="BG"
+          textColor={theme.primaryText}
+        />
+        <ColorPicker
+          className="primaryText"
+          color={theme.primaryText}
+          onChange={onUpdateColor('primaryText')}
+          text="Text"
+          textColor={theme.primary}
+        />
+      </div>
+      <div className="input-wrapper">
+        <label>Text Colors</label>
+        <ColorPicker
+          className="background"
+          color={theme.background}
+          onChange={onUpdateColor('background')}
+          text="BG"
+          textColor={theme.normalText}
+        />
+        <ColorPicker
+          className="normalText"
+          color={theme.normalText}
+          onChange={onUpdateColor('normalText')}
+          text="Text"
+          textColor={theme.background}
         />
       </div>
     </div>

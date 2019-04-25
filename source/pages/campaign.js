@@ -13,7 +13,7 @@ import ErrorPage from '@/pages/_error'
 import pluck from '@/utilities/pluck'
 import './campaign.scss'
 
-const EDITABLE_FIELDS = ['title', 'theme']
+const EDITABLE_FIELDS = ['title']
 const STATE_FIELDS = [...EDITABLE_FIELDS, 'isEditor', 'isOwner', 'isPlayer']
 
 export default class CampaignPage extends Component {
