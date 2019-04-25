@@ -286,6 +286,7 @@
     height: 100%;
     width: 100%; }
   .color-picker.input > .github-picker {
+    justify-content: center;
     left: 0;
     margin-top: 8px;
     position: absolute !important;
@@ -297,11 +298,24 @@
   margin-bottom: 5px; }
 
 .theme-editor > .input-wrapper > label {
+  font-weight: normal;
   padding: .5rem;
-  width: 80px; }
+  text-align: right;
+  width: 85px; }
 
 .theme-editor > .input-wrapper > .search-box {
   margin: 0; }
+
+.theme-editor > .input-wrapper .swatch {
+  border: none;
+  font-weight: bold; }
+
+.theme-editor > .input-wrapper .primary > .swatch {
+  color: var(--color-primary-text); }
+
+.theme-editor > .input-wrapper.font-for-titles > label {
+  font-size: 1rem;
+  font-weight: bold; }
 
 .ellipsis {
   overflow: hidden;
