@@ -11,14 +11,15 @@ export default function Toggle({
   onIcon = IconOn,
   onProps = {},
   onToggle = noop,
+  readOnly = false,
   value = false,
   ...props
 }) {
   const Icon = value ? onIcon : offIcon
   return (
     <Icon
-      className={`toggle ${value ? 'on' : 'off'} ${className}`}
-      onClick={onToggle}
+      className={`toggle ${value ? 'on' : 'off'} ${readOnly ? 'readonly' : ''} ${className}`}
+      onClick={readOnly ? noop : onToggle}
       {...props}
       {...(value ? onProps : offProps)}
     />

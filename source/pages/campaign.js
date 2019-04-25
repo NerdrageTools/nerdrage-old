@@ -82,16 +82,15 @@ export default class CampaignPage extends Component {
             readOnly={campaign.isEditable}
             value={title}
           />
-          {isOwner && (
-            <Toggle
-              className="secret"
-              offIcon={PublicIcon}
-              onIcon={SecretIcon}
-              onToggle={this.handleToggleSecret}
-              value={secret}
-            />
-          )}
-          {this.isDirty && <>
+          <Toggle
+            className="secret"
+            offIcon={PublicIcon}
+            onIcon={SecretIcon}
+            onToggle={this.handleToggleSecret}
+            readOnly={!isOwner}
+            value={secret}
+          />
+          {this.isDirty && isOwner && <>
             <button className="safe" onClick={this.handleSave}>Save</button>
             <button className="safe" onClick={this.handleReset}>Reset</button>
           </>}
