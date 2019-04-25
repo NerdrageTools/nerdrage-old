@@ -14,4 +14,8 @@
   &.off {
     color: $palette-gray-medium;
   }
+
+  &.readonly {
+    cursor: auto;
+  }
 }

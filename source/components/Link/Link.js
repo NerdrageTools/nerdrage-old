@@ -11,7 +11,6 @@ export default function Link({
   ...props
 }) {
   const context = useContext(Application)
-  const campaign = props.campaign || context.campaign || {}
   const subdomain = props.subdomain || context.subdomain
   const { rootUrl } = useContext(Application)
   const contents = children || type
@@ -22,7 +21,7 @@ export default function Link({
     return <span className="active link" title={contents}>{contents}</span>
   }
 
-  if (subdomain && subdomain !== campaign.subdomain) {
+  if (subdomain && subdomain !== context.campaign.subdomain) {
     let href = `//${subdomain}.${rootUrl}/${type}`
     if (type !== 'campaign') href += `/${slug}`
 

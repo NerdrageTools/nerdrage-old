@@ -17,6 +17,7 @@ function ColorPicker({
   hex = defaultColors[0],
   onChange = noop,
   popover = true,
+  readOnly = false,
   text = '',
   textColor = 'inherit',
   triangle = 'top-right',
@@ -38,11 +39,12 @@ function ColorPicker({
   }, [true])
 
   return (
-    <div className={`color-picker input ${className}`} ref={wrapper}>
+    <div className={`color-picker input ${className} ${readOnly ? 'readonly' : ''}`} ref={wrapper}>
       <button
         className="swatch"
         onClick={() => setOpen(!open)}
         style={{ background: hex, color: textColor }}
+        disabled={readOnly}
       >{text}</button>
       {open && <GithubPicker {...{ colors, hex, onChange, popover, triangle, width }} />}
     </div>

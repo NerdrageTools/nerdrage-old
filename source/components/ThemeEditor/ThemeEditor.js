@@ -2,10 +2,12 @@ import React, { useContext } from 'react'
 import ColorPicker from '@/components/ColorPicker'
 import FontSearchBox from '@/components/SearchBox/FontSearchBox'
 import Application from '@/contexts/Application'
+import range from '@/utilities/range'
 import './ThemeEditor.scss'
 
 export default function ThemeEditor({
   className = '',
+  readOnly = false,
 }) {
   const { campaign = {}, updateCampaign } = useContext(Application)
   const { theme = {} } = campaign
@@ -16,23 +18,33 @@ export default function ThemeEditor({
   const onUpdateFont = key => font => {
     updateCampaign({ theme: { ...theme, [key]: font.family } })
   }
+  const onUpdateFontSize = ({ target }) => {
+    console.log(target.value)
+    updateCampaign({ theme: { ...theme, fontSize: target.value } })
+  }
 
   return (
     <div className={`theme-editor ${className}`}>
       <div className="title">Theme</div>
       <div className="input-wrapper font-for-titles">
-        <label>Title Font</label>
-        <FontSearchBox
-          defaultInputValue={theme.fontForTitles}
-          onSelect={onUpdateFont('fontForTitles')}
-        />
+        <label>Titles</label>
+        {readOnly
+          ? <div className="display">{theme.fontForTitles}</div>
+          : <FontSearchBox
+              defaultInputValue={theme.fontForTitles}
+              onSelect={onUpdateFont('fontForTitles')}
+            />
+        }
       </div>
       <div className="input-wrapper font-for-text">
-        <label>Text Font</label>
-        <FontSearchBox
-          defaultInputValue={theme.fontForText}
-          onSelect={onUpdateFont('fontForText')}
-        />
+        <label>Text</label>
+        {readOnly
+          ? <div className="display">{theme.fontForText}</div>
+          : <FontSearchBox
+              defaultInputValue={theme.fontForText}
+              onSelect={onUpdateFont('fontForText')}
+            />
+        }
       </div>
       <div className="input-wrapper">
         <label>UI Color</label>
@@ -40,6 +52,7 @@ export default function ThemeEditor({
           className="primary"
           color={theme.primary}
           onChange={onUpdateColor('primary')}
+          readOnly={readOnly}
           text="BG"
           textColor={theme.primaryText}
         />
@@ -47,6 +60,7 @@ export default function ThemeEditor({
           className="primaryText"
           color={theme.primaryText}
           onChange={onUpdateColor('primaryText')}
+          readOnly={readOnly}
           text="Text"
           textColor={theme.primary}
         />
@@ -57,6 +71,7 @@ export default function ThemeEditor({
           className="background"
           color={theme.background}
           onChange={onUpdateColor('background')}
+          readOnly={readOnly}
           text="BG"
           textColor={theme.normalText}
         />
@@ -64,9 +79,18 @@ export default function ThemeEditor({
           className="normalText"
           color={theme.normalText}
           onChange={onUpdateColor('normalText')}
+          readOnly={readOnly}
           text="Text"
           textColor={theme.background}
         />
+      </div>
+      <div className="input-wrapper">
+        <label>Text Size</label>
+        <select disabled={readOnly} onChange={onUpdateFontSize} value={theme.fontSize}>
+          {range(8, 18).map(pixels => (
+            <option key={pixels} value={`${pixels}px`}>{pixels}px</option>
+          ))}
+        </select>
       </div>
     </div>
   )
