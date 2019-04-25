@@ -221,7 +221,7 @@
         margin: 0 .25rem 0 0;
         width: 2em; }
       .participants.lightbox .participant-list > .participant.row > .display {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
         flex: 1;
         overflow: hidden; }
@@ -292,6 +292,8 @@
     position: absolute !important;
     right: 0;
     z-index: 1; }
+  .color-picker.input.readonly > .swatch {
+    cursor: auto; }
 
 
 .theme-editor.lightbox > .title {
@@ -303,7 +305,7 @@
   text-align: right;
   width: 85px; }
 
-.theme-editor > .input-wrapper > .search-box {
+.theme-editor > .input-wrapper > .search-box, .theme-editor > .input-wrapper > .display {
   margin: 0; }
 
 .theme-editor > .input-wrapper .swatch {
@@ -503,6 +505,8 @@
     stroke: #998100; }
   .toggle.off {
     color: #999; }
+  .toggle.readonly {
+    cursor: auto; }
 
 .page {
   display: flex;
