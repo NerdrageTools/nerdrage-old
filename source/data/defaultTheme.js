@@ -3,7 +3,7 @@ export default {
   fontForText: 'Ubuntu',
   fontForTitles: 'Ubuntu',
   fontSize: '16px',
-  foreground: '#333',
+  normalText: '#333',
   primary: '#f00',
   primaryText: '#fff',
 }

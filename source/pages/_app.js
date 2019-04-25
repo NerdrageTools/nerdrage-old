@@ -135,6 +135,7 @@ export default class Wiki extends App {
               --font-for-text:       ${theme.fontForText};
               --font-for-titles:     ${theme.fontForTitles};
               --font-size:           ${theme.fontSize};
+              color:                 ${theme.normalText};
               font-family:           ${theme.fontForText};
               font-size:             ${theme.fontSize};
 
