@@ -13,7 +13,7 @@ const CAMPAIGN_DEFAULTS = {
   theme: {
     background: '#fff',
     fontFamily: 'Ubuntu',
-    foreground: '#333',
+    normalText: '#333',
     primary: '#42afe3',
     primaryText: '#fff',
   },

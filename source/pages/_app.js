@@ -129,7 +129,7 @@ export default class Wiki extends App {
             :root {
               --color-background:    ${theme.background};
               --color-borders:       ${theme.primary};
-              --color-foreground:    ${theme.foreground};
+              --color-normal-text:   ${theme.normalText};
               --color-primary:       ${theme.primary};
               --color-primary-text:  ${theme.primaryText};
               --font-for-text:       ${theme.fontForText};
