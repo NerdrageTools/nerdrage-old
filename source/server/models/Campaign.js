@@ -41,7 +41,7 @@ const CampaignSchema = new mongoose.Schema({
     type: {
       background: { ...ColorCode, default: defaultTheme.background },
       fontFamily: { default: defaultTheme.fontFamily, type: String },
-      foreground: { ...ColorCode, default: defaultTheme.foreground },
+      normalText: { ...ColorCode, default: defaultTheme.normalText },
       primary: { ...ColorCode, default: defaultTheme.primary },
       primaryText: { ...ColorCode, default: defaultTheme.primaryText },
     },

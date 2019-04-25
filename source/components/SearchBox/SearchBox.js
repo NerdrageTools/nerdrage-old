@@ -131,7 +131,7 @@ export default class SearchBox extends Component {
       >{({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
         <div
           className={`${className} search-box ${isOpen ? 'open' : 'closed'}`}
-          style={{ color: theme.foreground }}
+          style={{ color: theme.normalText }}
         >
           <input
             {...getInputProps({ onKeyDown: this.handleKeyDown })}
