@@ -546,12 +546,13 @@
   display: flex;
   flex-direction: column; }
   .page > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: #42afe3;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center; }
+    font-family: var(--font-for-titles); }
     .page > .title-bar > .editable.title {
       align-items: center;
       display: flex;
@@ -1301,12 +1302,13 @@ table.info-box {
   display: flex;
   flex-direction: column; }
   .page > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: #42afe3;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center; }
+    font-family: var(--font-for-titles); }
     .page > .title-bar > .editable.title {
       align-items: center;
       display: flex;
@@ -1392,12 +1394,13 @@ table.info-box {
   display: flex;
   flex-direction: column; }
   .page > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: #42afe3;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center; }
+    font-family: var(--font-for-titles); }
     .page > .title-bar > .editable.title {
       align-items: center;
       display: flex;
@@ -1464,12 +1467,13 @@ table.info-box {
   display: flex;
   flex-direction: column; }
   .page > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: #42afe3;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center; }
+    font-family: var(--font-for-titles); }
     .page > .title-bar > .editable.title {
       align-items: center;
       display: flex;
@@ -1531,12 +1535,13 @@ table.info-box {
   display: flex;
   flex-direction: column; }
   .page > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: #42afe3;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center; }
+    font-family: var(--font-for-titles); }
     .page > .title-bar > .editable.title {
       align-items: center;
       display: flex;
