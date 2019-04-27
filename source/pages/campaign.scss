@@ -20,7 +20,7 @@
       flex: 1;
     }
     > .right.column {
-      width: 250px;
+      min-width: 250px;
 
       > .participants {
         > b:not(:first-child) { margin-top: .75rem; }
@@ -35,13 +35,15 @@
   }
 }
 
-.layout.small .campaign.page {
-  > .contents > div {
-    display: block;
+.layout.medium, .layout.small {
+  .campaign.page {
+    > .contents > div {
+      display: block;
 
-    > .column {
-      flex: auto;
-      width: 100%;
+      > .column {
+        flex: auto;
+        width: 100%;
+      }
     }
   }
 }
