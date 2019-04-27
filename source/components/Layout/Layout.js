@@ -66,7 +66,7 @@ export default class Layout extends Component {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           key="content-font"
-          href={`//fonts.googleapis.com/css?family=${theme.fontFamily}:400,400i,700,700i`}
+          href={`//fonts.googleapis.com/css?family=${theme.fontForText}|${theme.fontForTitles}`}
           rel="stylesheet"
         />
       </Head>
