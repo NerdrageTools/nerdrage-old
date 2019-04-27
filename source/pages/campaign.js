@@ -3,6 +3,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import Editable from '@/components/Editable'
 import Link from '@/components/Link'
 import Participants from '@/components/Participants'
+import SheetList from '@/components/SheetList'
 import Sources from '@/components/Sources'
 import ThemeEditor from '@/components/ThemeEditor'
 import Toggle from '@/components/Toggle'
@@ -69,7 +70,10 @@ export default class CampaignPage extends Component {
       return <ErrorPage statusCode={404} message={campaign.message} />
     }
 
-    const { editors, isEditor, isOwner, owners, players, secret, sources } = campaign
+    const {
+      editors, isEditor, isOwner, isParticipant,
+      owners, players, secret, sources,
+    } = campaign
     const { savingParticipants, title } = this.state
 
     return (
@@ -104,11 +108,13 @@ export default class CampaignPage extends Component {
               saving={savingParticipants}
               readOnly={!isEditor}
             />
+            {isParticipant && <SheetList className="lightbox" />}
           </div>
           <div className="right column">
             <Sources
               className="lightbox"
               onSave={this.handleSourcesChange}
+              placeholder="Add Source Campaign..."
               readOnly={!isEditor}
               sources={sources}
             />
