@@ -5,12 +5,13 @@
   flex-direction: column;
 
   > .title-bar {
-    border-bottom: 1px solid;
+    align-items: center;
     border-bottom-color: $color-border;
     border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    font-family: var(--font-for-titles);
 
     > .editable.title {
       align-items: center;

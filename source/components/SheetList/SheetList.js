@@ -36,7 +36,7 @@ export default function SheetList({
             type="text"
             value={filter}
           />
-          <Scrollbars className={`scrollable ${loaded ? 'loaded' : 'loading'}`}>
+          <Scrollbars className={`scrollable ${loaded ? 'loaded' : 'loading'}`} universal>
             <table>
               {sheets.filter(s => s.title.toLowerCase().match(filter.toLowerCase())).map(sheet => (
                 <tr key={sheet._id}>

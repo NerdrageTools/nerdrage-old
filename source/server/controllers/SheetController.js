@@ -117,10 +117,9 @@ export const listByCampaign = async (request, response) => {
     })
   }
 
-  const campaignFilter = createCampaignFilter(request.campaign)
   const sheets = await Sheet.find({
     $and: [
-      campaignFilter,
+      { campaign: request.campaign._id },
       isOwner ? {} : { private: false },
     ],
   }, '_id secret slug template title')
