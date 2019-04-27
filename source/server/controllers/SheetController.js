@@ -109,9 +109,29 @@ export const deleteSheet = async (request, response) => {
 
   return response.status(204).send()
 }
+export const listByCampaign = async (request, response) => {
+  const { isOwner, isParticipant, subdomain } = request.campaign
+  if (!isParticipant) {
+    return response.status(401).json({
+      message: `This content is private to the ${subdomain} campaign.`,
+    })
+  }
+
+  const campaignFilter = createCampaignFilter(request.campaign)
+  const sheets = await Sheet.find({
+    $and: [
+      campaignFilter,
+      isOwner ? {} : { private: false },
+    ],
+  }, '_id secret slug template title')
+
+  return response.status(200).json(sheets)
+}
 
 const controller = express()
+controller.get('/list-by/campaign', listByCampaign)
 controller.get('/:slug', permissions('view'), getSheetRequest)
 controller.post('/:slug', permissions('edit'), upsertSheet)
 controller.delete('/:slug', permissions('edit'), deleteSheet)
+
 export default controller

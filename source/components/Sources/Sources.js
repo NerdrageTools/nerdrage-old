@@ -23,7 +23,7 @@ export default class Sources extends Component {
   }
 
   render = () => {
-    const { className, readOnly, sources, title } = this.props
+    const { className, placeholder, readOnly, sources, title } = this.props
 
     return (
       <div className={`sources ${className}`}>
@@ -49,7 +49,13 @@ export default class Sources extends Component {
             </li>
           ))}
         </ul>
-        {!readOnly && <CampaignSearchBox className="add-user" onSelect={this.handleAddSource} />}
+        {!readOnly && (
+          <CampaignSearchBox
+            className="add-user"
+            onSelect={this.handleAddSource}
+            placeholder={placeholder}
+          />
+        )}
       </div>
     )
   }

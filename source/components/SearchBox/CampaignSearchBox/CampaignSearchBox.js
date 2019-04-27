@@ -11,7 +11,7 @@ const renderOption = (campaign, index, itemProps) => (
   </li>
 )
 
-const CampaignSearchBox = ({ onSelect = noop }) => (
+const CampaignSearchBox = ({ onSelect = noop, ...props }) => (
   <SearchBox
     className="campaign"
     limit={5}
@@ -19,6 +19,7 @@ const CampaignSearchBox = ({ onSelect = noop }) => (
     placeholder="Search Campaigns..."
     renderOption={renderOption}
     url="/api/search/campaigns/:searchTerm"
+    {...props}
   />
 )
 

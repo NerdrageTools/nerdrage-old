@@ -1,0 +1,46 @@
+.sheet-list {
+  .message {
+    display: flex;
+    justify-content: center;
+  }
+
+  .filter {
+    margin: .5rem .25rem .25rem;
+    width: calc(100% - .5rem);
+  }
+
+  .scrollable {
+    height: 200px !important;
+  }
+
+  table {
+    box-shadow: none;
+    margin: 5px auto 0;
+    table-layout: fixed;
+    width: calc(100% - 10px);
+
+    td.properties {
+      padding: 0;
+      text-align: center;
+      width: 52px;
+    }
+
+    .toggle {
+      cursor: auto;
+      height: 15px;
+      margin: 5px;
+      padding: 0;
+      vertical-align: middle;
+      width: 15px;
+
+      &.on {
+        color: #97cd76;
+        stroke: none;
+      }
+      &.off {
+        fill: #ddd;
+        stroke: none;
+      }
+    }
+  }
+}
