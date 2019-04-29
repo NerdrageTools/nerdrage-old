@@ -76,11 +76,16 @@ ArticleSchema.methods.render = async function (campaign) {
   const includes = await transclude(this.html, campaignFilter)
   const links = await renderLinks(includes.html, campaignFilter)
   const childArticles = await mongoose.models.Article
-    .find({
-      ...campaignFilter,
-      tags: { $in: [this.slug, ...this.aliases] },
-    })
-    .select('slug title')
+    .aggregate([
+      { $match: { $and: [campaignFilter, { tags: { $in: [this.slug, ...this.aliases] } }] } },
+      { $group: {
+        _id: '$slug',
+        id: { $first: '$_id' },
+        slug: { $first: '$slug' },
+        title: { $first: '$title' },
+      } },
+      { $project: { _id: '$id', slug: '$slug', title: '$title' } },
+    ])
     .exec()
 
   const html = beautify(links.html, BEAUTIFY_OPTIONS)
