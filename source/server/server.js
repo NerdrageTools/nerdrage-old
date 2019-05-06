@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import path from 'path'
 import compression from 'compression'
 import cookieSession from 'cookie-session'
 import cors from 'cors'
@@ -61,6 +62,12 @@ app.prepare().then(async () => {
   server.get('/favicon.ico', (_, response) => {
     response.status(200).sendFile(`${__dirname}/favicon.ico`)
   })
+
+  const modulePath = path.resolve(__dirname, '../../node_modules')
+  server.use(
+    '/static/fantasy-map-generator',
+    express.static(`${modulePath}/fantasy-map-generator`)
+  )
 
   server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
