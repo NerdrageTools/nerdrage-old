@@ -35,6 +35,7 @@ export default function IFrame({
 
   useEffect(() => {
     const bodyTag = frameEl.current.contentDocument.body
+    if (!bodyTag) { return noop }
     const classNames = bodyClasses.filter(Boolean)
     classNames.forEach(cn => bodyTag.classList.add(cn))
 
