@@ -10,6 +10,7 @@ import nextApp from 'next'
 import nocache from 'nocache'
 import ArticleController from './controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
+import MapController from './controllers/MapController'
 import SearchController from './controllers/SearchController'
 import SheetController from './controllers/SheetController'
 import TemplateController from './controllers/TemplateController'
@@ -71,6 +72,7 @@ app.prepare().then(async () => {
 
   server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
+  server.use('/api/map', ContextLoader, nocache(), MapController)
   server.use('/api/search', ContextLoader, nocache(), SearchController)
   server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
   server.use('/api/templates', ContextLoader, nocache(), TemplateController)

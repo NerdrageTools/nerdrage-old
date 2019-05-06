@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import Alert from '@/components/Alert'
 import IFrame from '@/components/IFrame'
 import Application from '@/contexts/Application'
 import debounce from '@/utilities/debounce'
+import pluck from '@/utilities/pluck'
+import URI from '@/utilities/URI'
 import './map.scss'
 
 const USER_INTERACTION_EVENTS = ['mousedown', 'mouseup', 'keydown', 'keyup']
@@ -11,15 +14,31 @@ export default class Map extends Component {
     data: null,
     readOnly: false,
   }
+  static getInitialProps = async ({ query, req }) => {
+    const headers = pluck(req && req.headers, 'cookie')
+    const result = await fetch(URI(req, `/api/map/${query.slug}`), { headers })
+    const json = await result.json()
+
+    return {
+      httpStatusCode: result.status,
+      ...json,
+    }
+  }
 
   state = {
     data: this.props.data,
   }
 
   handleUserInteraction = debounce(() => {
+    if (!this.iframeWindow || !this.iframeWindow.packageJsonData) return;
     this.setState({ data: this.iframeWindow.packageJsonData() })
   }, 1000)
 
+  handleGenerate = () => {
+    const { router } = this.context
+    const { slug } = this.props
+    router.push(`/map?slug=${slug}&generate=true`, `/map/${slug}?generate=true`)
+  }
   handleIWindowRef = window => { this.iframeWindow = window }
 
   handleOnLoad = ({ document, window }) => {
@@ -46,23 +65,46 @@ export default class Map extends Component {
     localStorage.setItem('mapJson', JSON.stringify(this.state.data))
   }
 
-  render = () => (
-    <div className="map page">
-      <IFrame
-        bodyClasses={[this.props.readOnly ? 'readOnly' : '']}
-        className="map-frame"
-        css={`
-          .readOnly #viewbox, .readOnly #scaleBar {
-            pointer-events: none;
-          }
-        `}
-        onLoad={this.handleOnLoad}
-        onUnload={this.handleOnUnload}
-        src="/static/fantasy-map-generator"
-        queryString={{ doNotGenerate: !!this.props.data || undefined }}
-        title="map"
-        windowRef={this.handleIWindowRef}
-      />
-    </div>
-  )
+  render = () => {
+    const { generate } = this.context.router.query
+    const { data, isEditable } = this.props
+
+    let contents
+    if (data || (isEditable && generate)) {
+      contents = (
+        <IFrame
+          bodyClasses={[isEditable ? 'editable' : 'readOnly']}
+          className="map-frame"
+          css={`
+            .readOnly #viewbox, .readOnly #scaleBar {
+              pointer-events: none;
+            }
+          `}
+          onLoad={this.handleOnLoad}
+          onUnload={this.handleOnUnload}
+          src="/static/fantasy-map-generator"
+          queryString={{ doNotGenerate: !!data || undefined }}
+          title="map"
+          windowRef={this.handleIWindowRef}
+        />
+      )
+    } else if (isEditable) {
+      contents = (
+        <Alert className="center">
+          {isEditable && <>
+            {"This map doesn't exist. Would you like to "}
+            <button className="safe" onClick={this.handleGenerate}>Generate It?</button>
+          </>}
+        </Alert>
+      )
+    } else {
+      contents = (
+        <Alert className="center">
+          {"This map either doesn't exist, or you don't have permission to view it."}
+        </Alert>
+      )
+    }
+
+    return <div className="map page">{contents}</div>
+  }
 }
