@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import Application from '@/contexts/Application'
 import './_error.scss'
 
-export default function Error({
-  message = 'An unknown error occurred.',
-  statusCode = 500,
-}) {
+export default function Error() {
+  const { router } = useContext(Application)
+  const { query } = router
+
   return (
     <div className="error page">
-      <h1 className="status-code">{statusCode}</h1>
-      <div className="message">{message}</div>
+      <h1 className="status-code">{query.statusCode || 500}</h1>
+      <div className="message">An error occurred.</div>
     </div>
   )
 }
