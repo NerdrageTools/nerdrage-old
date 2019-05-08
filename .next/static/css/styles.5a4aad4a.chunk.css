@@ -1583,6 +1583,63 @@ table.info-box {
 .layout.small .page > .title-bar > .title {
   font-size: 1.2em; }
 
+.map.page > iframe.map-frame {
+  border: none;
+  height: 100%;
+  width: 100%; }
+
+.page {
+  display: flex;
+  flex-direction: column; }
+  .page > .title-bar {
+    align-items: center;
+    border-bottom-color: #42afe3;
+    border-bottom-color: var(--color-primary);
+    border-bottom: 1px solid;
+    display: flex;
+    flex-direction: row;
+    font-family: var(--font-for-titles); }
+    .page > .title-bar > .editable.title {
+      align-items: center;
+      display: flex;
+      flex: 1;
+      font-size: 2em;
+      font-weight: bold;
+      justify-content: flex-start;
+      margin: 0;
+      min-height: 50px;
+      padding: 15px; }
+      .page > .title-bar > .editable.title.default, .page > .title-bar > .editable.title.default > input {
+        text-transform: capitalize; }
+    .page > .title-bar > button {
+      margin: 3px; }
+    .page > .title-bar > .toggle.off {
+      color: rgba(153, 153, 153, 0.5); }
+    .page > .title-bar > .toggle.edit-mode.on {
+      color: #97cd76;
+      stroke: #97cd76;
+      stroke-width: 5%; }
+    .page > .title-bar > .toggle.in-navigation.on, .page > .title-bar > .toggle.secret.on {
+      color: #97cd76;
+      stroke: #4b7d2d;
+      stroke-width: 5%; }
+    .page > .title-bar > .toggle.favorite.on {
+      stroke: #998100;
+      stroke-width: 5%; }
+    .page > .title-bar > .redirected-from {
+      font-size: .7rem;
+      padding: .2rem .5rem;
+      opacity: .6; }
+  .page > .contents {
+    padding: 10px; }
+  .page .source {
+    font-size: .7rem;
+    padding: 0 .5rem;
+    opacity: .8; }
+
+.layout.small .page > .title-bar > .title {
+  font-size: 1.2em; }
+
 .login.page, .signup.page {
   align-items: flex-start; }
   .login.page > .container, .signup.page > .container {
