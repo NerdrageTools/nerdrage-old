@@ -31,8 +31,10 @@ export default function Link({
   let as = `/${type}`
   let href = `/${type}`
   if (type !== 'campaign') {
-    as += `/${slug}`
-    href += `?slug=${slug}`
+    if (slug) {
+      as += `/${slug}`
+      href += `?slug=${slug}`
+    }
     if (queryString) {
       as += `?${queryString}`
       href += `&${queryString}`
