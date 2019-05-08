@@ -13,20 +13,9 @@ export default function IFrame({
   windowRef = noop,
 }) {
   const frameEl = useRef()
-  const styleTag = useMemo(() => {
-    if (typeof document !== 'undefined') {
-      return document.createElement('style')
-    }
-
-    return {}
-  }, [])
-
   const handleOnLoad = useEffect(() => {
     const document = frameEl.current.contentDocument
     const window = frameEl.current.contentWindow
-    if (document.head) {
-      document.head.appendChild(styleTag)
-    }
 
     onLoad({ document, window })
     windowRef(window)
@@ -40,8 +29,19 @@ export default function IFrame({
     classNames.forEach(cn => bodyTag.classList.add(cn))
 
     return () => classNames.forEach(cn => bodyTag.classList.remove(cn))
-  })
-  useEffect(() => { styleTag.innerText = css }, [css])
+  }, [bodyClasses])
+  useEffect(() => {
+    const headTag = frameEl.current.contentDocument.head
+    if (!headTag) { return }
+    let styleTag = headTag.querySelector('style#injected')
+    if (!styleTag) {
+      styleTag = frameEl.current.contentDocument.createElement('style')
+      styleTag.id = 'injected'
+      headTag.appendChild(styleTag)
+    }
+
+    styleTag.innerHTML = css
+  }, [css])
 
   const url = useMemo(() => {
     const params = Object.entries(queryString)

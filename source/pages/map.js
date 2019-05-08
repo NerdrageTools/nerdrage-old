@@ -79,6 +79,9 @@ export default class Map extends Component {
             .readOnly #viewbox, .readOnly #scaleBar {
               pointer-events: none;
             }
+            .readOnly #optionsTab, .readOnly #toolsTab, .readOnly #regenerate {
+              display: none!important;
+            }
           `}
           onLoad={this.handleOnLoad}
           onUnload={this.handleOnUnload}
