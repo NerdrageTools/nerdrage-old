@@ -6,7 +6,7 @@ const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 export const MapSchema = new mongoose.Schema({
   campaign: { ref: 'Campaign', required: true, type: ObjectIdType, unique: false },
   data: { default: null, type: Object },
-  secret: { default: true, type: Boolean },
+  secret: { default: false, type: Boolean },
   slug: { ...Slug, required: true, unique: false },
   title: { default: 'Unnamed Map', type: String },
 }, {
