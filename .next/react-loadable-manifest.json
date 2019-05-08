@@ -117,7 +117,7 @@
       "publicPath": "static/chunks/commons.b45c93641946c3cd7f28.js"
     }
   ],
-  "../../core-js/object/keys": [
+  "@babel/runtime-corejs2/core-js/object/keys": [
     {
       "id": "1qCV",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/keys.js",
@@ -907,7 +907,7 @@
       "publicPath": "static/chunks/commons.b45c93641946c3cd7f28.js"
     }
   ],
-  "../../modules/_core": [
+  "../modules/_core": [
     {
       "id": "TaGV",
       "name": "../node_modules/core-js/library/modules/_core.js",
