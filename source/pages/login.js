@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-unfetch'
-import Router from 'next/router'
 import React, { Component } from 'react'
 import Application from '@/contexts/Application'
 import './authPages.scss'
@@ -33,8 +32,9 @@ export default class LoginPage extends Component {
   }
 
   handleRedirect = () => {
-    const { redirectTo } = this.context.router.query
-    if (redirectTo) Router.push(redirectTo)
+    const { router } = this.context
+    const { redirectTo } = router.query
+    if (redirectTo) router.push(redirectTo)
   }
   handleSubmit = async () => {
     const username = this.username.current.value
