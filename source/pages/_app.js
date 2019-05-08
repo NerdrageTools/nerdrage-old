@@ -57,9 +57,10 @@ export default class Wiki extends App {
   setUser = (user, callback = noop) => this.setState({ user }, callback)
   updateCampaign = async (updates, callback = noop) => {
     const { campaign } = this.state
+    const { subdomain } = this.props
     if (!campaign) { return false }
 
-    const result = await fetch(`/api/campaign/${this.state.campaign.subdomain}`, {
+    const result = await fetch(`/api/campaign/${subdomain}`, {
       body: updates ? JSON.stringify(updates) : undefined,
       headers: { 'Content-Type': 'application/json' },
       method: updates ? 'POST' : 'GET',
