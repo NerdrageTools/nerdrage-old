@@ -21,7 +21,7 @@ export default function Link({
     return <span className="active link" title={contents}>{contents}</span>
   }
 
-  if (subdomain && subdomain !== context.campaign.subdomain) {
+  if (subdomain && (!context.campaign || subdomain !== context.campaign.subdomain)) {
     let href = `//${subdomain}.${rootUrl}/${type}`
     if (type !== 'campaign') href += `/${slug}`
 
