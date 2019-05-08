@@ -23,8 +23,8 @@ const FONTS = fetch('https://fonts.google.com/metadata/fonts')
 export const campaignPermissions = async (request, response, next) => {
   const { campaign, user } = request
 
-  const allowPrivate = user && (user.isAdmin || campaign.isOwnedBy(user._id))
-  const allowPublic = user && (user.isAdmin || campaign.isVisibleTo(user._id))
+  const allowPrivate = user && (user.isAdmin || campaign.isOwner)
+  const allowPublic = user && (user.isAdmin || campaign.isViewer)
 
   Object.assign(request, {
     allowPrivate,
