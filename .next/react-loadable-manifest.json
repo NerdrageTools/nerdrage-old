@@ -755,7 +755,7 @@
       "publicPath": "static/chunks/commons.b45c93641946c3cd7f28.js"
     }
   ],
-  "../core-js/object/set-prototype-of": [
+  "../../core-js/object/set-prototype-of": [
     {
       "id": "OKNm",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/set-prototype-of.js",
