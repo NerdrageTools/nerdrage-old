@@ -26,7 +26,7 @@
     "downshift": "^3.2.7",
     "entities": "^1.1.2",
     "express": "^4.16.4",
-    "fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#4891e8dfefd8d223b64f2a819c73d91f8b84291d",
+    "fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#259f4ecedee1e6b67639e1cd3419a9e10c21b42e",
     "isomorphic-unfetch": "^3.0.0",
     "js-beautify": "^1.9.0",
     "mobx": "^5.9.0",
