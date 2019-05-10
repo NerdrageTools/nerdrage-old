@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{SLxR:function(n,w,o){(window.__NEXT_P=window.__NEXT_P||[]).push(["/_error",function(){var n=o("Y0NT");return{page:n.default||n}}])}},[["SLxR",1,0,2]]]);
