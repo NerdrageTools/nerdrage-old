@@ -75,13 +75,13 @@ export default class Map extends Component {
     this.iframeWindow = window
 
     const { _id, checksum, data, generating } = this.state
-    const { query } = this.props
+    const { slug } = this.props
 
     if (data) {
       window.displayJsonData(data)
     } else if (_id) {
       this.setState({ loading: true })
-      const map = await fetch(`/api/map/${query.slug}/${checksum}`, { credentials: 'include' })
+      const map = await fetch(`/api/map/${slug}/${checksum}`, { credentials: 'include' })
         .then(response => response.json())
         .catch(() => null)
       if (map && map.data) {
