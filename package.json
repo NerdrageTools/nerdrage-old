@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@azgaar/fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#b3b812e874af6e2ccb117a62f3e47e283aaf5447",
+    "@azgaar/fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#42cf359396301c8429889e8a643f8dc7b9c7f0ba",
     "@babel/register": "^7.4.0",
     "@tinymce/tinymce-react": "^3.0.1",
     "@zeit/next-css": "^1.0.1",
