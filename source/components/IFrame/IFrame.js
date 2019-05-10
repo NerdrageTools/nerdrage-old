@@ -1,47 +1,65 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import noop from '@/utilities/noop'
 
+const applyProps = ({ bodyClasses, css, document }) => {
+  if (!document || !document.body || !document.head) {
+    return noop
+  }
+
+  const bodyTag = document.body
+  const classNames = bodyClasses.filter(Boolean)
+  classNames.forEach(cn => bodyTag.classList.add(cn))
+
+  const headTag = document.head
+  let styleTag = headTag.querySelector('style#injected')
+  if (!styleTag) {
+    styleTag = document.createElement('style')
+    styleTag.id = 'injected'
+    headTag.appendChild(styleTag)
+  }
+
+  styleTag.innerHTML = css
+
+  return () => classNames.forEach(cn => bodyTag.classList.remove(cn))
+}
+
+
 export default function IFrame({
   bodyClasses = [],
   className = '',
   css = '',
   onLoad = noop,
+  onReady = noop,
   onUnload = noop,
   queryString = {},
   src = '',
   title = 'IFrame',
-  windowRef = noop,
 }) {
   const frameEl = useRef()
-  const handleOnLoad = useEffect(() => {
-    const document = frameEl.current.contentDocument
+
+  const handleOnReady = useMemo(() => ({ document, window }) => {
+    applyProps({ bodyClasses, css, document })
+    onReady({ document, window })
+  }, [bodyClasses, css, onReady])
+
+  const handleOnLoad = useEffect(function _handleOnLoad() {
+    const document = frameEl.current.contentDocument // eslint-disable-line no-shadow
     const window = frameEl.current.contentWindow
 
     onLoad({ document, window })
-    windowRef(window)
-    return () => onUnload({ document, window })
-  }, [])
 
-  useEffect(() => {
-    const bodyTag = frameEl.current.contentDocument.body
-    if (!bodyTag) { return noop }
-    const classNames = bodyClasses.filter(Boolean)
-    classNames.forEach(cn => bodyTag.classList.add(cn))
-
-    return () => classNames.forEach(cn => bodyTag.classList.remove(cn))
-  }, [bodyClasses])
-  useEffect(() => {
-    const headTag = frameEl.current.contentDocument.head
-    if (!headTag) { return }
-    let styleTag = headTag.querySelector('style#injected')
-    if (!styleTag) {
-      styleTag = frameEl.current.contentDocument.createElement('style')
-      styleTag.id = 'injected'
-      headTag.appendChild(styleTag)
+    if (window.location.href === 'about:blank') {
+      setTimeout(_handleOnLoad, 50)
+    } else if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        handleOnReady({ document, window })
+      })
+    } else {
+      handleOnReady({ document, window })
     }
 
-    styleTag.innerHTML = css
-  }, [css])
+    return () => onUnload({ document, window })
+  }, [onReady, onUnload])
 
   const url = useMemo(() => {
     const params = Object.entries(queryString)

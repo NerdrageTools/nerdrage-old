@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import path from 'path'
+import bodyParser from 'body-parser'
 import compression from 'compression'
 import cookieSession from 'cookie-session'
 import cors from 'cors'
@@ -35,6 +36,7 @@ app.prepare().then(async () => {
   mongoose.Promise = global.Promise
 
   const server = express()
+    .use(bodyParser.json({ limit: '10mb' }))
     .use((request, response, next) => {
       response.header('Access-Control-Allow-Origin', '*')
       response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -67,12 +69,12 @@ app.prepare().then(async () => {
   const modulePath = path.resolve(__dirname, '../../node_modules')
   server.use(
     '/static/fantasy-map-generator',
-    express.static(`${modulePath}/fantasy-map-generator`)
+    express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' })
   )
 
   server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
   server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
-  server.use('/api/map', ContextLoader, nocache(), MapController)
+  server.use('/api/map', ContextLoader, MapController)
   server.use('/api/search', ContextLoader, nocache(), SearchController)
   server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
   server.use('/api/templates', ContextLoader, nocache(), TemplateController)
