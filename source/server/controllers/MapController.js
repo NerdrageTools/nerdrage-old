@@ -1,4 +1,5 @@
 import express from 'express'
+import nocache from 'nocache'
 import Map from '@/server/models/Map'
 import createCampaignFilter from '@/utilities/createCampaignFilter'
 import omit from '@/utilities/omit'
@@ -17,6 +18,7 @@ const loadMap = (slug, campaign) => {
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, subdomain, params: { slug } } = request
   const map = await loadMap(slug, campaign)
+    .select('-data')
     .populate('campaign', 'subdomain title')
     .exec()
   const { isEditor, isOwner, isViewer } = campaign
@@ -60,26 +62,37 @@ export const getMap = async (request, response) => {
   }
 
   return response.status(200).json({
-    ...map,
+    ...omit(map, 'data'),
     campaign: pluck(map.campaign, '_id', 'subdomain', 'title'),
     isEditable,
     isOwner,
   })
 }
+export const getMapData = async (request, response) => {
+  const { map } = request
+  if (map && map._id) {
+    response.set('Cache-Control', 'public, max-age=31557600')
+    response.set('ETag', map.checksum)
+
+    map.data = (await Map.findOne({ _id: map._id }, { data: 1 })).data
+    response.status(200).json(map.toJSON())
+  } else {
+    response.status(404).send()
+  }
+}
 export const upsertMap = async (request, response) => {
   const {
     campaign,
-    isEditable,
     isOwner,
     slug,
   } = request
   let { map, body: updates } = request
   updates = {
-    ...omit(updates, '_id', 'slug'),
+    ...omit(updates, '_id', 'slug', 'version'),
     campaign: campaign._id,
     slug,
   }
-  if (!request.isOwner) {
+  if (!isOwner) {
     delete updates.secret // Only owners can set this field
   }
 
@@ -89,11 +102,8 @@ export const upsertMap = async (request, response) => {
     map = new Map(updates)
   }
 
-  const { _id } = await map.save()
-  const saved = await Map.findOne({ _id })
-    .populate('campaign', 'subdomain title')
-    .exec()
-  return response.status(200).json({ ...await saved.render(), isEditable, isOwner })
+  await map.save()
+  return response.status(200).json(map.toJSON())
 }
 export const deleteMap = async (request, response) => {
   const { map } = request
@@ -102,7 +112,8 @@ export const deleteMap = async (request, response) => {
 }
 
 const controller = express()
-controller.get('/:slug', permissions('view'), getMap)
-controller.post('/:slug', permissions('edit'), upsertMap)
-controller.delete('/:slug', permissions('edit'), deleteMap)
+controller.get('/:slug', nocache(), permissions('view'), getMap)
+controller.get('/:slug/:checksum', permissions('view'), getMapData)
+controller.post('/:slug', nocache(), permissions('edit'), upsertMap)
+controller.delete('/:slug', nocache(), permissions('edit'), deleteMap)
 export default controller
