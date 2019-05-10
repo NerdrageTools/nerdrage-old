@@ -125,7 +125,7 @@
       "publicPath": "static/chunks/commons.41e00ab149d542454834.js"
     }
   ],
-  "../../core-js/object/keys": [
+  "@babel/runtime-corejs2/core-js/object/keys": [
     {
       "id": "1qCV",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/keys.js",
