@@ -67,7 +67,7 @@ app.prepare().then(async () => {
   const modulePath = path.resolve(__dirname, '../../node_modules')
   server.use(
     '/static/fantasy-map-generator',
-    express.static(`${modulePath}/fantasy-map-generator`)
+    express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' })
   )
 
   server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)

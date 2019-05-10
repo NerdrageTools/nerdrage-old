@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@azgaar/fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#bbdbc750d1465c1b27014bd206a3c451bd581901",
     "@babel/register": "^7.4.0",
     "@tinymce/tinymce-react": "^3.0.1",
     "@zeit/next-css": "^1.0.1",
@@ -26,7 +27,6 @@
     "downshift": "^3.2.7",
     "entities": "^1.1.2",
     "express": "^4.16.4",
-    "fantasy-map-generator": "TroyAlford/Fantasy-Map-Generator#259f4ecedee1e6b67639e1cd3419a9e10c21b42e",
     "isomorphic-unfetch": "^3.0.0",
     "js-beautify": "^1.9.0",
     "mobx": "^5.9.0",
