@@ -3,6 +3,20 @@
 .page {
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  > .generating {
+    align-items: center;
+    background: #ffffffee;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+  }
 
   > .title-bar {
     align-items: center;
