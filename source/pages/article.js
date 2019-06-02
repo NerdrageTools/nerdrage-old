@@ -60,13 +60,10 @@ export default class Article extends Component {
     const headers = pluck(req && req.headers, 'cookie')
     let url = `/api/article/${query.slug}`
     if (query.template) url += `?template=${query.template}`
-    const result = await fetch(URI(req, url), { headers })
-    const json = await result.json()
+    const response = await fetch(URI(req, url), { headers })
+    const json = await response.json()
 
-    return {
-      httpStatusCode: result.status,
-      ...json,
-    }
+    return { httpStatusCode: response.status, ...json }
   }
   static getDerivedStateFromProps(props, state) {
     if (props.slug !== state.slug) {

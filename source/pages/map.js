@@ -141,7 +141,7 @@ export default class Map extends Component {
     } = this.state
 
     let contents
-    if (data || (isEditable && generating)) {
+    if (_id || (isEditable && generating)) {
       contents = (
         <IFrame
           bodyClasses={[isEditable ? 'editable' : 'readOnly']}
