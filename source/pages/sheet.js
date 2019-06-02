@@ -44,7 +44,8 @@ export default class Sheet extends Component {
     if (query.template) url += `?template=${query.template}`
     const response = await fetch(URI(req, url), { headers })
     const json = await response.json()
-    return { statusCode: response.status, ...json }
+
+    return { httpStatusCode: response.status, ...json }
   }
 
   get isDirty() {
@@ -116,11 +117,11 @@ export default class Sheet extends Component {
   handleToggleTemplate = () => this.handleSave({ template: !this.state.template })
 
   render = () => {
-    const { message, statusCode, slug } = this.props
+    const { httpStatusCode, message, slug } = this.props
     const { _id, isEditor, isOwner, secret, template, title } = this.state
 
-    if (statusCode !== 200) {
-      return <ErrorPage {...{ message, statusCode }} />
+    if (httpStatusCode !== 200) {
+      return <ErrorPage {...{ httpStatusCode, message }} />
     }
 
     return (
