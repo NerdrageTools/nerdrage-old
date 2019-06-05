@@ -95,9 +95,6 @@ export default class SearchBox extends Component {
 
     if (searchTerm) {
       this.debouncedSearch(searchTerm)
-    } else {
-      this.inputBox.current.blur()
-      this.inputBox.current.focus()
     }
   }
   handleSelect = option => {
@@ -120,7 +117,7 @@ export default class SearchBox extends Component {
   )
   render = () => {
     const { className, placeholder, ...props } = this.props
-    const { message, options, searching } = this.state
+    const { message, options, searching, searchTerm } = this.state
     const { theme } = this.context
     const renderOption = this.props.renderOption || this.renderOption
     const OverlayIcon = searching ? LoadingIcon : SearchIcon
@@ -130,6 +127,7 @@ export default class SearchBox extends Component {
         id="search-box" ref={this.downshift}
         {...props}
         itemToString={article => (article ? article.title : '')}
+        isOpen={Boolean(searchTerm)}
         onInputValueChange={this.handleSearch}
         onSelect={this.handleSelect}
       >{({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
@@ -142,7 +140,7 @@ export default class SearchBox extends Component {
             className="input" ref={this.inputBox}
             onFocus={this.handleFocus}
             placeholder={placeholder}
-            value={this.state.searchTerm}
+            value={searchTerm}
           />
           {(searching || !options.length)
             ? isOpen && <div className="search-results message">{message}</div>
