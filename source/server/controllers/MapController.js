@@ -1,19 +1,14 @@
 import express from 'express'
 import nocache from 'nocache'
 import Map from '@/server/models/Map'
-import createCampaignFilter from '@/utilities/createCampaignFilter'
+import loadByCampaign from '@/server/utilities/loadByCampaign'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
-const loadMap = (slug, campaign) => {
-  const campaignFilter = createCampaignFilter(campaign)
-  return Map.findOne({
-    $and: [
-      campaignFilter,
-      { slug },
-    ],
-  })
-}
+const loadMap = (slug, campaign) => (
+  loadByCampaign('Map', campaign, { filter: { slug } })
+    .then(maps => maps.shift())
+)
 
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, subdomain, params: { slug } } = request

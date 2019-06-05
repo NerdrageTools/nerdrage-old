@@ -6,11 +6,13 @@ import pluck from '@/utilities/pluck'
 
 const loadArticle = async (slug, campaign) => (
   loadByCampaign('Article', campaign, { filter: { $or: [{ aliases: slug }, { slug }] } })
-    .then(articles => articles.shift()
-      .populate('campaign', 'subdomain title')
-      .populate('createdBy lastUpdatedBy', 'name username')
-      .execPopulate()
-    )
+    .then(articles => {
+      if (!articles || !articles.length) return null
+      return articles.shift()
+        .populate('campaign', 'subdomain title')
+        .populate('createdBy lastUpdatedBy', 'name username')
+        .execPopulate()
+    })
 )
 
 export const permissions = (...required) => async (request, response, next) => {

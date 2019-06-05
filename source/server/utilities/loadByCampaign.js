@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 export default (model, campaign, {
   aggregation = [],
+  castAsModel = true,
   filter = {},
 }) => {
   const Model = mongoose.models[model]
@@ -14,5 +15,7 @@ export default (model, campaign, {
     { $group: { _id: '$slug', first: { $first: '$$ROOT' } } },
     { $replaceRoot: { newRoot: '$first' } },
     ...aggregation,
-  ]).then(documents => documents.map(document => new Model(document)))
+  ]).then(documents => (
+    castAsModel ? documents.map(document => new Model().init(document)) : documents
+  ))
 }

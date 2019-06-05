@@ -3,11 +3,10 @@ import entities from 'entities'
 import express from 'express'
 import fetch from 'isomorphic-unfetch'
 import Campaign404 from '@/server/errors/Campaign404'
-import Article from '@/server/models/Article'
 import Campaign from '@/server/models/Campaign'
 import User from '@/server/models/User'
+import loadByCampaign from '@/server/utilities/loadByCampaign'
 import bound from '@/utilities/bound'
-import createCampaignFilter from '@/utilities/createCampaignFilter'
 
 const FONTS = fetch('https://fonts.google.com/metadata/fonts')
   .then(async response => {
@@ -49,69 +48,57 @@ export const searchArticles = async (request, response) => {
     })
   }
 
-  const campaignFilter = createCampaignFilter(campaign)
   const $search = new Deburr(entities.decodeHTML(searchTerm)).toString()
 
-  const exactMatches = await Article.aggregate([
-    { $match: { $or: [{ title: $search }, { aliases: $search }, { slug: $search }] } },
-    { $project: {
-      _id: '$slug',
-      matchScore: { $literal: 0 },
-      preview: { $substr: ['$plainText', 0, 100] },
-      slug: '$slug',
-      title: '$title',
-    } },
-  ])
+  let exactMatches = []
+  exactMatches = await loadByCampaign('Article', campaign, {
+    aggregation: [{
+      $addFields: { preview: { $substr: ['$plainText', 0, 100] } },
+    }],
+    castAsModel: false,
+    filter: {
+      $or: [{ title: $search }, { aliases: $search }, { slug: $search }],
+      ...(!allowPrivate ? { secret: false } : {}),
+    },
+  })
+
+  let fullTextMatches = []
+  if (fullTextMatches.length < limit) {
+    const fullTextSearchTerm = $search.split(/\s/).map(term => `"${term}"`).join(' ')
+    fullTextMatches = await loadByCampaign('Article', campaign, {
+      aggregation: [
+        { $addFields: { preview: { $substr: ['$plainText', 0, 100] } } },
+        { $sort: { score: { $meta: 'textScore' } } },
+        { $limit: bound(limit - exactMatches.length, { min: 1 }) },
+      ],
+      castAsModel: false,
+      filter: {
+        $text: { $search: fullTextSearchTerm },
+        slug: { $nin: exactMatches.map(match => match.slug) },
+        ...(!allowPrivate ? { secret: false } : {}),
+      },
+    })
+  }
 
   let partialMatches = []
-  const fullTextMatches = await Article.aggregate([
-    { $match: {
-      $and: [
-        campaignFilter,
-        { slug: { $nin: exactMatches.map(match => match.slug) } },
-        !allowPrivate ? { secret: false } : {},
-        { $text: { $search } },
-      ],
-    } },
-    { $project: {
-      matchScore: { $meta: 'textScore' },
-      preview: { $substr: ['$plainText', 0, 100] },
-      slug: '$slug',
-      title: '$title',
-    } },
-    { $sort: { matchScore: { $meta: 'textScore' } } },
-    { $group: {
-      _id: '$slug',
-      matchScore: { $first: '$matchScore' },
-      preview: { $first: '$preview' },
-      slug: { $first: '$slug' },
-      title: { $first: '$title' },
-    } },
-    { $project: { _id: 0, matchScore: 1, preview: 1, slug: 1, title: 1 } },
-  ]).limit(bound(limit - exactMatches.length, { min: 1 }))
-
-  if (fullTextMatches.length <= 10) {
+  if ((exactMatches.length + fullTextMatches.length) < limit) {
     const searchKeys = $search.split(/\s/).map(term => new RegExp(`^${term}`))
 
-    partialMatches = await Article.aggregate([
-      { $match: {
+    partialMatches = await loadByCampaign('Article', campaign, {
+      aggregation: [
+        { $addFields: { preview: { $substr: ['$plainText', 0, 100] } } },
+        { $limit: bound(limit - fullTextMatches.length, { min: 1 }) },
+      ],
+      castAsModel: false,
+      filter: {
+        ...(!allowPrivate ? { secret: false } : {}),
         $and: [
-          campaignFilter,
           { slug: { $nin: fullTextMatches.map(match => match.slug) } },
           { slug: { $nin: exactMatches.map(match => match.slug) } },
-          !allowPrivate ? { secret: false } : {},
-          { searchKeys: { $in: searchKeys } },
         ],
-      } },
-      { $project: { preview: { $substr: ['$plainText', 0, 100] }, slug: '$slug', title: '$title' } },
-      { $group: {
-        _id: '$slug',
-        preview: { $first: '$preview' },
-        slug: { $first: '$slug' },
-        title: { $first: '$title' },
-      } },
-      { $project: { _id: 0, matchScore: { $literal: 0 }, preview: 1, slug: 1, title: 1 } },
-    ]).limit(bound(limit - fullTextMatches.length, { min: 1 }))
+        searchKeys: { $in: searchKeys },
+      },
+    })
   }
 
   const results = [...exactMatches, ...fullTextMatches, ...partialMatches]
