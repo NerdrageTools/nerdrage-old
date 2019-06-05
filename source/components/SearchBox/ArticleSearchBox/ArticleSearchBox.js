@@ -19,6 +19,7 @@ export default class ArticleSearchBox extends Component {
   render = () => (
     <SearchBox
       className="article"
+      clearOnSelect
       hotkeys={{
         focus: { ctrlKey: true, key: 'F', shiftKey: true },
       }}
