@@ -36,8 +36,8 @@ export default async function renderLinks(html, campaignFilter = { campaign: nul
 
   const linked = await Article.find({
     $and: [
-      { $or: [{ slug: { $in: links } }, { aliases: { $in: links } }] },
       campaignFilter,
+      { $or: [{ slug: { $in: links } }, { aliases: { $in: links } }] },
     ],
   }).select('slug aliases')
     .exec()

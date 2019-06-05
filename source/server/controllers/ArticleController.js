@@ -1,25 +1,21 @@
 import express from 'express'
 import Article from '@/server/models/Article'
-import createCampaignFilter from '@/utilities/createCampaignFilter'
+import loadByCampaign from '@/server/utilities/loadByCampaign'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
-const loadArticle = (slug, campaign) => {
-  const campaignFilter = createCampaignFilter(campaign)
-  return Article.findOne({
-    $and: [
-      campaignFilter,
-      { $or: [{ aliases: slug }, { slug }] },
-    ],
-  })
-}
+const loadArticle = async (slug, campaign) => (
+  loadByCampaign('Article', campaign, { filter: { $or: [{ aliases: slug }, { slug }] } })
+    .then(articles => articles.shift()
+      .populate('campaign', 'subdomain title')
+      .populate('createdBy lastUpdatedBy', 'name username')
+      .execPopulate()
+    )
+)
 
 export const permissions = (...required) => async (request, response, next) => {
   const { campaign, subdomain, params: { slug } } = request
   const article = await loadArticle(slug, campaign)
-    .populate('campaign', 'subdomain title')
-    .populate('createdBy lastUpdatedBy', 'name username')
-    .exec()
   const { isEditor, isOwner, isViewer } = campaign
 
   if (required.includes('view') && !isViewer) {
