@@ -91,10 +91,14 @@ export default class SearchBox extends Component {
     }
   }
   handleSearch = async (searchTerm = '') => {
-    if (!searchTerm) return
+    this.setState({ message: 'Searching...', searching: Boolean(searchTerm), searchTerm })
 
-    this.setState({ message: 'Searching...', searching: true, searchTerm })
-    this.debouncedSearch(searchTerm)
+    if (searchTerm) {
+      this.debouncedSearch(searchTerm)
+    } else {
+      this.inputBox.current.blur()
+      this.inputBox.current.focus()
+    }
   }
   handleSelect = option => {
     const { clearOnSelect, onSelect, valueGetter } = this.props
