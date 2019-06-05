@@ -803,7 +803,7 @@
       "publicPath": "static/chunks/commons.b86c14416d6391d555e7.js"
     }
   ],
-  "../core-js/object/set-prototype-of": [
+  "../../core-js/object/set-prototype-of": [
     {
       "id": "OKNm",
       "name": "../node_modules/@babel/runtime-corejs2/core-js/object/set-prototype-of.js",
