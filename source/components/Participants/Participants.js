@@ -62,6 +62,7 @@ export default class Participants extends Component {
   }
 
   handleSetEdit = (user, edit = {}) => {
+    if (!user) return
     const { current, edits } = this.state
     const exists = current.find(p => p._id === user._id)
     const currentEdit = edits.find(e => e._id === user._id) || {}
@@ -81,12 +82,15 @@ export default class Participants extends Component {
   }
 
   handleAddUser = user => {
+    if (!user) return
     this.handleSetEdit(user, { level: 'player', order: ORDER.player, type: 'added' })
   }
   handleSetPermission = (user, level) => {
+    if (!user) return
     this.handleSetEdit(user, { level, order: ORDER[level], type: 'updated' })
   }
   handleToggleRemoved = user => {
+    if (!user) return
     this.handleSetEdit(user, { level: 'removed', order: ORDER.removed, type: 'removed' })
   }
   handleSave = () => {
