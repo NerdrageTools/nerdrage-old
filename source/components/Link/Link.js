@@ -46,7 +46,7 @@ export default function Link({
 
   return (
     <NextLink {...{ as, href }}>
-      <a {...props}>{contents}</a>
+      <a {...{ href }}>{contents}</a>
     </NextLink>
   )
 }

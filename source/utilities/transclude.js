@@ -19,8 +19,8 @@ export default function transclude(html, campaignFilter) {
     if (!includes[from]) {
       includes[from] = Article.findOne({
         $and: [
-          { $or: [{ slug: from }, { aliases: from }] },
           campaignFilter,
+          { $or: [{ slug: from }, { aliases: from }] },
         ],
       })
     }
