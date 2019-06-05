@@ -16,10 +16,10 @@ export default function ThemeEditor({
     updateCampaign({ theme: { ...theme, [key]: color.hex } })
   }
   const onUpdateFont = key => font => {
+    if (!font) { return }
     updateCampaign({ theme: { ...theme, [key]: font.family } })
   }
   const onUpdateFontSize = ({ target }) => {
-    console.log(target.value)
     updateCampaign({ theme: { ...theme, fontSize: target.value } })
   }
 
@@ -31,7 +31,7 @@ export default function ThemeEditor({
         {readOnly
           ? <div className="display">{theme.fontForTitles}</div>
           : <FontSearchBox
-              defaultInputValue={theme.fontForTitles}
+              initialValue={theme.fontForTitles}
               onSelect={onUpdateFont('fontForTitles')}
             />
         }
@@ -41,7 +41,7 @@ export default function ThemeEditor({
         {readOnly
           ? <div className="display">{theme.fontForText}</div>
           : <FontSearchBox
-              defaultInputValue={theme.fontForText}
+              initialValue={theme.fontForText}
               onSelect={onUpdateFont('fontForText')}
             />
         }

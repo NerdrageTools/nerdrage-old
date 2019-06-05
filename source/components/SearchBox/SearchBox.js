@@ -12,8 +12,9 @@ export default class SearchBox extends Component {
   static contextType = Application
   static defaultProps = {
     className: '',
-    clearOnSelect: true,
+    clearOnSelect: false,
     hotkeys: {},
+    initialValue: '',
     limit: 10,
     onHotKey: noop,
     onSelect: noop,
@@ -28,7 +29,7 @@ export default class SearchBox extends Component {
   state = {
     message: null,
     options: [],
-    searchTerm: this.props.defaultInputValue,
+    searchTerm: this.props.initialValue,
   }
 
   downshift = React.createRef()
@@ -87,10 +88,20 @@ export default class SearchBox extends Component {
   }
   handleKeyDown = event => {
     if (event.key === 'Escape') {
+      this.setState({ searching: false, searchTerm: this.props.initialValue })
       this.inputBox.current.blur()
+      this.escapeKey = true
+      // eslint-disable-next-line no-param-reassign
+      event.nativeEvent.preventDownshiftDefault = true
     }
   }
-  handleSearch = async (searchTerm = '') => {
+  handleSearch = event => {
+    const { value: searchTerm = '' } = event.target
+
+    if (this.escapeKey) {
+      this.escapeKey = false
+      return
+    }
     this.setState({ message: 'Searching...', searching: Boolean(searchTerm), searchTerm })
 
     if (searchTerm) {
@@ -101,9 +112,10 @@ export default class SearchBox extends Component {
     const { clearOnSelect, onSelect, valueGetter } = this.props
 
     onSelect(option)
+    this.inputBox.current.blur()
 
-    if (clearOnSelect && !this.clearing) {
-      this.setState({ searchTerm: '' })
+    if (clearOnSelect) {
+      this.setState({ searching: false, searchTerm: '' })
     } else {
       this.setState({ searching: false, searchTerm: valueGetter(option) })
     }
@@ -121,14 +133,14 @@ export default class SearchBox extends Component {
     const { theme } = this.context
     const renderOption = this.props.renderOption || this.renderOption
     const OverlayIcon = searching ? LoadingIcon : SearchIcon
+    const inputHasFocus = this.inputBox.current && this.inputBox.current.matches(':focus')
 
     return (
       <Downshift
         id="search-box" ref={this.downshift}
         {...props}
         itemToString={article => (article ? article.title : '')}
-        isOpen={Boolean(searchTerm)}
-        onInputValueChange={this.handleSearch}
+        isOpen={Boolean(searchTerm) && inputHasFocus}
         onSelect={this.handleSelect}
       >{({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
         <div
@@ -138,6 +150,7 @@ export default class SearchBox extends Component {
           <input
             {...getInputProps({ onKeyDown: this.handleKeyDown })}
             className="input" ref={this.inputBox}
+            onChange={this.handleSearch}
             onFocus={this.handleFocus}
             placeholder={placeholder}
             value={searchTerm}

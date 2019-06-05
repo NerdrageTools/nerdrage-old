@@ -38,17 +38,19 @@ export default function SheetList({
           />
           <Scrollbars className={`scrollable ${loaded ? 'loaded' : 'loading'}`} universal>
             <table>
-              {sheets.filter(s => s.title.toLowerCase().match(filter.toLowerCase())).map(sheet => (
-                <tr key={sheet._id}>
-                  <td className="link">
-                    <Link type="sheet" {...sheet}>{sheet.title}</Link>
-                  </td>
-                  <td className="properties">
-                    <Toggle onIcon={SecretIcon} offIcon={PublicIcon} value={sheet.secret} />
-                    <Toggle onIcon={TemplateIcon} offIcon={TemplateIcon} value={sheet.template} />
-                  </td>
-                </tr>
-              ))}
+              <tbody>
+                {sheets.filter(s => s.title.toLowerCase().match(filter.toLowerCase())).map(sheet => (
+                  <tr key={sheet._id}>
+                    <td className="link">
+                      <Link type="sheet" {...sheet}>{sheet.title}</Link>
+                    </td>
+                    <td className="properties">
+                      <Toggle onIcon={SecretIcon} offIcon={PublicIcon} value={sheet.secret} />
+                      <Toggle onIcon={TemplateIcon} offIcon={TemplateIcon} value={sheet.template} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </Scrollbars>
         </>
