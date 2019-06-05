@@ -145,7 +145,10 @@ export default class Article extends Component {
   }
   handleTagsChange = tags => this.setState({ tags })
   handleTitleChange = title => this.setState({ title })
-  handleToggleEditMode = () => this.setState({ editMode: !this.state.editMode })
+  handleToggleEditMode = () => this.setState({
+    activeTab: this.state.editMode ? 'read' : 'edit',
+    editMode: !this.state.editMode,
+  })
   handleToggleFavorite = async () => {
     const updated = await fetch(`/api/user/my/favorites/${this.props.slug}`, {
       method: 'POST',

@@ -131,13 +131,13 @@ export async function logIn(request, response) {
   const query = { $or: [{ username }, { email: username }] }
 
   try {
-    const user = await User.findOne(query, { password: 1 })
+    const user = await User.findOne(query, { password: 1, username: 1 })
     if (!user) return invalidAuthentication(response)
 
     const isMatch = await user.comparePassword(password)
     if (isMatch) {
       await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
-      const loadedUser = await getUser(username, true)
+      const loadedUser = await getUser(user.username, true)
       request.session = loadedUser || null
       return response.status(200).json(loadedUser)
     }
