@@ -16,6 +16,16 @@ export default class ArticleSearchBox extends Component {
     }
   }
 
+  renderOption = (option, _, itemProps) => (
+    <li key={option.slug} className="search-result" {...itemProps}>
+      <b className="title">{option.title}</b>
+      <div className="preview">{option.preview.map((preview, key) => (
+        // eslint-disable-next-line react/no-danger
+        <span key={key} dangerouslySetInnerHTML={{ __html: preview }} />
+      ))}</div>
+    </li>
+  )
+
   render = () => (
     <SearchBox
       className="article"
@@ -26,6 +36,7 @@ export default class ArticleSearchBox extends Component {
       onHotKey={this.handleHotKey}
       onSelect={this.handleSelect}
       placeholder="Search... (Ctrl+Shift+F)"
+      renderOption={this.renderOption}
       url="/api/search/articles/:searchTerm"
     />
   )

@@ -19,6 +19,26 @@ const FONTS = fetch('https://fonts.google.com/metadata/fonts')
     return []
   })
 
+const getPreview = (record, searchTerm, limit = 5) => {
+  const full = new RegExp(searchTerm, 'gi')
+  const matches = []
+
+  let match
+  Object.values(record).forEach(value => {
+    // eslint-disable-next-line no-cond-assign
+    while ((match = full.exec(value)) !== null && matches.length < limit) {
+      const preview = [
+        `...${value.substr(match.index - 25, 25)}`,
+        `<span class="highlight">${searchTerm}</span>`,
+        `${value.substr(match.index + searchTerm.length, 25)}...`,
+      ].join('')
+      matches.push(preview)
+    }
+  })
+
+  return matches
+}
+
 export const campaignPermissions = async (request, response, next) => {
   const { campaign, user } = request
 
@@ -49,27 +69,32 @@ export const searchArticles = async (request, response) => {
   }
 
   const $search = new Deburr(entities.decodeHTML(searchTerm)).toString()
+  const projection = {
+    $project: { campaign: 1, plainText: 1, secret: 1, slug: 1, template: 1, title: 1 },
+  }
 
   let exactMatches = []
+  const $regex = new RegExp($search.split(/\s/).map(t => `(?=${t})`).join(''), 'i')
   exactMatches = await loadByCampaign('Article', campaign, {
-    aggregation: [{
-      $addFields: { preview: { $substr: ['$plainText', 0, 100] } },
-    }],
+    aggregation: [projection],
     castAsModel: false,
     filter: {
-      $or: [{ title: $search }, { aliases: $search }, { slug: $search }],
+      $or: [{ title: $regex }, { aliases: $regex }, { slug: $regex }],
       ...(!allowPrivate ? { secret: false } : {}),
     },
   })
 
   let fullTextMatches = []
   if (fullTextMatches.length < limit) {
-    const fullTextSearchTerm = $search.split(/\s/).map(term => `"${term}"`).join(' ')
+    const fullTextSearchTerm = [
+      `"${$search}"`,
+      ...$search.split(/\s/).map(term => `"${term}"`),
+    ].join(' ')
     fullTextMatches = await loadByCampaign('Article', campaign, {
       aggregation: [
-        { $addFields: { preview: { $substr: ['$plainText', 0, 100] } } },
         { $sort: { score: { $meta: 'textScore' } } },
         { $limit: bound(limit - exactMatches.length, { min: 1 }) },
+        projection,
       ],
       castAsModel: false,
       filter: {
@@ -86,8 +111,8 @@ export const searchArticles = async (request, response) => {
 
     partialMatches = await loadByCampaign('Article', campaign, {
       aggregation: [
-        { $addFields: { preview: { $substr: ['$plainText', 0, 100] } } },
         { $limit: bound(limit - fullTextMatches.length, { min: 1 }) },
+        projection,
       ],
       castAsModel: false,
       filter: {
@@ -103,6 +128,11 @@ export const searchArticles = async (request, response) => {
 
   const results = [...exactMatches, ...fullTextMatches, ...partialMatches]
     .slice(0, bound(limit, { min: 0 }))
+    .map(result => ({
+      ...result,
+      plainText: undefined,
+      preview: getPreview(result, $search),
+    }))
 
   return response.status(200).json(results)
 }
