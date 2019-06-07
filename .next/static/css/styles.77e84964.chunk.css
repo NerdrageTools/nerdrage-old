@@ -616,6 +616,7 @@ table[class*="callout-"] {
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
+  position: relative;
   width: 275px;
   z-index: 1; }
 
