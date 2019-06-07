@@ -5,6 +5,7 @@ import Application from '@/contexts/Application'
 export default function Link({
   active,
   children,
+  className = '',
   query = null,
   slug = '',
   type = 'article',
@@ -46,7 +47,7 @@ export default function Link({
 
   return (
     <NextLink {...{ as, href }}>
-      <a {...{ href }}>{contents}</a>
+      <a {...{ className, href: as }}>{contents}</a>
     </NextLink>
   )
 }

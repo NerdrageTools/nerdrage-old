@@ -71,6 +71,7 @@ export default class Article extends Component {
       const title = props.title || new URLSearchParams(window.location.search).get('title') || ''
       return {
         activeTab: 'read',
+        editMode: false,
         ...saved,
         saved: { ...saved, title },
         title,
