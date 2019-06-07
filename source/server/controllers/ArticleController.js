@@ -56,7 +56,7 @@ export const getArticle = async (request, response) => {
   if (!article) {
     article = omit(await new Article({ slug }).render(campaign), '_id')
     if (templateSlug) {
-      const template = await loadArticle(templateSlug, campaign).select('html tags').exec()
+      const template = await loadArticle(templateSlug, campaign)
       Object.assign(article, pluck(template ? template.toJSON() : {}, 'html', 'tags'))
     }
   } else {
