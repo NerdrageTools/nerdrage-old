@@ -613,6 +613,7 @@ table[class*="callout-"] {
   background: var(--color-background);
   border: 2px solid var(--color-primary);
   box-shadow: 3px 3px 3px #00000033, 0 0.75em 0 var(--color-background), -0.75em 0 0 var(--color-background);
+  clear: both;
   float: right;
   font-size: .9rem;
   margin: 0 0 1em 1em;
