@@ -1,8 +1,11 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-import Header from '@/components/Header'
 import Navigation from '@/components/Navigation'
+import ArticleSearchBox from '@/components/SearchBox/ArticleSearchBox'
+import UserMenu from '@/components/UserMenu'
 import Application from '@/contexts/Application'
+import Logo from '@/icons/fist.svg'
+import NavigationIcon from '@/icons/Navigation'
 import debounce from '@/utilities/debounce'
 import './Layout.scss'
 
@@ -10,11 +13,12 @@ export default class Layout extends Component {
   static contextType = Application
 
   state = {
-    expandNavigation: false,
+    expanded: false,
     size: 'large',
   }
 
   navigation = React.createRef()
+  navigationIcon = React.createRef()
 
   handleWindowResize = debounce(() => {
     let size = 'large'
@@ -37,27 +41,31 @@ export default class Layout extends Component {
   }
 
   collapseNavigation = () => {
-    this.setState({ expandNavigation: false })
+    this.setState({ expanded: false })
+  }
+  toggleNavigation = () => {
+    this.setState({ expanded: !this.state.expanded })
   }
   handleOutsideNavClick = ({ target }) => {
-    if (this.state.expandNavigation && !this.navigation.current.contains(target)) {
+    if (
+      this.state.expanded // only collapse if expanded
+      && !this.navigation.current.contains(target) // and the click isn't in the nav
+      && this.navigationIcon.current !== target // and the click isn't on the nav icon
+    ) {
       this.collapseNavigation()
     }
-  }
-  handleToggleNavigation = () => {
-    this.setState({ expandNavigation: !this.state.expandNavigation })
   }
 
   render = () => {
     const { className } = this.props
     const { campaign, theme } = this.context
-    const { expandNavigation, size } = this.state
+    const { expanded, size } = this.state
     const title = campaign ? campaign.title : 'Unknown Campaign'
     const classNames = [
       'wiki layout',
       className,
+      expanded ? 'expand-navigation' : 'collapse-navigation',
       size,
-      expandNavigation ? 'expand-navigation' : 'collapse-navigation',
     ].join(' ')
 
     return <>
@@ -71,7 +79,19 @@ export default class Layout extends Component {
         />
       </Head>
       <div className={classNames}>
-        <Header onNavigationIconClick={this.handleToggleNavigation} />
+        <div className="header">
+          <div className="logo">
+            <Logo className="logo x2" />
+            <div className="nerd">Nerd</div>
+            <div className="rage">RAGE</div>
+          </div>
+          <ArticleSearchBox />
+          <NavigationIcon
+            className="navigation toggle" onClick={this.toggleNavigation}
+            wrapperRef={this.navigationIcon}
+          />
+          <UserMenu />
+        </div>
         <div className="content">
           <Navigation onItemClick={this.collapseNavigation} wrapperRef={this.navigation} />
           {this.props.children}
