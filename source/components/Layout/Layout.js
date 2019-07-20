@@ -9,31 +9,33 @@ import NavigationIcon from '@/icons/Navigation'
 import debounce from '@/utilities/debounce'
 import './Layout.scss'
 
+const getWindowSize = () => {
+  if (typeof window === 'undefined') return 'server'
+  if (window.matchMedia('(min-width: 551px) and (max-width: 979px)').matches) return 'medium'
+  if (window.matchMedia('(max-width: 550px)').matches) return 'small'
+  return 'large'
+}
+
 export default class Layout extends Component {
   static contextType = Application
 
   state = {
     expanded: false,
-    size: 'large',
+    size: getWindowSize(),
+    ssrDone: false,
   }
 
   navigation = React.createRef()
   navigationIcon = React.createRef()
 
   handleWindowResize = debounce(() => {
-    let size = 'large'
-    if (window.matchMedia('(min-width: 551px) and (max-width: 979px)').matches) {
-      size = 'medium'
-    } else if (window.matchMedia('(max-width: 550px)').matches) {
-      size = 'small'
-    }
-    if (size !== this.state.size) {
-      this.setState({ size })
-      this.context.setSize(size)
-    }
-  }, 250)
+    const size = getWindowSize()
+    this.setState({ size })
+    this.context.setSize(size)
+  }, 100)
 
   componentDidMount = () => {
+    this.setState({ ssrDone: true })
     this.handleWindowResize()
     window.addEventListener('resize', this.handleWindowResize)
     document.addEventListener('mousedown', this.handleOutsideNavClick)
@@ -68,8 +70,8 @@ export default class Layout extends Component {
       'wiki layout',
       className,
       expanded ? 'expand-navigation' : 'collapse-navigation',
-      size,
-    ].join(' ')
+      this.state.ssrDone ? size : 'server',
+    ].filter(Boolean).join(' ')
 
     return <>
       <Head>
