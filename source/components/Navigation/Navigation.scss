@@ -88,3 +88,9 @@
     }
   }
 }
+
+.layout.small .navigation {
+  > .link-sections > div > .content li .controls {
+    display: none;
+  }
+}

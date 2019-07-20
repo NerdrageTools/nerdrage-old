@@ -27,7 +27,10 @@ export default class Layout extends Component {
     } else if (window.matchMedia('(max-width: 550px)').matches) {
       size = 'small'
     }
-    if (size !== this.state.size) this.setState({ size })
+    if (size !== this.state.size) {
+      this.setState({ size })
+      this.context.setSize(size)
+    }
   }, 250)
 
   componentDidMount = () => {

@@ -54,6 +54,7 @@ export default class Wiki extends App {
   }
 
   setCampaign = (campaign, callback = noop) => this.setState({ campaign }, callback)
+  setSize = (size, callback = noop) => this.setState({ size }, callback)
   setUser = (user, callback = noop) => this.setState({ user }, callback)
   updateCampaign = async (updates, callback = noop) => {
     const { campaign } = this.state
@@ -96,7 +97,7 @@ export default class Wiki extends App {
 
   render = () => {
     const { Component, pageProps, rootUrl, router, subdomain } = this.props
-    const { campaign, user } = this.state
+    const { campaign, size, user } = this.state
     const theme = Object.assign(defaultTheme, (campaign && campaign.theme) || {})
     const context = {
       campaign,
@@ -104,7 +105,9 @@ export default class Wiki extends App {
       rootUrl,
       router,
       setCampaign: this.setCampaign,
+      setSize: this.setSize,
       setUser: this.setUser,
+      size,
       subdomain,
       theme,
       updateCampaign: this.updateCampaign,
