@@ -38,7 +38,7 @@ export default class Navigation extends Component {
     const { navigation } = this.context.campaign
 
     this.sortable = Sortable.create(ul, {
-      disabled: !this.isCampaignEditor,
+      disabled: !this.isCampaignEditor || this.context.size === 'small',
       dragClass: 'dragging',
       draggable: 'li',
       onEnd: () => {

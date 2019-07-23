@@ -97,6 +97,8 @@ export default class Article extends Component {
     if (slug && router.query.slug !== slug) {
       this.setState({ redirectedFrom: router.query.slug })
       router.push(`/article?slug=${slug}`, `/article/${slug}`, { shallow: true })
+    } else {
+      this.setState({ redirectedFrom: undefined })
     }
   }
 

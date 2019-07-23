@@ -77,7 +77,10 @@ ArticleSchema.methods.render = async function (campaign) {
   const links = await renderLinks(includes.html, campaignFilter)
   const childArticles = await mongoose.models.Article
     .aggregate([
-      { $match: { $and: [campaignFilter, { tags: { $in: [this.slug, ...this.aliases] } }] } },
+      { $match: {
+        $and: [campaignFilter, { tags: { $in: [this.slug, ...this.aliases] } }],
+        template: false,
+      } },
       { $group: {
         _id: '$slug',
         id: { $first: '$_id' },
