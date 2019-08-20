@@ -1,21 +1,4 @@
 {
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/_error.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/campaign.scss": [
     {
       "modules": {
@@ -34,6 +17,57 @@
     }
   ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/authPages.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/_error.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/sheet.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/user.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -84,40 +118,6 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/user.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/sheet.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!pages/map.scss": [
     {
       "modules": {
@@ -152,7 +152,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Toggle/Toggle.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Layout/Layout.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -169,58 +169,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Alert/Alert.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/ThemeEditor/ThemeEditor.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SheetList/SheetList.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Sources/Sources.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Editable/Editable.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -254,7 +203,24 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Editable/Editable.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Toggle/Toggle.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/ThemeEditor/ThemeEditor.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -305,7 +271,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!styles/classes/warning.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Sources/Sources.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -322,41 +288,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Layout/Layout.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/TagBar/TagBar.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/TabSet/TabSet.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Alert/Alert.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -390,7 +322,58 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Dialog/Dialog.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/TabSet/TabSet.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/TagBar/TagBar.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!styles/classes/warning.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SheetList/SheetList.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -424,6 +407,23 @@
       }
     }
   ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Dialog/Dialog.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/EditableList/EditableList.scss": [
     {
       "modules": {
@@ -441,58 +441,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/CampaignSearchBox/CampaignSearchBox.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/UserSearchBox/UserSearchBox.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/FontSearchBox/FontSearchBox.scss": [
-    {
-      "modules": {
-        "byIdentifier": {},
-        "usedIds": {}
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/ColorPicker/ColorPicker.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -543,7 +492,58 @@
       }
     }
   ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/ColorPicker/ColorPicker.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/FontSearchBox/FontSearchBox.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
   "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/Tag/Tag.scss": [
+    {
+      "modules": {
+        "byIdentifier": {},
+        "usedIds": {}
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/SearchBox/CampaignSearchBox/CampaignSearchBox.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -594,7 +594,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/FlyoutMenu/FlyoutMenu.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -611,7 +611,7 @@
       }
     }
   ],
-  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/FlyoutMenu/FlyoutMenu.scss": [
+  "mini-css-extract-plugin ../node_modules/css-loader/dist/cjs.js??ref--6-1!../node_modules/sass-loader/lib/loader.js??ref--6-2!components/CreateMenu/CreateMenu.scss": [
     {
       "modules": {
         "byIdentifier": {},
@@ -738,17 +738,17 @@
       "commons": 0,
       "static/runtime/webpack.js": 1,
       "styles": 2,
-      "static/runtime/main.js": 3,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/_app.js": 4,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/_error.js": 5,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/article.js": 6,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/campaign.js": 7,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/index.js": 8,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/login.js": 9,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/map.js": 10,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/sheet.js": 11,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/signup.js": 12,
-      "static/ux7Y5VVJ3au03imGTAU~f/pages/user.js": 13
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/_app.js": 3,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/_error.js": 4,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/article.js": 5,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/campaign.js": 6,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/index.js": 7,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/login.js": 8,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/map.js": 9,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/sheet.js": 10,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/signup.js": 11,
+      "static/e7gkMHeHFfj_2K0p4lCmR/pages/user.js": 12,
+      "static/runtime/main.js": 13
     },
     "bySource": {
       "0 ../node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--4!pages/article.js @/components/WysiwygEditor": 2,
