@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema({
   versionKey: 'version',
 })
 
-UserSchema.index({ username: 'text', })
+UserSchema.index({ username: 'text' })
 UserSchema.pre('save', function (next) {
   if (this.email) this.email = this.email.toLowerCase().trim()
   if (this.username) this.username = this.username.toLowerCase().trim()

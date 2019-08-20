@@ -4,6 +4,7 @@ import Article from '@/server/models/Article'
 import Campaign from '@/server/models/Campaign'
 import Sheet from '@/server/models/Sheet'
 import User from '@/server/models/User'
+import { decrypt, encrypt } from '@/utilities/encryption'
 import omit from '@/utilities/omit'
 import pluck from '@/utilities/pluck'
 
@@ -16,6 +17,32 @@ export function invalidAuthentication(response) {
   response.status(401).json({ message: 'Username/password combination is invalid.' })
 }
 
+export function readCookie(request) {
+  if (!request || !request.cookies || !request.cookies.session) {
+    return null
+  }
+  try {
+    return JSON.parse(decrypt(request.cookies.session))
+  } catch {
+    return null
+  }
+}
+
+export function setCookie(response, username, domain) {
+  response.cookie(
+    'session',
+    encrypt(JSON.stringify({
+      timestamp: (new Date()).getMilliseconds(),
+      username,
+    })),
+    { domain, httpOnly: true }
+  )
+}
+
+export function clearCookie(request, response) {
+  response.cookie('session', '', { domain: request.domain, maxAge: 0 })
+}
+
 export async function createUser(request, response) {
   try {
     const user = new User({
@@ -25,7 +52,7 @@ export async function createUser(request, response) {
     })
     await user.save()
 
-    request.session = user
+    setCookie(response, user.username, request.domain)
     return response.status(200).json(user)
   } catch (error) {
     switch (error.code) {
@@ -138,7 +165,7 @@ export async function logIn(request, response) {
     if (isMatch) {
       await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
       const loadedUser = await getUser(user.username, true)
-      request.session = loadedUser || null
+      setCookie(response, loadedUser.username, request.domain)
       return response.status(200).json(loadedUser)
     }
 
@@ -149,7 +176,7 @@ export async function logIn(request, response) {
   }
 }
 export async function logOff(request, response) {
-  request.session = null
+  clearCookie(request, response)
   request.user = null
   return response.status(200).json({ anonymous: true })
 }
@@ -166,7 +193,7 @@ export async function updateCurrentUser(request, response) {
     Object.assign(user, updates)
 
     const updated = await user.save()
-    Object.assign(request.session, updated.toProfile())
+    Object.assign(request.user, updated.toProfile())
     return response.status(200).json(updated.toProfile())
   } catch (error) {
     if (error.code === 11000) {
@@ -192,7 +219,7 @@ export async function updateCurrentUserFavorites(request, response) {
 }
 export async function updateUser(request, response) {
   try {
-    if (request.session.username === request.params.username) {
+    if (request.user.username === request.params.username) {
       return response.redirect(307, '/api/user/')
     }
 
