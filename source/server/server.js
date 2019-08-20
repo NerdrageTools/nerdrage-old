@@ -2,7 +2,7 @@
 import path from 'path'
 import bodyParser from 'body-parser'
 import compression from 'compression'
-import cookieSession from 'cookie-session'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
@@ -37,10 +37,12 @@ app.prepare().then(async () => {
 
   const server = express()
     .use(bodyParser.json({ limit: '10mb' }))
+    .use(cookieParser())
     .use((request, response, next) => {
-      response.header('Access-Control-Allow-Origin', '*')
+      response.header('Access-Control-Allow-Credentials', 'true')
       response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
       response.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+      response.header('Access-Control-Allow-Origin', '*')
       if (request.method === 'OPTIONS') {
         response.status(200).send()
       } else {
@@ -48,15 +50,6 @@ app.prepare().then(async () => {
       }
     })
     .use(compression())
-    .use((request, response, next) => {
-      const host = request.get('host') || ''
-      cookieSession({
-        domain: host.split('.').slice(-2).join('.').split(':')[0],
-        httpOnly: true,
-        keys: ['name', 'username'],
-        name: 'session',
-      })(request, response, next)
-    })
     .use(cors())
     .use(express.urlencoded({ extended: true }))
     .use(express.json())

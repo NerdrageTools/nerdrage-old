@@ -96,7 +96,7 @@ const updateCampaign = async (request, response) => {
 
     if (!campaign) return Campaign404({ subdomain }, response)
 
-    const userId = request.session._id
+    const userId = request.user._id
 
     if (!campaign.isEditor) {
       return response.status(401).json({

@@ -50,7 +50,7 @@ export default class Wiki extends App {
   logOff = async event => {
     event.preventDefault()
     this.setUser(await fetch('/api/user/auth/logoff').then(r => r.json()))
-    this.updateCampaign()
+    window.location = window.location
   }
 
   setCampaign = (campaign, callback = noop) => this.setState({ campaign }, callback)
