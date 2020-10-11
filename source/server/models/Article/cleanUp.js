@@ -7,10 +7,10 @@ export default function cleanUp(html) {
     const $el = $(el)
     const href = $el.attr('href')
 
-    if (!href.includes('//')) {
-      const parsed = parseHref($el.attr('href'))
+    if (!href.includes('://')) {
+      const parsed = parseHref(href)
       const slug = $el.attr('slug') || parsed.slug
-      const type = $el.attr('type') || parsed.type
+      const type = $el.attr('type') || parsed.type || 'article'
       const subdomain = $el.attr('subdomain') || parsed.subdomain
       $el.attr('href', `${subdomain}/${type}/${slug}`)
     }
@@ -31,5 +31,5 @@ export default function cleanUp(html) {
   })
   $('include').each((_, el) => $(el).removeClass('noedit').html(''))
 
-  return $.html()
+  return $.html().trim()
 }
