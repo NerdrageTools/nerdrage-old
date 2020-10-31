@@ -1,38 +1,39 @@
 import mongoose from 'mongoose'
-import transclude from './transclude'
-import Article from '@/server/models/Article'
+import { Article } from '@/server/models/Article'
+import { transclude } from './transclude'
 
 describe('utilities/transclude', () => {
-  beforeAll(async done => {
-    await mongoose.connect('mongodb://localhost/test-transclude', {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-    })
-    done()
-  })
-  beforeEach(async done => {
-    await Article.deleteMany({})
-    done()
-  })
+	beforeAll(async () => {
+		await mongoose.connect('mongodb://localhost/test-transclude', {
+			useCreateIndex: true,
+			useNewUrlParser: true,
+		})
+	})
 
-  it('transcludes', async done => {
-    await Article.deleteMany({ slug: { $in: ['a', 'b', 'c'] } })
-    await Article.create([
-      /* eslint-disable sort-keys */
-      { slug: 'a', title: 'Ant', html: 'Ant!' },
-      { slug: 'b', title: 'Bug', html: 'Nope! <div id="simple">Bug!</div>' },
-      { aliases: ['cat'], slug: 'c', title: 'Cat', html: `
+	beforeEach(async () => {
+		await Article.deleteMany({})
+	})
+
+	test('transcludes', async () => {
+		await Article.deleteMany({ slug: { $in: ['a', 'b', 'c'] } })
+		await Article.create([
+			/* eslint-disable sort-keys */
+			{ slug: 'a', title: 'Ant', html: 'Ant!' },
+			{ slug: 'b', title: 'Bug', html: 'Nope! <div id="simple">Bug!</div>' },
+			{
+				aliases: ['cat'], slug: 'c', title: 'Cat', html: `
         Nope!
         <div id="simple">Foo</div>
         <div id="nested">
           Bar
           <include sections="simple" from="b" />
         </div>
-      ` },
-      /* eslint-enable sort-keys */
-    ])
+      `,
+			},
+			/* eslint-enable sort-keys */
+		])
 
-    const html = `
+		const html = `
       <h3>Title</h3>
       <include sections="*" from="a" />
       <include sections="simple" from="b" />
@@ -42,17 +43,16 @@ describe('utilities/transclude', () => {
       <include sections="missing,missing-2" from="e" />
     `
 
-    const transcluded = await transclude(html)
-    expect(transcluded.links).toEqual(['a', 'b', 'c', 'cat', 'd', 'e'])
-    expect(transcluded.missing).toEqual(['d', 'e'])
-    expect(transcluded.html).toMatchSnapshot()
+		const transcluded = await transclude(html)
+		expect(transcluded.links).toEqual(['a', 'b', 'c', 'cat', 'd', 'e'])
+		expect(transcluded.missing).toEqual(['d', 'e'])
+		expect(transcluded.html).toMatchSnapshot()
 
-    done()
-  })
+		done()
+	})
 
-  afterAll(async done => {
-    await mongoose.connection.db.dropDatabase()
-    await mongoose.disconnect()
-    done()
-  })
+	afterAll(async () => {
+		await mongoose.connection.db.dropDatabase()
+		await mongoose.disconnect()
+	})
 })

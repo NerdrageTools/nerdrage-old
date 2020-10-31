@@ -1,40 +1,40 @@
 import React, { Component } from 'react'
-import TinyMCE from './TinyMCE'
+import { Editor as TinyMCE } from './TinyMCE'
 import './ArticleEditor.scss'
 import './WysiwygEditor.scss'
 
-export default class WysiwygEditor extends Component {
-  static defaultProps = {
-    onChange: () => {},
-  }
+export class WysiwygEditor extends Component {
+	static defaultProps = {
+		onChange: () => {},
+	}
 
-  previousValue = this.props.html
-  componentWillReceiveProps(props) { this.previousValue = props.html }
+	previousValue = this.props.html
+	componentWillReceiveProps(props) { this.previousValue = props.html }
 
-  handleChangeEvent = (_, editor) => {
-    const html = editor.getContent()
-    if (html !== this.previousValue) {
-      this.props.onChange(html)
-      this.previousValue = html
-    }
-  }
+	handleChangeEvent = (_, editor) => {
+		const html = editor.getContent()
+		if (html !== this.previousValue) {
+			this.props.onChange(html)
+			this.previousValue = html
+		}
+	}
 
-  render = () => {
-    const { html, onChange, ...props } = this.props
+	render = () => {
+		const { html, onChange, ...props } = this.props
 
-    return (
-      <div className="wysiwyg-editor">
-        <div className="menubar" />
-        <TinyMCE
-          {...props}
-          initialValue={html}
-          inline
-          onNodeChange={this.handleChangeEvent}
-          onCut={this.handleChangeEvent}
-          onKeyUp={this.handleChangeEvent}
-          onPaste={this.handleChangeEvent}
-        />
-      </div>
-    )
-  }
+		return (
+			<div className="wysiwyg-editor">
+				<div className="menubar" />
+				<TinyMCE
+					{...props}
+					initialValue={html}
+					inline
+					onCut={this.handleChangeEvent}
+					onKeyUp={this.handleChangeEvent}
+					onNodeChange={this.handleChangeEvent}
+					onPaste={this.handleChangeEvent}
+				/>
+			</div>
+		)
+	}
 }

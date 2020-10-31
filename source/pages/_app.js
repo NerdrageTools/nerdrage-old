@@ -2,8 +2,8 @@ import fetch from 'isomorphic-unfetch'
 import App from 'next/app'
 import React from 'react'
 import { Layout } from '@/components/Layout'
-import Application from '@/contexts/Application'
-import defaultTheme from '@/data/defaultTheme'
+import { Application } from '@/contexts/Application'
+import { defaultTheme } from '@/data/defaultTheme'
 import '@/styles/all.scss'
 /* eslint-disable import/extensions */
 import imageBook from '@/icons/book.png'
@@ -12,7 +12,7 @@ import imageSystem from '@/icons/dice.gif'
 import imageInfo from '@/icons/info.png'
 /* eslint-enable import/extensions */
 import Error from '@/pages/_error'
-import noop from '@/utilities/noop'
+import { noop } from '@/utilities/noop'
 
 export default class Wiki extends App {
 	static getInitialProps = async context => {
@@ -39,7 +39,9 @@ export default class Wiki extends App {
 		const subdomain = host.split('.').shift()
 		const rootUrl = host.slice(subdomain.length + 1)
 
-		return { ...props, campaign, rootUrl, subdomain, user }
+		return {
+			...props, campaign, rootUrl, subdomain, user,
+		}
 	}
 
 	state = {
@@ -96,7 +98,9 @@ export default class Wiki extends App {
 	}
 
 	render = () => {
-		const { Component, pageProps, rootUrl, router, subdomain } = this.props
+		const {
+			Component, pageProps, rootUrl, router, subdomain,
+		} = this.props
 		const { campaign, size, user } = this.state
 		const theme = Object.assign(defaultTheme, (campaign && campaign.theme) || {})
 		const context = {
@@ -122,8 +126,7 @@ export default class Wiki extends App {
 				<Layout className={!campaign ? 'no-campaign' : ''}>
 					{campaignError
 						? <Error message="This campaign does not exist." statusCode={404} />
-						: <Component {...pageProps} />
-					}
+						: <Component {...pageProps} />}
 				</Layout>
 				<style>
 					{`

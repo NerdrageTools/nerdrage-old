@@ -18,7 +18,6 @@ module.exports = {
 	],
 	plugins: [
 		'@typescript-eslint',
-		'import-order-alphabetical',
 		'import',
 		'jest',
 		'jest-formatting',
@@ -66,8 +65,8 @@ module.exports = {
 			json: 'always',
 			png: 'always',
 			scss: 'always',
+			svg: 'always',
 		}],
-		'import-order-alphabetical/order': 'error',
 		'import/no-default-export': 'error',
 		'import/no-extraneous-dependencies': 'off',
 		'import/no-unresolved': 'off',
@@ -99,6 +98,7 @@ module.exports = {
 		'no-unused-vars': 'off',
 		'no-use-before-define': 'off',
 		'no-var': 'error',
+		'object-curly-newline': 'off',
 		'prefer-destructuring': ['error', { AssignmentExpression: { array: false, object: false } }],
 		'prefer-promise-reject-errors': 'off',
 		'react-hooks/exhaustive-deps': 'off',
@@ -139,4 +139,16 @@ module.exports = {
 		'sort-vars': ['error', { ignoreCase: true }],
 		'spaced-comment': ['error', 'always', { markers: ['/'] }],
 	},
+	overrides: [{
+		files: ['source/pages/*.js', 'source/server/controllers/*Controller.js'],
+		rules: {
+			'import/no-default-export': 'off',
+			'import/prefer-default-export': 'error',
+		},
+	}, {
+		files: ['source/**/*.js'],
+		rules: {
+			'@typescript-eslint/explicit-module-boundary-types': 'off',
+		},
+	}],
 }

@@ -1,1 +1,2 @@
-export default () => {}
+/* eslint-disable */
+export function noop() { return }

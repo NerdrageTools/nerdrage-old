@@ -1,1 +1,1 @@
-export default (array, value) => array.includes(value)
+export const includes = (array, value) => array.includes(value)

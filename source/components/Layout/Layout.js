@@ -1,12 +1,12 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-import Navigation from '@/components/Navigation'
-import ArticleSearchBox from '@/components/SearchBox/ArticleSearchBox'
-import UserMenu from '@/components/UserMenu'
-import Application from '@/contexts/Application'
+import { Navigation } from '@/components/Navigation'
+import { ArticleSearchBox } from '@/components/SearchBox/ArticleSearchBox'
+import { UserMenu } from '@/components/UserMenu'
+import { Application } from '@/contexts/Application'
 import Logo from '@/icons/fist.svg'
-import NavigationIcon from '@/icons/Navigation'
-import debounce from '@/utilities/debounce'
+import { NavigationIcon } from '@/icons/Navigation'
+import { debounce } from '@/utilities/debounce'
 import './Layout.scss'
 
 const getWindowSize = () => {

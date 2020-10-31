@@ -1,8 +1,8 @@
-import cleanUp from './cleanUp'
+import { cleanUp } from './cleanUp'
 
 describe('models/Article/cleanUp', () => {
-  it('clears markup from links and includes', () => {
-    expect(cleanUp(`
+	test('clears markup from links and includes', () => {
+		expect(cleanUp(`
       <a href="/article/foo" class="highlight missing">Foo!</a>
       <a href="/article/bar">Bar!</a>
       <a href="/media/baz.gif" class="missing" target="_new">Baz!</a>
@@ -19,7 +19,7 @@ describe('models/Article/cleanUp', () => {
       <include from="foo" sections="bar,baz"/>
     `.trim())
 
-    expect(cleanUp('<a href="foo">Foo!</a>'))
-      .toBe('<a href="/article/foo">Foo!</a>')
-  })
+		expect(cleanUp('<a href="foo">Foo!</a>'))
+			.toBe('<a href="/article/foo">Foo!</a>')
+	})
 })

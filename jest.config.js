@@ -4,6 +4,7 @@ module.exports = {
 	coverageDirectory: path.resolve(__dirname, 'tests', 'coverage'),
 	moduleDirectories: ['node_modules'],
 	moduleNameMapper: {
+		'@/(.*)$': '<rootDir>/source/$1',
 		'^(.*).(css|eot|gif|jpg|otf|png|svg|ttf|woff2?)$': path.resolve(__dirname, 'mocks/fileMock.js'),
 		'^(.*).s?css$': path.resolve(__dirname, 'mocks/styleMock.js'),
 	},
