@@ -5,6 +5,7 @@
 		"multilines",
 		"noninteractive",
 		"setstate",
+		"transclude",
 		"upsert",
 		"virtuals"
 	]
