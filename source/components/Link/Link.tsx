@@ -1,25 +1,37 @@
 import NextLink from 'next/link'
-import React, { useContext } from 'react'
+import React, { FunctionComponent, useContext } from 'react'
 import { Application } from '@/contexts/Application'
 
-export function Link({
-	active,
+type TProps = {
+	active?: boolean,
+	className?: string,
+	query?: Record<string, any>,
+	slug: string,
+	subdomain?: string,
+	type: 'article' | 'campaign' | 'map' | 'sheet' | 'user',
+}
+
+export const Link: FunctionComponent<TProps> = ({
+	active = false,
 	children,
 	className = '',
 	query = null,
 	slug = '',
 	type = 'article',
 	...props
-}) {
+}) => {
 	const context = useContext(Application)
 	const subdomain = props.subdomain || context.subdomain
 	const { rootUrl } = useContext(Application)
 	const contents = children || type
 
-	const queryString = !query ? '' : `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
+	const queryString = !query
+		? ''
+		: `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
 
 	if (active) {
-		return <span className="active link" title={contents}>{contents}</span>
+		const title = typeof contents === 'string' ? contents : undefined
+		return <span className="active link" title={title}>{contents}</span>
 	}
 
 	if (subdomain && (!context.campaign || subdomain !== context.campaign.subdomain)) {
