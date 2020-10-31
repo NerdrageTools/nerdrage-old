@@ -8,5 +8,6 @@
 		"transclude",
 		"upsert",
 		"virtuals"
-	]
+	],
+	"typescript.tsdk": "node_modules/typescript/lib"
 }

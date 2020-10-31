@@ -1,6 +1,10 @@
 const path = require('path')
 
 module.exports = {
+	env: {
+		development: { compact: false },
+		production: { compact: true },
+	},
 	plugins: [
 		['module-resolver', {
 			alias: { '@': path.resolve(__dirname, 'source') },
