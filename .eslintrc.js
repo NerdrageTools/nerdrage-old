@@ -118,7 +118,7 @@ module.exports = {
 		'react/jsx-max-props-per-line': 'off',
 		'react/jsx-no-bind': 'error',
 		'react/jsx-no-duplicate-props': 'error',
-		'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
+		'react/jsx-one-expression-per-line': 'off',
 		'react/jsx-props-no-spreading': 'off',
 		'react/jsx-sort-props': ['error', { reservedFirst: ['key', 'ref'] }],
 		'react/jsx-wrap-multilines': 'off',
@@ -140,7 +140,10 @@ module.exports = {
 		'spaced-comment': ['error', 'always', { markers: ['/'] }],
 	},
 	overrides: [{
-		files: ['source/pages/*.js', 'source/server/controllers/*Controller.js'],
+		files: [
+			'source/pages/*.{ts,tsx,js}',
+			'source/server/controllers/*Controller.{ts,js}',
+		],
 		rules: {
 			'import/no-default-export': 'off',
 			'import/prefer-default-export': 'error',
