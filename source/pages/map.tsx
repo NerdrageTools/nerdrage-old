@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { Alert } from '@/components/Alert'
-import { Editable } from '@/components/Editable'
-import { IFrame } from '@/components/IFrame'
-import { Toggle } from '@/components/Toggle'
-import { Application } from '@/contexts/Application'
-import { NavigationIcon } from '@/icons/Navigation'
-import PublicIcon from '@/icons/public.svg'
-import SecretIcon from '@/icons/secret.svg'
-import { confirm } from '@/utilities/confirm'
-import { pluck } from '@/utilities/pluck'
-import { URI } from '@/utilities/URI'
-import './map.scss'
+import { Alert } from '~/components/Alert/Alert'
+import { Editable } from '~/components/Editable/Editable'
+import { IFrame } from '~/components/IFrame/IFrame'
+import { Toggle } from '~/components/Toggle/Toggle'
+import { Application } from '~/contexts/Application'
+import { NavigationIcon } from '~/icons/Navigation'
+import PublicIcon from '~/icons/public.svg'
+import SecretIcon from '~/icons/secret.svg'
+import { confirm } from '~/utilities/confirm'
+import { pluck } from '~/utilities/pluck'
+import { URI } from '~/utilities/URI'
 
 const STATE_FIELDS = [
 	'_id',
@@ -24,6 +23,7 @@ const STATE_FIELDS = [
 	'title',
 ]
 export default class Map extends Component {
+	static styles = import('./map.scss')
 	static contextType = Application
 	static getInitialProps = async ({ query, req }) => {
 		const headers = pluck(req && req.headers, 'cookie')

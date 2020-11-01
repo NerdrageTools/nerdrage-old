@@ -1,4 +1,4 @@
-import { splitObjectPath } from '@/utilities/splitObjectPath'
+import { splitObjectPath } from '~/utilities/splitObjectPath'
 
 export const setPathValue = (object, path, value) => {
 	const split = splitObjectPath(path)

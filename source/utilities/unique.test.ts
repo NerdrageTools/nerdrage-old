@@ -1,4 +1,4 @@
-import { unique } from './unique'
+import { unique } from '~/utilities/unique'
 
 describe('utilities/unique', () => {
 	test('can filter simple values', () => {

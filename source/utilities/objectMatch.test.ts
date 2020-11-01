@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { objectMatch } from './objectMatch'
+import { objectMatch } from '~/utilities/objectMatch'
 
 describe('utilities/objectMatch', () => {
 	test('identifies 1-level matches correctly', () => {

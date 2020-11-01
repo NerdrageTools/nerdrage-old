@@ -1,13 +1,12 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-import { Navigation } from '@/components/Navigation'
-import { ArticleSearchBox } from '@/components/SearchBox/ArticleSearchBox'
-import { UserMenu } from '@/components/UserMenu'
-import { Application } from '@/contexts/Application'
-import Logo from '@/icons/fist.svg'
-import { NavigationIcon } from '@/icons/Navigation'
-import { debounce } from '@/utilities/debounce'
-import './Layout.scss'
+import { Navigation } from '~/components/Navigation/Navigation'
+import { ArticleSearchBox } from '~/components/SearchBox/ArticleSearchBox/ArticleSearchBox'
+import { UserMenu } from '~/components/UserMenu/UserMenu'
+import { Application } from '~/contexts/Application'
+import Logo from '~/icons/fist.svg'
+import { NavigationIcon } from '~/icons/Navigation'
+import { debounce } from '~/utilities/debounce'
 
 const getWindowSize = () => {
 	if (typeof window === 'undefined') return 'server'
@@ -17,6 +16,7 @@ const getWindowSize = () => {
 }
 
 export class Layout extends Component {
+	static styles = import('./Layout.scss')
 	static contextType = Application
 
 	state = {

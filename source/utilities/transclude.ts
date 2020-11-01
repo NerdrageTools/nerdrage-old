@@ -1,6 +1,6 @@
 import cheerio from 'cheerio'
-import Article from '@/server/models/Article'
-import { unique } from '@/utilities/unique'
+import Article from '~/server/models/Article'
+import { unique } from '~/utilities/unique'
 
 export function transclude(html, campaignFilter) {
 	const $ = cheerio.load(html, { decodeEntities: false, xmlMode: true })

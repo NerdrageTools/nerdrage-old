@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { Application } from '@/contexts/Application'
-import './_error.scss'
+import { Application } from '~/contexts/Application'
+import '~/pages/_error.scss'
 
 export default function Error() {
 	const { router } = useContext(Application)

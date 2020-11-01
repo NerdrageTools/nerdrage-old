@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path') // eslint-disable-line
 
 module.exports = {
 	env: {
@@ -8,7 +8,11 @@ module.exports = {
 	plugins: [
 		['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
 		['module-resolver', {
-			alias: { '@': path.resolve(__dirname, 'source') },
+			alias: {
+				'@': path.resolve(__dirname, 'source'),
+				'~': path.resolve(__dirname, 'source'),
+			},
+			extensions: ['.ts', '.tsx', '.js', '.scss'],
 		}],
 		['@babel/plugin-proposal-decorators', { legacy: true }],
 		'@babel/plugin-proposal-class-properties',
@@ -28,6 +32,6 @@ module.exports = {
 		'@babel/preset-react',
 		['@babel/env', { corejs: '3.6.5', modules: 'auto', useBuiltIns: 'entry' }],
 		['@babel/preset-typescript', { allowDeclareFields: true }],
-		'next/babel',
+		// 'next/babel',
 	],
 }

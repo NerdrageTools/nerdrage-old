@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { CreateMenu } from '@/components/CreateMenu'
-import { FlyoutMenu, MenuItem } from '@/components/FlyoutMenu'
-import { Link } from '@/components/Link'
-import { Application } from '@/contexts/Application'
-import LogOutIcon from '@/icons/logout.svg'
-import './UserMenu.scss'
+import { CreateMenu } from '~/components/CreateMenu/CreateMenu'
+import { FlyoutMenu, MenuItem } from '~/components/FlyoutMenu/FlyoutMenu'
+import { Link } from '~/components/Link/Link'
+import { Application } from '~/contexts/Application'
+import LogOutIcon from '~/icons/logout.svg'
 
 export class UserMenu extends Component {
+	static styles = import('./UserMenu.scss')
 	static contextType = Application
 
 	renderAnonymous = () => {

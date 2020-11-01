@@ -1,4 +1,4 @@
-import { omit } from './omit'
+import { omit } from '~/utilities/omit'
 
 test('utilities/omit', () => {
 	const object = { bar: 'BAR', foo: 'FOO' }

@@ -1,31 +1,33 @@
 import React from 'react'
-import { SearchBox } from '@/components/SearchBox'
-import { noop } from '@/utilities/noop'
-import './FontSearchBox.scss'
+import { SearchBox } from '~/components/SearchBox/SearchBox'
+import { noop } from '~/utilities/noop'
 
-const renderOption = (font, index, itemProps) => (
-	<li key={font.family} className="search-result" {...itemProps}>
-		<b className="family">{font.family}</b>
-		{' '}
-		|
-		{font.category}
-	</li>
-)
+export class FontSearchBox extends React.Component {
+	static styles = import('./FontSearchBox.scss')
 
-const valueGetter = fontOption => fontOption.family
-
-export function FontSearchBox({ onSelect = noop, ...props }) {
-	return (
-		<SearchBox
-			className="font"
-			clearOnSelect={false}
-			limit={5}
-			onSelect={onSelect}
-			placeholder="Search Fonts..."
-			renderOption={renderOption}
-			url="/api/search/fonts/:searchTerm"
-			valueGetter={valueGetter}
-			{...props}
-		/>
+	renderOption = (font, _, itemProps): JSX.Element => (
+		<li key={font.family} className="search-result" {...itemProps}>
+			<b className="family">{font.family}</b>{' '} | {font.category}
+		</li>
 	)
+
+	renderValue = fontOption => fontOption.family
+
+	render = (): JSX.Element => {
+		const { onSelect = noop, ...props } = this.props
+
+		return (
+			<SearchBox
+				className="font"
+				clearOnSelect={false}
+				limit={5}
+				onSelect={onSelect}
+				placeholder="Search Fonts..."
+				renderOption={this.renderOption}
+				url="/api/search/fonts/:searchTerm"
+				valueGetter={this.renderValue}
+				{...props}
+			/>
+		)
+	}
 }

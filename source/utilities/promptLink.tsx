@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { CreateLinkDialog } from '@/components/CreateLinkDialog'
+import { CreateLinkDialog } from '~/components/CreateLinkDialog/CreateLinkDialog'
 import './prompt.scss'
 
 export async function promptLink({

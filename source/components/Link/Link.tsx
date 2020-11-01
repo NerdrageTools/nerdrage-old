@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import React, { FunctionComponent, useContext } from 'react'
-import { Application } from '@/contexts/Application'
+import { Application } from '~/contexts/Application'
 
 type TProps = {
 	active?: boolean,

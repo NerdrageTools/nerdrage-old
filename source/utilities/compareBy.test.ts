@@ -1,4 +1,4 @@
-import { compareBy } from './compareBy'
+import { compareBy } from '~/utilities/compareBy'
 
 test('sorts arrays of objects correctly', () => {
 	const array = [{ a: 3 }, { a: 1 }, { a: 2 }]

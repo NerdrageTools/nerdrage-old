@@ -1,4 +1,4 @@
-import { formatBytes } from './formatBytes'
+import { formatBytes } from '~/utilities/formatBytes'
 
 test('formatBytes() parses correctly', () => {
 	expect(formatBytes(123)).toEqual('123bytes')

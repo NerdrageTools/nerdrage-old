@@ -1,4 +1,4 @@
-import { computeSearchKeys } from './computeSearchKeys'
+import { computeSearchKeys } from '~/utilities/computeSearchKeys'
 
 describe('utilities/computeSearchKeys', () => {
 	test('computes search terms correctly', () => {

@@ -1,4 +1,4 @@
-import { range } from './range'
+import { range } from '~/utilities/range'
 
 describe('range()', () => {
 	test('returns 1 value when low === high', () => {

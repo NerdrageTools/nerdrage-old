@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import TagsInput from 'react-tagsinput'
-import { Tag } from '@/components/Tag'
-import { noop } from '@/utilities/noop'
-import './TagBar.scss'
+import { Tag } from '~/components/Tag/Tag'
+import { noop } from '~/utilities/noop'
 
 const exclude = (list, exclusions) => list.filter(el => !exclusions.includes(el))
 const areEqual = (array1, array2) => array1.every((el, ix) => el === array2[ix])
 
 export class TagBar extends Component {
+	static styles = import('./TagBar.scss')
 	static defaultProps = {
 		asLinks: false,
 		banned: [],

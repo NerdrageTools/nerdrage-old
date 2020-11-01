@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import { ColorPicker } from '@/components/ColorPicker'
-import { FontSearchBox } from '@/components/SearchBox/FontSearchBox'
-import { Application } from '@/contexts/Application'
-import { range } from '@/utilities/range'
+import { ColorPicker } from '~/components/ColorPicker/ColorPicker'
+import { FontSearchBox } from '~/components/SearchBox/FontSearchBox/FontSearchBox'
+import { Application } from '~/contexts/Application'
+import { range } from '~/utilities/range'
 import './ThemeEditor.scss'
 
 export function ThemeEditor({

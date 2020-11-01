@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-// import { IArticle } from '@/server/models/Article'
-// import { IMap } from '@/server/models/Map'
-// import { ISheet } from '@/server/models/Sheet'
-import { IUser } from '@/server/models/User'
-import { defaultTheme, ITheme } from '@/data/Theme'
-import { unique } from '@/utilities/unique'
-import { Slug } from './Slug'
+// import { IArticle } from '~/server/models/Article'
+// import { IMap } from '~/server/models/Map'
+// import { ISheet } from '~/server/models/Sheet'
+import { IUser } from '~/server/models/User'
+import { defaultTheme, ITheme } from '~/data/Theme'
+import { Slug } from '~/server/models/Slug'
+import { unique } from '~/utilities/unique'
 
 interface INavigation<T extends mongoose.Document = mongoose.Document> {
 	children: INavigation[],

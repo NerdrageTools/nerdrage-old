@@ -3,7 +3,7 @@ import ReactAce from 'react-ace'
 import 'brace/mode/html'
 import 'brace/theme/chrome'
 
-export class AceEditor extends Component {
+export class HtmlEditor extends Component {
 	static defaultProps = {
 		editorProps: { $blockScrolling: Infinity },
 		height: '100%',

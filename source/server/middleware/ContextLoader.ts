@@ -1,18 +1,18 @@
-import { getCampaign } from '@/server/controllers/CampaignController'
+import { getCampaign } from '~/server/controllers/CampaignController'
 import {
 	clearCookie, getUser, readCookie, setCookie,
-} from '@/server/controllers/UserController'
+} from '~/server/controllers/UserController'
 
 export default async (request, response, next) => {
 	const subdomain = request.hostname.split('.').shift()
-	request.domain = request.hostname.split('.').slice(1).join('.')
+	request.domainName = request.hostname.split('.').slice(1).join('.')
 	request.subdomain = subdomain
 
 	const session = readCookie(request)
 	if (session && session.username) {
 		const user = await getUser(session.username, true)
 		if (!user.anonymous) {
-			setCookie(response, user.username, request.domain)
+			setCookie(response, user.username, request.domainName)
 			request.user = user
 		} else {
 			clearCookie(request, response)

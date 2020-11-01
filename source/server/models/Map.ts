@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import hash from 'object-hash'
-import { Slug } from '@/server/models/Slug'
+import { Slug } from '~/server/models/Slug'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 

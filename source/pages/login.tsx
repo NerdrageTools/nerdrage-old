@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-unfetch'
 import React, { Component } from 'react'
-import { Application } from '@/contexts/Application'
-import './authPages.scss'
+import { Application } from '~/contexts/Application'
 
 export default class LoginPage extends Component {
+	static styles = import('./authPages.scss')
 	static contextType = Application
 
 	username = React.createRef()

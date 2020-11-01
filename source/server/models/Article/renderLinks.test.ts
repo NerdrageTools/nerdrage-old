@@ -1,7 +1,7 @@
 /** @jest-environment node */
 import mockingoose from 'mockingoose'
-import { Article } from '@/server/models/Article'
-import { renderLinks } from './renderLinks'
+import { Article } from '~/server/models/Article'
+import { renderLinks } from '~/server/models/Article/renderLinks'
 
 const mockExec = jest.fn()
 global.mockModel('Article', {
@@ -13,7 +13,7 @@ global.mockModel('Article', {
 // 	select: () => mockArticle,
 // }
 
-// jest.mock('@/server/models/Article', () => ({
+// jest.mock('~/server/models/Article', () => ({
 // 	__esModule: true,
 // 	Article: mockArticle,
 // }))

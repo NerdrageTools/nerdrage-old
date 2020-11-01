@@ -1,6 +1,6 @@
-import { parseHref } from './parseHref'
+import { parseHref } from '~/utilities/parseHref'
 
-describe('components/Link', () => {
+describe('components/Link/Link', () => {
 	test('returns empty object for invalid URLs', () => {
 		expect(parseHref()).toMatchObject({})
 		expect(parseHref()).toMatchObject({})

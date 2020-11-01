@@ -1,5 +1,5 @@
 import React from 'react'
-import { noop } from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 
 export function NavigationIcon({ title = 'Navigation', wrapperRef = noop, ...props }) {
 	return (

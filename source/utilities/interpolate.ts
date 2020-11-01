@@ -1,4 +1,4 @@
-import { getPathValue } from '@/utilities/getPathValue'
+import { getPathValue } from '~/utilities/getPathValue'
 
 export const interpolate = (string, object) => {
 	const matches = string.match(/(\${[a-z0-9-_[\].]*})/gi)

@@ -16,7 +16,7 @@ import 'tinymce/plugins/paste/plugin'
 import 'tinymce/plugins/table/plugin'
 
 // Theme
-import 'tinymce/themes/modern/theme'
+import 'tinymce/themes/silver/theme'
 
 // Skin
 import './TinyMCE.scss'

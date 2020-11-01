@@ -1,4 +1,4 @@
-import { cleanUp } from './cleanUp'
+import { cleanUp } from '~/server/models/Article/cleanUp'
 
 describe('models/Article/cleanUp', () => {
 	test('clears markup from links and includes', () => {

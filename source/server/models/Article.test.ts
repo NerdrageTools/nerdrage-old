@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Article } from './Article'
+import { Article } from '~/server/models/Article'
 
 const { ObjectId } = mongoose.Types
 

@@ -1,4 +1,4 @@
-import { Campaign } from './Campaign'
+import { Campaign } from '~/server/models/Campaign'
 
 describe('Campaign model', () => {
 	const OWNER = 'bbbbbbbbbbbb'

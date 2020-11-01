@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Link } from '@/components/Link'
-import Remove from '@/icons/remove.svg'
-import TagIcon from '@/icons/tag.svg'
-import { noop } from '@/utilities/noop'
-import './Tag.scss'
+import { Link } from '~/components/Link/Link'
+import Remove from '~/icons/remove.svg'
+import TagIcon from '~/icons/tag.svg'
+import { noop } from '~/utilities/noop'
 
 export class Tag extends Component {
+	static styles = import('./Tag.scss')
 	static defaultProps = {
 		asLink: false,
 		className: '',

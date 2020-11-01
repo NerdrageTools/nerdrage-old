@@ -1,27 +1,28 @@
 import React from 'react'
-import { SearchBox } from '@/components/SearchBox'
-import NerdIcon from '@/icons/nerd.svg'
-import { noop } from '@/utilities/noop'
-import './UserSearchBox.scss'
+import { SearchBox } from '~/components/SearchBox/SearchBox'
+import NerdIcon from '~/icons/nerd.svg'
+import { noop } from '~/utilities/noop'
 
-const renderOption = (user, index, itemProps) => (
-	<li key={user._id} className="search-result" {...itemProps}>
-		<NerdIcon />
-		<b className="name">{user.name}</b>
-		{' '}
-		|
-		{user.username}
-	</li>
-)
+export class UserSearchBox extends React.Component {
+	static styles = import('./UserSearchBox.scss')
 
-export function UserSearchBox({ onSelect = noop }) {
-	return (
+	renderOption = (user, _, itemProps): JSX.Element => (
+		<li key={user._id} className="search-result" {...itemProps}>
+			<NerdIcon />
+			<b className="name">{user.name}</b>
+			{' '}
+			|
+			{user.username}
+		</li>
+	)
+
+	render = (): JSX.Element => (
 		<SearchBox
 			className="user"
 			limit={5}
-			onSelect={onSelect}
+			onSelect={this.props.onSelect ?? noop}
 			placeholder="Search Users..."
-			renderOption={renderOption}
+			renderOption={this.renderOption}
 			url="/api/search/users/:searchTerm"
 		/>
 	)

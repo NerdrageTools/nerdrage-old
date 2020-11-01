@@ -1,7 +1,7 @@
-import { Link } from '@/components/Link/Link'
-import { Application } from '@/contexts/Application'
 import React, { useContext } from 'react'
-import './_error.scss'
+import { Link } from '~/components/Link/Link'
+import { Application } from '~/contexts/Application'
+import '~/pages/_error.scss'
 
 export default function Error404() {
 	const { router } = useContext(Application)

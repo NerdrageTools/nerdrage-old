@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Link } from '@/components/Link'
-import { CampaignSearchBox } from '@/components/SearchBox/CampaignSearchBox'
-import CampaignIcon from '@/icons/campaign.svg'
-import RemoveIcon from '@/icons/remove.svg'
-import './Sources.scss'
+import { Link } from '~/components/Link/Link'
+import { CampaignSearchBox } from '~/components/SearchBox/CampaignSearchBox/CampaignSearchBox'
+import CampaignIcon from '~/icons/campaign.svg'
+import RemoveIcon from '~/icons/remove.svg'
 
 export class Sources extends Component {
+	static styles = import('./Sources.scss')
 	static defaultProps = {
 		className: '',
 		readOnly: true,

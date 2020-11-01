@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import MenuIcon from '@/icons/menu.svg'
-import { noop } from '@/utilities/noop'
-import './FlyoutMenu.scss'
+import MenuIcon from '~/icons/menu.svg'
+import { noop } from '~/utilities/noop'
 
 export class FlyoutMenu extends Component {
+	static styles = import('./FlyoutMenu.scss')
 	static defaultProps = {
 		children: [],
 		className: '',

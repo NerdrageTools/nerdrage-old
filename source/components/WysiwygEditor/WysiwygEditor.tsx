@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Editor as TinyMCE } from './TinyMCE'
-import './ArticleEditor.scss'
-import './WysiwygEditor.scss'
+import { Editor as TinyMCE } from '~/components/WysiwygEditor/TinyMCE'
 
 export class WysiwygEditor extends Component {
+	static styles = Promise.all([
+		import('./ArticleEditor.scss'),
+		import('./WysiwygEditor.scss'),
+	])
 	static defaultProps = {
 		onChange: () => {},
 	}

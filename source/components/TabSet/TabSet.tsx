@@ -1,6 +1,6 @@
 import React from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { noop } from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 import './TabSet.scss'
 
 const DEFAULT_TAB = {

@@ -1,4 +1,4 @@
-import { splitObjectPath } from '@/utilities/splitObjectPath'
+import { splitObjectPath } from '~/utilities/splitObjectPath'
 
 export const getPathValue = (object, path) => {
 	if (typeof path !== 'string') return undefined

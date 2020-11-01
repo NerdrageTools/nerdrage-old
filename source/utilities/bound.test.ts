@@ -1,4 +1,4 @@
-import { bound } from './bound'
+import { bound } from '~/utilities/bound'
 
 describe('bound()', () => {
 	test('correctly applies ranges to numeric values', () => {

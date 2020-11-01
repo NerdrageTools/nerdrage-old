@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { ICampaign } from '@/server/models/Campaign'
-import { Slug } from '@/server/models/Slug'
+import { ICampaign } from '~/server/models/Campaign'
+import { Slug } from '~/server/models/Slug'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 

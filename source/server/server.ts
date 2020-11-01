@@ -9,17 +9,17 @@ import express from 'express'
 import mongoose from 'mongoose'
 import nextApp from 'next'
 import nocache from 'nocache'
-import ArticleController from '@/server/controllers/ArticleController'
-import CampaignController from './controllers/CampaignController'
-import MapController from './controllers/MapController'
-import SearchController from './controllers/SearchController'
-import SheetController from './controllers/SheetController'
-import TemplateController from './controllers/TemplateController'
-import UserController from './controllers/UserController'
-import Campaign404 from './errors/Campaign404'
-import ContextLoader from './middleware/ContextLoader'
-import routes from './routes'
-import './models'
+import ArticleController from '~/server/controllers/ArticleController'
+import CampaignController from '~/server/controllers/CampaignController'
+import MapController from '~/server/controllers/MapController'
+import SearchController from '~/server/controllers/SearchController'
+import SheetController from '~/server/controllers/SheetController'
+import TemplateController from '~/server/controllers/TemplateController'
+import UserController from '~/server/controllers/UserController'
+import Campaign404 from '~/server/errors/Campaign404'
+import ContextLoader from '~/server/middleware/ContextLoader'
+import routes from '~/server/routes'
+import '~/server/models'
 
 dotenv.config()
 
@@ -82,12 +82,16 @@ app.prepare().then(async () => {
 	server.get('/_next/*', routeHandler)
 	server.get('*', nocache(), ContextLoader, routeHandler)
 
-	server.listen(3000, error => {
-		if (error) throw error
+	server.use((error, request, response, next) => {
+		console.error(error)
+		response.status(500).send('Something broke!')
+	})
+
+	server.listen(3000, () => {
 		console.log('~> Listening on port 3000')
 	})
 }).catch(exception => {
-	console.error(exception.stack)
+	console.error(exception)
 	process.exit(1)
 })
 /* eslint-enable no-console */

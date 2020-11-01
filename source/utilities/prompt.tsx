@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Dialog } from '@/components/Dialog'
+import { Dialog } from '~/components/Dialog/Dialog'
 import './prompt.scss'
 
 export async function prompt(text = '', { defaultValue = '', title = 'Prompt' } = {}) {
@@ -8,9 +8,9 @@ export async function prompt(text = '', { defaultValue = '', title = 'Prompt' } 
 	document.body.appendChild(container)
 
 	return new Promise((resolve, reject) => {
-		const inputBox = React.createRef()
+		const inputBox = React.createRef<HTMLInputElement>()
 		const handleCancel = () => reject()
-		const handleOk = () => resolve(inputBox.current.value)
+		const handleOk = () => resolve(inputBox.current?.value)
 
 		const handleKeyDown = event => {
 			switch (event.key) {

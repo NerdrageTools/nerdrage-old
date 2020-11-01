@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { Article } from '@/server/models/Article'
-import { transclude } from './transclude'
+import { Article } from '~/server/models/Article'
+import { transclude } from '~/utilities/transclude'
 
 describe('utilities/transclude', () => {
 	beforeAll(async () => {

@@ -1,18 +1,18 @@
 import fetch from 'isomorphic-unfetch'
 import App from 'next/app'
 import React from 'react'
-import { Layout } from '@/components/Layout'
-import { Application } from '@/contexts/Application'
-import { defaultTheme } from '@/data/Theme'
-import '@/styles/all.scss'
+import { Layout } from '~/components/Layout/Layout'
+import { Application } from '~/contexts/Application'
+import { defaultTheme } from '~/data/Theme'
 /* eslint-disable import/extensions */
-import imageBook from '@/icons/book.png'
-import imageCombo from '@/icons/combo.png'
-import imageSystem from '@/icons/dice.gif'
-import imageInfo from '@/icons/info.png'
+import imageBook from '~/icons/book.png'
+import imageCombo from '~/icons/combo.png'
+import imageSystem from '~/icons/dice.gif'
+import imageInfo from '~/icons/info.png'
 /* eslint-enable import/extensions */
-import Error from '@/pages/_error'
-import { noop } from '@/utilities/noop'
+import Error from '~/pages/_error'
+import { noop } from '~/utilities/noop'
+import '~/styles/all.scss'
 
 export default class Wiki extends App {
 	static getInitialProps = async context => {

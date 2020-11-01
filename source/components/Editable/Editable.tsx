@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { bound } from '@/utilities/bound'
-import { noop } from '@/utilities/noop'
+import { bound } from '~/utilities/bound'
+import { noop } from '~/utilities/noop'
 import './Editable.scss'
 
 const TYPES = [

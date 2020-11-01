@@ -1,13 +1,10 @@
 import mockingoose from 'mockingoose'
 import mongoose from 'mongoose'
-import { Article, Campaign } from '@/server/models'
-import { pluck } from '@/utilities/pluck'
+import { Article, Campaign } from '~/server/models'
+import { pluck } from '~/utilities/pluck'
 import {
-	deleteArticle,
-	getArticle,
-	permissions,
-	upsertArticle,
-} from './ArticleController'
+	deleteArticle, getArticle, permissions, upsertArticle,
+} from '~/server/controllers/ArticleController'
 
 const { ObjectId } = mongoose.Types
 

@@ -1,4 +1,4 @@
-import { flatten } from '@/utilities/flatten'
+import { flatten } from '~/utilities/flatten'
 
 export const pluck = (object, ...keys) => {
 	if (!object || typeof object !== 'object') return {}

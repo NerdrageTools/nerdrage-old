@@ -1,5 +1,5 @@
 import { Router } from 'next/router'
-import { noop } from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 import React from 'react'
 
 const CAMPAIGN_DEFAULTS = {

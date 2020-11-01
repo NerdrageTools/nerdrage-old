@@ -1,9 +1,9 @@
 import express from 'express'
-import Campaign404 from '@/server/errors/Campaign404'
-import ContextLoader from '@/server/middleware/ContextLoader'
-import NoAnonymous from '@/server/middleware/NoAnonymous'
-import { Article, Sheet } from '@/server/models'
-import { createCampaignFilter } from '@/utilities/createCampaignFilter'
+import Campaign404 from '~/server/errors/Campaign404'
+import ContextLoader from '~/server/middleware/ContextLoader'
+import NoAnonymous from '~/server/middleware/NoAnonymous'
+import { Article, Sheet } from '~/server/models'
+import { createCampaignFilter } from '~/utilities/createCampaignFilter'
 
 const controller = express().use(Campaign404).use(NoAnonymous).use(ContextLoader)
 

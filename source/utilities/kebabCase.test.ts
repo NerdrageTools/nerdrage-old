@@ -1,4 +1,4 @@
-import { kebabCase } from './kebabCase'
+import { kebabCase } from '~/utilities/kebabCase'
 
 test('utilities/kebabCase', () => {
 	expect(kebabCase('This is a String')).toEqual('this-is-a-string')

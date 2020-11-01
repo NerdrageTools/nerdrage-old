@@ -1,4 +1,4 @@
-import { slugify, slugifyUrl } from './slugs'
+import { slugify, slugifyUrl } from '~/utilities/slugs'
 
 describe('slugify()', () => {
 	test('returns empty string for falsy values', () => {

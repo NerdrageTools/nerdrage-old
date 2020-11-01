@@ -1,4 +1,4 @@
-import { createRange } from './createRange'
+import { createRange } from '~/utilities/createRange'
 
 describe('createRange()', () => {
 	test('returns 1 value when low === high', () => {

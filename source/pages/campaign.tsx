@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { Editable } from '@/components/Editable'
-import { Link } from '@/components/Link'
-import { Participants } from '@/components/Participants'
-import { SheetList } from '@/components/SheetList'
-import { Sources } from '@/components/Sources'
-import { ThemeEditor } from '@/components/ThemeEditor'
-import { Toggle } from '@/components/Toggle'
-import { Application } from '@/contexts/Application'
-import PublicIcon from '@/icons/public.svg'
-import SecretIcon from '@/icons/secret.svg'
-import ErrorPage from '@/pages/_error'
-import { pluck } from '@/utilities/pluck'
-import './campaign.scss'
+import { Editable } from '~/components/Editable/Editable'
+import { Link } from '~/components/Link/Link'
+import { Participants } from '~/components/Participants/Participants'
+import { SheetList } from '~/components/SheetList/SheetList'
+import { Sources } from '~/components/Sources/Sources'
+import { ThemeEditor } from '~/components/ThemeEditor/ThemeEditor'
+import { Toggle } from '~/components/Toggle/Toggle'
+import { Application } from '~/contexts/Application'
+import PublicIcon from '~/icons/public.svg'
+import SecretIcon from '~/icons/secret.svg'
+import ErrorPage from '~/pages/_error'
+import { pluck } from '~/utilities/pluck'
 
 const EDITABLE_FIELDS = ['title']
 const STATE_FIELDS = [...EDITABLE_FIELDS, 'isEditor', 'isOwner', 'isPlayer']
 
 export default class CampaignPage extends Component {
+	static styles = import('./campaign.scss')
 	static contextType = Application
 
 	state = {

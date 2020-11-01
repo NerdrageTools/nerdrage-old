@@ -1,13 +1,9 @@
 import mockingoose from 'mockingoose'
 import mongoose from 'mongoose'
-import { Campaign, Sheet } from '@/server/models'
+import { Campaign, Sheet } from '~/server/models'
 import {
-	deleteSheet,
-	getSheet,
-	getSheetRequest,
-	permissions,
-	upsertSheet,
-} from './SheetController'
+	deleteSheet, getSheet, getSheetRequest, permissions, upsertSheet,
+} from '~/server/controllers/SheetController'
 
 const { ObjectId } = mongoose.Types
 
