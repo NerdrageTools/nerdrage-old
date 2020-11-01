@@ -74,6 +74,7 @@
     "@types/jest": "^26.0.15",
     "@types/mongoose": "^5.7.36",
     "@types/react": "^16.9.52",
+    "@types/react-color": "^3.0.4",
     "@types/react-custom-scrollbars": "^4.0.7",
     "@types/w3c-css-typed-object-model-level-1": "^20180410.0.2",
     "@typescript-eslint/eslint-plugin": "^4.6.0",

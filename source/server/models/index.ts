@@ -1,5 +1,5 @@
 export * from './Article'
-export * from './Campaign.ts'
+export * from './Campaign'
 export * from './Map'
 export * from './Sheet'
 export * from './User'

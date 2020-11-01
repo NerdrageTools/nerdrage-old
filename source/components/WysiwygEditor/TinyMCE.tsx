@@ -42,21 +42,21 @@ Editor.defaultProps = Object.assign(Editor.defaultProps || {}, {
 		menubar: false,
 		noneditable_noneditable_class: 'noedit',
 		plugins:
-      'anchor advlist autosave code fullscreen hr image link lists noneditable paste table',
+	'anchor advlist autosave code fullscreen hr image link lists noneditable paste table',
 		skin: false,
 		table_invalid_styles: 'table/td/th[height,width]',
 		table_resize_bars: false,
 		toolbar:
-      'formatselect | bold italic underline | alignleft aligncenter alignright alignjustify '
-      + '| indent outdent | bullist numlist | hr link | image table | removeformat',
+	'formatselect | bold italic underline | alignleft aligncenter alignright alignjustify '
+	+ '| indent outdent | bullist numlist | hr link | image table | removeformat',
 		valid_elements:
-      'a[id|href|target|class|style|subdomain],'
-      + 'img[id|src|class|style|height|width],'
-      + '@[id|class|colspan|rowspan|style],#th,#td,'
-      + '@[id|class|style],'
-      + '-h1,-h2,-h3,-h4,-h5,-h6,'
-      + '-table,-tr,-thead,-tbody,-tfoot,br,hr,-blockquote,'
-      + '-div,-span,-p,-ul,-ol,-li,-b/strong,-i/em,-u,-s/strike/del,-center,-sup,-sub',
+	'a[id|href|target|class|style|subdomain],'
+	+ 'img[id|src|class|style|height|width],'
+	+ '@[id|class|colspan|rowspan|style],#th,#td,'
+	+ '@[id|class|style],'
+	+ '-h1,-h2,-h3,-h4,-h5,-h6,'
+	+ '-table,-tr,-thead,-tbody,-tfoot,br,hr,-blockquote,'
+	+ '-div,-span,-p,-ul,-ol,-li,-b/strong,-i/em,-u,-s/strike/del,-center,-sup,-sub',
 	},
 })
 

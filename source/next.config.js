@@ -2,6 +2,7 @@ const withCSS = require('@zeit/next-css')
 const withSass = require('@zeit/next-sass')
 const DirectoryNamedWebpackPlugin = require('directory-named-webpack-plugin')
 const withPlugins = require('next-compose-plugins')
+const babelConfig = require('../babel.config')
 
 module.exports = withPlugins([withSass, withCSS], {
 	distDir: '../.next',
@@ -18,11 +19,20 @@ module.exports = withPlugins([withSass, withCSS], {
 		// 	delete cssLoader.options.minimize
 		// })
 
-		config.module.rules.push({
+		// delete options.defaultLoaders.babel // .options.babelPresetPlugins = babelConfig.presets
+		// console.log(options.defaultLoaders)
+
+		// const jsRule = config.module.rules
+		// 	.find(rule => rule.test.toString() === '/\\.(tsx|ts|js|mjs|jsx)$/')
+		// jsRule.use.push('babel-loader')
+
+		config.module.rules.unshift({
 			exclude: /node_modules/,
 			loader: 'babel-loader',
 			test: /\.[jt]sx?$/,
-		}, {
+		})
+
+		config.module.rules.push({
 			loader: 'url-loader',
 			options: {
 				fallback: 'file-loader',
