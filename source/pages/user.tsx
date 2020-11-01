@@ -1,4 +1,5 @@
-import { formatDistanceToNow } from 'date-fns'
+import dayjs from 'dayjs'
+import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { Editable } from '~/components/Editable/Editable'
@@ -14,10 +15,9 @@ import { confirm } from '~/utilities/confirm'
 import { pluck } from '~/utilities/pluck'
 import { URI } from '~/utilities/URI'
 
+dayjs.extend(dayjsRelativeTime)
+
 const UPDATABLE_FIELDS = ['email', 'favorites', 'name', 'username']
-const formatTime = (time: Date | string): string => (
-	formatDistanceToNow(new Date(time), { addSuffix: true })
-)
 
 export default class UserPage extends Component {
 	static styles = import('./user.scss')
@@ -150,14 +150,14 @@ export default class UserPage extends Component {
 						)}
 						<div className="row">
 							<b>Joined:</b>
-							<span title={Date(user.createdAt).toLocaleString()}>
-								{formatTime(user.createdAt)}
+							<span title={dayjs(user.createdAt).toLocaleString()}>
+								{dayjs(user.createdAt).fromNow()}
 							</span>
 						</div>
 						<div className="row">
 							<b>Last Login:</b>
-							<span title={Date(user.lastLogin).toLocaleString()}>
-								{formatTime(user.lastLogin)}
+							<span title={dayjs(user.lastLogin).toLocaleString()}>
+								{dayjs(user.lastLogin).fromNow()}
 							</span>
 						</div>
 					</div>
