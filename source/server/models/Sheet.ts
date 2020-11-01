@@ -1,11 +1,20 @@
 import mongoose from 'mongoose'
-import Slug from '@/server/models/Slug'
+import { ICampaign } from '@/server/models/Campaign'
+import { Slug } from '@/server/models/Slug'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 
-export const SheetSchema = new mongoose.Schema({
+interface TSheet extends mongoose.Document {
+	_id: string,
+	campaign: ICampaign['_id'],
+}
+
+export const SheetSchema = new mongoose.Schema<TSheet>({
 	campaign: {
-		ref: 'Campaign', required: true, type: ObjectIdType, unique: false,
+		ref: 'Campaign',
+		required: true,
+		type: ObjectIdType,
+		unique: false,
 	},
 	data: { default: {}, type: Object },
 	layout: { default: {}, type: Object },

@@ -4,7 +4,23 @@ import { computeSearchKeys } from '@/utilities/computeSearchKeys'
 
 const SALT_WORK_FACTOR = 10
 
-const UserSchema = new mongoose.Schema({
+interface IUserJSON {
+	email: string,
+	favorites: string[],
+	isAdmin: boolean,
+	lastLogin: Date,
+	name: string,
+	password: string,
+	searchKeys: string[],
+	username: string,
+}
+
+export interface IUser extends mongoose.Document, IUserJSON {
+	comparePassword: (password: string) => Promise<boolean>,
+	toProfile: () => IUserJSON,
+}
+
+const Schema = new mongoose.Schema<IUser>({
 	email: {
 		required: true,
 		trim: true,
@@ -43,8 +59,8 @@ const UserSchema = new mongoose.Schema({
 	versionKey: 'version',
 })
 
-UserSchema.index({ username: 'text' })
-UserSchema.pre('save', function (next) {
+Schema.index({ username: 'text' })
+Schema.pre<IUser>('save', function (next) {
 	if (this.email) this.email = this.email.toLowerCase().trim()
 	if (this.username) this.username = this.username.toLowerCase().trim()
 
@@ -64,7 +80,7 @@ UserSchema.pre('save', function (next) {
 	})
 })
 
-UserSchema.methods.comparePassword = function (password) {
+Schema.methods.comparePassword = function (password) {
 	return new Promise((resolve, reject) => {
 		bcrypt.compare(password, this.password, (error, isMatch) => {
 			if (error) reject(error)
@@ -72,16 +88,16 @@ UserSchema.methods.comparePassword = function (password) {
 		})
 	})
 }
-UserSchema.methods.toProfile = function () {
+Schema.methods.toProfile = function toProfile(): IUserJSON {
 	return {
-		...Object.keys(this.toJSON()).reduce((all, key) => {
-			if (!['password'].includes(key)) {
-				return { ...all, [key]: this[key] }
+		...Object.keys(this.toJSON() as IUserJSON).reduce((all, key) => {
+			if (key !== 'password') {
+				return { ...all, [key]: this[key as keyof IUserJSON] }
 			}
 			return all
 		}, {}),
 		username: this.username,
-	}
+	} as IUserJSON
 }
 
-export const User = mongoose.model('User', UserSchema)
+export const User = mongoose.model<IUser>('User', Schema)

@@ -6,6 +6,7 @@ module.exports = {
 		production: { compact: true },
 	},
 	plugins: [
+		['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
 		['module-resolver', {
 			alias: { '@': path.resolve(__dirname, 'source') },
 		}],
@@ -25,14 +26,8 @@ module.exports = {
 	],
 	presets: [
 		'@babel/preset-react',
-		['@babel/env', {
-			corejs: '3.0.0',
-			targets: {
-				esmodules: true,
-				ie: '11',
-				node: 'current',
-			},
-			useBuiltIns: 'entry',
-		}],
+		['@babel/env', { corejs: '3.6.5', modules: 'auto', useBuiltIns: 'entry' }],
+		['@babel/preset-typescript', { allowDeclareFields: true }],
+		'next/babel',
 	],
 }

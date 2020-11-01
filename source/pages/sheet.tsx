@@ -2,8 +2,8 @@ import fetch from 'isomorphic-unfetch'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { CharacterModel, LayoutModel, Sheet as SfSheet } from 'sheetforge'
-import { Editable } from '@/components/Editable'
-import { Toggle } from '@/components/Toggle'
+import { Editable } from '@/components/Editable/Editable'
+import { Toggle } from '@/components/Toggle/Toggle'
 import { Application } from '@/contexts/Application'
 import { defaultSheetLayout } from '@/data/defaultSheetLayout'
 import PublicIcon from '@/icons/public.svg'
@@ -13,13 +13,15 @@ import ErrorPage from '@/pages/_error'
 import { confirm } from '@/utilities/confirm'
 import { pluck } from '@/utilities/pluck'
 import { URI } from '@/utilities/URI'
-import 'sheetforge/build/sheetforge.css'
-import './sheet.scss'
 
 const STATE_FIELDS = ['_id', 'isEditor', 'isOwner', 'secret', 'slug', 'template']
 const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
+	static styles = Promise.all([
+		import('sheetforge/build/sheetforge.css'),
+		import('./sheet.scss'),
+	])
 	static contextType = Application
 	static defaultProps = {
 		children: [],

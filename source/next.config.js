@@ -9,16 +9,20 @@ module.exports = withPlugins([withSass, withCSS], {
 	webpack(nextConfig, options) {
 		const config = { ...nextConfig }
 
-		config.module.rules.forEach(rule => {
-			if (!Array.isArray(rule.use)) return
+		// config.module.rules.forEach(rule => {
+		// 	if (!Array.isArray(rule.use)) return
 
-			const cssLoader = rule.use.find(use => use.loader && use.loader === 'css-loader')
-			if (!cssLoader || !cssLoader.options) return
+		// 	const cssLoader = rule.use.find(use => use.loader && use.loader === 'css-loader')
+		// 	if (!cssLoader || !cssLoader.options) return
 
-			delete cssLoader.options.minimize
-		})
+		// 	delete cssLoader.options.minimize
+		// })
 
 		config.module.rules.push({
+			exclude: /node_modules/,
+			loader: 'babel-loader',
+			test: /\.[jt]sx?$/,
+		}, {
 			loader: 'url-loader',
 			options: {
 				fallback: 'file-loader',

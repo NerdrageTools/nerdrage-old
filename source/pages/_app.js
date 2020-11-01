@@ -3,7 +3,7 @@ import App from 'next/app'
 import React from 'react'
 import { Layout } from '@/components/Layout'
 import { Application } from '@/contexts/Application'
-import { defaultTheme } from '@/data/defaultTheme'
+import { defaultTheme } from '@/data/Theme'
 import '@/styles/all.scss'
 /* eslint-disable import/extensions */
 import imageBook from '@/icons/book.png'
@@ -98,11 +98,9 @@ export default class Wiki extends App {
 	}
 
 	render = () => {
-		const {
-			Component, pageProps, rootUrl, router, subdomain,
-		} = this.props
+		const { Component, pageProps, rootUrl, router, subdomain } = this.props
 		const { campaign, size, user } = this.state
-		const theme = Object.assign(defaultTheme, (campaign && campaign.theme) || {})
+		const theme = { ...defaultTheme, ...(campaign?.theme ?? {}) }
 		const context = {
 			campaign,
 			logOff: this.logOff,

@@ -9,7 +9,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import nextApp from 'next'
 import nocache from 'nocache'
-import ArticleController from './controllers/ArticleController'
+import ArticleController from '@/server/controllers/ArticleController'
 import CampaignController from './controllers/CampaignController'
 import MapController from './controllers/MapController'
 import SearchController from './controllers/SearchController'
@@ -26,9 +26,7 @@ dotenv.config()
 const PRODUCTION = process.env.NODE_ENV === 'production'
 const app = nextApp({ dev: !PRODUCTION, dir: './source' })
 const routeHandler = routes.getRequestHandler(app)
-const {
-	DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME,
-} = process.env
+const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 
 app.prepare().then(async () => {
 	mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {

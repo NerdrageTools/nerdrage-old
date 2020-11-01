@@ -1,6 +1,6 @@
-const routes = require('next-routes')
+import routes from 'next-routes'
 
-module.exports = routes()
+export default routes()
 	.add('article', '/article/:slug')
 	.add('error', '/error/:statusCode?')
 	.add('map', '/map/:slug')
