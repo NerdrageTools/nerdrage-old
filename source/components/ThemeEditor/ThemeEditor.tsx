@@ -47,18 +47,16 @@ export function ThemeEditor({
 			<div className="input-wrapper">
 				<label>UI Color</label>
 				<ColorPicker
-					className="primary"
 					color={theme.primary}
+					disabled={readOnly}
 					onChange={onUpdateColor('primary')}
-					readOnly={readOnly}
 					text="BG"
 					textColor={theme.primaryText}
 				/>
 				<ColorPicker
-					className="primaryText"
 					color={theme.primaryText}
+					disabled={readOnly}
 					onChange={onUpdateColor('primaryText')}
-					readOnly={readOnly}
 					text="Text"
 					textColor={theme.primary}
 				/>
@@ -66,18 +64,16 @@ export function ThemeEditor({
 			<div className="input-wrapper">
 				<label>Text Colors</label>
 				<ColorPicker
-					className="background"
 					color={theme.background}
+					disabled={readOnly}
 					onChange={onUpdateColor('background')}
-					readOnly={readOnly}
 					text="BG"
 					textColor={theme.normalText}
 				/>
 				<ColorPicker
-					className="normalText"
 					color={theme.normalText}
+					disabled={readOnly}
 					onChange={onUpdateColor('normalText')}
-					readOnly={readOnly}
 					text="Text"
 					textColor={theme.background}
 				/>
