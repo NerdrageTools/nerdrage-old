@@ -2,27 +2,28 @@ import NextLink from 'next/link'
 import React, { FunctionComponent, useContext } from 'react'
 import { Application } from '~/contexts/Application'
 
-type TProps = {
+interface Props {
 	active?: boolean,
 	className?: string,
 	query?: Record<string, any>,
-	slug: string,
+	slug?: string,
 	subdomain?: string,
-	type: 'article' | 'campaign' | 'map' | 'sheet' | 'user',
+	to?: string,
+	type?: 'article' | 'campaign' | 'map' | 'sheet' | 'user',
 }
 
-export const Link: FunctionComponent<TProps> = ({
+export const Link: FunctionComponent<Props> = ({
 	active = false,
 	children,
 	className = '',
 	query = null,
 	slug = '',
+	to,
 	type = 'article',
 	...props
 }) => {
 	const context = useContext(Application)
 	const subdomain = props.subdomain || context.subdomain
-	const { rootUrl } = useContext(Application)
 	const contents = children || type
 
 	const queryString = !query
@@ -35,7 +36,7 @@ export const Link: FunctionComponent<TProps> = ({
 	}
 
 	if (subdomain && (!context.campaign || subdomain !== context.campaign.subdomain)) {
-		let href = `//${subdomain}.${rootUrl}/${type}`
+		let href = `//${subdomain}.${context.rootUrl}/${type}`
 		if (type !== 'campaign') href += `/${slug}`
 
 		return <a {...{ ...props, href, subdomain }}>{contents}</a>
@@ -43,7 +44,10 @@ export const Link: FunctionComponent<TProps> = ({
 
 	let as = `/${type}`
 	let href = `/${type}`
-	if (type !== 'campaign') {
+	if (to) {
+		as = to
+		href = to
+	} else if (type !== 'campaign') {
 		if (slug) {
 			as += `/${slug}`
 			href += `?slug=${slug}`

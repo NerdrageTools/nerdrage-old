@@ -1,6 +1,6 @@
 @import '~@/styles/palette';
 
-.flyout.menu {
+.menu {
   background: inherit;
   border: 1px solid transparent;
   color: inherit;
@@ -44,7 +44,7 @@
     z-index: 1;
   }
 
-  > .flyout-panel {
+  > .menu-panel {
     background: inherit;
     border: 1px solid #00000033;
     border-radius: 5px 0 5px 5px;

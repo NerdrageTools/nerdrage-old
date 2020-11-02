@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
-import { FlyoutMenu, MenuItem } from '~/components/FlyoutMenu/FlyoutMenu'
+import { Menu } from '~/components/Menu/Menu'
 import { Application } from '~/contexts/Application'
 import ArticleIcon from '~/icons/read.svg'
 import SheetIcon from '~/icons/sheet.svg'
 import { alert } from '~/utilities/alert'
 import { promptLink } from '~/utilities/promptLink'
-import './CreateMenu.scss'
 
 export class CreateMenu extends Component {
+	static styles = import('./CreateMenu.scss')
 	static contextType = Application
+	context!: React.ContextType<typeof Application>
 
-	flyoutMenu = React.createRef()
-
-	handleNew = type => async () => {
-		this.flyoutMenu.current.close()
-
+	handleNew = (type: string) => async (): Promise<void> => {
 		const lowered = type.toLowerCase()
 		try {
 			const { slug, templateSlug, text } = await promptLink({
@@ -32,12 +29,14 @@ export class CreateMenu extends Component {
 				asUrl += `&template=${templateSlug}`
 			}
 
-			this.context.router.push(href, asUrl)
-		} catch (error) { }
+			this.context.router!.push(href, asUrl)
+		} catch (error) {
+			console.log(error) // eslint-disable-line no-console
+		}
 	}
-	handleNewCampaign = async () => {
+
+	handleNewCampaign = async (): Promise<void> => {
 		const { rootUrl } = this.context
-		this.flyoutMenu.current.close()
 
 		try {
 			const { slug, text } = await promptLink({
@@ -53,46 +52,39 @@ export class CreateMenu extends Component {
 				credentials: 'include',
 				method: 'PUT',
 			})
+
 			if (response.status === 201) {
-				this.context.router.push(`//${slug}.${rootUrl}/campaign`, `//${slug}.${rootUrl}/campaign`)
+				this.context.router!.push(`//${slug}.${rootUrl}/campaign`)
 			} else {
 				const json = await response.json()
 				alert(json.message, 'Error')
 			}
-		} catch (error) { }
+		} catch (error) {
+			console.error(error) // eslint-disable-line no-console
+		}
 	}
 
-	render = () => {
-		const { children } = this.props
+	render = (): JSX.Element => {
 		const { isEditor, isParticipant } = this.context.campaign || {}
 		const { isAdmin } = this.context.user || {}
 
-		return (
-			<FlyoutMenu ref={this.flyoutMenu} className="create">
-				{isAdmin && (
-					<MenuItem onClick={this.handleNewCampaign}>
-						<SheetIcon />
-						{' '}
-						New Campaign...
-					</MenuItem>
-				)}
-				{isEditor && (
-					<MenuItem onClick={this.handleNew('Article')}>
-						<ArticleIcon />
-						{' '}
-						New Article...
-					</MenuItem>
-				)}
-				{isParticipant && (
-					<MenuItem onClick={this.handleNew('Sheet')}>
-						<SheetIcon />
-						{' '}
-						New Sheet...
-					</MenuItem>
-				)}
-				<hr />
-				{children}
-			</FlyoutMenu>
-		)
+		return <>
+			{isAdmin && (
+				<Menu.MenuItem icon={<SheetIcon />} onClick={this.handleNewCampaign}>
+					New Campaign...
+				</Menu.MenuItem>
+			)}
+			{isEditor && (
+				<Menu.MenuItem icon={<ArticleIcon />} onClick={this.handleNew('Article')}>
+					New Article...
+				</Menu.MenuItem>
+			)}
+			{isParticipant && (
+				<Menu.MenuItem icon={<SheetIcon />} onClick={this.handleNew('Sheet')}>
+					New Sheet...
+				</Menu.MenuItem>
+			)}
+			<hr />
+		</>
 	}
 }
