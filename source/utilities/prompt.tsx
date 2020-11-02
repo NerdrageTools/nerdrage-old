@@ -15,10 +15,10 @@ export const prompt = async (
 	document.body.appendChild(container)
 
 	return new Promise<string>((resolve, reject) => {
-		const inputBox = React.createRef<HTMLInputElement>()
+		const inputRef = React.createRef<HTMLInputElement>()
 
 		const handleCancel = () => reject()
-		const handleOk = () => resolve(inputBox.current?.value)
+		const handleOk = () => resolve(inputRef.current!.value)
 		const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 			switch (event.key) {
 				case 'Enter':
@@ -41,7 +41,7 @@ export const prompt = async (
 				<div className="text">{text ?? ''}</div>
 				<div className="input-wrapper">
 					<input
-						ref={inputBox}
+						ref={inputRef}
 						defaultValue={options?.defaultValue ?? ''}
 						onKeyDown={handleKeyDown}
 						type="text"
@@ -49,8 +49,8 @@ export const prompt = async (
 				</div>
 			</Dialog>
 		), container, () => {
-			inputBox.current?.select()
-			inputBox.current?.focus()
+			inputRef.current!.select()
+			inputRef.current!.focus()
 		})
 	}).finally(() => {
 		document.body.removeChild(container)

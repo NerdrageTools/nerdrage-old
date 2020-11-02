@@ -1,25 +1,33 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { CreateLinkDialog } from '~/components/CreateLinkDialog/CreateLinkDialog'
-import './prompt.scss'
+import { CreateLinkDialog, INewLink } from '~/components/CreateLinkDialog/CreateLinkDialog'
+
+interface PromptProps {
+	defaultSlug?: string,
+	defaultText?: string,
+	slugLabel?: string,
+	templateType?: string,
+	textLabel?: string,
+	title?: string,
+}
 
 export async function promptLink({
 	defaultText = '',
 	defaultSlug = '',
-	templateType = null,
+	slugLabel,
+	templateType,
+	textLabel,
 	title = 'Create Link',
-}) {
+}: PromptProps): Promise<INewLink> {
 	const container = document.createElement('div')
 	document.body.appendChild(container)
 
-	return new Promise((resolve, reject) => {
-		const onCancel = () => reject()
-		const onOk = payload => resolve(payload)
-
+	return new Promise<INewLink>((resolve, reject) => {
 		ReactDOM.render(
-			<CreateLinkDialog {...{
-				defaultSlug, defaultText, onCancel, onOk, templateType, title,
-			}}
+			<CreateLinkDialog
+				onCancel={() => reject()}
+				onOk={(newLink: INewLink) => resolve(newLink)}
+				{...{ defaultSlug, defaultText, slugLabel, templateType, textLabel, title }}
 			/>,
 			container,
 		)

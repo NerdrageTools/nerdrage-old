@@ -50,7 +50,7 @@ export const ColorPicker = CustomPicker(class extends React.Component<Props, Sta
 	}
 
 	handleClickOutside = ({ target }: MouseEvent) => {
-		if (!this.#wrapper.current?.contains(target as Node)) {
+		if (!this.#wrapper.current!.contains(target as Node)) {
 			this.setState({ open: false })
 		}
 	}

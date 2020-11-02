@@ -52,6 +52,7 @@ module.exports = {
 			{ selector: 'enum', format: ['PascalCase'] },
 			{ selector: 'enumMember', format: ['PascalCase'] },
 		],
+		'@typescript-eslint/no-non-null-assertion': 'off',
 		'array-bracket-newline': ['error', 'consistent'],
 		'arrow-parens': ['error', 'as-needed'],
 		'comma-dangle': ['error', 'always-multiline'],

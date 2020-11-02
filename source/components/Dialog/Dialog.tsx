@@ -12,8 +12,8 @@ interface Props {
 	title?: string,
 }
 
-export class Dialog<ExtraProps, State>
-	extends React.Component<Props & ExtraProps, State> {
+export class Dialog<P extends Record<string, any>, S = never, C = never>
+	extends React.Component<P & Omit<Props, keyof P>, S, C> {
 	static styles = import('./Dialog.scss')
 	static defaultProps: Props = {
 		modal: false,

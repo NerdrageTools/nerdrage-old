@@ -4,7 +4,7 @@ import type { ITemplateLink } from '~/server/schema/ITemplate'
 import { pluck } from '~/utilities/pluck'
 import { slugify } from '~/utilities/slugs'
 
-interface INewLink {
+export interface INewLink {
 	slug: string,
 	templateSlug: string,
 	text: string,
@@ -52,8 +52,8 @@ export class CreateLinkDialog extends Dialog<Props, State> {
 
 	componentDidMount = async (): Promise<void> => {
 		if (process.browser) {
-			this.#textInput?.current?.focus()
-			this.#textInput?.current?.select()
+			this.#textInput?.current!.focus()
+			this.#textInput?.current!.select()
 		}
 
 		const { templateType } = this.props
