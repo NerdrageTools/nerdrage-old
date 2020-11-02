@@ -1,17 +1,12 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "jsx": "preserve",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "isolatedModules": true
+    "jsx": "preserve"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "**/*.js"
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"

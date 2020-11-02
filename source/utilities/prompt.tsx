@@ -1,18 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Dialog } from '~/components/Dialog/Dialog'
-import './prompt.scss'
 
-export async function prompt(text = '', { defaultValue = '', title = 'Prompt' } = {}) {
+interface PromptOptions {
+	defaultValue?: string,
+	title?: string,
+}
+
+export const prompt = async (
+	text?: string,
+	options?: PromptOptions,
+): Promise<string> => {
 	const container = document.createElement('div')
 	document.body.appendChild(container)
 
-	return new Promise((resolve, reject) => {
+	return new Promise<string>((resolve, reject) => {
 		const inputBox = React.createRef<HTMLInputElement>()
+
 		const handleCancel = () => reject()
 		const handleOk = () => resolve(inputBox.current?.value)
-
-		const handleKeyDown = event => {
+		const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 			switch (event.key) {
 				case 'Enter':
 					return handleOk()
@@ -29,21 +36,21 @@ export async function prompt(text = '', { defaultValue = '', title = 'Prompt' } 
 				modal
 				onCancel={handleCancel}
 				onOk={handleOk}
-				title={title}
+				title={options?.title ?? 'Prompt'}
 			>
-				<div className="text">{text}</div>
+				<div className="text">{text ?? ''}</div>
 				<div className="input-wrapper">
 					<input
 						ref={inputBox}
-						defaultValue={defaultValue}
+						defaultValue={options?.defaultValue ?? ''}
 						onKeyDown={handleKeyDown}
 						type="text"
 					/>
 				</div>
 			</Dialog>
 		), container, () => {
-			inputBox.current.select()
-			inputBox.current.focus()
+			inputBox.current?.select()
+			inputBox.current?.focus()
 		})
 	}).finally(() => {
 		document.body.removeChild(container)

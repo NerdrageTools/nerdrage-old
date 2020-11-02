@@ -1,90 +1,120 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { createRef } from 'react'
 import { Dialog } from '~/components/Dialog/Dialog'
-import { noop } from '~/utilities/noop'
+import type { ITemplateLink } from '~/server/schema/ITemplate'
+import { pluck } from '~/utilities/pluck'
 import { slugify } from '~/utilities/slugs'
-import './CreateLinkDialog.scss'
 
-const getTemplates = async type => {
-	const response = await fetch(`/api/templates/${type.toLowerCase()}`)
-	if (response.status === 200) return response.json()
-
-	return []
+interface INewLink {
+	slug: string,
+	templateSlug: string,
+	text: string,
 }
 
-export function CreateLinkDialog({
-	defaultSlug = '',
-	defaultText = '',
-	onCancel = noop,
-	onOk = noop,
-	slugLabel = 'Slug',
-	templateType = null,
-	textLabel = 'Text',
-	title = 'Create Link',
-}) {
-	const [text, setText] = useState(defaultText)
-	const [slug, setSlug] = useState(defaultSlug)
-	const [auto, setAuto] = useState(true)
-	const [templates, setTemplates] = useState([])
-	const [templateSlug, setTemplate] = useState(undefined)
-	const slugInput = useRef(null)
-	const textInput = useRef(null)
-	const templateInput = useRef(null)
+interface Props {
+	defaultSlug?: string,
+	defaultText?: string,
+	onOk?: (link: INewLink) => void,
+	slugLabel?: string,
+	templateType?: string,
+	textLabel?: string,
+	title?: string,
+}
 
-	useEffect(() => {
-		if (templateType) getTemplates(templateType).then(setTemplates)
-	}, [templateType])
-	useEffect(() => {
-		textInput.current.focus()
-		textInput.current.select()
-	}, [true])
+interface State {
+	auto: boolean,
+	slug: string,
+	templateSlug: string,
+	templates: ITemplateLink[],
+	text: string,
+}
 
-	const handleKeyDown = ({ key }) => {
-		switch (key) {
-			case 'Escape':
-				return onCancel()
-			case 'Enter':
-				return onOk({ slug, templateSlug, text })
-			default:
-				return undefined
+export class CreateLinkDialog extends Dialog<Props, State> {
+	static styles = import('./CreateLinkDialog.scss')
+	static defaultProps = {
+		...Dialog.defaultProps,
+		className: 'create-link',
+		slugLabel: 'Slug',
+		textLabel: 'Text',
+		title: 'Create Link',
+	}
+
+	state: State = {
+		auto: true,
+		slug: this.props.defaultSlug ?? '',
+		templates: [],
+		templateSlug: '',
+		text: this.props.defaultText ?? '',
+	}
+
+	#slugInput = createRef<HTMLInputElement>()
+	#templateInput = createRef<HTMLSelectElement>()
+	#textInput = createRef<HTMLInputElement>()
+
+	componentDidMount = async (): Promise<void> => {
+		if (process.browser) {
+			this.#textInput?.current?.focus()
+			this.#textInput?.current?.select()
+		}
+
+		const { templateType } = this.props
+		if (!templateType) { return }
+
+		const response = await fetch(`/api/templates/${templateType.toLowerCase()}`)
+		if (response.status === 200) {
+			this.setState({ templates: await response.json() })
 		}
 	}
-	const handleSlug = ({ target }) => {
-		if (auto) setAuto(false)
-		setSlug(slugify(target.value))
-	}
-	const handleText = ({ target }) => {
-		setText(target.value)
-		if (auto) setSlug(slugify(target.value))
-	}
-	const handleTemplate = ({ target }) => setTemplate(target.value)
 
-	return (
-		<Dialog
-			className="create-link"
-			modal
-			onCancel={onCancel}
-			onKeyDown={handleKeyDown}
-			onOk={() => onOk({ slug, templateSlug, text })}
-			title={title}
-		>
+	handleKeyDown: React.KeyboardEventHandler = ({ key }) => {
+		switch (key) {
+			case 'Escape': return this.props.onCancel?.()
+			case 'Enter': return this.props.onOk?.(pluck(this.state, 'slug', 'templateSlug', 'text'))
+			default: return undefined
+		}
+	}
+
+	handleSlug = (event: React.ChangeEvent<HTMLInputElement>): void => {
+		const slug = slugify(event.target.value)
+		if (slug !== this.state.slug) {
+			this.setState({ auto: false, slug })
+		}
+	}
+
+	handleTemplate = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+		this.setState({ templateSlug: event.target.value })
+	}
+
+	handleText = (event: React.ChangeEvent<HTMLInputElement>): void => {
+		const text = event.target.value
+		const slug = slugify(text)
+
+		if (text !== this.state.text) {
+			this.setState((this.state.auto ? { slug, text } : { text }) as State)
+		}
+	}
+
+	renderBody = (): JSX.Element => {
+		const { slugLabel, templateType, textLabel } = this.props
+		const { slug: currentSlug, templates, templateSlug, text } = this.state
+
+		return <>
 			<div className="input-wrapper">
 				<label>{textLabel}</label>
-				<input ref={textInput} onChange={handleText} type="text" value={text} />
+				<input ref={this.#textInput} onChange={this.handleText} type="text" value={text} />
 			</div>
 			<div className="input-wrapper">
 				<label>{slugLabel}</label>
-				<input ref={slugInput} onChange={handleSlug} type="text" value={slug} />
+				<input ref={this.#slugInput} onChange={this.handleSlug} type="text" value={currentSlug} />
 			</div>
 			{templateType && (
 				<div className="input-wrapper">
 					<label>Template</label>
-					<select ref={templateInput} onChange={handleTemplate} value={templateSlug}>
+					<select ref={this.#templateInput} onChange={this.handleTemplate} value={templateSlug}>
 						<option key="none" value="">None</option>
-						{/* eslint-disable-next-line no-shadow */}
 						{templates.map(({ slug, title }) => <option key={slug} value={slug}>{title}</option>)}
 					</select>
 				</div>
 			)}
-		</Dialog>
-	)
+		</>
+	}
 }
