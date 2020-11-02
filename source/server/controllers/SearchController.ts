@@ -1,4 +1,4 @@
-import { Deburr } from 'deburr'
+import deburr from 'lodash.deburr'
 import entities from 'entities'
 import express from 'express'
 import fetch from 'isomorphic-unfetch'
@@ -67,7 +67,7 @@ export const searchArticles = async (request, response) => {
 		})
 	}
 
-	const $search = new Deburr(entities.decodeHTML(searchTerm)).toString()
+	const $search = deburr(entities.decodeHTML(searchTerm))
 	const projection = {
 		$project: {
 			campaign: 1, plainText: 1, secret: 1, slug: 1, template: 1, title: 1,
@@ -139,7 +139,7 @@ export const searchArticles = async (request, response) => {
 }
 export const searchCampaigns = async (request, response) => {
 	const { searchTerm = '', limit = 10 } = request.params
-	const $searchRegex = new RegExp(`${new Deburr(searchTerm.toLowerCase()).toString()}`, 'i')
+	const $searchRegex = new RegExp(`${deburr(searchTerm.toLowerCase())}`, 'i')
 	const matches = await Campaign.find(
 		{
 			$and: [
@@ -168,12 +168,10 @@ export const searchFonts = async (request, response) => {
 }
 export const searchUsers = async (request, response) => {
 	const { searchTerm = '.', limit = 10 } = request.params
-	const $searchRegex = new RegExp(`^${new Deburr(searchTerm.toLowerCase()).toString()}`)
+	const $searchRegex = new RegExp(`^${deburr(searchTerm.toLowerCase())}`)
 	const matches = await User.find(
 		{ $or: [{ searchKeys: $searchRegex }, { email: searchTerm }] },
-		{
-			isAdmin: 1, lastLogin: 1, name: 1, username: 1,
-		},
+		{ isAdmin: 1, lastLogin: 1, name: 1, username: 1 },
 	).sort('name').limit(bound(limit, { min: 1 }))
 
 	return response.status(200).json(matches)
