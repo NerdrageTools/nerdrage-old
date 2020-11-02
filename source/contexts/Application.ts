@@ -1,17 +1,14 @@
 import { Router } from 'next/router'
-import { noop } from '~/utilities/noop'
 import React from 'react'
+import { ICampaign } from '~/server/schema/ICampaign'
+import { ITheme } from '~/server/schema/ITheme'
+import { noop } from '~/utilities/noop'
 
-const CAMPAIGN_DEFAULTS = {
-	createdAt: null,
-	createdBy: {},
+const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
 	editors: [],
-	lastUpdatedAt: null,
-	lastUpdatedBy: {},
 	navigation: [],
 	owners: [],
-	secret: false,
-	subdomain: '',
+	secret: true,
 	theme: {
 		background: '#fff',
 		fontFamily: 'Ubuntu',
@@ -20,14 +17,13 @@ const CAMPAIGN_DEFAULTS = {
 		primaryText: '#fff',
 	},
 	title: 'New Campaign',
-	version: 0,
 }
 const USER_DEFAULTS = {
 	anonymous: true,
 }
 
-type TContext = {
-	campaign: typeof CAMPAIGN_DEFAULTS,
+export interface IApplicationContext {
+	campaign: ICampaign,
 	logOff: typeof noop,
 	rootUrl: string,
 	router?: Router,
@@ -36,14 +32,14 @@ type TContext = {
 	setUser: typeof noop,
 	size: 'small' | 'medium' | 'large',
 	subdomain: string,
-	theme: typeof CAMPAIGN_DEFAULTS.theme,
+	theme: ITheme,
 	updateCampaign: typeof noop,
 	updateUser: typeof noop,
 	user: typeof USER_DEFAULTS,
 }
 
-export const Application = React.createContext<TContext>({
-	campaign: CAMPAIGN_DEFAULTS,
+export const Application = React.createContext<IApplicationContext>({
+	campaign: CAMPAIGN_DEFAULTS as ICampaign,
 	logOff: noop,
 	rootUrl: '',
 	setCampaign: noop,
@@ -51,7 +47,7 @@ export const Application = React.createContext<TContext>({
 	setUser: noop,
 	size: 'large',
 	subdomain: '',
-	theme: CAMPAIGN_DEFAULTS.theme,
+	theme: CAMPAIGN_DEFAULTS.theme as ITheme,
 	updateCampaign: noop,
 	updateUser: noop,
 	user: USER_DEFAULTS,
