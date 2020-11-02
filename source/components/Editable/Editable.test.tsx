@@ -5,16 +5,16 @@ import { Editable } from '~/components/Editable/Editable'
 
 describe('Editable', () => {
 	let parent = document.createElement('div')
-	let component = null
-	let rendered = null
+	let component: Editable
+	let rendered: () => HTMLDivElement
 
-	function render(element) { ReactDOM.render(element, parent) }
+	function render(element: JSX.Element) { ReactDOM.render(element, parent) }
 
 	beforeEach(() => {
 		parent = document.createElement('div')
-		component = ReactDOM.render(<Editable />, parent)
+		component = ReactDOM.render(<Editable />, parent) as unknown as Editable
 		// eslint-disable-next-line react/no-find-dom-node
-		rendered = () => ReactDOM.findDOMNode(component)
+		rendered = () => ReactDOM.findDOMNode(component) as HTMLDivElement
 	})
 
 	test('renders classes properly', () => {
@@ -32,9 +32,9 @@ describe('Editable', () => {
 		render(<Editable onChange={onChange} value="first" />)
 		component.handleToggleEditing()
 
-		const editor = rendered().children[0]
+		const editor = rendered().children[0] as HTMLInputElement
 		expect(editor.value).toEqual('first')
-		Simulate.change(editor, { target: { value: 'second' } })
+		Simulate.change(editor, { target: { value: 'second' } as HTMLInputElement })
 		Simulate.blur(editor)
 		expect(onChange).toBeCalledWith('second', 'first')
 	})
@@ -44,7 +44,7 @@ describe('Editable', () => {
 
 		function validateCheckbox() {
 			expect(rendered().children.length).toEqual(1)
-			const checkbox = rendered().children[0]
+			const checkbox = rendered().children[0] as HTMLInputElement
 			expect(checkbox.tagName).toEqual('INPUT')
 			expect(checkbox.type).toEqual('checkbox')
 			return checkbox
@@ -59,7 +59,7 @@ describe('Editable', () => {
 		expect(component.getEditorType()).toEqual('boolean')
 		const checkbox = validateCheckbox()
 
-		Simulate.change(checkbox, { target: { value: false } })
+		Simulate.change(checkbox, { target: { value: false } as unknown as HTMLInputElement })
 		expect(onChange).toBeCalledWith(false, 'test')
 	})
 })
