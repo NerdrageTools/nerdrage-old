@@ -1,80 +1,87 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React from 'react'
 import { noop } from '~/utilities/noop'
 
-const applyProps = ({ bodyClasses, css, document }) => {
-	if (!document || !document.body || !document.head) {
-		return noop
-	}
-
-	const bodyTag = document.body
-	const classNames = bodyClasses.filter(Boolean)
-	classNames.forEach(cn => bodyTag.classList.add(cn))
-
-	const headTag = document.head
-	let styleTag = headTag.querySelector('style#injected')
-	if (!styleTag) {
-		styleTag = document.createElement('style')
-		styleTag.id = 'injected'
-		headTag.appendChild(styleTag)
-	}
-
-	styleTag.innerHTML = css
-
-	return () => classNames.forEach(cn => bodyTag.classList.remove(cn))
+interface LoadEvent {
+	document: Document | null,
+	window: Window | null,
 }
 
-export function IFrame({
-	bodyClasses = [],
-	className = '',
-	css = '',
-	onLoad = noop,
-	onReady = noop,
-	onUnload = noop,
-	queryString = {},
-	src = '',
-	title = 'IFrame',
-}) {
-	const frameEl = useRef()
+interface Props {
+	bodyClasses?: string[],
+	className?: string,
+	css?: string,
+	onLoad?: (event: LoadEvent) => void,
+	onReady?: (event: LoadEvent) => void,
+	onUnload?: (event: LoadEvent) => void,
+	queryString?: Record<string, string>,
+	src?: string,
+	title?: string,
+}
 
-	const handleOnReady = useMemo(() => ({ document, window }) => {
-		applyProps({ bodyClasses, css, document })
-		onReady({ document, window })
-	}, [bodyClasses, css, onReady])
+export class IFrame extends React.Component<Props> {
+	static defaultProps = {
+		bodyClasses: [],
+		onLoad: noop,
+		onReady: noop,
+		onUnload: noop,
+		title: 'IFrame',
+	}
 
-	const handleOnLoad = useEffect(function _handleOnLoad() {
-		const document = frameEl.current.contentDocument // eslint-disable-line no-shadow
-		const window = frameEl.current.contentWindow
+	#el = React.createRef<HTMLIFrameElement>()
 
-		onLoad({ document, window })
+	componentWillUnmount = (): void => {
+		this.props.onUnload!({
+			document: this.#el.current!.contentDocument,
+			window: this.#el.current!.contentWindow,
+		})
+	}
+
+	handleOnLoad = (): void => {
+		const document = this.#el.current!.contentDocument!
+		const window = this.#el.current!.contentWindow!
+
+		this.props.onLoad!({ document, window })
 
 		if (window.location.href === 'about:blank') {
-			setTimeout(_handleOnLoad, 50)
+			setTimeout(this.handleOnLoad, 50)
 		} else if (document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', () => {
-				handleOnReady({ document, window })
+				this.props.onReady!({ document, window })
 			})
 		} else {
-			handleOnReady({ document, window })
+			this.props.onReady!({ document, window })
 		}
+	}
 
-		return () => onUnload({ document, window })
-	}, [onReady, onUnload])
+	handleOnReady = (): void => {
+		const document = this.#el.current!.contentDocument
+		const { bodyClasses, css } = this.props
 
-	const url = useMemo(() => {
+		if (!document || !document.body || !document.head) { return }
+
+		const classNames = bodyClasses!.filter(Boolean)
+		classNames.forEach(cn => document.body.classList.add(cn))
+
+		if (css) {
+			let styleTag = document.head.querySelector('style#injected')
+			if (!styleTag) {
+				styleTag = document.createElement('style')
+				styleTag.id = 'injected'
+				document.head.appendChild(styleTag)
+			}
+
+			styleTag.innerHTML = css
+		}
+	}
+
+	render = (): JSX.Element => {
+		const { className, queryString = {}, src = '', title } = this.props
 		const params = Object.entries(queryString)
 			.filter(([, value]) => value !== undefined)
 			.reduce((object, [key, value]) => ({ ...object, [key]: value }), {})
 		const qs = (new URLSearchParams(params)).toString()
+		const url = src.match(/[?]/) ? `${src}&${qs}` : `${src}?${qs}`
 
-		return src.match(/[?]/) ? `${src}&${qs}` : `${src}?${qs}`
-	}, [src, queryString])
-
-	return (
-		<iframe
-			ref={frameEl}
-			onLoad={handleOnLoad}
-			src={url}
-			{...{ className, title }}
-		/>
-	)
+		return <iframe ref={this.#el} onLoad={this.handleOnLoad} src={url} {...{ className, title }} />
+	}
 }

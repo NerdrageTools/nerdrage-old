@@ -6,6 +6,7 @@
 		"multilines",
 		"noninteractive",
 		"setstate",
+		"sortablejs",
 		"transclude",
 		"upsert",
 		"virtuals"

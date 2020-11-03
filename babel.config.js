@@ -29,9 +29,8 @@ module.exports = {
 		}],
 	],
 	presets: [
+		['@babel/preset-typescript', { allowDeclareFields: true }],
 		'@babel/preset-react',
 		['@babel/env', { corejs: '3.6.5', modules: 'auto', useBuiltIns: 'entry' }],
-		['@babel/preset-typescript', { allowDeclareFields: true }],
-		// 'next/babel',
 	],
 }

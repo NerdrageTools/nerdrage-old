@@ -2,6 +2,7 @@ import { Router } from 'next/router'
 import React from 'react'
 import { ICampaign } from '~/server/schema/ICampaign'
 import { ITheme } from '~/server/schema/ITheme'
+import { IUser } from '~/server/schema/IUser'
 import { noop } from '~/utilities/noop'
 
 const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
@@ -18,8 +19,10 @@ const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
 	},
 	title: 'New Campaign',
 }
-const USER_DEFAULTS = {
+const USER_DEFAULTS: Partial<IUser> = {
 	anonymous: true,
+	favorites: [],
+	sheets: [],
 }
 
 export interface IApplicationContext {
@@ -33,9 +36,9 @@ export interface IApplicationContext {
 	size: 'small' | 'medium' | 'large',
 	subdomain: string,
 	theme: ITheme,
-	updateCampaign: typeof noop,
-	updateUser: typeof noop,
-	user: typeof USER_DEFAULTS,
+	updateCampaign: (update: Partial<ICampaign>) => void,
+	updateUser: (update: Partial<IUser>) => void,
+	user: IUser,
 }
 
 export const Application = React.createContext<IApplicationContext>({
@@ -50,5 +53,5 @@ export const Application = React.createContext<IApplicationContext>({
 	theme: CAMPAIGN_DEFAULTS.theme as ITheme,
 	updateCampaign: noop,
 	updateUser: noop,
-	user: USER_DEFAULTS,
+	user: USER_DEFAULTS as IUser,
 })

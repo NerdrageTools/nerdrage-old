@@ -1,18 +1,25 @@
-import React, { Component } from 'react'
+import React, { Component, MouseEvent } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Sortable from 'sortablejs'
-import { Link } from '~/components/Link/Link'
+import { Link, LinkType } from '~/components/Link/Link'
 import { Application } from '~/contexts/Application'
 import CampaignIcon from '~/icons/campaign.svg'
 import EditIcon from '~/icons/edit.svg'
 import FavoriteIcon from '~/icons/favorite-on.svg'
 import DeleteIcon from '~/icons/remove.svg'
 import SheetIcon from '~/icons/sheet.svg'
+import { INavigation } from '~/server/schema/INavigation'
+import { IUser } from '~/server/schema/IUser'
 import { noop } from '~/utilities/noop'
 import { pluck } from '~/utilities/pluck'
 import { prompt } from '~/utilities/prompt'
 
-export class Navigation extends Component {
+interface Props {
+	items: INavigation[],
+	wrapperRef: React.RefObject<HTMLDivElement>,
+}
+
+export class Navigation extends Component<Props> {
 	static styles = import('./Navigation.scss')
 	static contextType = Application
 	static defaultProps = {
@@ -20,56 +27,58 @@ export class Navigation extends Component {
 		onItemClick: noop,
 		wrapperRef: noop,
 	}
+	context!: React.ContextType<typeof Application>
 
-	campaignNav = React.createRef()
+	#campaignNav = React.createRef<HTMLDivElement>()
+	#sortable!: Sortable
 
-	componentDidMount() { this.initializeSortable() }
-	componentDidUpdate() { this.initializeSortable() }
+	componentDidMount = (): void => { this.initializeSortable() }
+	componentDidUpdate = (): void => { this.initializeSortable() }
 
-	get isCampaignEditor() {
-		return Boolean(this.context.campaign && this.context.campaign.isEditor)
+	get allowEditing(): boolean {
+		return this.context.campaign.isEditor === true
 	}
 
-	initializeSortable = () => {
-		if (!this.campaignNav.current) return
-		if (this.sortable) this.sortable.destroy()
+	initializeSortable = (): void => {
+		if (!this.#campaignNav.current) return
+		if (this.#sortable) this.#sortable.destroy()
 
-		const ul = this.campaignNav.current.querySelector('ul')
+		const ul = this.#campaignNav.current.querySelector('ul')!
 		const { navigation } = this.context.campaign
 
-		this.sortable = Sortable.create(ul, {
-			disabled: !this.isCampaignEditor || this.context.size === 'small',
+		this.#sortable = Sortable.create(ul, {
+			disabled: !this.allowEditing || this.context.size === 'small',
 			dragClass: 'dragging',
 			draggable: 'li',
 			onEnd: () => {
-				const updated = [...ul.querySelectorAll('li')]
+				const updated = Array.from(ul.querySelectorAll('li'))
 					.map(li => li.getAttribute('data-id'))
 					.map(id => navigation.find(navLink => navLink._id === id))
-					.filter(Boolean)
+					.filter(Boolean) as INavigation[]
 
 				this.context.updateCampaign({ navigation: updated })
 			},
 		})
 	}
 
-	promptForLinkDetails = async (item = {}) => {
+	promptForLinkDetails = async (item: Partial<INavigation> = {}): Promise<INavigation | null> => {
 		try {
 			const title = await prompt('New Title?', { defaultValue: item.title, title: 'Set Title' })
-			if (!title) return undefined
+			if (!title) return null
 
 			const slug = await prompt('Slug to link to?', {
-				defaultValue: item.slug,
+				defaultValue: item.slug ?? '',
 				placeholder: 'Leave blank to create a header...',
 				title: 'Set Slug',
 			})
 
-			return { slug, title }
+			return { slug, title } as INavigation
 		} catch (_) {
 			return null
 		}
 	}
 
-	handleAddLink = async () => {
+	handleAddLink = async (): Promise<void> => {
 		const newLink = await this.promptForLinkDetails()
 		if (!newLink) { return }
 
@@ -77,15 +86,15 @@ export class Navigation extends Component {
 			navigation: [...this.context.campaign.navigation, newLink],
 		})
 	}
-	handleDelete = ({ currentTarget }) => {
-		const id = currentTarget.getAttribute('data-id')
+	handleDelete = ({ currentTarget }: MouseEvent<SVGElement>): void => {
+		const id: string = currentTarget.getAttribute('data-id')!
 		const { navigation } = this.context.campaign
 
 		this.context.updateCampaign({
 			navigation: navigation.filter(item => item._id !== id),
 		})
 	}
-	handleEdit = async ({ currentTarget }) => {
+	handleEdit = async ({ currentTarget }: MouseEvent<SVGElement>): Promise<void> => {
 		const id = currentTarget.getAttribute('data-id')
 		const navigation = [...this.context.campaign.navigation]
 		const item = navigation.find(navItem => navItem._id === id)
@@ -99,15 +108,19 @@ export class Navigation extends Component {
 		this.context.updateCampaign({ navigation })
 	}
 
-	renderList = (list = [], listTitle = '', type = 'article', campaignLink = null) => <>
-		{(campaignLink || Boolean(list.length))
-	&& <div className="list-title">{campaignLink || listTitle}</div>}
+	renderList = (
+		list: INavigation[] = [],
+		listTitle: JSX.Element | string = '',
+		type: LinkType = 'article',
+		campaignLink: JSX.Element | null = null,
+	): JSX.Element => <>
+		{(campaignLink || Boolean(list.length)) && (
+			<div className="list-title">{campaignLink || listTitle}</div>
+		)}
 		<ul>
-			{list.map(({
-				_id, campaign, slug, title,
-			}, index) => {
-				const { subdomain = '', title: cTitle = '' } = (campaign || this.context.campaign || {})
-				let text = title
+			{list.map(({ _id, slug, title }, index) => {
+				const { subdomain = '', title: cTitle = '' } = this.context.campaign
+				let text: string = title
 				if (type !== 'campaign' && subdomain && subdomain !== this.context.subdomain) {
 					text += ` (${cTitle || subdomain})`
 				}
@@ -128,13 +141,7 @@ export class Navigation extends Component {
 
 				return (
 					<li key={_id || index} data-id={_id} title={title}>
-						<Link
-							{...{ campaign, slug, type }}
-							active={this.context.subdomain === subdomain && this.context.router.asPath === `/${type}/${slug}`}
-							onClick={this.props.onItemClick}
-						>
-							{text}
-						</Link>
+						<Link {...{ slug, type }}>{text}</Link>
 						{this.context.campaign.isEditor && (
 							<div className="controls">
 								<EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
@@ -147,25 +154,28 @@ export class Navigation extends Component {
 		</ul>
 	</>
 
-	filterLinks = link => link.campaign.subdomain === this.context.campaign.subdomain
-	render = () => {
-		const { campaign, user = {} } = this.context
-		let { favorites = [], sheets = [] } = user
+	render = (): JSX.Element | null => {
+		const user = this.context.user ?? {} as IUser
+		const campaign = this.context.campaign
 
-		if (!campaign || !campaign.navigation) return null
+		if (!campaign?.navigation) { return null }
 
 		const navigation = campaign.navigation.map(link => ({
 			...link,
 			campaign: pluck(campaign, '_id', 'subdomain', 'title'),
 		}))
-		favorites = favorites.filter(this.filterLinks)
-		sheets = sheets.filter(this.filterLinks)
+		const favorites = (user.favorites ?? []).filter(link => (
+			link.campaign.subdomain === campaign.subdomain
+		))
+		const sheets = (user.sheets ?? []).filter(sheet => (
+			sheet.campaign.subdomain === campaign.subdomain
+		))
 
 		return (
 			<div className="navigation">
 				<Scrollbars autoHide className="scrollbars link-sections" universal>
 					<div ref={this.props.wrapperRef} className="content">
-						<div ref={this.campaignNav} className="campaign-nav">
+						<div ref={this.#campaignNav} className="campaign-nav">
 							{this.renderList(navigation, campaign.title, 'article', <>
 								<CampaignIcon />
 								<Link subdomain={campaign.subdomain} type="campaign">{campaign.title}</Link>
@@ -173,18 +183,10 @@ export class Navigation extends Component {
 						</div>
 						{user && <>
 							{Boolean(favorites.length) && (
-								this.renderList(favorites, <>
-									<FavoriteIcon />
-									{' '}
-									Favorites
-								</>)
+								this.renderList(favorites, <><FavoriteIcon />{' Favorites'}</>)
 							)}
 							{Boolean(sheets.length) && (
-								this.renderList(sheets, <>
-									<SheetIcon />
-									{' '}
-									Sheets
-								</>, 'sheet')
+								this.renderList(sheets, <><SheetIcon />{' Sheets'}</>, 'sheet')
 							)}
 						</>}
 					</div>

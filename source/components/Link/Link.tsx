@@ -2,6 +2,8 @@ import NextLink from 'next/link'
 import React, { FunctionComponent, useContext } from 'react'
 import { Application } from '~/contexts/Application'
 
+export type LinkType = 'article' | 'campaign' | 'map' | 'sheet' | 'user'
+
 interface Props {
 	active?: boolean,
 	className?: string,
@@ -9,11 +11,10 @@ interface Props {
 	slug?: string,
 	subdomain?: string,
 	to?: string,
-	type?: 'article' | 'campaign' | 'map' | 'sheet' | 'user',
+	type?: LinkType,
 }
 
 export const Link: FunctionComponent<Props> = ({
-	active = false,
 	children,
 	className = '',
 	query = null,
@@ -25,6 +26,7 @@ export const Link: FunctionComponent<Props> = ({
 	const context = useContext(Application)
 	const subdomain = props.subdomain || context.subdomain
 	const contents = children || type
+	const active = context.router!.asPath === `/${type}/${slug}`
 
 	const queryString = !query
 		? ''

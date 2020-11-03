@@ -4,6 +4,7 @@ import { Dialog } from '~/components/Dialog/Dialog'
 
 interface PromptOptions {
 	defaultValue?: string,
+	placeholder?: string,
 	title?: string,
 }
 
@@ -36,6 +37,7 @@ export const prompt = async (
 				modal
 				onCancel={handleCancel}
 				onOk={handleOk}
+				placeholder={options?.placeholder}
 				title={options?.title ?? 'Prompt'}
 			>
 				<div className="text">{text ?? ''}</div>

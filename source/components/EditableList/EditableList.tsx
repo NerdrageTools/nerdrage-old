@@ -1,8 +1,15 @@
-import React, { Component } from 'react'
+import React, { ChangeEvent, Component } from 'react'
 import { noop } from '~/utilities/noop'
-import './EditableList.scss'
 
-export class EditableList extends Component {
+interface Props {
+	className?: string,
+	defaultValue?: string,
+	onChange?: (value: string) => void,
+	options?: string[],
+}
+
+export class EditableList extends Component<Props> {
+	static styles = import('./EditableList.scss')
 	static defaultProps = {
 		className: '',
 		defaultValue: '',
@@ -14,11 +21,11 @@ export class EditableList extends Component {
 		selected: this.props.defaultValue,
 	}
 
-	handleChange = ({ target }) => {
-		this.props.onChange(target.value)
+	handleChange = ({ target }: ChangeEvent<HTMLSelectElement>): void => {
+		this.props.onChange!(target.value)
 	}
 
-	render = () => {
+	render = (): JSX.Element => {
 		const { className, options } = this.props
 		const { selected } = this.state
 
@@ -27,7 +34,7 @@ export class EditableList extends Component {
 				className={`editable-list ${className}`} defaultValue={selected}
 				onChange={this.handleChange}
 			>
-				{options.map(option => (
+				{options!.map(option => (
 					<option key={option} value={option}>{option}</option>
 				))}
 			</select>

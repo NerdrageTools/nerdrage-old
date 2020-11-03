@@ -4,8 +4,9 @@ import { ISheetLink } from '~/server/schema/ISheet'
 
 export type IUserLink = Pick<IUser, '_id' | 'name' | 'username'>
 
-export interface IUser {
+export type IUser = {
 	_id: string,
+	anonymous?: boolean,
 	campaigns: ICampaignLink[],
 	createdAt: string,
 	email: string,
