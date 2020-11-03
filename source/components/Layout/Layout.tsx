@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce'
 import Head from 'next/head'
 import React, { Component } from 'react'
 import { Navigation } from '~/components/Navigation/Navigation'
@@ -6,69 +7,69 @@ import { UserMenu } from '~/components/UserMenu/UserMenu'
 import { Application } from '~/contexts/Application'
 import Logo from '~/icons/fist.svg'
 import { NavigationIcon } from '~/icons/Navigation'
-import { debounce } from '~/utilities/debounce'
 
-const getWindowSize = () => {
-	if (typeof window === 'undefined') return 'server'
-	if (window.matchMedia('(min-width: 551px) and (max-width: 979px)').matches) return 'medium'
-	if (window.matchMedia('(max-width: 550px)').matches) return 'small'
-	return 'large'
+type WindowSize = 'server' | 'small' | 'medium' | 'large'
+
+interface State {
+	expanded: boolean,
+	size: WindowSize,
+	ssrDone: boolean,
 }
 
-export class Layout extends Component {
+export class Layout extends Component<any, State> {
 	static styles = import('./Layout.scss')
 	static contextType = Application
+	static getWindowSize = (): WindowSize => {
+		if (!process.browser) return 'server'
+		if (window.matchMedia('(min-width: 551px) and (max-width: 979px)').matches) return 'medium'
+		if (window.matchMedia('(max-width: 550px)').matches) return 'small'
+		return 'large'
+	}
 
 	state = {
 		expanded: false,
-		size: getWindowSize(),
+		size: Layout.getWindowSize(),
 		ssrDone: false,
 	}
 
-	navigation = React.createRef()
-	navigationIcon = React.createRef()
+	#navigation = React.createRef<HTMLDivElement>()
+	#toggle = React.createRef<SVGSVGElement>()
 
 	handleWindowResize = debounce(() => {
-		const size = getWindowSize()
+		const size = Layout.getWindowSize()
 		this.setState({ size })
 		this.context.setSize(size)
-	}, 100)
+	}, 100, { leading: true })
 
-	componentDidMount = () => {
+	componentDidMount = (): void => {
 		this.setState({ ssrDone: true })
 		this.handleWindowResize()
 		window.addEventListener('resize', this.handleWindowResize)
 		document.addEventListener('mousedown', this.handleOutsideNavClick)
 	}
-	componentWillUnmount = () => {
+	componentWillUnmount = (): void => {
 		window.removeEventListener('resize', this.handleWindowResize)
 		document.removeEventListener('mousedown', this.handleOutsideNavClick)
 	}
 
-	handleCollapseNavigation = () => {
-		this.setState({ expanded: false })
-	}
-	handleToggleNavigation = () => {
-		this.setState({ expanded: !this.state.expanded })
-	}
-	handleOutsideNavClick = ({ target }) => {
+	handleCollapseNavigation = (): void => this.setState({ expanded: false })
+	handleToggleNavigation = (): void => this.setState({ expanded: !this.state.expanded })
+	handleOutsideNavClick = ({ target }: MouseEvent): void => {
 		if (
 			this.state.expanded // only collapse if expanded
-			&& !this.navigation.current.contains(target) // and the click isn't in the nav
-			&& this.navigationIcon.current !== target // and the click isn't on the nav icon
+			&& !this.#navigation.current!.contains(target as Node) // and the click isn't in the nav
+			&& this.#toggle.current !== target // and the click isn't on the nav icon
 		) {
 			this.handleCollapseNavigation()
 		}
 	}
 
-	render = () => {
-		const { className } = this.props
+	render = (): JSX.Element => {
 		const { campaign, theme } = this.context
 		const { expanded, size } = this.state
 		const title = campaign ? campaign.title : 'Unknown Campaign'
 		const classNames = [
 			'wiki layout',
-			className,
 			expanded ? 'expand-navigation' : 'collapse-navigation',
 			this.state.ssrDone ? size : 'server',
 		].filter(Boolean).join(' ')
@@ -92,14 +93,13 @@ export class Layout extends Component {
 						<div className="rage">RAGE</div>
 					</div>
 					<ArticleSearchBox />
-					<NavigationIcon
-						className="navigation toggle" onClick={this.handleToggleNavigation}
-						wrapperRef={this.navigationIcon}
+					<NavigationIcon className="navigation toggle"
+						onClick={this.handleToggleNavigation} wrapperRef={this.#toggle}
 					/>
 					<UserMenu />
 				</div>
 				<div className="content">
-					<Navigation onItemClick={this.handleCollapseNavigation} wrapperRef={this.navigation} />
+					<Navigation onItemClick={this.handleCollapseNavigation} wrapperRef={this.#navigation} />
 					{this.props.children}
 				</div>
 			</div>

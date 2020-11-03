@@ -3,7 +3,8 @@ import { INavigation } from '~/server/schema/INavigation'
 import { ITheme } from '~/server/schema/ITheme'
 import { IUserLink } from '~/server/schema/IUser'
 
-export interface ICampaignLink extends Omit<ILink, 'slug'> {
+export interface ICampaignLink extends Omit<ILink, '_id' | 'slug'> {
+	_id?: string,
 	subdomain: string,
 }
 

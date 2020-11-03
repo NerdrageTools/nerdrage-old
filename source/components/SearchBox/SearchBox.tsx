@@ -1,9 +1,9 @@
 import Downshift from 'downshift'
+import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
 import { Application } from '~/contexts/Application'
 import LoadingIcon from '~/icons/loading.svg'
 import SearchIcon from '~/icons/search.svg'
-import { debounce } from '~/utilities/debounce'
 import { noop } from '~/utilities/noop'
 import { objectMatch } from '~/utilities/objectMatch'
 
@@ -65,7 +65,7 @@ export class SearchBox extends Component {
 			options: [],
 			searching: false,
 		})
-	}, 500)
+	}, 500, { leading: true, trailing: true })
 
 	componentDidMount = () => {
 		document.addEventListener('keydown', this.handleHotKeys)
