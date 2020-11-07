@@ -1,11 +1,12 @@
 @import '~@/styles/mixins/ellipsis';
 
 .user.search-box {
-  .search-result {
-    @include ellipsis;
-    display: flex;
-    align-items: center;
+	.search-result {
+		@include ellipsis;
+		align-items: center;
+		display: flex;
+		gap: .25em;
 
-    > svg { height: 1.25rem; width: 1.25rem; }
-  }
+		> svg { height: 1.25rem; width: 1.25rem; }
+	}
 }

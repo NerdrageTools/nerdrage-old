@@ -9,6 +9,7 @@ export interface ICampaignLink extends Omit<ILink, '_id' | 'slug'> {
 }
 
 export interface ICampaign {
+	_id: string,
 	createdAt: string,
 	createdBy: IUserLink,
 	editors: IUserLink[],

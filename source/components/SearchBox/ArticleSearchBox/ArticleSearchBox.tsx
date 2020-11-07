@@ -1,22 +1,27 @@
-import React, { Component } from 'react'
-import { SearchBox } from '~/components/SearchBox/SearchBox'
+import React from 'react'
+import { OptionProps, SearchBox } from '~/components/SearchBox/SearchBox'
 import { Application } from '~/contexts/Application'
+import { IArticleSearchResult } from '~/server/schema/IArticle'
+import { objectMatch } from '~/utilities/objectMatch'
 
-export class ArticleSearchBox extends Component {
+export class ArticleSearchBox extends SearchBox<IArticleSearchResult> {
 	static contextType = Application
+	readonly clearOnSelect: boolean = true
+	readonly placeholder: string = 'Search... (Ctrl+Shift+F)'
+	readonly typeName: string = 'article'
+	readonly url: string = '/api/search/articles/:searchTerm'
 
-	handleHotKey = (_, __, ref) => {
-		ref.inputBox.current.focus()
-	}
-	handleSelect = option => {
-		const { router } = this.context
+	componentDidMount = (): void => document.addEventListener('keydown', this.#handleHotKey)
+	componentWillUnmount = (): void => document.removeEventListener('keydown', this.#handleHotKey)
 
-		if (option) {
-			router.push(`/article?slug=${option.slug}`, `/article/${option.slug}`)
+	#handleHotKey = (event: KeyboardEvent): void => {
+		if (objectMatch(event, { ctrlKey: true, key: 'F', shiftKey: true })) {
+			this.inputBox.current!.focus()
 		}
 	}
 
-	renderOption = (option, _, itemProps) => (
+	getValue = (article: IArticleSearchResult): string => article._id
+	renderOption = (option: IArticleSearchResult, _: number, itemProps: OptionProps): JSX.Element => (
 		<li key={option.slug} className="search-result" {...itemProps}>
 			<b className="title">{option.title}</b>
 			<div className="preview">
@@ -26,20 +31,5 @@ export class ArticleSearchBox extends Component {
 				))}
 			</div>
 		</li>
-	)
-
-	render = () => (
-		<SearchBox
-			className="article"
-			clearOnSelect
-			hotkeys={{
-				focus: { ctrlKey: true, key: 'F', shiftKey: true },
-			}}
-			onHotKey={this.handleHotKey}
-			onSelect={this.handleSelect}
-			placeholder="Search... (Ctrl+Shift+F)"
-			renderOption={this.renderOption}
-			url="/api/search/articles/:searchTerm"
-		/>
 	)
 }

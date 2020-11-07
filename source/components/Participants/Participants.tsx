@@ -5,29 +5,65 @@ import { Link } from '~/components/Link/Link'
 import { UserSearchBox } from '~/components/SearchBox/UserSearchBox/UserSearchBox'
 import NerdIcon from '~/icons/nerd.svg'
 import RemoveIcon from '~/icons/remove.svg'
+import { IUserLink } from '~/server/schema/IUser'
 import { compareBy } from '~/utilities/compareBy'
 import { noop } from '~/utilities/noop'
 import { pluck } from '~/utilities/pluck'
 import './Participants.scss'
 
-const ORDER = {
-	editor: 2,
-	owner: 1,
-	player: 3,
-	removed: 4,
+/* eslint-disable @typescript-eslint/naming-convention */
+enum SortOrder {
+	editor = 2,
+	owner = 1,
+	player = 3,
+	removed = 4,
+}
+/* eslint-enable @typescript-eslint/naming-convention */
+
+type ParticipationLevel = 'owner' | 'editor' | 'player'
+
+interface Participation {
+	level: ParticipationLevel,
+	order: SortOrder,
 }
 
-const addParticipants = (map, users, addition) => {
+type Participant = IUserLink & Participation
+type ParticipantEdit = Participant & {
+	type: 'added' | 'removed' | 'updated',
+}
+
+interface Props {
+	className: string,
+	editors: IUserLink[],
+	onSave: (data: { editors: IUserLink[], owners: IUserLink[], players: IUserLink[] }) => void,
+	owners: IUserLink[],
+	players: IUserLink[],
+	readOnly: boolean,
+	saving: boolean,
+	title: string,
+}
+
+interface State {
+	current: Participant[],
+	edits: ParticipantEdit[],
+	participants: ParticipantEdit[],
+}
+
+const addParticipants = (
+	map: Map<string, Participant>,
+	users: Partial<IUserLink>[],
+	addition: Partial<Participation> = {},
+): void => {
 	users.forEach(user => {
-		map.set(user._id, {
-			...(map.get(user._id) || user),
+		map.set(user._id!, {
+			...(map.get(user._id!) || user),
 			...user,
 			...addition,
-		})
+		} as Participant)
 	})
 }
 
-export class Participants extends Component {
+export class Participants extends Component<Props, State> {
 	static defaultProps = {
 		className: '',
 		editors: [],
@@ -39,14 +75,14 @@ export class Participants extends Component {
 		title: 'Participants',
 	}
 
-	static getDerivedStateFromProps(props, state) {
+	static getDerivedStateFromProps(props: Props, state: State): State {
 		const { editors, owners, players } = props
 		const { edits } = state
 
-		const map = new Map()
-		addParticipants(map, players, { level: 'player', order: ORDER.player })
-		addParticipants(map, editors, { level: 'editor', order: ORDER.editor })
-		addParticipants(map, owners, { level: 'owner', order: ORDER.owner })
+		const map = new Map<string, ParticipantEdit>()
+		addParticipants(map, players, { level: 'player', order: SortOrder.player })
+		addParticipants(map, editors, { level: 'editor', order: SortOrder.editor })
+		addParticipants(map, owners, { level: 'owner', order: SortOrder.owner })
 
 		const current = Array.from(map.values()).sort(compareBy('order'))
 
@@ -56,16 +92,17 @@ export class Participants extends Component {
 		return { ...state, current, participants }
 	}
 
-	state = {
+	state: State = {
+		current: [],
 		edits: [],
 		participants: [],
 	}
 
-	handleSetEdit = (user, edit = {}) => {
+	handleSetEdit = (user: IUserLink, edit: Partial<ParticipantEdit> = {}): void => {
 		if (!user) return
 		const { current, edits } = this.state
 		const exists = current.find(p => p._id === user._id)
-		const currentEdit = edits.find(e => e._id === user._id) || {}
+		const currentEdit = edits.find(e => e._id === user._id) || {} as ParticipantEdit
 
 		const updated = edits.filter(e => e._id !== user._id)
 		if (edit.type === 'added' && !exists) {
@@ -75,25 +112,25 @@ export class Participants extends Component {
 			updated.push({ ...user, ...edit, ...pluck(currentEdit, 'level', 'order') })
 		}
 		if (edit.type === 'updated') {
-			updated.push({ ...user, ...edit })
+			updated.push({ ...user, ...edit } as ParticipantEdit)
 		}
 
 		this.setState({ edits: updated })
 	}
 
-	handleAddUser = user => {
+	handleAddUser = (user: IUserLink): void => {
 		if (!user) return
-		this.handleSetEdit(user, { level: 'player', order: ORDER.player, type: 'added' })
+		this.handleSetEdit(user, { level: 'player', order: SortOrder.player, type: 'added' })
 	}
-	handleSetPermission = (user, level) => {
+	handleSetPermission = (user: IUserLink, level: ParticipationLevel): void => {
 		if (!user) return
-		this.handleSetEdit(user, { level, order: ORDER[level], type: 'updated' })
+		this.handleSetEdit(user, { level, order: SortOrder[level], type: 'updated' })
 	}
-	handleToggleRemoved = user => {
+	handleToggleRemoved = (user: IUserLink): void => {
 		if (!user) return
-		this.handleSetEdit(user, { level: 'removed', order: ORDER.removed, type: 'removed' })
+		this.handleSetEdit(user, { level: undefined, order: SortOrder.removed, type: 'removed' })
 	}
-	handleSave = () => {
+	handleSave = (): void => {
 		const { participants } = this.state
 		this.props.onSave({
 			editors: participants.filter(p => p.level === 'editor'),
@@ -103,10 +140,8 @@ export class Participants extends Component {
 		this.setState({ edits: [] })
 	}
 
-	render = () => {
-		const {
-			className, readOnly, saving, title,
-		} = this.props
+	render = (): JSX.Element => {
+		const { className, readOnly, saving, title } = this.props
 		const { participants } = this.state
 
 		return (
@@ -119,17 +154,13 @@ export class Participants extends Component {
 								<NerdIcon className="nerd icon" />
 								<Link className="display" slug={user.username} type="user">
 									<span className="name" title={user.name}>{user.name}</span>
-									<span className="username" title={user.username}>
-										(
-										{user.username}
-										)
-									</span>
+									<span className="username" title={user.username}>({user.username})</span>
 								</Link>
 								{!readOnly && <>
 									<EditableList
 										className="role"
 										defaultValue={user.level}
-										onChange={level => this.handleSetPermission(user, level)}
+										onChange={level => this.handleSetPermission(user, level as ParticipationLevel)}
 										options={['owner', 'editor', 'player']}
 									/>
 									<RemoveIcon
@@ -142,10 +173,7 @@ export class Participants extends Component {
 					</ul>
 				</Scrollbars>
 				{!readOnly && <>
-					<UserSearchBox
-						className="add-user"
-						onSelect={this.handleAddUser}
-					/>
+					<UserSearchBox onSelect={this.handleAddUser} />
 					{(this.state.edits.length !== 0) && (
 						<button className="save safe" onClick={this.handleSave}>Save</button>
 					)}

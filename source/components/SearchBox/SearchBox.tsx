@@ -1,43 +1,82 @@
-import Downshift from 'downshift'
+import cn from 'classnames'
+import Downshift, { DownshiftProps } from 'downshift'
 import debounce from 'lodash.debounce'
-import React, { Component } from 'react'
+import React, { ChangeEvent, Component } from 'react'
 import { Application } from '~/contexts/Application'
 import LoadingIcon from '~/icons/loading.svg'
 import SearchIcon from '~/icons/search.svg'
 import { noop } from '~/utilities/noop'
-import { objectMatch } from '~/utilities/objectMatch'
 
-export class SearchBox extends Component {
+interface Option {
+	_id: string,
+	preview: string,
+	title: string,
+}
+
+interface Hotkey {
+	ctrlKey: boolean,
+	key: string,
+	shiftKey: boolean,
+}
+
+export type OptionProps = {
+	'aria-selected': boolean,
+	id: string,
+	role: 'option',
+}
+
+interface Props<TOption = Option> extends Omit<DownshiftProps<TOption>, 'onSelect'> {
+	className?: string,
+	initialValue?: string,
+	limit?: number,
+	onHotKey?: (name: string, event: KeyboardEvent, searchBox: SearchBox<TOption>) => void,
+	onSelect?: (option: TOption) => void,
+	placeholder?: string,
+	selectOnFocus?: boolean,
+}
+
+interface State<TOption> {
+	message: string | null,
+	options: TOption[],
+	searchTerm?: string,
+	searching: boolean,
+}
+
+export abstract class SearchBox<TOption = Option>
+	extends Component<Props<TOption>, State<TOption>> {
 	static styles = import('./SearchBox.scss')
 	static contextType = Application
-	static defaultProps = {
+	static defaultProps: Props<Option> = {
 		className: '',
-		clearOnSelect: false,
-		hotkeys: {},
 		initialValue: '',
 		limit: 10,
 		onHotKey: noop,
 		onSelect: noop,
 		placeholder: 'Search...',
-		renderOption: null,
 		selectOnFocus: true,
-		url: '',
-		valueGetter: option => option,
 	}
 	static displayName = 'SearchBox'
 
-	state = {
+	readonly clearOnSelect: boolean = false
+	readonly placeholder: string = 'Search...'
+	readonly typeName: string = 'option'
+	readonly abstract url: string // eslint-disable-line react/sort-comp
+
+	state: State<TOption> = {
 		message: null,
 		options: [],
-		searchTerm: this.props.initialValue,
+		searching: false,
+		searchTerm: this.props.initialValue ?? '',
 	}
 
-	downshift = React.createRef()
-	inputBox = React.createRef()
-	debouncedSearch = debounce(async (searchTerm = '') => {
-		const { limit, url } = this.props
+	#downshift = React.createRef<Downshift>()
+	#escapeKey: boolean = false
+	inputBox = React.createRef<HTMLInputElement>()
 
-		if (!url || !searchTerm || searchTerm.length < 3) {
+	#search = debounce(async (searchTerm = '') => {
+		const { limit } = this.props
+
+		if (!this.url || !searchTerm || searchTerm.length < 3) {
 			this.setState({
 				message: 'Enter at least 3 characters...',
 				options: [],
@@ -46,7 +85,7 @@ export class SearchBox extends Component {
 			return undefined
 		}
 
-		const searchUrl = url.replace(':searchTerm', searchTerm)
+		const searchUrl = this.url.replace(':searchTerm', searchTerm)
 		const queryString = `limit=${limit}`
 
 		const response = await fetch(`${searchUrl}?${queryString}`)
@@ -67,92 +106,67 @@ export class SearchBox extends Component {
 		})
 	}, 500, { leading: true, trailing: true })
 
-	componentDidMount = () => {
-		document.addEventListener('keydown', this.handleHotKeys)
-	}
-	componentWillUnmount = () => {
-		document.removeEventListener('keydown', this.handleHotKeys)
+	handleFocus = (): void => {
+		if (this.props.selectOnFocus) { this.inputBox.current!.select() }
 	}
 
-	handleFocus = () => {
-		if (this.props.selectOnFocus) {
-			this.inputBox.current.select()
-		}
-	}
-	handleHotKeys = event => {
-		Object.entries(this.props.hotkeys).forEach(([name, keyCombo]) => {
-			if (objectMatch(event, keyCombo)) {
-				this.props.onHotKey(name, event, this)
-			}
-		})
-	}
-	handleKeyDown = event => {
+	handleKeyDown = (event: React.KeyboardEvent): void => {
 		if (event.key === 'Escape') {
 			this.setState({ searching: false, searchTerm: this.props.initialValue })
-			this.inputBox.current.blur()
-			this.escapeKey = true
-			// eslint-disable-next-line no-param-reassign
-			event.nativeEvent.preventDownshiftDefault = true
+			this.inputBox.current!.blur()
+			this.#escapeKey = true
+			// @ts-expect-error - downshift has no ts definitions
+			event.nativeEvent.preventDownshiftDefault = true // eslint-disable-line no-param-reassign
 		}
 	}
-	handleSearch = event => {
+	handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
 		const { value: searchTerm = '' } = event.target
 
-		if (this.escapeKey) {
-			this.escapeKey = false
+		if (this.#escapeKey) {
+			this.#escapeKey = false
 			return
 		}
 		this.setState({ message: 'Searching...', searching: Boolean(searchTerm), searchTerm })
 
 		if (searchTerm) {
-			this.debouncedSearch(searchTerm)
+			this.#search(searchTerm)
 		}
 	}
-	handleSelect = option => {
-		const { clearOnSelect, onSelect, valueGetter } = this.props
+	handleSelect = (selectedItem: TOption | null): void => {
+		this.props.onSelect!(selectedItem as TOption)
+		this.inputBox.current!.blur()
 
-		onSelect(option)
-		this.inputBox.current.blur()
-
-		if (clearOnSelect) {
+		if (this.clearOnSelect) {
 			this.setState({ searching: false, searchTerm: '' })
 		} else {
-			this.setState({ searching: false, searchTerm: valueGetter(option) })
+			this.setState({
+				searching: false,
+				searchTerm: this.getValue!(selectedItem as TOption),
+			})
 		}
 	}
 
-	renderOption = (option, index, itemProps) => (
-		<li key={index} className="search-result" {...itemProps}>
-			<b className="title">{option.title}</b>
-			<div className="preview">
-				{option.preview}
-				...
-			</div>
-		</li>
-	)
-	render = () => {
-		const { className, placeholder, ...props } = this.props
-		const {
-			message, options, searching, searchTerm,
-		} = this.state
+	abstract getValue: (option: TOption) => string
+	abstract renderOption: (option: TOption, index: number, itemProps: OptionProps) => JSX.Element
+
+	render = (): JSX.Element => {
+		const { message, options, searching, searchTerm } = this.state
 		const { theme } = this.context
-		const renderOption = this.props.renderOption || this.renderOption
 		const OverlayIcon = searching ? LoadingIcon : SearchIcon
-		const inputHasFocus = this.inputBox.current && this.inputBox.current.matches(':focus')
+		const inputHasFocus = Boolean(this.inputBox?.current?.matches(':focus'))
+		const className = cn(this.typeName, 'search-box', this.props.className)
 
 		return (
-			<Downshift
-				ref={this.downshift} id="search-box"
-				{...props}
+			<Downshift<TOption>
+				ref={this.#downshift} id="search-box"
+				{...this.props}
 				isOpen={Boolean(searchTerm) && inputHasFocus}
-				itemToString={article => (article ? article.title : '')}
+				itemToString={option => ((option as unknown as Option)?.title ?? '')}
 				onSelect={this.handleSelect}
 			>
-				{({
-					getInputProps, getItemProps, getMenuProps, isOpen,
-				}) => (
+				{({ getInputProps, getItemProps, getMenuProps, isOpen }) => (
 					<div
-						className={`${className} search-box ${isOpen ? 'open' : 'closed'}`}
+						className={cn(className, { closed: !isOpen, open: isOpen })}
 						style={{ color: theme.normalText }}
 					>
 						<input
@@ -160,16 +174,16 @@ export class SearchBox extends Component {
 							ref={this.inputBox} className="input"
 							onChange={this.handleSearch}
 							onFocus={this.handleFocus}
-							placeholder={placeholder}
+							placeholder={this.placeholder}
 							value={searchTerm}
 						/>
 						{(searching || !options.length)
 							? isOpen && <div className="search-results message">{message}</div>
 							: isOpen && (
 								<ul {...getMenuProps()} className="search-results list">
-									{options.map((option, index) => renderOption(
+									{options.map((option, index) => this.renderOption(
 										option, index,
-										getItemProps({ index, item: option, key: option._id })),
+										getItemProps({ index, item: option, key: this.getValue(option) })),
 									)}
 								</ul>
 							)}

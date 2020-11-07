@@ -21,3 +21,13 @@ export interface IArticle extends IArticleLink {
 	updatedAt: string,
 	version: number,
 }
+
+export interface IArticleSearchResult {
+	_id: string,
+	campaign: string,
+	preview: string[],
+	secret: boolean,
+	slug: string,
+	template: boolean,
+	title: string,
+}

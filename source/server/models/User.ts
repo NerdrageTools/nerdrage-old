@@ -4,7 +4,7 @@ import { computeSearchKeys } from '~/utilities/computeSearchKeys'
 
 const SALT_WORK_FACTOR = 10
 
-interface IUserJSON {
+interface IUserData {
 	email: string,
 	favorites: string[],
 	isAdmin: boolean,
@@ -15,12 +15,12 @@ interface IUserJSON {
 	username: string,
 }
 
-export interface IUser extends mongoose.Document, IUserJSON {
+export interface IUserModel extends mongoose.Document, IUserData {
 	comparePassword: (password: string) => Promise<boolean>,
-	toProfile: () => IUserJSON,
+	toProfile: () => IUserData,
 }
 
-const Schema = new mongoose.Schema<IUser>({
+const Schema = new mongoose.Schema<IUserModel>({
 	email: {
 		required: true,
 		trim: true,
@@ -60,7 +60,7 @@ const Schema = new mongoose.Schema<IUser>({
 })
 
 Schema.index({ username: 'text' })
-Schema.pre<IUser>('save', function (next) {
+Schema.pre<IUserModel>('save', function (next) {
 	if (this.email) this.email = this.email.toLowerCase().trim()
 	if (this.username) this.username = this.username.toLowerCase().trim()
 
@@ -88,16 +88,16 @@ Schema.methods.comparePassword = function (password) {
 		})
 	})
 }
-Schema.methods.toProfile = function toProfile(): IUserJSON {
+Schema.methods.toProfile = function toProfile(): IUserData {
 	return {
-		...Object.keys(this.toJSON() as IUserJSON).reduce((all, key) => {
+		...Object.keys(this.toJSON() as IUserData).reduce((all, key) => {
 			if (key !== 'password') {
-				return { ...all, [key]: this[key as keyof IUserJSON] }
+				return { ...all, [key]: this[key as keyof IUserData] }
 			}
 			return all
 		}, {}),
 		username: this.username,
-	} as IUserJSON
+	} as IUserData
 }
 
-export const User = mongoose.model<IUser>('User', Schema)
+export const UserSchema = mongoose.model<IUserModel>('User', Schema)

@@ -1,14 +1,16 @@
-import express from 'express'
+import express, { IRequest, Response } from 'express'
 import { defaultTheme } from '~/data/Theme'
-import Campaign404 from '~/server/errors/Campaign404'
-import ContextLoader from '~/server/middleware/ContextLoader'
-import NoAnonymous from '~/server/middleware/NoAnonymous'
-import { Campaign } from '~/server/models'
+import { Campaign404 } from '~/server/errors/Campaign404'
+import { ContextLoader } from '~/server/middleware/ContextLoader'
+import { NoAnonymous } from '~/server/middleware/NoAnonymous'
+import { Campaign, ICampaignModel } from '~/server/models'
+import { ICampaign } from '~/server/schema/ICampaign'
+import { IUser } from '~/server/schema/IUser'
 
 const controller = express()
 
 /* eslint-disable no-console */
-export async function getCampaign(subdomain, user) {
+export async function loadCampaign(subdomain: string, user: IUser): Promise<ICampaign | null> {
 	if (!subdomain) return null
 
 	try {
@@ -19,11 +21,12 @@ export async function getCampaign(subdomain, user) {
 
 		if (!campaign) return null
 
-		const json = campaign.toJSON()
-		json.isEditor = Boolean(user.isAdmin || campaign.isEditableBy(user._id))
-		json.isOwner = Boolean(user.isAdmin || campaign.isOwnedBy(user._id))
-		json.isParticipant = Boolean(user.isAdmin || campaign.isParticipant(user._id))
-		json.isViewer = Boolean(user.isAdmin || campaign.isVisibleTo(user._id))
+		const json: ICampaign = Object.assign(campaign.toJSON(), {
+			isEditor: Boolean(user.isAdmin || campaign.isEditableBy(user._id)),
+			isOwner: Boolean(user.isAdmin || campaign.isOwnedBy(user._id)),
+			isParticipant: Boolean(user.isAdmin || campaign.isParticipant(user._id)),
+			isViewer: Boolean(user.isAdmin || campaign.isVisibleTo(user._id)),
+		})
 
 		return json
 	} catch (error) {
@@ -31,17 +34,27 @@ export async function getCampaign(subdomain, user) {
 		return null
 	}
 }
-export async function getCampaignRequest(request, response) {
+
+interface IGetRequest extends IRequest {
+	document?: ICampaignModel,
+	params: { subdomain: string },
+}
+export const getCampaign = async (request: IGetRequest, response: Response): Promise<void> => {
 	const { subdomain } = request.params || {}
-	const campaign = await getCampaign(subdomain, request.user)
+	const campaign = await loadCampaign(subdomain, request.user)
 
 	if (!campaign || !campaign._id) {
-		return Campaign404({ campaign, subdomain }, response)
+		Campaign404({ campaign, subdomain }, response)
+	} else {
+		response.status(200).json(campaign)
 	}
-
-	return response.status(200).json(campaign)
 }
-const createCampaign = async (request, response) => {
+
+interface IUpsertRequest extends IRequest {
+	document?: ICampaignModel,
+	params: { subdomain: string },
+}
+const createCampaign = async (request: IUpsertRequest, response: Response) => {
 	const userId = request.user._id
 	if (!userId) {
 		return response.status(401).send({
@@ -81,14 +94,14 @@ const createCampaign = async (request, response) => {
 		}
 	}
 }
-const updateCampaign = async (request, response) => {
+const updateCampaign = async (request: IUpsertRequest, response: Response) => {
 	try {
 		const updates = { ...request.body }
 		let campaign
 		let subdomain
 		if (request.params.subdomain) {
       subdomain = request.params.subdomain // eslint-disable-line
-			campaign = await getCampaign(subdomain, request.user)
+			campaign = await loadCampaign(subdomain, request.user)
 		} else {
       subdomain = request.subdomain // eslint-disable-line
       campaign = request.campaign // eslint-disable-line
@@ -122,7 +135,7 @@ const updateCampaign = async (request, response) => {
 		})
 		await Campaign.updateOne({ subdomain }, { $set: updates })
 
-		return getCampaignRequest(request, response)
+		return getCampaign(request, response)
 	} catch (error) {
 		switch (error.code) {
 			case 11000:
@@ -139,8 +152,11 @@ const updateCampaign = async (request, response) => {
 }
 /* eslint-enable no-console */
 
-controller.get('/:subdomain?', ContextLoader, getCampaignRequest)
+// @ts-expect-error - stupid TS typings
+controller.get('/:subdomain?', ContextLoader, getCampaign)
+// @ts-expect-error - stupid TS typings
 controller.put('/:subdomain?', NoAnonymous, createCampaign)
+// @ts-expect-error - stupid TS typings
 controller.post('/:subdomain?', updateCampaign)
 
 export default controller

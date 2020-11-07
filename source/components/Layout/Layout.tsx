@@ -7,6 +7,7 @@ import { UserMenu } from '~/components/UserMenu/UserMenu'
 import { Application } from '~/contexts/Application'
 import Logo from '~/icons/fist.svg'
 import { NavigationIcon } from '~/icons/Navigation'
+import { IArticleSearchResult } from '~/server/schema/IArticle'
 
 type WindowSize = 'server' | 'small' | 'medium' | 'large'
 
@@ -52,6 +53,10 @@ export class Layout extends Component<any, State> {
 		document.removeEventListener('mousedown', this.handleOutsideNavClick)
 	}
 
+	handleArticleSearch = (option: IArticleSearchResult): void => {
+		if (!option) { return }
+		this.context.router.push(`/article?slug=${option.slug}`, `/article/${option.slug}`)
+	}
 	handleCollapseNavigation = (): void => this.setState({ expanded: false })
 	handleToggleNavigation = (): void => this.setState({ expanded: !this.state.expanded })
 	handleOutsideNavClick = ({ target }: MouseEvent): void => {
@@ -92,7 +97,7 @@ export class Layout extends Component<any, State> {
 						<div className="nerd">Nerd</div>
 						<div className="rage">RAGE</div>
 					</div>
-					<ArticleSearchBox />
+					<ArticleSearchBox onSelect={this.handleArticleSearch} />
 					<NavigationIcon className="navigation toggle"
 						onClick={this.handleToggleNavigation} wrapperRef={this.#toggle}
 					/>
