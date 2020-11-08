@@ -6,8 +6,6 @@ import { loadByCampaign } from '~/server/utilities/loadByCampaign'
 import { omit } from '~/utilities/omit'
 import { pluck } from '~/utilities/pluck'
 
-const controller = express()
-
 const loadArticle = async (slug: string, campaign: ICampaign): Promise<IArticleModel | null> => {
 	const articles = await loadByCampaign<IArticleModel>(
 		'Article', campaign,
@@ -43,7 +41,7 @@ export const permissions = (...required: string[]) => (
 		} else {
 			Object.assign(request, {
 				campaign,
-				document,
+				document: article,
 				isEditable: isEditor,
 				isOwner,
 				isVisible: isViewer,
@@ -133,10 +131,10 @@ export const deleteArticle = (
 	}
 )
 
-// @ts-expect-error - stupid TS typings
-controller.get('/:slug', permissions('view'), getArticle)
-// @ts-expect-error - stupid TS typings
-controller.post('/:slug', permissions('edit'), upsertArticle)
-// @ts-expect-error - stupid TS typings
-controller.delete('/:slug', permissions('edit'), deleteArticle)
-export default controller
+export default express()
+	// @ts-expect-error - stupid TS typings
+	.get('/:slug', permissions('view'), getArticle)
+	// @ts-expect-error - stupid TS typings
+	.post('/:slug', permissions('edit'), upsertArticle)
+	// @ts-expect-error - stupid TS typings
+	.delete('/:slug', permissions('edit'), deleteArticle)

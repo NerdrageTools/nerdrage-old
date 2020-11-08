@@ -1,9 +1,11 @@
-import { Request, RequestHandler } from 'express'
+import { IRequest, RequestHandler } from 'express'
 import { loadCampaign } from '~/server/controllers/CampaignController'
 import { clearCookie, getUser, readCookie, setCookie } from '~/server/controllers/UserController'
+import { IUser } from '~/server/schema/IUser'
+import { ICampaign } from '../schema/ICampaign'
 
 export const ContextLoader: RequestHandler = (
-	async (request: Request, response, next) => {
+	async (request: IRequest, response, next) => {
 		const subdomain = request.hostname.split('.').shift() ?? ''
 		request.domainName = request.hostname.split('.').slice(1).join('.')
 		request.subdomain = subdomain
@@ -16,11 +18,11 @@ export const ContextLoader: RequestHandler = (
 				request.user = user
 			} else {
 				clearCookie(request, response)
-				request.user = { anonymous: true }
+				request.user = { anonymous: true } as IUser
 			}
 		}
 		request.user = request.user ?? { anonymous: true }
-		request.campaign = await loadCampaign(subdomain, request.user)
+		request.campaign = await loadCampaign(subdomain, request.user) as ICampaign
 
 		return next()
 	}

@@ -1,11 +1,11 @@
-import { NextFunction, Response } from 'express'
+import { NextFunction, RequestHandler, Response } from 'express'
 
 interface IRequest {
 	campaign?: any,
 	subdomain: string,
 }
 
-export const Campaign404 = (
+export const Campaign404: RequestHandler = ((
 	request: IRequest,
 	response: Response,
 	next?: NextFunction,
@@ -17,4 +17,4 @@ export const Campaign404 = (
 			message: `Campaign '${request.subdomain}' does not exist.`,
 		})
 	}
-}
+}) as unknown as RequestHandler

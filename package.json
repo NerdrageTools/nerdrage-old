@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "cd source && next build",
-    "develop": "nodemon -w ./source -e .ts,.tsx,.js,.json --exec \"yarn start\"",
+    "develop": "nodemon -w ./source/server -e .ts,.tsx,.json --exec \"yarn start\"",
     "prebuild": "rimraf ./.next",
     "start": "babel-node --extensions \".ts,.tsx\" ./source/server/server.ts",
     "test": "jest"

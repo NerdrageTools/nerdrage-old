@@ -25,9 +25,11 @@ export interface IArticle extends IArticleLink {
 export interface IArticleSearchResult {
 	_id: string,
 	campaign: string,
+	nameHits: number,
 	preview: string[],
 	secret: boolean,
 	slug: string,
 	template: boolean,
+	textHits: number,
 	title: string,
 }

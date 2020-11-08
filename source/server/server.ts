@@ -16,8 +16,8 @@ import SearchController from '~/server/controllers/SearchController'
 import SheetController from '~/server/controllers/SheetController'
 import TemplateController from '~/server/controllers/TemplateController'
 import UserController from '~/server/controllers/UserController'
-import Campaign404 from '~/server/errors/Campaign404'
-import ContextLoader from '~/server/middleware/ContextLoader'
+import { Campaign404 } from '~/server/errors/Campaign404'
+import { ContextLoader } from '~/server/middleware/ContextLoader'
 import routes from '~/server/routes'
 import '~/server/models'
 
@@ -66,7 +66,7 @@ app.prepare().then(async () => {
 	const modulePath = path.resolve(__dirname, '../../node_modules')
 	server.use(
 		'/static/fantasy-map-generator',
-		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' }),
+		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxAge: '1d' }),
 	)
 
 	server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
@@ -81,11 +81,6 @@ app.prepare().then(async () => {
 
 	server.get('/_next/*', routeHandler)
 	server.get('*', nocache(), ContextLoader, routeHandler)
-
-	server.use((error, request, response, next) => {
-		console.error(error)
-		response.status(500).send('Something broke!')
-	})
 
 	server.listen(3000, () => {
 		console.log('~> Listening on port 3000')

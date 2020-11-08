@@ -5,7 +5,7 @@ declare module 'express' {
 	export interface IRequest<TParams = ParamsDictionary, ParsedQs = any>
 		extends Request<TParams, any, any, ParsedQs>
 	{
-		campaign: ICampaign | null,
+		campaign: ICampaign,
 		domainName: string,
 		isEditable: boolean,
 		isOwner: boolean,
