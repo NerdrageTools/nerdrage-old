@@ -90,7 +90,7 @@ export default class Article extends Component {
 		title: this.props.title || this.context.router.query.title,
 	}
 
-	componentDidMount() {
+	componentDidMount = (): void => {
 		const { slug } = this.props
 		const { router } = this.context
 		if (slug && router.query.slug !== slug) {
@@ -101,19 +101,19 @@ export default class Article extends Component {
 		}
 	}
 
-	get isDirty() {
+	get isDirty(): boolean {
 		const fromState = JSON.stringify(pluck(this.state, STATE_FIELDS))
 		const fromSaved = JSON.stringify(pluck(this.state.saved, STATE_FIELDS))
 
 		return fromState !== fromSaved
 	}
-	get isNavLink() {
+	get isNavLink(): boolean {
 		const { campaign = {} } = this.context
 		if (!campaign.navigation || !campaign.navigation.length) return false
 		return Boolean(campaign.navigation.find(n => n.slug === this.props.slug))
 	}
 
-	handleAliasesChange = aliases => this.setState({ aliases })
+	handleAliasesChange = (aliases: string[]): void => this.setState({ aliases })
 	handleDelete = async () => {
 		if (!await confirm('Are you sure you want to permanently delete this article?')) return
 		await fetch(`/api/article/${this.props.slug}`, { method: 'DELETE' })
@@ -127,11 +127,9 @@ export default class Article extends Component {
 		this.setState({ ...json, activeTab: 'read', saved: json })
 		this.context.updateUser()
 	}
-	handleHtmlChange = html => this.setState({ html })
-	handleReset = () => {
-		this.setState({ activeTab: 'read', ...this.state.saved })
-	}
-	handleSave = async () => {
+	handleHtmlChange = (html: string): void => this.setState({ html })
+	handleReset = (): void => this.setState({ activeTab: 'read', ...this.state.saved })
+	handleSave = async (): Promise<void> => {
 		const saved = await fetch(`/api/article/${this.props.slug}`, {
 			body: JSON.stringify(pluck(this.state, STATE_FIELDS)),
 			headers: { 'Content-Type': 'application/json' },
@@ -145,9 +143,9 @@ export default class Article extends Component {
 			this.setState({ activeTab: tab })
 		}
 	}
-	handleTagsChange = tags => this.setState({ tags })
-	handleTitleChange = title => this.setState({ title })
-	handleToggleEditMode = () => this.setState({
+	handleTagsChange = (tags: string[]): void => this.setState({ tags })
+	handleTitleChange = (title?: string): void => this.setState({ title })
+	handleToggleEditMode = (): void => this.setState({
 		activeTab: this.state.editMode ? 'read' : 'edit',
 		editMode: !this.state.editMode,
 	})
@@ -190,15 +188,19 @@ export default class Article extends Component {
 		}
 	}
 
-	renderReadOnlyContent = () => {
+	renderReadOnlyContent = (): JSX.Element => {
 		const jsx = (this.state.html || this.props.html || '').trim()
-		const components = {
-			a: Link,
-			Warning,
-		}
 
 		return <>
-			{jsx ? <JsxParser {...{ components, jsx }} /> : ''}
+			<JsxParser
+				allowUnknownElements
+				autoCloseVoidElements
+				components={{
+					a: Link,
+					Warning,
+				}}
+				jsx={jsx ?? ''}
+			/>
 			<Links pages={this.props.childArticles} />
 		</>
 	}
@@ -224,7 +226,7 @@ export default class Article extends Component {
 			</fieldset>
 		)}
 	</>
-	render = () => {
+	render = (): JSX.Element => {
 		const {
 			_id, activeTab, aliases, html, isEditable, isOwner, message,
 			redirectedFrom, secret, slug, tags, template = false, title = '',
@@ -244,7 +246,7 @@ export default class Article extends Component {
 		if (httpStatusCode !== 200) {
 			return (
 				<div className={classNames}>
-					<Alert type="error">{message}</Alert>
+					<Alert>{message}</Alert>
 					{this.renderReadOnlyContent()}
 				</div>
 			)
@@ -254,7 +256,7 @@ export default class Article extends Component {
 			<div className={classNames}>
 				{message && <Alert>{message}</Alert>}
 				<div className="title-bar">
-					<Editable
+					<Editable<string>
 						className={`title ${title.trim() ? '' : 'default'}`}
 						onChange={this.handleTitleChange}
 						placeholder={slug}

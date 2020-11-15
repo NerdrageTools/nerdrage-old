@@ -11,7 +11,6 @@
   "dependencies": {
     "@azgaar/fantasy-map-generator": "https://github.com/TroyAlford/Fantasy-Map-Generator/archive/v0.8.1-nr.tar.gz",
     "@babel/register": "^7.12.1",
-    "@tinymce/tinymce-react": "^3.8.1",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
@@ -30,6 +29,7 @@
     "entities": "^2.1.0",
     "express": "^4.17.1",
     "isomorphic-unfetch": "^3.1.0",
+    "jodit": "^3.4.29",
     "js-beautify": "^1.13.0",
     "lodash.debounce": "^4.0.8",
     "lodash.deburr": "^4.1.0",
@@ -48,11 +48,10 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
-    "react-jsx-parser": "^1.26.3",
+    "react-jsx-parser": "^1.28.0",
     "react-tagsinput": "^3.19.0",
     "sheetforge": "^2.1.9",
     "sortablejs": "^1.10.1",
-    "tinymce": "5.5.1",
     "typescript": "^4.0.5",
     "webfontloader": "^1.6.28"
   },

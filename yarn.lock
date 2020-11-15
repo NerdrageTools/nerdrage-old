@@ -2410,14 +2410,6 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tinymce/tinymce-react@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.npmjs.org/@tinymce/tinymce-react/-/tinymce-react-3.8.1.tgz#7549bf8c06487b0b21b5b8c86c66c376dbbf5270"
-  integrity sha512-mLoA7CJoi4e0NqgNmCLLmK/gAvh9Tjd9WHWHtUJ6msBciLfc3c4Ma3UKlAvlRqNR8Q07ywTeRWvUjTn3zbqxIQ==
-  dependencies:
-    prop-types "^15.6.2"
-    tinymce "^5.5.0"
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.10"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.10.tgz#ca58fc195dd9734e77e57c6f2df565623636ab40"
@@ -3544,6 +3536,11 @@ atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+autobind-decorator@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
+  integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
 
 autoprefixer@^9.8.6:
   version "9.8.6"
@@ -8454,6 +8451,13 @@ jest@^26.6.1:
     import-local "^3.0.2"
     jest-cli "^26.6.1"
 
+jodit@^3.4.29:
+  version "3.4.29"
+  resolved "https://registry.npmjs.org/jodit/-/jodit-3.4.29.tgz#fba8d9678b954d5d5ea5015b50628c704f7658a2"
+  integrity sha512-1rW4aBeG5hgdTjNxYOWN2hc51M5O4U3BNdwxaxwLR8pIlrjmeDVxZu2YZ6L4TI1MfFRCpczL0vPzj6hlTFyvng==
+  dependencies:
+    autobind-decorator "^2.4.0"
+
 js-beautify@^1.13.0:
   version "1.13.0"
   resolved "https://registry.npmjs.org/js-beautify/-/js-beautify-1.13.0.tgz#a056d5d3acfd4918549aae3ab039f9f3c51eebb2"
@@ -11223,7 +11227,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -11486,7 +11490,7 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
-react-jsx-parser@^1.26.3:
+react-jsx-parser@^1.28.0:
   version "1.28.0"
   resolved "https://registry.npmjs.org/react-jsx-parser/-/react-jsx-parser-1.28.0.tgz#6bade24a30845e353bfa1ba6e0fea0cbd7a2252c"
   integrity sha512-6VmmljxzO0GriKYDVCKM7jCygX2m8THiFbZhftqtaXX9eSFdJZhRbXhpw4UStjz6KXSQ5DVY1vdfnll2+e3OXg==
@@ -13437,11 +13441,6 @@ tinycolor2@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
-
-tinymce@5.5.1, tinymce@^5.5.0:
-  version "5.5.1"
-  resolved "https://registry.npmjs.org/tinymce/-/tinymce-5.5.1.tgz#4f24ca6e7b698a3c7418a39ef0f3d613f4a703a4"
-  integrity sha512-z03C8/0TBby68Kp7YUTSCZ0QJINsFCv9U+Cv3TNHg+T1spZ4V6vOIgD0zeTd/xKqkru0P7IOHoeAnOjfpTLq7g==
 
 tmpl@1.0.x:
   version "1.0.4"
