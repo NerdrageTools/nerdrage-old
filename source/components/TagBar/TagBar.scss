@@ -1,22 +1,23 @@
 .tag-bar {
-  display: flex;
-  flex-direction: column;
-  min-height: 40px;
-  padding: 2px;
+	display: flex;
+	flex-direction: column;
+	min-height: 40px;
+	padding: 2px;
 
-  > div, > div > div {
-    align-items: center;
-    display: flex;
-    flex: 1;
-    justify-items: flex-start;
-  }
+	> div,
+	> div > div {
+		align-items: center;
+		display: flex;
+		flex: 1;
+		justify-items: flex-start;
+	}
 
-  &.readOnly {
-    background: transparent;
-  }
+	&.readOnly {
+		background: transparent;
+	}
 
-  .tag-bar-input {
-    margin: 0 5px;
-    width: 100px;
-  }
+	.tag-bar-input {
+		margin: 0 5px;
+		width: 100px;
+	}
 }

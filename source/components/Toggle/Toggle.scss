@@ -1,21 +1,22 @@
 @import '~@/styles/palette';
 
 .toggle {
-  cursor: pointer;
-  padding: 12px;
-  height: 40px;
-  width: 40px;
+	cursor: pointer;
+	padding: 12px;
+	height: 40px;
+	width: 40px;
 
-  &.on {
-    color: $palette-gold;
-    stroke-width: 3px;
-    stroke: $palette-gold-dark;
-  }
-  &.off {
-    color: $palette-gray-medium;
-  }
+	&.on {
+		color: $palette-gold;
+		stroke-width: 3px;
+		stroke: $palette-gold-dark;
+	}
 
-  &.readonly {
-    cursor: auto;
-  }
+	&.off {
+		color: $palette-gray-medium;
+	}
+
+	&.readonly {
+		cursor: auto;
+	}
 }

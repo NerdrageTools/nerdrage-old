@@ -1,40 +1,41 @@
 @import '~@/styles/palette';
 
 .user-menu {
-  align-items: center;
-  background: inherit;
-  color: inherit;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-right: .5rem;
+	align-items: center;
+	background: inherit;
+	color: inherit;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin-right: 0.5rem;
 
-  > * {
-    padding: .5rem;
-  }
+	> * {
+		padding: 0.5rem;
+	}
 
-  > .divider {
-    border-left: 1px solid;
-    height: 40px;
-    margin: 0 8px;
-    opacity: .6;
-    padding: 0;
-  }
+	> .divider {
+		border-left: 1px solid;
+		height: 40px;
+		margin: 0 8px;
+		opacity: 0.6;
+		padding: 0;
+	}
 
-  .username {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+	.username {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 
-    > span {
-      font-size: .6rem;
-      opacity: .7;
-    }
-  }
-  a {
-    color: var(--color-primary-text);
-    font-size: .8rem;
-    font-weight: bold;
-  }
+		> span {
+			font-size: 0.6rem;
+			opacity: 0.7;
+		}
+	}
+
+	a {
+		color: var(--color-primary-text);
+		font-size: 0.8rem;
+		font-weight: bold;
+	}
 }

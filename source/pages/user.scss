@@ -2,26 +2,28 @@
 @import './page';
 
 .user.page {
-  > .title-bar {
-    .is-admin.toggle { padding: 0; }
-  }
-  > .user-info {
-    columns: 2;
+	> .title-bar {
+		.is-admin.toggle { padding: 0; }
+	}
 
-    .row {
-      > b { width: 150px; }
-    }
-  }
+	> .user-info {
+		columns: 2;
 
-  .favorites.icon {
-    color: $palette-gold;
-    stroke: $palette-gold-dark;
-    stroke-width: 3px;
-  }
+		.row {
+			> b { width: 150px; }
+		}
+	}
+
+	.favorites.icon {
+		color: $palette-gold;
+		stroke: $palette-gold-dark;
+		stroke-width: 3px;
+	}
 }
 
-.layout.small, .layout.medium {
-  .user.page {
-    .user-info { columns: 1; }
-  }
+.layout.small,
+.layout.medium {
+	.user.page {
+		.user-info { columns: 1; }
+	}
 }

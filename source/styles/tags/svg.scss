@@ -1,8 +1,11 @@
 svg {
-  fill: currentColor;
-  height: 1rem;
-  shape-rendering: geometricPrecision;
-  width: 1rem;
+	fill: currentColor;
+	height: 1rem;
+	shape-rendering: geometricPrecision;
+	width: 1rem;
 
-  &.x2 { height: 2rem; width: 2rem; }
+	&.x2 {
+		height: 2rem;
+		width: 2rem;
+	}
 }

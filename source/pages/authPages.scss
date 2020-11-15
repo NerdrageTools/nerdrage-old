@@ -1,50 +1,52 @@
 @import './page';
 
-.login.page, .signup.page {
-  align-items: flex-start;
+.login.page,
+.signup.page {
+	align-items: flex-start;
 
-  > .container {
-    background-color: var(--color-primary);
-    border-radius: 1em;
-    border: 2px solid var(--color-primary-text);
-    box-shadow: 3px 3px 3px #ccc;
-    color: var(--color-primary-text);
-    display: flex;
-    flex-direction: column;
-    margin: 20px auto;
-    padding: 2em;
-    width: 250px;
+	> .container {
+		background-color: var(--color-primary);
+		border-radius: 1em;
+		border: 2px solid var(--color-primary-text);
+		box-shadow: 3px 3px 3px #ccc;
+		color: var(--color-primary-text);
+		display: flex;
+		flex-direction: column;
+		margin: 20px auto;
+		padding: 2em;
+		width: 250px;
 
-    > h3 {
-      margin-top: 0;
-    }
+		> h3 {
+			margin-top: 0;
+		}
 
-    > .buttons {
-      display: flex;
-      flex-direction: row;
-      padding: .25rem;
-      justify-content: flex-end;
-    }
+		> .buttons {
+			display: flex;
+			flex-direction: row;
+			padding: 0.25rem;
+			justify-content: flex-end;
+		}
 
-    > .message-field {
-      margin-top: 1em;
+		> .message-field {
+			margin-top: 1em;
 
-      &:empty { display: none; }
-    }
-  }
+			&:empty { display: none; }
+		}
+	}
 
-  .validation-message {
-    display: none;
-    font-size: .6rem;
-    margin-bottom: .5rem;
-    text-align: center;
-  }
+	.validation-message {
+		display: none;
+		font-size: 0.6rem;
+		margin-bottom: 0.5rem;
+		text-align: center;
+	}
 
-  input:invalid, input.invalid {
-    background-color: lighten(pink, 5%);
+	input:invalid,
+	input.invalid {
+		background-color: lighten(pink, 5%);
 
-    + .validation-message {
-      display: inline-block;
-    }
-  }
+		+ .validation-message {
+			display: inline-block;
+		}
+	}
 }

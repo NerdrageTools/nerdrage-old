@@ -2,38 +2,41 @@
 @import '~@/styles/mixins/gradient';
 
 button {
-  border: 1px outset #66666655;
-  border-radius: .25rem;
-  box-shadow: 0 0 0 1px #66666655;
-  cursor: pointer;
-  padding: .25rem .4rem;
+	border: 1px outset #6665;
+	border-radius: 0.25rem;
+	box-shadow: 0 0 0 1px #6665;
+	cursor: pointer;
+	padding: 0.25rem 0.4rem;
 
-  &:not(.link) {
-    @include gradient(to bottom, #ffffff55 0%, #ffffff55 20%, #ffffff00 80%, #ffffff00 100%);
-  }
+	&:not(.link) {
+		@include gradient(to bottom, #ffffff55 0%, #ffffff55 20%, #ffffff00 80%, #ffffff00 100%);
+	}
 
-  &:focus {
-    box-shadow: 0 0 0 3px $color-highlight;
-  }
+	&:focus {
+		box-shadow: 0 0 0 3px $color-highlight;
+	}
 
-  &.danger {
-    background-color: $color-danger;
-    color: $color-danger-text;
-  }
-  &.safe {
-    background-color: $color-safe;
-    color: $color-safe-text;
-    font-weight: bold;
-    text-shadow: 1px 1px 1px darken($color-safe-text, 50%);
-  }
-  &.link {
-    border: none;
-    box-shadow: none;
-  }
+	&.danger {
+		background-color: $color-danger;
+		color: $color-danger-text;
+	}
 
-  &[disabled], &.disabled {
-    background-color: #eeeeee;
-    color: #aaaaaa;
-    text-shadow: none;
-  }
+	&.safe {
+		background-color: $color-safe;
+		color: $color-safe-text;
+		font-weight: bold;
+		text-shadow: 1px 1px 1px darken($color-safe-text, 50%);
+	}
+
+	&.link {
+		border: none;
+		box-shadow: none;
+	}
+
+	&[disabled],
+	&.disabled {
+		background-color: #eee;
+		color: #aaa;
+		text-shadow: none;
+	}
 }

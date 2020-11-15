@@ -1,11 +1,11 @@
 .prompt.dialog {
-  > .body {
-    display: flex;
-    flex-direction: column;
+	> .body {
+		display: flex;
+		flex-direction: column;
 
-    > .text {
-      max-width: 300px;
-      padding: .5rem;
-    }
-  }
+		> .text {
+			max-width: 300px;
+			padding: 0.5rem;
+		}
+	}
 }

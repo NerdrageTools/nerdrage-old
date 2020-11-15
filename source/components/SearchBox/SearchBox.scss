@@ -1,63 +1,64 @@
 .search-box {
-  align-items: center;
-  border-radius: 5px;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  margin: 5px;
-  position: relative;
+	align-items: center;
+	border-radius: 5px;
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	margin: 5px;
+	position: relative;
 
-  > .search.icon {
-    fill: #ccc;
-    position: absolute;
-    left: .75rem;
-  }
+	> .search.icon {
+		fill: #ccc;
+		position: absolute;
+		left: 0.75rem;
+	}
 
-  &:focus-within {
-    > .search.icon {
-      fill: currentColor;
-    }
-  }
+	&:focus-within {
+		> .search.icon {
+			fill: currentColor;
+		}
+	}
 
-  > .input {
-    flex: 1;
-    padding: .25rem .25rem .25rem 1.75rem;
-    width: 100%;
-  }
+	> .input {
+		flex: 1;
+		padding: 0.25rem 0.25rem 0.25rem 1.75rem;
+		width: 100%;
+	}
 
-  &.open > input {
-    border: 1px solid #00000044;
-    border-radius: 5px 5px 0 0;
-    box-shadow: 3px 3px 3px #33333333;
-  }
-  &.open > .search-results {
-    background: #fff;
-    border-radius: 0 0 5px 5px;
-    border: 1px solid #00000044;
-    border-top-color: transparent;
-    box-shadow: 3px 3px 3px #33333333;
-    font-size: .8rem;
-    left: 0;
-    line-height: 1.5rem;
-    list-style: none;
-    margin: -5px 4px;
-    padding: .25rem;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    z-index: 5;
+	&.open > input {
+		border: 1px solid #0004;
+		border-radius: 5px 5px 0 0;
+		box-shadow: 3px 3px 3px #3333;
+	}
 
-    > .search-result {
-      cursor: pointer;
-      padding: .15rem;
+	&.open > .search-results {
+		background: #fff;
+		border-radius: 0 0 5px 5px;
+		border: 1px solid #0004;
+		border-top-color: transparent;
+		box-shadow: 3px 3px 3px #3333;
+		font-size: 0.8rem;
+		left: 0;
+		line-height: 1.5rem;
+		list-style: none;
+		margin: -5px 4px;
+		padding: 0.25rem;
+		position: absolute;
+		right: 0;
+		top: 100%;
+		z-index: 5;
 
-      &[aria-selected="true"] {
-        background: var(--color-system);
-      }
+		> .search-result {
+			cursor: pointer;
+			padding: 0.15rem;
 
-      > .preview {
-        font-size: .8rem;
-      }
-    }
-  }
+			&[aria-selected="true"] {
+				background: var(--color-system);
+			}
+
+			> .preview {
+				font-size: 0.8rem;
+			}
+		}
+	}
 }

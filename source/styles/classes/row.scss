@@ -1,10 +1,10 @@
 .row {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
 
-  > * {
-    margin: .25rem;
-  }
+	> * {
+		margin: 0.25rem;
+	}
 }

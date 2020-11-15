@@ -2,60 +2,61 @@
 @import '~@/styles/palette';
 
 .links {
-  display: flex;
-  flex-direction: column;
-  margin-top: 2em;
-  overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	margin-top: 2em;
+	overflow: hidden;
 
-  &:first-child { margin-top: 0; }
+	&:first-child { margin-top: 0; }
 
-  header {
-    align-items: center;
-    border-bottom: 1px solid var(--color-primary);
-    color: $palette-gray-dark;
-    display: flex;
-    flex-direction: row;
-    font-weight: bold;
-    justify-content: flex-start;
-    opacity: .9;
-    padding: .5rem;
+	header {
+		align-items: center;
+		border-bottom: 1px solid var(--color-primary);
+		color: $palette-gray-dark;
+		display: flex;
+		flex-direction: row;
+		font-weight: bold;
+		justify-content: flex-start;
+		opacity: 0.9;
+		padding: 0.5rem;
 
-    > svg {
-      margin-right: .25rem;
-      padding: .1rem;
-    }
-  }
-  ul.list {
-    columns: 4;
-    column-fill: balance;
-    column-gap: 10px;
-    list-style: none;
-    margin: 10px;
-    padding: 0;
+		> svg {
+			margin-right: 0.25rem;
+			padding: 0.1rem;
+		}
+	}
 
-    > li {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    > a { display: inherit; }
-  }
+	ul.list {
+		columns: 4;
+		column-fill: balance;
+		column-gap: 10px;
+		list-style: none;
+		margin: 10px;
+		padding: 0;
+
+		> li {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		> a { display: inherit; }
+	}
 }
 
 .layout.medium {
-  .article-children {
-    .link-list {
-      columns: 3;
-    }
-  }
+	.article-children {
+		.link-list {
+			columns: 3;
+		}
+	}
 }
 
 .layout.small {
-  .article-children {
-    .links {
-      columns: 2;
+	.article-children {
+		.links {
+			columns: 2;
 
-      a { @include ellipsis; }
-    }
-  }
+			a { @include ellipsis; }
+		}
+	}
 }

@@ -9,12 +9,12 @@
 	top: 0;
 	z-index: 100;
 
-	&.modal:after {
+	&.modal::after {
 		background: #fff;
 		bottom: 0;
 		content: '';
 		left: 0;
-		opacity: .75;
+		opacity: 0.75;
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -36,21 +36,24 @@
 			background: var(--color-primary);
 			color: var(--color-primary-text);
 			height: 2em;
-			padding: .5em;
+			padding: 0.5em;
 		}
+
 		> .body {
 			flex: 1;
-			padding: .5em;
+			padding: 0.5em;
 		}
+
 		> .buttons {
 			align-items: center;
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-end;
-			padding: .25em;
+			padding: 0.25em;
 
-			> button, > .button {
-				margin: 0 .1em;
+			> button,
+			> .button {
+				margin: 0 0.1em;
 			}
 		}
 
@@ -60,7 +63,7 @@
 
 			> .text {
 				max-width: 300px;
-				padding: .5rem;
+				padding: 0.5rem;
 			}
 		}
 	}

@@ -1,41 +1,41 @@
 @import '~@/styles/palette';
 
 .tag {
-  align-items: center;
-  background-color: $palette-offwhite;
-  border-radius: 3px;
-  border: 1px solid;
-  display: flex;
-  flex-direction: row;
-  font-size: .9em;
-  grid-gap: .25em;
-  height: 2em;
-  justify-content: space-between;
-  margin: 3px;
-  padding: 3px;
-  white-space: nowrap;
+	align-items: center;
+	background-color: $palette-offwhite;
+	border-radius: 3px;
+	border: 1px solid;
+	display: flex;
+	flex-direction: row;
+	font-size: 0.9em;
+	grid-gap: 0.25em;
+	height: 2em;
+	justify-content: space-between;
+	margin: 3px;
+	padding: 3px;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
+	> svg {
+		padding: 0.1rem;
 
-  > svg {
-    padding: .1rem;
+		&:first-child { margin-right: 0.25rem; }
+		&:last-child { margin-left: 0.25em; }
+	}
 
-    &:first-child { margin-right: .25rem; }
-    &:last-child { margin-left: .25em; }
-  }
+	&.is-link {
+		color: $color-link;
+		font-size: 0.8rem;
+	}
 
-  &.is-link {
-    color: $color-link;
-    font-size: .8rem;
-  }
-  .remove {
-    cursor: pointer;
-  }
+	.remove {
+		cursor: pointer;
+	}
 
-  svg.remove { display: none; }
-  &.removable > svg.remove { display: inline-block; }
+	svg.remove { display: none; }
+	&.removable > svg.remove { display: inline-block; }
 }

@@ -1,81 +1,89 @@
 @import '~@/styles/palette';
 
 .participants.lightbox {
-  height: 250px;
-  position: relative;
+	height: 250px;
+	position: relative;
 
-  &.loading:after {
-    content: 'Updating...';
-  }
+	&.loading::after {
+		content: 'Updating...';
+	}
 
-  .participant-list {
-    list-style: none;
-    margin: 0;
-    max-width: calc(100% - 15px); // account for scrollbar
-    padding: 5px;
+	.participant-list {
+		list-style: none;
+		margin: 0;
+		max-width: calc(100% - 15px); // account for scrollbar
+		padding: 5px;
 
-    > .participant.row {
-      justify-content: space-between;
-      margin-bottom: .25rem;
+		> .participant.row {
+			justify-content: space-between;
+			margin-bottom: 0.25rem;
 
-      &:last-child { margin-bottom: 0; }
+			&:last-child { margin-bottom: 0; }
 
-      > .nerd.icon {
-        height: 2em;
-        margin: 0 .25rem 0 0;
-        width: 2em;
-      }
+			> .nerd.icon {
+				height: 2em;
+				margin: 0 0.25rem 0 0;
+				width: 2em;
+			}
 
-      > .display {
-        align-items: center;
-        display: flex;
-        flex: 1;
-        overflow: hidden;
+			> .display {
+				align-items: center;
+				display: flex;
+				flex: 1;
+				overflow: hidden;
 
-        > .name, > .username {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        > .username {
-          font-size: .8rem;
-          margin-left: .5rem;
-          opacity: .6;
-        }
-      }
+				> .name,
+				> .username {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
 
-      > .role { opacity: .5; }
-      > .remove.icon {
-        cursor: pointer;
-        opacity: .5;
-      }
+				> .username {
+					font-size: 0.8rem;
+					margin-left: 0.5rem;
+					opacity: 0.6;
+				}
+			}
 
-      &.added {
-        background-color: transparentize($color-safe, .8);
-        color: darken($color-safe, 20%);
-      }
-      &.updated {
-        background-color: darken($color-highlight, 10%);
-      }
-      &.removed {
-        background-color: transparentize($color-danger, .8);
-        color: darken($color-danger, 20%);
-        text-decoration: line-through;
-      }
+			> .role { opacity: 0.5; }
 
-      &:hover {
-        > .role, > .remove.icon { opacity: 1; }
-      }
-    }
-  }
-  > .user.search-box {
-    margin: 5px 0 0 0;
-  }
-  > button.safe { margin: 5px; }
+			> .remove.icon {
+				cursor: pointer;
+				opacity: 0.5;
+			}
+
+			&.added {
+				background-color: transparentize($color-safe, 0.8);
+				color: darken($color-safe, 20%);
+			}
+
+			&.updated {
+				background-color: darken($color-highlight, 10%);
+			}
+
+			&.removed {
+				background-color: transparentize($color-danger, 0.8);
+				color: darken($color-danger, 20%);
+				text-decoration: line-through;
+			}
+
+			&:hover {
+				> .role,
+				> .remove.icon { opacity: 1; }
+			}
+		}
+	}
+
+	> .user.search-box {
+		margin: 5px 0 0 0;
+	}
+	> button.safe { margin: 5px; }
 }
 
 .layout.small {
-  .participants > .participant-list > .participant.row {
-    > .role, > .remove.icon { display: inline-block; }
-  }
+	.participants > .participant-list > .participant.row {
+		> .role,
+		> .remove.icon { display: inline-block; }
+	}
 }

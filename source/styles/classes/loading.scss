@@ -1,19 +1,19 @@
 .loading {
-  overflow: hidden;
+	overflow: hidden;
 
-  &:after {
-    align-items: center;
-    background-color: #ffffffdd;
-    color: #000000aa;
-    content: 'Loading...';
-    display: flex;
-    font-style: italic;
-    font-weight: bold;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
+	&::after {
+		align-items: center;
+		background-color: #fffd;
+		color: #000a;
+		content: 'Loading...';
+		display: flex;
+		font-style: italic;
+		font-weight: bold;
+		height: 100%;
+		justify-content: center;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
 }

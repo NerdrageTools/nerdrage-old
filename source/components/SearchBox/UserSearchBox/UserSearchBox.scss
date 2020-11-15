@@ -3,10 +3,14 @@
 .user.search-box {
 	.search-result {
 		@include ellipsis;
+
 		align-items: center;
 		display: flex;
-		gap: .25em;
+		gap: 0.25em;
 
-		> svg { height: 1.25rem; width: 1.25rem; }
+		> svg {
+			height: 1.25rem;
+			width: 1.25rem;
+		}
 	}
 }

@@ -2,157 +2,167 @@
 @import '~@/styles/palette';
 
 .wiki.layout {
-  background: $color-bg;
-  background: var(--color-background);
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100vh;
-  margin: 0;
-  max-height: 100vh;
-  max-width: 100vw;
-  min-height: 100vh;
-  min-width: 100vw;
-  padding: 0;
-  width: 100vw;
+	background: $color-bg;
+	background: var(--color-background);
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	height: 100vh;
+	margin: 0;
+	max-height: 100vh;
+	max-width: 100vw;
+	min-height: 100vh;
+	min-width: 100vw;
+	padding: 0;
+	width: 100vw;
 
-  > .header {
-    align-items: center;
-    background-color: white;
-    background-color: var(--color-primary);
-    border-bottom: 1px outset;
-    box-shadow: 0px 2px 5px $color-shadow;
-    box-shadow: 0px 2px 5px var(--color-shadow);
-    color: black;
-    color: var(--color-primary-text);
-    display: flex;
-    justify-content: flex-start;
-    min-height: 40px;
-    width: 100%;
+	> .header {
+		align-items: center;
+		background-color: white;
+		background-color: var(--color-primary);
+		border-bottom: 1px outset;
+		box-shadow: 0 2px 5px $color-shadow;
+		box-shadow: 0 2px 5px var(--color-shadow);
+		color: black;
+		color: var(--color-primary-text);
+		display: flex;
+		justify-content: flex-start;
+		min-height: 40px;
+		width: 100%;
 
-    .navigation.toggle {
-      background: inherit;
-      border-bottom-width: 2px;
-      border: 1px solid transparent;
-      color: inherit;
-      cursor: pointer;
-      display: none;
-      margin-bottom: -4px;
-      margin-left: .5rem;
-      padding: .5rem;
+		.navigation.toggle {
+			background: inherit;
+			border: 1px solid transparent;
+			border-bottom-width: 2px;
+			color: inherit;
+			cursor: pointer;
+			display: none;
+			margin-bottom: -4px;
+			margin-left: 0.5rem;
+			padding: 0.5rem;
 
-      * { pointer-events: none; }
-    }
+			* { pointer-events: none; }
+		}
 
-    > .logo {
-      align-items: center;
-      box-sizing: border-box;
-      cursor: pointer;
-      display: flex;
-      justify-content: flex-start;
-      min-width: 150px;
+		> .logo {
+			align-items: center;
+			box-sizing: border-box;
+			cursor: pointer;
+			display: flex;
+			justify-content: flex-start;
+			min-width: 150px;
 
-      > .nerd, > .rage {
-        font-size: 1.4em;
-        text-shadow:
-           1px  1px 0 rgba(255,255,255,.8),
-          -1px  1px 0 rgba(255,255,255,.8),
-           1px -1px 0 rgba(255,255,255,.8),
-          -1px -1px 0 rgba(255,255,255,.8),
-           1px  1px 3px #666,
-          -1px  1px 3px #666,
-           1px -1px 3px #666,
-          -1px -1px 3px #666,
-        ;
-      }
-      .nerd { color: #000; }
-      .rage { color: #f00; }
-    }
-    > .navigation.toggle { order: 0; }
-    > .search-box {
-      order: 1;
+			> .nerd,
+			> .rage {
+				font-size: 1.4em;
+				text-shadow:
+					1px  1px 0 rgba(255, 255, 255, 0.8),
+					-1px  1px 0 rgba(255, 255, 255, 0.8),
+					1px -1px 0 rgba(255, 255, 255, 0.8),
+					-1px -1px 0 rgba(255, 255, 255, 0.8),
+					1px  1px 3px #666,
+					-1px  1px 3px #666,
+					1px -1px 3px #666,
+					-1px -1px 3px #666,;
+			}
+			.nerd { color: #000; }
+			.rage { color: #f00; }
+		}
+		> .navigation.toggle { order: 0; }
 
-      &:focus-within {
-        ~ * { display: none; }
-      }
-    }
-    > .user-menu { order: 2; }
-  }
-  > .content {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    position: relative;
-    height: 100%;
-    width: 100%;
+		> .search-box {
+			order: 1;
 
-    > .navigation {
-      max-height: calc(100vh - 40px);
-      max-width: $navigation-width;
-      width: $navigation-width;
-      z-index: 1;
-    }
-    > .page {
-      flex: 1;
-      max-height: calc(100vh - 40px);
-      width: 100%;
-    }
-    > .navigation ~ .page {
-      width: $page-width;
-    }
-  }
+			&:focus-within {
+				~ * { display: none; }
+			}
+		}
+		> .user-menu { order: 2; }
+	}
 
-  &.small {
-    font-size: 10pt;
+	> .content {
+		display: flex;
+		flex-direction: row;
+		flex: 1;
+		position: relative;
+		height: 100%;
+		width: 100%;
 
-    > .header {
-      > .logo {
-        min-width: auto;
+		> .navigation {
+			max-height: calc(100vh - 40px);
+			max-width: $navigation-width;
+			width: $navigation-width;
+			z-index: 1;
+		}
 
-        > .nerd, > .rage { display: none; }
-      }
-      > .navigation.toggle {
-        display: flex;
-      }
-    }
+		> .page {
+			flex: 1;
+			max-height: calc(100vh - 40px);
+			width: 100%;
+		}
 
-    &.collapse-navigation {
-      > .content > .navigation {
-        display: none;
-      }
-    }
-    &.expand-navigation {
-      > .header > .navigation.toggle {
-        background: var(--color-background);
-        border-bottom-color: var(--color-background);
-        box-shadow: 5px 0 5px #33333355;
-        color: var(--color-primary);
-        margin-bottom: -6px;
-      }
-      > .content > .navigation {
-        bottom: 0;
-        box-shadow: 3px 5px 5px #33333355;
-        left: 0;
-        position: absolute !important;
-        top: 0;
-        width: 85%;
-        z-index: 5;
-      }
-    }
+		> .navigation ~ .page {
+			width: $page-width;
+		}
+	}
 
-    button {
-      font-size: 10pt;
-    }
-  }
+	&.small {
+		font-size: 10pt;
 
-  &.no-campaign {
-    > .header {
-      justify-content: flex-end;
+		> .header {
+			> .logo {
+				min-width: auto;
 
-      > .logo { flex: 1; }
-      > .navigation.toggle, > .search-box {
-        display: none;
-      }
-    }
-  }
+				> .nerd,
+				> .rage { display: none; }
+			}
+
+			> .navigation.toggle {
+				display: flex;
+			}
+		}
+
+		&.collapse-navigation {
+			> .content > .navigation {
+				display: none;
+			}
+		}
+
+		&.expand-navigation {
+			> .header > .navigation.toggle {
+				background: var(--color-background);
+				border-bottom-color: var(--color-background);
+				box-shadow: 5px 0 5px #3335;
+				color: var(--color-primary);
+				margin-bottom: -6px;
+			}
+
+			> .content > .navigation {
+				bottom: 0;
+				box-shadow: 3px 5px 5px #3335;
+				left: 0;
+				position: absolute !important;
+				top: 0;
+				width: 85%;
+				z-index: 5;
+			}
+		}
+
+		button {
+			font-size: 10pt;
+		}
+	}
+
+	&.no-campaign {
+		> .header {
+			justify-content: flex-end;
+
+			> .logo { flex: 1; }
+
+			> .navigation.toggle,
+			> .search-box {
+				display: none;
+			}
+		}
+	}
 }

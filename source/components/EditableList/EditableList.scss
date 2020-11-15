@@ -1,10 +1,10 @@
 .editable-list {
-  cursor: pointer;
-  padding: .25em;
+	cursor: pointer;
+	padding: 0.25em;
 
-  &:not(:focus) {
-    background: transparent;
-    border-color: transparent;
-    color: inherit;
-  }
+	&:not(:focus) {
+		background: transparent;
+		border-color: transparent;
+		color: inherit;
+	}
 }

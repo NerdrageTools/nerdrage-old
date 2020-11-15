@@ -2,62 +2,63 @@
 @import './page';
 
 .article.page {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  > .tab-set {
-    > .tab-contents {
-      padding: 0;
-      text-align: justify;
+	> .tab-set {
+		> .tab-contents {
+			padding: 0;
+			text-align: justify;
 
-      > p { // Loading component
-        align-items: center;
-        display: flex;
-        flex: 1;
-        justify-content: center;
-      }
-    }
+			> p { // Loading component
+				align-items: center;
+				display: flex;
+				flex: 1;
+				justify-content: center;
+			}
+		}
 
-    > .tab-contents.read {
-      padding: .5rem;
+		> .tab-contents.read {
+			padding: 0.5rem;
 
-      .jsx-parser {
-        &.no-child-articles:empty {
-          min-height: 50px;
-          position: relative;
+			.jsx-parser {
+				&.no-child-articles:empty {
+					min-height: 50px;
+					position: relative;
 
-          &:before {
-            content: 'This article has not yet been written.';
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-style: italic;
-            height: 50px;
-            left: 0;
-            opacity: .25;
-            position: absolute;
-            text-shadow: 1px 1px 1px #00000066;
-            top: 0;
-            width: 100%;
-          }
-        }
-      }
-    }
-    > .tabs.html {
-      > .tab.html.is-active {
-        background-color: #fff;
-        border-bottom-color: #fff;
-      }
-    }
-  }
+					&::before {
+						content: 'This article has not yet been written.';
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-style: italic;
+						height: 50px;
+						left: 0;
+						opacity: 0.25;
+						position: absolute;
+						text-shadow: 1px 1px 1px #0006;
+						top: 0;
+						width: 100%;
+					}
+				}
+			}
+		}
 
-  .tag-bar.tags {
-    border-top: 1px solid var(--color-primary);
+		> .tabs.html {
+			> .tab.html.is-active {
+				background-color: #fff;
+				border-bottom-color: #fff;
+			}
+		}
+	}
 
-    &:not(.readOnly) {
-      background: $color-bg-button;
-      box-shadow: 0 3px 3px $color-shadow inset;
-      padding-top: 3px;
-    }
-  }
+	.tag-bar.tags {
+		border-top: 1px solid var(--color-primary);
+
+		&:not(.readOnly) {
+			background: $color-bg-button;
+			box-shadow: 0 3px 3px $color-shadow inset;
+			padding-top: 3px;
+		}
+	}
 }

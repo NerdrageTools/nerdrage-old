@@ -1,88 +1,95 @@
 @import '~@/styles/palette';
 
 .page {
-  display: flex;
-  flex-direction: column;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 
-  > .generating {
-    align-items: center;
-    background: #ffffffee;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 1;
-  }
+	> .generating {
+		align-items: center;
+		background: #fffe;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: 1;
+	}
 
-  > .title-bar {
-    align-items: center;
-    border-bottom-color: $color-border;
-    border-bottom-color: var(--color-primary);
-    border-bottom: 1px solid;
-    display: flex;
-    flex-direction: row;
-    font-family: var(--font-for-titles);
+	> .title-bar {
+		align-items: center;
+		border-bottom: 1px solid;
+		border-bottom-color: $color-border;
+		border-bottom-color: var(--color-primary);
+		display: flex;
+		flex-direction: row;
+		font-family: var(--font-for-titles);
 
-    > .editable.title {
-      align-items: center;
-      display: flex;
-      flex: 1;
-      font-size: 2em;
-      font-weight: bold;
-      justify-content: flex-start;
-      margin: 0;
-      min-height: 50px;
-      padding: 15px;
+		> .editable.title {
+			align-items: center;
+			display: flex;
+			flex: 1;
+			font-size: 2em;
+			font-weight: bold;
+			justify-content: flex-start;
+			margin: 0;
+			min-height: 50px;
+			padding: 15px;
 
-      &.default, &.default > input {
-        text-transform: capitalize;
-      }
-    }
+			&.default,
+			&.default > input {
+				text-transform: capitalize;
+			}
+		}
 
-    > button {
-      margin: 3px;
-    }
-    > .toggle {
-      &.off { color: transparentize($palette-gray-medium, .5); }
-      &.edit-mode.on {
-        color: $palette-green;
-        stroke: $palette-green;
-        stroke-width: 5%;
-      }
-      &.in-navigation.on, &.secret.on {
-        color: $palette-green;
-        stroke: darken($palette-green, 30%);
-        stroke-width: 5%;
-      }
-      &.favorite.on {
-        stroke: $palette-gold-dark;
-        stroke-width: 5%;
-      }
-    }
-    > .redirected-from {
-      font-size: .7rem;
-      padding: .2rem .5rem;
-      opacity: .6;
-    }
-  }
+		> button {
+			margin: 3px;
+		}
 
-  > .contents {
-    padding: 10px;
-  }
+		> .toggle {
+			&.off { color: transparentize($palette-gray-medium, 0.5); }
 
-  .source {
-    font-size: .7rem;
-    padding: 0 .5rem;
-    opacity: .8;
-  }
+			&.edit-mode.on {
+				color: $palette-green;
+				stroke: $palette-green;
+				stroke-width: 5%;
+			}
+
+			&.in-navigation.on,
+			&.secret.on {
+				color: $palette-green;
+				stroke: darken($palette-green, 30%);
+				stroke-width: 5%;
+			}
+
+			&.favorite.on {
+				stroke: $palette-gold-dark;
+				stroke-width: 5%;
+			}
+		}
+
+		> .redirected-from {
+			font-size: 0.7rem;
+			padding: 0.2rem 0.5rem;
+			opacity: 0.6;
+		}
+	}
+
+	> .contents {
+		padding: 10px;
+	}
+
+	.source {
+		font-size: 0.7rem;
+		padding: 0 0.5rem;
+		opacity: 0.8;
+	}
 }
 
 .layout.small .page {
-  > .title-bar > .title {
-    font-size: 1.2em;
-  }
+	> .title-bar > .title {
+		font-size: 1.2em;
+	}
 }

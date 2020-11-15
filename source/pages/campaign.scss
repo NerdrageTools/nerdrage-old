@@ -1,49 +1,53 @@
 @import '~@/pages/page';
 
 .campaign.page {
-  > .contents > div {
-    display: flex;
-    flex-direction: row;
-    padding: 5px;
-    justify-content: stretch;
+	> .contents > div {
+		display: flex;
+		flex-direction: row;
+		padding: 5px;
+		justify-content: stretch;
 
-    > .column {
-      display: flex;
-      flex-direction: column;
-      max-width: 100vw;
+		> .column {
+			display: flex;
+			flex-direction: column;
+			max-width: 100vw;
 
-      > * {
-        margin: 5px;
-      }
-    }
-    > .left.column {
-      flex: 1;
-    }
-    > .right.column {
-      min-width: 250px;
+			> * {
+				margin: 5px;
+			}
+		}
 
-      > .participants {
-        > b:not(:first-child) { margin-top: .75rem; }
-        > .user-list {
-          list-style: none;
-          margin: 0;
-          padding-left: .75rem;
-          text-transform: capitalize;
-        }
-      }
-    }
-  }
+		> .left.column {
+			flex: 1;
+		}
+
+		> .right.column {
+			min-width: 250px;
+
+			> .participants {
+				> b:not(:first-child) { margin-top: 0.75rem; }
+
+				> .user-list {
+					list-style: none;
+					margin: 0;
+					padding-left: 0.75rem;
+					text-transform: capitalize;
+				}
+			}
+		}
+	}
 }
 
-.layout.medium, .layout.small {
-  .campaign.page {
-    > .contents > div {
-      display: block;
+.layout.medium,
+.layout.small {
+	.campaign.page {
+		> .contents > div {
+			display: block;
 
-      > .column {
-        flex: auto;
-        width: 100%;
-      }
-    }
-  }
+			> .column {
+				flex: auto;
+				width: 100%;
+			}
+		}
+	}
 }
