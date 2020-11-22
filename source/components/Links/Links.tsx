@@ -29,9 +29,9 @@ export class Links<T extends IArticleLink | ICampaignLink = IArticleLink>
 		</li>
 	)
 
-	renderArticleLink = ({ campaign, slug, title }: IArticleLink): JSX.Element => (
+	renderArticleLink = ({ slug, subdomain, title }: IArticleLink): JSX.Element => (
 		<li key={slug} title={title}>
-			<Link slug={slug} subdomain={campaign.subdomain} type="article">{title}</Link>
+			<Link {...{ slug, subdomain }} type="article">{title}</Link>
 		</li>
 	)
 
@@ -40,12 +40,11 @@ export class Links<T extends IArticleLink | ICampaignLink = IArticleLink>
 
 		if (!pages!.length) return null
 
-		const links = pages!.sort((a, b) => a.title.localeCompare(b.title))
-			// @ts-expect-error - awkward destructuring
-			.map(({ campaign = {}, slug = '', title }) => (
+		const links = pages!.sort((a, b) => a.title?.localeCompare(b.title))
+			.map(link => (
 				type === 'campaign'
-					? this.renderCampaignLink({ subdomain: campaign?.subdomain, title })
-					: this.renderArticleLink({ campaign, slug, title })
+					? this.renderCampaignLink(link as ICampaignLink)
+					: this.renderArticleLink(link as IArticleLink)
 			))
 
 		return (

@@ -8,8 +8,8 @@ import EditIcon from '~/icons/edit.svg'
 import FavoriteIcon from '~/icons/favorite-on.svg'
 import DeleteIcon from '~/icons/remove.svg'
 import SheetIcon from '~/icons/sheet.svg'
+import { IUserProfile } from '~/server/models'
 import { INavigation } from '~/server/schema/INavigation'
-import { IUser } from '~/server/schema/IUser'
 import { noop } from '~/utilities/noop'
 import { pluck } from '~/utilities/pluck'
 import { prompt } from '~/utilities/prompt'
@@ -155,7 +155,7 @@ export class Navigation extends Component<Props> {
 	</>
 
 	render = (): JSX.Element | null => {
-		const user = this.context.user ?? {} as IUser
+		const user = this.context.user ?? {} as IUserProfile
 		const campaign = this.context.campaign
 
 		if (!campaign?.navigation) { return null }
@@ -165,10 +165,10 @@ export class Navigation extends Component<Props> {
 			campaign: pluck(campaign, '_id', 'subdomain', 'title'),
 		}))
 		const favorites = (user.favorites ?? []).filter(link => (
-			link.campaign.subdomain === campaign.subdomain
+			link.subdomain === campaign.subdomain
 		))
 		const sheets = (user.sheets ?? []).filter(sheet => (
-			sheet.campaign.subdomain === campaign.subdomain
+			sheet.subdomain === campaign.subdomain
 		))
 
 		return (
