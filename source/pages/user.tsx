@@ -107,7 +107,7 @@ export default class UserPage extends Component<Props> {
 		const { httpStatusCode, message } = this.props
 		const { user: currentUser } = this.context
 		const user = { ...this.props.user, ...this.state.user }
-		const isEditable = user._id === currentUser._id || currentUser.isAdmin
+		const isEditable = currentUser && (user._id === currentUser._id || currentUser.isAdmin)
 
 		if (httpStatusCode !== 200) {
 			return <Error message={message} statusCode={httpStatusCode} />
@@ -126,7 +126,7 @@ export default class UserPage extends Component<Props> {
 					{isEditable && this.isDirty && (
 						<button className="update safe" onClick={this.handleSave}>Save</button>
 					)}
-					{currentUser.isAdmin
+					{currentUser?.isAdmin
 						? (
 							<Toggle
 								className="is-admin"

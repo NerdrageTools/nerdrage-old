@@ -49,10 +49,8 @@ export default class Wiki extends App {
 		user: this.props.user,
 	}
 
-	logOff = async event => {
-		event.preventDefault()
-		this.setUser(await fetch('/api/user/auth/logoff').then(r => r.json()))
-		window.location = window.location
+	handleLogOff = (): void => {
+		fetch('/api/user/auth/logoff').then(() => { window.location.reload() })
 	}
 
 	setCampaign = (campaign, callback = noop) => this.setState({ campaign }, callback)
@@ -103,7 +101,7 @@ export default class Wiki extends App {
 		const theme = { ...defaultTheme, ...(campaign?.theme ?? {}) }
 		const context = {
 			campaign,
-			logOff: this.logOff,
+			handleLogOff: this.handleLogOff,
 			rootUrl,
 			router,
 			setCampaign: this.setCampaign,
@@ -117,7 +115,7 @@ export default class Wiki extends App {
 			user,
 		}
 
-		const campaignError = !campaign && !['/user', '/login', '/signup'].includes(router.pathname)
+		const campaignError = !campaign && !['/user', '/login', '/sign-up'].includes(router.pathname)
 
 		return (
 			<Application.Provider value={context}>

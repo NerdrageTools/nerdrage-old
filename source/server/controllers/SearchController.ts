@@ -13,7 +13,7 @@ interface ISearchRequest extends IRequest {
 	allowPrivate: boolean,
 	allowPublic: boolean,
 	params: { searchTerm: string },
-	query: { limit: number },
+	query: { limit: string },
 }
 interface ITextMatch {
 	idx: number,
@@ -30,19 +30,6 @@ const FONTS = fetch('https://fonts.google.com/metadata/fonts').then(async respon
 	return [] as IFontSearchResult[]
 })
 
-export const campaignPermissions = (
-	async (request: IRequest, response: Response, next: NextFunction): Promise<void> => {
-		const { campaign, user } = request
-		Object.assign(request, {
-			allowPrivate: Boolean(user && (user.isAdmin || campaign.isOwner)),
-			allowPublic: Boolean(user && (user.isAdmin || campaign.isViewer)),
-			campaign,
-		})
-
-		return next()
-	}
-)
-
 interface IArticleResult extends IArticleSearchResult {
 	nameMatches: ITextMatch[],
 	plainText: string,
@@ -50,19 +37,21 @@ interface IArticleResult extends IArticleSearchResult {
 }
 export const searchArticles = (
 	async (request: ISearchRequest, response: Response): Promise<Response> => {
-		const {
-			allowPrivate, allowPublic, campaign,
-			params: { searchTerm = '' },
-			query: { limit = 10 },
-		} = request
+		const { campaign, subdomain, user } = request
+		if (!campaign) {
+			Campaign404({ campaign, subdomain }, response)
+			return response
+		}
 
-		if (!allowPublic) {
+		const userIsViewer = Boolean(user?.isAdmin || campaign.isViewer)
+		const userIsOwner = Boolean(user?.isAdmin || campaign.isOwner)
+		if (!userIsViewer) {
 			return response.status(401).send({
 				message: 'You are not authorized to view articles in this campaign.',
 			})
 		}
 
-		const words = deburr(entities.decodeHTML(searchTerm))
+		const words = deburr(entities.decodeHTML(request.params.searchTerm ?? ''))
 			.split(/\b/)
 			.map(word => word.trim()).filter(Boolean)
 		const regex = new RegExp(`(?<match>${words.join('|')})`, 'gim')
@@ -90,17 +79,18 @@ export const searchArticles = (
 				// @ts-expect-error - @types/mongoose sucks
 				{ $match: {
 					$or: [{ nameHits: { $gt: 0 } }, { textHits: { $gt: 0 } }],
-					...(!allowPrivate ? { secret: false } : {}),
+					...(!userIsOwner ? { secret: false } : {}),
 				} },
 				// @ts-expect-error - @types/mongoose sucks
 				{ $sort: { nameHits: -1, textHits: -1 } },
 				// @ts-expect-error - @types/mongoose sucks
-				{ $limit: bound(parseInt(limit, 10), { min: 0 }) },
+				{ $limit: bound(parseInt(request.query.limit, 10), { min: 0 }) },
 			],
 			castAsModel: false,
 		})
 
 		const results = articles.map<IArticleSearchResult>(
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			({ nameMatches, plainText, textMatches, ...article }) => ({
 				...article,
 				preview: textMatches.map(({ idx, match }: ITextMatch) => [
@@ -116,8 +106,7 @@ export const searchArticles = (
 )
 export const searchCampaigns = (
 	async (request: ISearchRequest, response: Response): Promise<Response> => {
-		const { limit = 10, searchTerm = '' } = request.params
-		const $regex = searchTerm ? new RegExp(deburr(searchTerm), 'i') : /./
+		const $regex = new RegExp(deburr(request.params.searchTerm ?? '.'), 'i')
 		const matches = await Campaign.find(
 			{
 				$and: [
@@ -136,30 +125,27 @@ export const searchCampaigns = (
 				],
 			},
 			{ subdomain: 1, title: 1 },
-		).sort('title').limit(bound(limit, { min: 1 }))
+		).sort('title').limit(bound(parseInt(request.query.limit ?? 10, 10), { min: 1 }))
 
 		return response.status(200).json(matches)
 	}
 )
 export const searchFonts = (
 	async (request: ISearchRequest, response: Response): Promise<Response> => {
-		const { searchTerm = '' } = request.params
-		const { limit = 10 } = request.query
-		const $regex = searchTerm ? new RegExp(searchTerm, 'i') : /./
+		const $regex = new RegExp(request.params.searchTerm ?? '.', 'i')
 		const matches = (await FONTS)
-			.filter(font => font.family.match($regex)).slice(0, limit)
+			.filter(font => font.family.match($regex))
+			.slice(0, parseInt(request.query.limit ?? 10, 10))
 		return response.status(200).json(matches)
 	}
 )
 export const searchUsers = (
 	async (request: ISearchRequest, response: Response): Promise<Response> => {
-		const { searchTerm = '' } = request.params
-		const { limit = 10 } = request.query
-		const $regex = searchTerm ? new RegExp(`^${deburr(searchTerm)}`, 'i') : /./
+		const $regex = new RegExp(`^${deburr(request.params.searchTerm ?? '.')}`, 'i')
 		const matches = await UserSchema.find(
-			{ $or: [{ searchKeys: $regex }, { email: searchTerm }] },
+			{ $or: [{ searchKeys: $regex }, { email: request.params.searchTerm }] },
 			{ isAdmin: 1, lastLogin: 1, name: 1, username: 1 },
-		).sort('name').limit(bound(limit, { min: 1 }))
+		).sort('name').limit(bound(parseInt(request.query.limit ?? 10, 10), { min: 1 }))
 
 		return response.status(200).json(matches)
 	}
@@ -167,7 +153,7 @@ export const searchUsers = (
 
 export default express()
 	// @ts-expect-error - stupid TS typings
-	.get('/articles/:searchTerm', Campaign404, campaignPermissions, searchArticles)
+	.get('/articles/:searchTerm', searchArticles)
 	// @ts-expect-error - stupid TS typings
 	.get('/campaigns/:searchTerm', searchCampaigns)
 	// @ts-expect-error - stupid TS typings

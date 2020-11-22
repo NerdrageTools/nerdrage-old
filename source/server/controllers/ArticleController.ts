@@ -1,13 +1,13 @@
 import express, { IRequest, NextFunction, Response } from 'express'
-import { ArticleSchema, IArticleData, IArticleModel } from '~/server/models'
+import { Article, Articles, IArticleData } from '~/server/models'
 import { IArticle } from '~/server/schema/IArticle'
 import { ICampaign } from '~/server/schema/ICampaign'
 import { loadByCampaign } from '~/server/utilities/loadByCampaign'
 import { omit } from '~/utilities/omit'
 import { pluck } from '~/utilities/pluck'
 
-const loadArticle = async (slug: string, campaign: ICampaign): Promise<IArticleModel | null> => {
-	const articles = await loadByCampaign<IArticleModel>(
+const loadArticle = async (slug: string, campaign: ICampaign): Promise<IArticleData | null> => {
+	const articles = await loadByCampaign<IArticleData>(
 		'Article', campaign,
 		{ filter: { $or: [{ aliases: slug }, { slug }] } },
 	)
@@ -54,7 +54,7 @@ export const permissions = (...required: string[]) => (
 )
 
 interface IGetRequest extends IRequest {
-	document?: IArticleModel,
+	document?: Article,
 	params: { slug: string },
 	query: { template?: string },
 }
@@ -62,16 +62,16 @@ export const getArticle = (
 	async (request: IGetRequest, response: Response): Promise<void> => {
 		const templateSlug = request.query.template as string
 		const { campaign, isEditable, isOwner, slug } = request
-		let article: IArticle
+		let article: Article
 
 		if (!request.document) {
-			article = omit(await new ArticleSchema({ slug }).render(campaign), '_id') as IArticle
+			article = omit(await new Article({ slug }).render(campaign), '_id')
 			if (templateSlug) {
 				const template = await loadArticle(templateSlug, campaign)
 				Object.assign(article, pluck(template ? template.toJSON() : {}, 'html', 'tags'))
 			}
 		} else {
-			article = await request.document.render(campaign) as IArticle
+			article = await request.document.render(campaign)
 		}
 
 		response.status(200).json({
@@ -85,7 +85,7 @@ export const getArticle = (
 
 interface IUpsertRequest extends IRequest {
 	body: Partial<IArticle>,
-	document?: IArticleModel,
+	document?: Article,
 }
 export const upsertArticle = (
 	async (request: IUpsertRequest, response: Response): Promise<void> => {
@@ -106,11 +106,11 @@ export const upsertArticle = (
 		if (document?.campaign?._id?.equals!(campaign._id)) {
 			document.set(updates)
 		} else {
-			document = new ArticleSchema(updates)
+			document = new Article(updates)
 		}
 
 		const { _id } = await document.save()
-		const saved = await ArticleSchema.findOne({ _id })
+		const saved = await Articles.findOne({ _id })
 			.populate('campaign', 'subdomain title')
 			.populate('createdBy lastUpdatedBy', 'name username')
 			.exec()
@@ -120,7 +120,7 @@ export const upsertArticle = (
 )
 
 interface IDeleteRequest extends IRequest {
-	document?: IArticleModel,
+	document?: Article,
 }
 export const deleteArticle = (
 	async (request: IDeleteRequest, response: Response): Promise<void> => {

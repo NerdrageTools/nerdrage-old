@@ -1,35 +1,34 @@
 import React, { Component } from 'react'
 import { Application } from '~/contexts/Application'
+import { REGEX } from '~/utilities/CONSTANTS'
 
-/* eslint-disable max-len */
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const PASSWORD_REGEX = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
-const USERNAME_REGEX = /[a-zA-Z0-9_-]{4,}/
-/* eslint-enable max-len */
+interface State {
+	message: string,
+	valid: boolean,
+}
 
-export default class SignupPage extends Component {
+export default class SignupPage extends Component<never, State> {
 	static styles = import('./authPages.scss')
 	static contextType = Application
 
 	state = {
+		message: '',
 		valid: false,
 	}
 
-	email = React.createRef()
-	name = React.createRef()
-	password = React.createRef()
-	passwordConfirm = React.createRef()
-	username = React.createRef()
+	email = React.createRef<HTMLInputElement>()
+	name = React.createRef<HTMLInputElement>()
+	password = React.createRef<HTMLInputElement>()
+	passwordConfirm = React.createRef<HTMLInputElement>()
+	username = React.createRef<HTMLInputElement>()
 
-	componentDidMount = () => {
-		this.name.current.focus()
-	}
+	componentDidMount = (): void => { this.name.current?.focus() }
 
-	handleEmail = ({ target }) => {
+	handleChangeEmail = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
 		// eslint-disable-next-line no-param-reassign
 		target.value = target.value.toLowerCase()
 
-		if (target.value.match(EMAIL_REGEX)) {
+		if (target.value.match(REGEX.EMAIL_ADDRESS)) {
 			target.classList.remove('invalid')
 		} else {
 			target.classList.add('invalid')
@@ -37,9 +36,9 @@ export default class SignupPage extends Component {
 
 		this.handleValidated()
 	}
-	handlePassword = ({ target }) => {
+	handleChangePassword = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
 		const { value } = target
-		if (value.match(PASSWORD_REGEX)) {
+		if (value.match(REGEX.PASSWORD)) {
 			target.classList.remove('invalid')
 		} else {
 			target.classList.add('invalid')
@@ -47,8 +46,8 @@ export default class SignupPage extends Component {
 
 		this.handleValidated()
 	}
-	handlePasswordConfirm = ({ target }) => {
-		if (target.value === this.password.current.value) {
+	handleChangePasswordConfirm = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
+		if (target.value === this.password.current!.value) {
 			target.classList.remove('invalid')
 		} else {
 			target.classList.add('invalid')
@@ -56,13 +55,13 @@ export default class SignupPage extends Component {
 
 		this.handleValidated()
 	}
-	handleUsername = ({ target }) => {
+	handleChangeUsername = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
 		// eslint-disable-next-line no-param-reassign
 		target.value = target.value
 			.toLowerCase()
 			.replace(/[^a-z0-9-_]+/g, '')
 
-		if (target.value.match(USERNAME_REGEX)) {
+		if (target.value.match(REGEX.USERNAME)) {
 			target.classList.remove('invalid')
 		} else {
 			target.classList.add('invalid')
@@ -70,20 +69,7 @@ export default class SignupPage extends Component {
 
 		this.handleValidated()
 	}
-	handleValidated = () => {
-		let valid = true;
-
-		['email', 'password', 'passwordConfirm', 'username'].forEach(key => {
-			const el = this[key].current
-			if (!el.value || el.matches(':invalid, .invalid')) {
-				valid = false
-			}
-		})
-
-		this.setState({ valid })
-	}
-
-	handleKeyPress = event => {
+	handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>): void => {
 		switch (event.key) {
 			case 'Enter':
 				this.handleSubmit(); break
@@ -92,13 +78,13 @@ export default class SignupPage extends Component {
 			default:
 		}
 	}
-	handleSubmit = async () => {
+	handleSubmit = async (): Promise<void> => {
 		if (!this.state.valid) { return }
 
-		const email = this.email.current.value
-		const name = this.name.current.value
-		const password = this.password.current.value
-		const username = this.username.current.value
+		const email = this.email.current?.value
+		const name = this.name.current?.value
+		const password = this.password.current?.value
+		const username = this.username.current?.value
 
 		const response = await fetch('/api/user', {
 			body: JSON.stringify({
@@ -115,10 +101,21 @@ export default class SignupPage extends Component {
 			this.setState({ message: '', ...json })
 		}
 	}
+	handleValidated = (): void => {
+		let valid = true;
+
+		[this.email, this.password, this.passwordConfirm, this.username].forEach(ref => {
+			if (!ref.current!.value || ref.current!.matches(':invalid, .invalid')) {
+				valid = false
+			}
+		})
+
+		this.setState({ valid })
+	}
 
 	/* eslint-disable no-useless-escape */
-	render = () => (
-		<div className="signup page">
+	render = (): JSX.Element => (
+		<div className="sign-up page">
 			<div className="container">
 				<h3>Sign Up</h3>
 				<input
@@ -131,7 +128,7 @@ export default class SignupPage extends Component {
 
 				<input
 					ref={this.username}
-					onChange={this.handleUsername}
+					onChange={this.handleChangeUsername}
 					onKeyDown={this.handleKeyPress}
 					pattern="[a-zA-Z0-9_-]{4,}"
 					placeholder="Username"
@@ -143,7 +140,7 @@ export default class SignupPage extends Component {
 
 				<input
 					ref={this.email}
-					onChange={this.handleEmail}
+					onChange={this.handleChangeEmail}
 					onKeyDown={this.handleKeyPress}
 					placeholder="Email Address"
 					type="email"
@@ -154,7 +151,7 @@ export default class SignupPage extends Component {
 
 				<input
 					ref={this.password}
-					onChange={this.handlePassword}
+					onChange={this.handleChangePassword}
 					onKeyDown={this.handleKeyPress}
 					placeholder="Password"
 					type="password"
@@ -164,7 +161,7 @@ export default class SignupPage extends Component {
 				</span>
 				<input
 					ref={this.passwordConfirm}
-					onChange={this.handlePasswordConfirm}
+					onChange={this.handleChangePasswordConfirm}
 					onKeyDown={this.handleKeyPress}
 					placeholder="Confirm Password"
 					type="password"
@@ -181,7 +178,7 @@ export default class SignupPage extends Component {
 					)}
 				</div>
 
-				<center className="message-field">{this.state.message}</center>
+				<div className="center message-field">{this.state.message}</div>
 			</div>
 		</div>
 	)

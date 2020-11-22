@@ -1,7 +1,7 @@
 import { IRequest, RequestHandler } from 'express'
 import { loadCampaign } from '~/server/controllers/CampaignController'
-import { clearCookie, getUser, readCookie, setCookie } from '~/server/controllers/UserController'
-import { IUser } from '~/server/schema/IUser'
+import { clearCookie, readCookie, setCookie } from '~/server/controllers/UserController'
+import { Users } from '~/server/models/User'
 import { ICampaign } from '../schema/ICampaign'
 
 export const ContextLoader: RequestHandler = (
@@ -11,18 +11,18 @@ export const ContextLoader: RequestHandler = (
 		request.subdomain = subdomain
 
 		const session = readCookie(request)
-		if (session && session.username) {
-			const user = await getUser(session.username, true)
-			if (!user.anonymous) {
-				setCookie(response, user.username, request.domainName)
-				request.user = user
-			} else {
-				clearCookie(request, response)
-				request.user = { anonymous: true } as IUser
-			}
+		const username = session?.username
+		const user = await (username ? Users.findOne({ username }) : Promise.resolve(null))
+
+		if (user) {
+			request.campaign = await loadCampaign(subdomain, await user.toProfile()) as ICampaign
+			request.user = await user.toProfile()
+			setCookie(request, response)
+		} else {
+			clearCookie(request, response)
+			request.campaign = await loadCampaign(subdomain, null) as ICampaign
+			request.user = null
 		}
-		request.user = request.user ?? { anonymous: true }
-		request.campaign = await loadCampaign(subdomain, request.user) as ICampaign
 
 		return next()
 	}

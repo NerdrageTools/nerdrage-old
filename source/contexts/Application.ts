@@ -21,30 +21,35 @@ const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
 	title: 'New Campaign',
 }
 
+export enum LayoutSize {
+	Small = 'small',
+	Medium = 'medium',
+	Large = 'large'
+}
 export interface IApplicationContext {
 	campaign: ICampaign,
-	logOff: typeof noop,
+	handleLogOff: typeof noop,
 	rootUrl: string,
 	router?: Router,
 	setCampaign: typeof noop,
-	setSize: typeof noop,
-	setUser: typeof noop,
-	size: 'small' | 'medium' | 'large',
+	setSize: (size: LayoutSize) => void,
+	setUser: (user: Partial<IUserProfile>) => void,
+	size: LayoutSize,
 	subdomain: string,
 	theme: ITheme,
-	updateCampaign: (update: Partial<ICampaign>) => void,
+	updateCampaign: (update?: Partial<ICampaign>) => void,
 	updateUser: (update: Partial<IUser>) => void,
 	user: IUserProfile | null,
 }
 
 export const Application = React.createContext<IApplicationContext>({
 	campaign: CAMPAIGN_DEFAULTS as ICampaign,
-	logOff: noop,
+	handleLogOff: noop,
 	rootUrl: '',
 	setCampaign: noop,
 	setSize: noop,
 	setUser: noop,
-	size: 'large',
+	size: LayoutSize.Large,
 	subdomain: '',
 	theme: CAMPAIGN_DEFAULTS.theme as ITheme,
 	updateCampaign: noop,

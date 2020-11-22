@@ -157,5 +157,10 @@ module.exports = {
 		rules: {
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
 		},
+	}, {
+		files: ['source/server/**/*.ts'],
+		rules: {
+			'no-console': 'off',
+		},
 	}],
 }

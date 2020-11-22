@@ -30,6 +30,7 @@ export const permissions = (...required) => async (request, response, next) => {
 	}
 	if (map && map.secret && !isOwner) {
 		return response.status(401).json({
+			// eslint-disable-next-line max-len
 			message: `This content is secret! Only owners of the ${campaign.subdomain} campaign can see or edit it.`,
 		})
 	}

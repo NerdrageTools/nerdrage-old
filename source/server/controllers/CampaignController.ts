@@ -3,14 +3,16 @@ import { defaultTheme } from '~/data/Theme'
 import { Campaign404 } from '~/server/errors/Campaign404'
 import { ContextLoader } from '~/server/middleware/ContextLoader'
 import { NoAnonymous } from '~/server/middleware/NoAnonymous'
-import { Campaign, ICampaignModel } from '~/server/models'
+import { Campaign, ICampaignModel, IUserProfile } from '~/server/models'
 import { ICampaign } from '~/server/schema/ICampaign'
-import { IUser } from '~/server/schema/IUser'
+import { noop } from '~/utilities/noop'
 
 const controller = express()
 
-/* eslint-disable no-console */
-export async function loadCampaign(subdomain: string, user: IUser): Promise<ICampaign | null> {
+export async function loadCampaign(
+	subdomain: string,
+	user: IUserProfile | null,
+): Promise<ICampaign | null> {
 	if (!subdomain) return null
 
 	try {
@@ -21,14 +23,16 @@ export async function loadCampaign(subdomain: string, user: IUser): Promise<ICam
 
 		if (!campaign) return null
 
-		const json: ICampaign = Object.assign(campaign.toJSON(), {
-			isEditor: Boolean(user.isAdmin || campaign.isEditableBy(user._id)),
-			isOwner: Boolean(user.isAdmin || campaign.isOwnedBy(user._id)),
-			isParticipant: Boolean(user.isAdmin || campaign.isParticipant(user._id)),
-			isViewer: Boolean(user.isAdmin || campaign.isVisibleTo(user._id)),
-		})
-
-		return json
+		return Object.assign(campaign.toJSON(),
+			!user
+				? { isEditor: false, isOwner: false, isParticipant: false, isViewer: false }
+				: {
+					isEditor: Boolean(user.isAdmin || campaign.isEditableBy(user._id!)),
+					isOwner: Boolean(user.isAdmin || campaign.isOwnedBy(user._id!)),
+					isParticipant: Boolean(user.isAdmin || campaign.isMember(user._id!)),
+					isViewer: Boolean(user.isAdmin || campaign.isVisibleTo(user._id!)),
+				},
+		)
 	} catch (error) {
 		console.error('CampaignController#getCampaign', error)
 		return null
@@ -44,7 +48,7 @@ export const getCampaign = async (request: IGetRequest, response: Response): Pro
 	const campaign = await loadCampaign(subdomain, request.user)
 
 	if (!campaign || !campaign._id) {
-		Campaign404({ campaign, subdomain }, response)
+		Campaign404({ campaign, subdomain }, response, noop)
 	} else {
 		response.status(200).json(campaign)
 	}
@@ -150,7 +154,6 @@ const updateCampaign = async (request: IUpsertRequest, response: Response) => {
 		}
 	}
 }
-/* eslint-enable no-console */
 
 // @ts-expect-error - stupid TS typings
 controller.get('/:subdomain?', ContextLoader, getCampaign)

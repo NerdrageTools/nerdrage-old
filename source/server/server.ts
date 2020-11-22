@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import path from 'path'
 import bodyParser from 'body-parser'
 import compression from 'compression'
@@ -91,4 +90,3 @@ app.prepare().then(async () => {
 	console.error(exception)
 	process.exit(1)
 })
-/* eslint-enable no-console */

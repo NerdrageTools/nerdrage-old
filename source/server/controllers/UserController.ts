@@ -1,55 +1,48 @@
-import express from 'express'
-import NoAnonymous from '~/server/middleware/NoAnonymous'
-import { Article, Campaign, Sheet, User } from '~/server/models'
+import express, { IRequest, Response } from 'express'
+import { NoAnonymous } from '~/server/middleware/NoAnonymous'
+import { IUserData, IUserProfile, Users } from '~/server/models'
+import { IArticleLink } from '~/server/schema/IArticle'
+import { IUser } from '~/server/schema/IUser'
 import { decrypt, encrypt } from '~/utilities/encryption'
-import { omit } from '~/utilities/omit'
 import { pluck } from '~/utilities/pluck'
 
 const controller = express()
 
-const ANONYMOUS = { anonymous: true }
-
-/* eslint-disable no-console */
-export function invalidAuthentication(response) {
-	response.status(401).json({ message: 'Username/password combination is invalid.' })
+interface ISession {
+	timestamp: number,
+	username: string,
 }
 
-export function readCookie(request) {
+export function readCookie(request: IRequest): ISession | null {
 	if (!request || !request.cookies || !request.cookies.session) {
 		return null
 	}
 	try {
-		return JSON.parse(decrypt(request.cookies.session))
+		return JSON.parse(decrypt(request.cookies.session)) as ISession
 	} catch {
 		return null
 	}
 }
-
-export function setCookie(response, username, domain) {
-	response.cookie(
-		'session',
-		encrypt(JSON.stringify({
-			timestamp: (new Date()).getMilliseconds(),
-			username,
-		})),
-		{ domain, httpOnly: true },
-	)
+export function setCookie(request: IRequest, response: Response): void {
+	const timestamp = (new Date()).getMilliseconds()
+	const cookie = encrypt(JSON.stringify({ timestamp, username: request.user?.username }))
+	response.cookie('session', cookie, { domain: request.domainName, httpOnly: true })
+}
+export function clearCookie(request: IRequest, response: Response): void {
+	response.cookie('session', '', { domain: request.domainName, httpOnly: true, maxAge: 0 })
 }
 
-export function clearCookie(request, response) {
-	response.cookie('session', '', { domain: request.domainName, maxAge: 0 })
-}
-
-export async function createUser(request, response) {
+export async function createUser(request: IRequest, response: Response): Promise<Response> {
 	try {
-		const user = new User({
-			...request.body,
+		const user = new UserSchema({
+			...request.body as Partial<IUser>,
 			isAdmin: false,
 			lastLogin: Date.now(),
 		})
 		await user.save()
 
-		setCookie(response, user.username, request.domainName)
+		request.user = await user.toProfile()
+		setCookie(request, response)
 		return response.status(200).json(user)
 	} catch (error) {
 		switch (error.code) {
@@ -61,73 +54,21 @@ export async function createUser(request, response) {
 		}
 	}
 }
-export async function getUserFavorites(user) {
-	const subdomains = [null]
-	const slugs = []
-	const map = user.favorites.map(favorite => {
-		const [subdomain, slug] = favorite.split(':')
-		if (!subdomain || !slug) return null
-
-		slugs.push(slug)
-		subdomains.push(subdomain)
-
-		return { slug, subdomain }
-	}).filter(Boolean)
-
-	const campaigns = await Campaign.find({ subdomain: subdomains }, { subdomain: 1, title: 1 })
-	const articles = await Article.find({ slug: slugs }, { campaign: 1, slug: 1, title: 1 })
-
-	return map.map(favorite => {
-		const campaign = campaigns.find(c => c.subdomain === favorite.subdomain)
-      || { _id: null, subdomain: 'www', title: 'Nerdrage' }
-		const article = articles.find(a => a.slug === favorite.slug && a.campaign === campaign._id)
-      || articles.find(a => a.slug === favorite.slug)
-      || {}
-
-		return {
-			campaign,
-			slug: favorite.slug,
-			title: article.title || favorite.slug,
-		}
-	})
+export async function getUserFavorites(user: IUserData): Promise<IArticleLink[]> {
+	const profile = await (await Users.findOne({ _id: user._id }))?.toProfile(true)
+	return profile?.favorites ?? []
 }
-export async function getUser(username, populated = false) {
-	try {
-		const user = await User.findOne({ username })
-		if (!user) return ANONYMOUS
-
-		const json = user.toJSON()
-		if (!populated) {
-			return pluck(json,
-				'_id', 'campaigns', 'createdAt', 'isAdmin',
-				'lastLogin', 'name', 'username',
-			)
-		}
-
-		json.sheets = await Sheet.find({ ownedBy: user._id }, { slug: 1, title: 1 })
-			.sort({ title: 1 })
-			.populate('campaign', 'subdomain title').exec()
-
-		json.campaigns = await Campaign.find({
-			$or: [
-				{ editors: json._id },
-				{ owners: json._id },
-				{ players: json._id },
-			],
-		}, { subdomain: 1, title: 1 })
-
-		json.favorites = await getUserFavorites(user) || []
-		return json
-	} catch (error) {
-		console.error('UserController#getUser', error.message)
-		return ANONYMOUS
-	}
+export async function getUser(username: string, populated: boolean = false)
+	: Promise<IUserProfile | null> {
+	return (await Users.findOne({ username }))?.toProfile(populated) ?? null
 }
-export async function getUserRequest(request, response) {
-	const { params: { username }, user: currentUser = {} } = request
-	if (username && username !== currentUser.username) {
-		const populated = Boolean(currentUser.isAdmin || currentUser.username === username)
-		const user = await getUser(username, populated)
+export async function getUserRequest(request: IRequest, response: Response): Promise<Response> {
+	const username = request.params?.username
+	const currentUser = request.user
+
+	if (username && username !== currentUser?.username) {
+		// const populated = Boolean(currentUser.isAdmin || currentUser.username === username)
+		const user = await Users.findOne({ username }) // await getUser(username, populated)
 
 		if (!user) {
 			return response.status(404).json({
@@ -135,7 +76,7 @@ export async function getUserRequest(request, response) {
 			})
 		}
 
-		return response.status(200).json(user)
+		return response.status(200).json(await user.toProfile())
 	}
 
 	if (!currentUser || !currentUser._id) {
@@ -146,52 +87,52 @@ export async function getUserRequest(request, response) {
 
 	return response.status(200).json(currentUser)
 }
-export async function getCurrentUserFavorites(request, response) {
-	return response.status(200).json(await getUserFavorites(request.user))
+export async function getCurrentUserFavorites(request: IRequest, response: Response)
+	: Promise<Response> {
+	return response.status(200).json(request.user?.favorites)
 }
-export async function logIn(request, response) {
+export async function logIn(request: IRequest, response: Response): Promise<Response> {
 	const { password = '' } = request.body
 	const username = (request.body.username || '').toLowerCase().trim()
 	const query = { $or: [{ username }, { email: username }] }
 
 	try {
-		const user = await User.findOne(query, { password: 1, username: 1 })
-		if (!user) return invalidAuthentication(response)
+		const user = await Users.findOne(query, { password: 1, username: 1 })
+		const isMatch = await user?.comparePassword(password)
 
-		const isMatch = await user.comparePassword(password)
-		if (isMatch) {
-			await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
-			const loadedUser = await getUser(user.username, true)
-			setCookie(response, loadedUser.username, request.domainName)
-			return response.status(200).json(loadedUser)
+		if (!user || !isMatch) {
+			return response.status(401).json({ message: 'Username/password combination is invalid.' })
 		}
 
-		return invalidAuthentication(response)
+		await user.set('lastLogin', Date.now()).save()
+		request.user = await user.toProfile()
+		setCookie(request, response)
+		return response.status(200).json(await user.toProfile())
 	} catch (error) {
 		console.error('UserController#logIn error:', error)
 		return response.status(500).json({ message: 'Unknown error.' })
 	}
 }
-export async function logOff(request, response) {
+export async function logOff(request: IRequest, response: Response): Promise<Response> {
 	clearCookie(request, response)
 	request.user = null
-	return response.status(200).json({ anonymous: true })
+	return response.status(200).json(null)
 }
-export async function updateCurrentUser(request, response) {
-	const { user } = request
-	try {
-		const updates = omit(
-			request.body,
-			'_id', 'createdAt', 'favorites', 'lastLogin', 'updatedAt', 'version',
-		)
-		if (!user.isAdmin) {
-			delete updates.isAdmin
-		}
-		Object.assign(user, updates)
+export async function updateCurrentUser(request: IRequest, response: Response): Promise<Response> {
+	const currentUser = await Users.findOne({ _id: request?.user?._id })
+	if (!currentUser) {
+		return response.status(404).json({ message: 'You must be logged in to edit your profile.' })
+	}
 
-		const updated = await user.save()
-		Object.assign(request.user, updated.toProfile())
-		return response.status(200).json(updated.toProfile())
+	try {
+		const updates = pluck(request.body, 'email', 'isAdmin', 'name', 'password', 'username')
+		if (!currentUser.isAdmin) { delete updates.isAdmin }
+
+		Object.assign(currentUser, updates)
+		await currentUser.save()
+		const profile = await currentUser.toProfile()
+		Object.assign(request.user, profile)
+		return response.status(200).json(profile)
 	} catch (error) {
 		if (error.code === 11000) {
 			return response.status(409).json({ message: 'Username or email is already in use.' })
@@ -207,44 +148,40 @@ export async function updateCurrentUser(request, response) {
 export async function updateCurrentUserFavorites(request, response) {
 	const { params: { slug }, subdomain, user: { username } } = request
 	const favorite = `${subdomain}:${slug}`
-	const { favorites: rawFavorites } = await User.findOne({ username }, { favorites: 1 })
+	const { favorites: rawFavorites } = await Users.findOne({ username }, { favorites: 1 })
 	const verb = rawFavorites.includes(favorite) ? '$pull' : '$addToSet'
 
-	await User.updateOne({ username }, { [verb]: { favorites: favorite } })
+	await Users.updateOne({ username }, { [verb]: { favorites: favorite } })
 	request.user = await getUser(username, true)
 	return getUserRequest(request, response)
 }
-export async function updateUser(request, response) {
+export async function updateUser(request: IRequest, response: Response): Promise<Response | void> {
 	try {
-		if (request.user.username === request.params.username) {
-			return response.redirect(307, '/api/user/')
+		const username: string = request.params?.username
+		const currentUser = request.user
+		if (currentUser?.username === username) {
+			return response.redirect(307, '/api/user')
 		}
 
-		const currentUser = request.user
-		if (!currentUser.isAdmin) {
+		if (!currentUser?.isAdmin) {
 			return response.status(401).json({
 				message: 'You must be an administrator to edit another user.',
 			})
 		}
 
-		const targetUser = await User.findOne({ username: request.params.username })
+		const targetUser = await Users.findOne({ username })
 		if (!targetUser) {
-			return response.status(404).json({
-				message: `No such user: '${request.params.username}'.`,
-			})
+			return response.status(404).json({ message: `No such user: '${username}'.` })
 		}
 
 		Object.assign(targetUser, request.body)
 
-		const updated = await targetUser.save()
-		return response.status(200).json(updated)
+		await targetUser.save()
+		return response.status(200).json(await targetUser.toProfile())
 	} catch (error) {
-		return response.status(500).json({
-			message: 'Unknown error. Please try again.',
-		})
+		return response.status(500).json({ message: 'Unknown error. Please try again.' })
 	}
 }
-/* eslint-enable no-console */
 
 controller.post('/auth/login', logIn)
 controller.use('/auth/logoff', logOff)

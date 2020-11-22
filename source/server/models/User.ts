@@ -28,10 +28,11 @@ export interface IUserLink {
 	username: string,
 }
 
-export interface IUserProfile extends Omit<IUserData, 'favorites' | 'password'> {
-	campaigns: ICampaignLink[],
-	favorites: IArticleLink[],
-	sheets: ISheetLink[],
+export interface IUserProfile extends Omit<IUserData, 'email' | 'favorites' | 'password'> {
+	campaigns?: ICampaignLink[],
+	email?: string,
+	favorites?: IArticleLink[],
+	sheets?: ISheetLink[],
 }
 
 type IUserSearchResult = Pick<IUserProfile, 'isAdmin' | 'lastLogin' | 'name' | 'username'>
@@ -53,7 +54,7 @@ type IUserSearchResult = Pick<IUserProfile, 'isAdmin' | 'lastLogin' | 'name' | '
 		this.password = hash
 	}
 })
-class User implements IUserData {
+export class User implements IUserData {
 	_id?: string
 	createdAt?: Date
 	updatedAt?: Date
@@ -67,7 +68,7 @@ class User implements IUserData {
 	})
 	public email: string = ''
 
-	@prop({ type: [String] })
+	@prop({ default: [], type: [String] })
 	public favorites?: string[] = []
 
 	@prop({ default: false })
@@ -84,8 +85,6 @@ class User implements IUserData {
 
 	@prop({ match: [REGEX.USERNAME, MESSAGES.INVALID_USERNAME], trim: true, unique: true })
 	public username: string = ''
-
-	get anonymous(): boolean { return Boolean(this._id) }
 
 	comparePassword(password: string): boolean {
 		return bcrypt.compareSync(password, this.password)
@@ -134,18 +133,24 @@ class User implements IUserData {
 			title: sheet.title!,
 		}))
 	}
-	async toProfile(): Promise<IUserProfile> {
-		return {
+	async toProfile(fullView: boolean = false): Promise<IUserProfile> {
+		const profile = {
 			_id: this._id,
-			campaigns: await this.campaignLinks(),
-			email: this.email,
-			favorites: await this.favoriteLinks(),
 			isAdmin: this.isAdmin ?? false,
 			lastLogin: this.lastLogin ?? null,
 			name: this.name,
-			sheets: await this.sheetLinks(),
 			username: this.username,
 		}
+		if (fullView) {
+			Object.assign(profile, {
+				campaigns: await this.campaignLinks(),
+				email: this.email,
+				favorites: await this.favoriteLinks(),
+				sheets: await this.sheetLinks(),
+			})
+		}
+
+		return profile
 	}
 }
 

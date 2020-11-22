@@ -1,11 +1,12 @@
-import { NextFunction, RequestHandler, Response } from 'express'
+import { NextFunction, Response } from 'express'
+import { ICampaign } from '../schema/ICampaign'
 
 interface IRequest {
-	campaign?: any,
+	campaign?: ICampaign | null,
 	subdomain: string,
 }
 
-export const Campaign404: RequestHandler = ((
+export const Campaign404 = ((
 	request: IRequest,
 	response: Response,
 	next?: NextFunction,
@@ -17,4 +18,4 @@ export const Campaign404: RequestHandler = ((
 			message: `Campaign '${request.subdomain}' does not exist.`,
 		})
 	}
-}) as unknown as RequestHandler
+})

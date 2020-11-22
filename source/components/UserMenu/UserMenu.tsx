@@ -16,7 +16,7 @@ export class UserMenu extends Component {
 		return <>
 			<Link query={{ redirectTo }} to="/login">Log In</Link>
 			<div className="divider" />
-			<Link to="/signup">Sign Up</Link>
+			<Link to="/sign-up">Sign Up</Link>
 		</>
 	}
 
@@ -31,7 +31,7 @@ export class UserMenu extends Component {
 			<div className="divider" />
 			<Menu>
 				{this.context.campaign && <CreateMenu />}
-				<Menu.MenuItem icon={<LogOutIcon />} onClick={this.context.logOff}>
+				<Menu.MenuItem icon={<LogOutIcon />} onClick={this.context.handleLogOff}>
 					Log Out
 				</Menu.MenuItem>
 			</Menu>
