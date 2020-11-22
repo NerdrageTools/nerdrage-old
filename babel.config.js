@@ -15,6 +15,7 @@ module.exports = {
 			extensions: ['.ts', '.tsx', '.js', '.scss'],
 		}],
 		['@babel/plugin-proposal-decorators', { legacy: true }],
+		'babel-plugin-transform-typescript-metadata',
 		'@babel/plugin-proposal-class-properties',
 		'@babel/plugin-syntax-dynamic-import',
 		'@babel/plugin-syntax-object-rest-spread',

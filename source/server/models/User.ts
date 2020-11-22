@@ -1,103 +1,171 @@
+import {
+	getModelForClass, index, modelOptions, pre, prop, ReturnModelType, Severity,
+} from '@typegoose/typegoose'
 import bcrypt from 'bcrypt'
-import mongoose from 'mongoose'
-import { computeSearchKeys } from '~/utilities/computeSearchKeys'
+import { REGEX, MESSAGES } from '~/utilities/CONSTANTS'
+import { IArticleLink } from '../schema/IArticle'
+import { ICampaignLink } from '../schema/ICampaign'
+import { Campaign } from './Campaign'
+import { loadByCampaign } from '../utilities/loadByCampaign'
+import { ISheetLink, Sheet } from './Sheet'
 
-const SALT_WORK_FACTOR = 10
-
-interface IUserData {
+export interface IUserData {
+	_id?: string,
+	createdAt?: Date,
 	email: string,
-	favorites: string[],
-	isAdmin: boolean,
-	lastLogin: Date,
+	favorites?: string[],
+	isAdmin?: boolean,
+	lastLogin?: Date | null,
 	name: string,
 	password: string,
-	searchKeys: string[],
+	updatedAt?: Date,
 	username: string,
 }
 
-export interface IUserModel extends mongoose.Document, IUserData {
-	comparePassword: (password: string) => Promise<boolean>,
-	toProfile: () => IUserData,
+export interface IUserLink {
+	_id: string,
+	name: string,
+	username: string,
 }
 
-const Schema = new mongoose.Schema<IUserModel>({
-	email: {
+export interface IUserProfile extends Omit<IUserData, 'favorites' | 'password'> {
+	campaigns: ICampaignLink[],
+	favorites: IArticleLink[],
+	sheets: ISheetLink[],
+}
+
+type IUserSearchResult = Pick<IUserProfile, 'isAdmin' | 'lastLogin' | 'name' | 'username'>
+
+@index({ email: 'text', name: 'text', username: 'text' })
+@modelOptions({
+	options: { allowMixed: Severity.ALLOW },
+	schemaOptions: { id: false, timestamps: true, versionKey: 'version' },
+})
+@pre<User>('save', function () {
+	this.email = this.email.toLowerCase().trim()
+	this.name = this.name.trim()
+	this.username = this.username.toLowerCase().trim()
+	this.unmarkModified('createdAt')
+
+	if (this.isModified('password')) {
+		const salt = bcrypt.genSaltSync(10)
+		const hash = bcrypt.hashSync(this.password, salt)
+		this.password = hash
+	}
+})
+class User implements IUserData {
+	_id?: string
+	createdAt?: Date
+	updatedAt?: Date
+	version?: number
+
+	@prop({
+		match: [REGEX.EMAIL_ADDRESS, MESSAGES.INVALID_EMAIL],
 		required: true,
 		trim: true,
-		type: String,
 		unique: true,
-		validate: [
-			// eslint-disable-next-line max-len
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-			'Invalid email address',
-		],
-	},
-	favorites: [String],
-	isAdmin: { default: false, type: Boolean },
-	lastLogin: Date,
-	name: { trim: true, type: String },
-	password: {
-		select: false,
-		type: String,
-		validate: [
-			/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-			// eslint-disable-next-line max-len
-			'Password must be at least 8 characters long, with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.',
-		],
-	},
-	searchKeys: { select: false, type: [String] },
-	username: {
-		match: [/^[a-z0-9_-]{4,}$/, 'Invalid Username: only lowercase letters/numbers, _ and -'],
-		required: true,
-		trim: true,
-		type: String,
-		unique: true,
-	},
-}, {
-	id: false,
-	timestamps: true,
-	versionKey: 'version',
-})
-
-Schema.index({ username: 'text' })
-Schema.pre<IUserModel>('save', function (next) {
-	if (this.email) this.email = this.email.toLowerCase().trim()
-	if (this.username) this.username = this.username.toLowerCase().trim()
-
-	const searchable = `${this.username} ${this.name}`
-	this.searchKeys = computeSearchKeys(searchable)
-
-	if (!this.isModified('password')) { next(); return }
-	bcrypt.genSalt(SALT_WORK_FACTOR, (saltError, salt) => {
-		if (saltError) { next(saltError); return }
-
-		bcrypt.hash(this.password, salt, (hashError, hash) => {
-			if (hashError) { next(hashError); return }
-
-			this.password = hash
-			next()
-		})
 	})
-})
+	public email: string = ''
 
-Schema.methods.comparePassword = function (password) {
-	return new Promise((resolve, reject) => {
-		bcrypt.compare(password, this.password, (error, isMatch) => {
-			if (error) reject(error)
-			resolve(isMatch)
+	@prop({ type: [String] })
+	public favorites?: string[] = []
+
+	@prop({ default: false })
+	public isAdmin?: boolean = false
+
+	@prop({ default: null })
+	public lastLogin?: Date | null = null
+
+	@prop({ trim: true })
+	public name: string = ''
+
+	@prop({ match: [REGEX.PASSWORD, MESSAGES.INVALID_PASSWORD], select: false })
+	public password: string = ''
+
+	@prop({ match: [REGEX.USERNAME, MESSAGES.INVALID_USERNAME], trim: true, unique: true })
+	public username: string = ''
+
+	get anonymous(): boolean { return Boolean(this._id) }
+
+	comparePassword(password: string): boolean {
+		return bcrypt.compareSync(password, this.password)
+	}
+
+	async campaignLinks(): Promise<ICampaignLink[]> {
+		return Campaign.find(
+			// @ts-expect-error - incomplete typings on .find()
+			{ $or: [{ editors: this._id }, { owners: this._id }, { players: this._id }] },
+			{ _id: 1, subdomain: 1, title: 1 },
+		)
+	}
+	async favoriteLinks(): Promise<IArticleLink[]> {
+		const byCampaign = new Map<string, Set<string>>()
+		this.favorites?.forEach(favorite => {
+			const [subdomain, slug] = favorite.split(':')
+			const slugs = byCampaign.get(subdomain) ?? new Set<string>()
+			slugs.add(slug)
+			byCampaign.set(subdomain, slugs)
 		})
-	})
-}
-Schema.methods.toProfile = function toProfile(): IUserData {
-	return {
-		...Object.keys(this.toJSON() as IUserData).reduce((all, key) => {
-			if (key !== 'password') {
-				return { ...all, [key]: this[key as keyof IUserData] }
-			}
-			return all
-		}, {}),
-		username: this.username,
-	} as IUserData
+
+		const byCampaignFavorites = await Promise.all(
+			Array.from(byCampaign.entries())
+				.map(async ([subdomain, slugs]) => {
+					const campaign = await Campaign.findOne({ subdomain }, { _id: 1, sources: 1 })
+					const articles = await loadByCampaign<IArticleLink>('Article', campaign, {
+						aggregation: [{ $project: { slug: 1, title: 1 } }],
+						filter: { $or: [{ slug: { $in: [...slugs] } }, { aliases: { $in: [...slugs] } }] },
+					})
+					return articles.map(article => ({
+						slug: article.slug,
+						subdomain,
+						title: article.title,
+					}))
+				}),
+		)
+		return byCampaignFavorites.flat() as IArticleLink[]
+	}
+	async sheetLinks(): Promise<ISheetLink[]> {
+		const sheets = await Sheet.find({ ownedBy: this._id }, { slug: 1, title: 1 })
+			.populate('campaign', 'subdomain')
+			.exec()
+		return sheets.map(sheet => ({
+			slug: sheet.slug,
+			subdomain: sheet.campaign!.subdomain,
+			title: sheet.title!,
+		}))
+	}
+	async toProfile(): Promise<IUserProfile> {
+		return {
+			_id: this._id,
+			campaigns: await this.campaignLinks(),
+			email: this.email,
+			favorites: await this.favoriteLinks(),
+			isAdmin: this.isAdmin ?? false,
+			lastLogin: this.lastLogin ?? null,
+			name: this.name,
+			sheets: await this.sheetLinks(),
+			username: this.username,
+		}
+	}
 }
 
-export const UserSchema = mongoose.model<IUserModel>('User', Schema)
+const search = async (
+	searchTerm: string | RegExp,
+	limit: number = 10,
+): Promise<IUserSearchResult[]> => {
+	const email = typeof searchTerm === 'string' ? searchTerm : null
+	const regex = searchTerm instanceof RegExp ? searchTerm : new RegExp(searchTerm)
+	return Users.aggregate<IUserSearchResult[]>([
+		{ $match: { $or: [{ email }, { username: regex }, { name: regex }] } },
+		{ $project: { isAdmin: 1, lastLogin: 1, name: 1, username: 1 } },
+		{ $limit: limit },
+	]).exec()
+}
+
+interface IUsers extends ReturnModelType<typeof User> {
+	search: typeof search,
+}
+
+export const Users: IUsers = Object.assign(getModelForClass(User), {
+	search,
+})

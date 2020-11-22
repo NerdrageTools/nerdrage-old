@@ -1,6 +1,6 @@
+**/.env
+**/.next
+**/build
+**/globalConfig.json
 **/node_modules
 **/yarn-error.log
-**/.env
-
-**/build
-**/.next
