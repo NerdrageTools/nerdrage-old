@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 import dayjsRelativeTime from 'dayjs/plugin/relativeTime'
+import deepEqual from 'fast-deep-equal'
+import { NextPageContext } from 'next'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { Editable } from '~/components/Editable/Editable'
@@ -11,76 +13,78 @@ import DiceIcon from '~/icons/dice.svg'
 import FavoriteIcon from '~/icons/favorite-on.svg'
 import SheetIcon from '~/icons/sheet.svg'
 import Error from '~/pages/_error'
+import { IUserProfile } from '~/server/models/User'
 import { confirm } from '~/utilities/confirm'
 import { pluck } from '~/utilities/pluck'
 import { URI } from '~/utilities/URI'
 
 dayjs.extend(dayjsRelativeTime)
 
-const UPDATABLE_FIELDS = ['email', 'favorites', 'name', 'username']
+const UPDATABLE_FIELDS = ['email', 'favorites', 'isAdmin', 'name', 'username']
 
-export default class UserPage extends Component {
+interface Props {
+	httpStatusCode?: number,
+	message?: string,
+	user: IUserProfile,
+}
+interface State {
+	saved: IUserProfile,
+	user: IUserProfile,
+}
+
+export default class UserPage extends Component<Props> {
 	static styles = import('./user.scss')
 	static contextType = Application
 	static defaultProps = {
 		httpStatusCode: 200,
 		message: '',
-		user: { anonymous: true },
+		user: null,
 	}
-	static getInitialProps = async ({ query, req }) => {
-		const headers = pluck(req && req.headers, 'cookie')
+	static getInitialProps = async ({ query, req }: NextPageContext): Promise<Props> => {
+		const headers = pluck(req?.headers, 'cookie')
 		const result = await (fetch(URI(req, `/api/user/${query.slug}`), { headers }))
-		const json = await result.json()
 
-		if (result.status !== 200) {
-			return {
-				httpStatusCode: result.status,
-				...json,
-			}
+		return {
+			httpStatusCode: result.status !== 200 ? result.status : undefined,
+			user: await result.json(),
 		}
-
-		return { user: json }
 	}
-	static getDerivedStateFromProps(props, state) {
+	static getDerivedStateFromProps(props: Props, state: State): State {
 		if (props.user.username !== state.user.username) {
 			return {
 				...state,
-				saved: pluck(props.user, UPDATABLE_FIELDS),
-				user: props.user,
+				saved: pluck(props.user, ...UPDATABLE_FIELDS),
+				user: pluck(props.user, ...UPDATABLE_FIELDS),
 			}
 		}
-
 		return state
 	}
 
 	state = {
-		saved: pluck(this.props.user, UPDATABLE_FIELDS),
-		user: this.props.user,
+		saved: pluck(this.props.user, ...UPDATABLE_FIELDS),
+		user: pluck(this.props.user, ...UPDATABLE_FIELDS),
 	}
 
-	get isDirty() {
-		const fromState = JSON.stringify(pluck(this.state.user, UPDATABLE_FIELDS))
-		const fromSaved = JSON.stringify(pluck(this.state.saved, UPDATABLE_FIELDS))
+	get isDirty(): boolean { return !deepEqual(this.state.user, this.state.saved) }
 
-		return (fromState !== fromSaved)
+	handleNameChange = (name?: string): void => {
+		this.setState({ user: { ...this.state.user, name } })
 	}
-
-	handleNameChange = name => this.setState({ user: { ...this.state.user, name } })
-	handleSave = async () => {
+	handleSave = async (): Promise<void> => {
 		const response = await fetch(`/api/user/${this.state.user.username || ''}`, {
-			body: JSON.stringify(pluck(this.state.user, UPDATABLE_FIELDS)),
+			body: JSON.stringify(this.state.user),
 			headers: { 'Content-Type': 'application/json' },
 			method: 'POST',
 		})
 
 		if (response.status === 200) {
-			const saved = await response.json()
+			const saved = pluck(await response.json(), ...UPDATABLE_FIELDS)
 			return this.setState({ saved, user: { ...this.state.user, ...saved } })
 		}
 
-		return this.setState(await response.json())
+		return undefined
 	}
-	handleToggleAdmin = async () => {
+	handleToggleAdmin = async (): Promise<void> => {
 		const { isAdmin, username } = this.state.user
 		const action = isAdmin ? 'revoke' : 'grant'
 		if (await confirm(`Are you sure you want to ${action} this user Admin privileges?`)) {
@@ -99,11 +103,11 @@ export default class UserPage extends Component {
 		return undefined
 	}
 
-	render = () => {
+	render = (): JSX.Element => {
 		const { httpStatusCode, message } = this.props
 		const { user: currentUser } = this.context
-		const { user } = this.state
-		const isEditable = user === currentUser || currentUser.isAdmin
+		const user = { ...this.props.user, ...this.state.user }
+		const isEditable = user._id === currentUser._id || currentUser.isAdmin
 
 		if (httpStatusCode !== 200) {
 			return <Error message={message} statusCode={httpStatusCode} />
@@ -164,28 +168,17 @@ export default class UserPage extends Component {
 
 					{user.favorites && (
 						<Links
-							caption="Favorites"
-							icon={<FavoriteIcon className="favorites icon" />}
+							caption="Favorites" icon={<FavoriteIcon className="favorites icon" />}
 							pages={user.favorites}
 						/>
 					)}
 
 					{user.campaigns && (
-						<Links
-							caption="Campaigns"
-							icon={<DiceIcon />}
-							pages={user.campaigns}
-							type="campaign"
-						/>
+						<Links caption="Campaigns" icon={<DiceIcon />} pages={user.campaigns} type="campaign" />
 					)}
 
 					{user.sheets && (
-						<Links
-							caption="Sheets"
-							icon={<SheetIcon />}
-							pages={user.sheets}
-							type="sheet"
-						/>
+						<Links caption="Sheets" icon={<SheetIcon />} pages={user.sheets} type="sheet" />
 					)}
 				</Scrollbars>
 			</div>
