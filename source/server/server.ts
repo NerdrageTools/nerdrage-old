@@ -69,10 +69,12 @@ app.prepare().then(async () => {
 		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxAge: '1d' }),
 	)
 
+	// @ts-expect-error - typing for Campaign404
 	server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
 	server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
 	server.use('/api/map', ContextLoader, MapController)
 	server.use('/api/search', ContextLoader, nocache(), SearchController)
+	// @ts-expect-error - typing for Campaign404
 	server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
 	server.use('/api/templates', ContextLoader, nocache(), TemplateController)
 	server.use('/api/user', ContextLoader, nocache(), UserController)

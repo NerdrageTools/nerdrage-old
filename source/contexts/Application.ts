@@ -1,5 +1,6 @@
 import { Router } from 'next/router'
 import React from 'react'
+import { IUserProfile } from '~/server/models'
 import { ICampaign } from '~/server/schema/ICampaign'
 import { ITheme } from '~/server/schema/ITheme'
 import { IUser } from '~/server/schema/IUser'
@@ -19,11 +20,6 @@ const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
 	},
 	title: 'New Campaign',
 }
-const USER_DEFAULTS: Partial<IUser> = {
-	anonymous: true,
-	favorites: [],
-	sheets: [],
-}
 
 export interface IApplicationContext {
 	campaign: ICampaign,
@@ -38,7 +34,7 @@ export interface IApplicationContext {
 	theme: ITheme,
 	updateCampaign: (update: Partial<ICampaign>) => void,
 	updateUser: (update: Partial<IUser>) => void,
-	user: IUser,
+	user: IUserProfile | null,
 }
 
 export const Application = React.createContext<IApplicationContext>({
@@ -53,5 +49,5 @@ export const Application = React.createContext<IApplicationContext>({
 	theme: CAMPAIGN_DEFAULTS.theme as ITheme,
 	updateCampaign: noop,
 	updateUser: noop,
-	user: USER_DEFAULTS as IUser,
+	user: null,
 })

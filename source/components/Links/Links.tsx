@@ -10,7 +10,7 @@ interface Props<T> {
 	className?: string,
 	icon?: JSX.Element | null,
 	pages?: T[],
-	type?: 'article' | 'campaign',
+	type?: 'article' | 'campaign' | 'sheet',
 }
 
 export class Links<T extends IArticleLink | ICampaignLink = IArticleLink>
