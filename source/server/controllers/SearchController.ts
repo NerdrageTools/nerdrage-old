@@ -1,13 +1,12 @@
 import deburr from 'lodash.deburr'
 import * as entities from 'entities'
-import express, { IRequest, NextFunction, Response } from 'express'
+import express, { IRequest, Response } from 'express'
 import fetch from 'isomorphic-unfetch'
 import { Campaign404 } from '~/server/errors/Campaign404'
-import { Campaign, UserSchema } from '~/server/models'
+import { Campaign, IArticleSearchResult, Users } from '~/server/models'
 import { IFontSearchResult } from '~/server/schema/IFont'
 import { loadByCampaign } from '~/server/utilities/loadByCampaign'
 import { bound } from '~/utilities/bound'
-import { IArticleSearchResult } from '../schema/IArticle'
 
 interface ISearchRequest extends IRequest {
 	allowPrivate: boolean,
@@ -58,16 +57,13 @@ export const searchArticles = (
 		const projection = { campaign: 1, plainText: 1, secret: 1, slug: 1, template: 1, title: 1 }
 		const articles = await loadByCampaign<IArticleResult>('Article', campaign, {
 			aggregation: [
-				// @ts-expect-error - @types/mongoose sucks
 				{ $project: {
 					...projection,
 					slugMatches: { $regexFindAll: { input: '$slug', regex } },
 					textMatches: { $regexFindAll: { input: '$plainText', regex } },
 					titleMatches: { $regexFindAll: { input: '$title', regex } },
 				} },
-				// @ts-expect-error - @types/mongoose sucks
 				{ $addFields: { aliasMatches: { $regexFindAll: { input: '$aliases', regex } } } },
-				// @ts-expect-error - @types/mongoose sucks
 				{ $project: {
 					...projection,
 					// eslint-disable-next-line max-len
@@ -76,14 +72,11 @@ export const searchArticles = (
 					textHits: { $size: '$textMatches' },
 					textMatches: 1,
 				} },
-				// @ts-expect-error - @types/mongoose sucks
 				{ $match: {
 					$or: [{ nameHits: { $gt: 0 } }, { textHits: { $gt: 0 } }],
 					...(!userIsOwner ? { secret: false } : {}),
 				} },
-				// @ts-expect-error - @types/mongoose sucks
 				{ $sort: { nameHits: -1, textHits: -1 } },
-				// @ts-expect-error - @types/mongoose sucks
 				{ $limit: bound(parseInt(request.query.limit, 10), { min: 0 }) },
 			],
 			castAsModel: false,
@@ -139,17 +132,10 @@ export const searchFonts = (
 		return response.status(200).json(matches)
 	}
 )
-export const searchUsers = (
-	async (request: ISearchRequest, response: Response): Promise<Response> => {
-		const $regex = new RegExp(`^${deburr(request.params.searchTerm ?? '.')}`, 'i')
-		const matches = await UserSchema.find(
-			{ $or: [{ searchKeys: $regex }, { email: request.params.searchTerm }] },
-			{ isAdmin: 1, lastLogin: 1, name: 1, username: 1 },
-		).sort('name').limit(bound(parseInt(request.query.limit ?? 10, 10), { min: 1 }))
-
-		return response.status(200).json(matches)
-	}
-)
+export async function searchUsers(request: ISearchRequest, response: Response): Promise<Response> {
+	const $regex = new RegExp(`^${deburr(request.params.searchTerm ?? '.')}`, 'i')
+	return response.status(200).json(await Users.search($regex))
+}
 
 export default express()
 	// @ts-expect-error - stupid TS typings

@@ -7,7 +7,7 @@ import { UserMenu } from '~/components/UserMenu/UserMenu'
 import { Application } from '~/contexts/Application'
 import Logo from '~/icons/fist.svg'
 import { NavigationIcon } from '~/icons/Navigation'
-import { IArticleSearchResult } from '~/server/schema/IArticle'
+import { IArticleSearchResult } from '~/server/models'
 
 type WindowSize = 'server' | 'small' | 'medium' | 'large'
 

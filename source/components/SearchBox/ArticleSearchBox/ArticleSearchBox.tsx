@@ -1,7 +1,7 @@
 import React from 'react'
 import { OptionProps, SearchBox } from '~/components/SearchBox/SearchBox'
 import { Application } from '~/contexts/Application'
-import { IArticleSearchResult } from '~/server/schema/IArticle'
+import { IArticleSearchResult } from '~/server/models'
 import { objectMatch } from '~/utilities/objectMatch'
 
 export class ArticleSearchBox extends SearchBox<IArticleSearchResult> {

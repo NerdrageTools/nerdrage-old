@@ -1,8 +1,6 @@
 import express, { IRequest, Response } from 'express'
 import { NoAnonymous } from '~/server/middleware/NoAnonymous'
-import { IUserData, IUserProfile, Users } from '~/server/models'
-import { IArticleLink } from '~/server/schema/IArticle'
-import { IUser } from '~/server/schema/IUser'
+import { IArticleLink, IUserData, IUserProfile, Users } from '~/server/models'
 import { decrypt, encrypt } from '~/utilities/encryption'
 import { pluck } from '~/utilities/pluck'
 
@@ -34,12 +32,8 @@ export function clearCookie(request: IRequest, response: Response): void {
 
 export async function createUser(request: IRequest, response: Response): Promise<Response> {
 	try {
-		const user = new UserSchema({
-			...request.body as Partial<IUser>,
-			isAdmin: false,
-			lastLogin: Date.now(),
-		})
-		await user.save()
+		const userData = request.body as IUserData
+		const user = await Users.create({ ...userData, isAdmin: false, lastLogin: Date.now() })
 
 		request.user = await user.toProfile()
 		setCookie(request, response)

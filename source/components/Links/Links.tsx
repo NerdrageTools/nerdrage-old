@@ -2,7 +2,7 @@ import cn from 'classnames'
 import React from 'react'
 import { Link } from '~/components/Link/Link'
 import TagIcon from '~/icons/tag.svg'
-import { IArticleLink } from '~/server/schema/IArticle'
+import { IArticleLink } from '~/server/models'
 import { ICampaignLink } from '~/server/schema/ICampaign'
 
 interface Props<T> {
