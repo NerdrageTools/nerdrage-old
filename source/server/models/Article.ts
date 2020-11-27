@@ -6,7 +6,6 @@ import * as entities from 'entities'
 import { html_beautify as beautify } from 'js-beautify'
 import deburr from 'lodash.deburr'
 import { Slug } from '~/server/models/Slug'
-import { computeSearchKeys } from '~/utilities/computeSearchKeys'
 import { createCampaignFilter } from '~/utilities/createCampaignFilter'
 import { transclude } from '~/utilities/transclude'
 import { unique } from '~/utilities/unique'
@@ -85,7 +84,6 @@ export interface IArticleSearchResult {
 	$('br').replaceWith('\r\n')
 	// @ts-expect-error - .text() is perfectly valid on Root
 	this.plainText = entities.decodeHTML($.text().replace(/[\r\n]/g, ' ').replace(/\s+/g, ' '))
-	this.searchKeys = computeSearchKeys(this.plainText)
 
 	await Articles.updateMany(
 		{ _id: { $ne: this._id }, campaign: this.campaign },
@@ -219,7 +217,6 @@ const search = async (
 		}),
 	)
 }
-
 interface IArticles extends ReturnModelType<typeof Article> {
 	search: typeof search,
 }
