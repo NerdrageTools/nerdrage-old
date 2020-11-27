@@ -1,14 +1,16 @@
-import { kebabCase } from '~/utilities/kebabCase'
+import { paramCase } from 'param-case'
 import { unique } from '~/utilities/unique'
 
-const strip = string => string
+const strip = (string: string) => string
 	.replace(/\s|\r|\n/g, '-')
 	.replace(/-{2,}/g, '-')
 	.replace(/[^a-z0-9._-]/gi, '')
 
-export function slugify(input) {
+export function slugify(input: string): string
+export function slugify(input: string[]): string[]
+export function slugify(input: string | string[]): string | string[] {
 	if (Array.isArray(input)) {
-		const list = input.map(slugify).filter(slug => slug)
+		const list = input.map<string>(slugify).filter(slug => slug)
 		return unique(list).sort()
 	}
 
@@ -17,27 +19,32 @@ export function slugify(input) {
 	}
 
 	const lowercase = strip(input).toLowerCase()
-	return lowercase.split('.').map(kebabCase).join('.')
 	// Split file.ext and kebab-case each section, then rejoin
+	return lowercase.split('.').map<string>(value => paramCase(value)).join('.')
 }
 
-export function extractUrlSlug(input) {
+export function extractUrlSlug(input: string): string
+export function extractUrlSlug(input: string[]): string[]
+export function extractUrlSlug(input: string | string[]): string | string[] {
 	if (Array.isArray(input)) {
-		return input.map(extractUrlSlug).filter(slug => slug)
+		return input.map<string>(extractUrlSlug).filter(slug => slug)
 	}
 
 	if (typeof input !== 'string') return ''
 
-	return slugify(input.split(/[/\\]/g).pop().split(/[?#]/g).shift())
+	return slugify(input.split(/[/\\]/g).pop()!.split(/[?#]/g).shift()!)
 }
-export function slugifyUrl(input) {
+
+export function slugifyUrl(input: string): string
+export function slugifyUrl(input: string[]): string[]
+export function slugifyUrl(input: string | string[]): string | string[] {
 	if (Array.isArray(input)) {
-		return input.map(slugifyUrl).filter(slug => slug)
+		return input.map<string>(slugifyUrl).filter(slug => slug)
 	}
 
 	if (typeof input !== 'string') return ''
 
-	let result = []
+	let result: string[] = []
 
 	const [file, ...path] = input.split('/').reverse()
 	const [slug, extension] = file.split('.')

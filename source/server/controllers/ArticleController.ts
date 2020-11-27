@@ -65,7 +65,10 @@ export const getArticle = (
 		let article: Article
 
 		if (!request.document) {
-			article = omit(await new Article({ slug }).render(campaign), '_id')
+			article = omit(
+				await new Article({ slug, title: titleCase(slug) }).render(campaign),
+				'_id',
+			)
 			if (templateSlug) {
 				const template = await loadArticle(templateSlug, campaign)
 				Object.assign(article, pluck(template ? template.toJSON() : {}, 'html', 'tags'))
