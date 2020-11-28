@@ -1,13 +1,13 @@
-import { flatten } from '~/utilities/flatten'
+export const pluck = <
+	T extends object, // eslint-disable-line @typescript-eslint/ban-types
+	O = { [K in keyof T]: T[K] }
+>(object: T, ...keys: (keyof T)[]): O => {
+	if (!object || typeof object !== 'object') {
+		return {} as O
+	}
 
-export const pluck = (object, ...keys) => {
-	if (!object || typeof object !== 'object') return {}
-
-	return flatten(keys).reduce((out, key) => {
-		// eslint-disable-next-line no-prototype-builtins
-		if (object.hasOwnProperty(key)) {
-			out[key] = object[key] // eslint-disable-line no-param-reassign
-		}
-		return out
-	}, {})
+	return keys.flat().reduce(
+		(out, key) => Object.assign(out, { [key]: object[key as keyof T] }),
+		{} as O,
+	)
 }
