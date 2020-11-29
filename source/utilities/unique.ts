@@ -1,11 +1,14 @@
-export function unique(array, ...args) {
-	let list
-	if (args.length > 0) {
-		list = [array, ...args]
-	} else if (Array.isArray(array)) {
-		list = array
+export function unique<T>(...args: T[]): T[]
+export function unique<T>(array: T[]): T[]
+export function unique<T>(first: T | T[], ...rest: T[]): T[] {
+	let list: T[]
+	if (rest.length > 0) {
+		list = [first as T, ...rest]
+	} else if (Array.isArray(first)) {
+		list = first
 	} else {
-		list = [array]
+		list = [first]
 	}
+
 	return list.filter((el, ix, all) => all.indexOf(el) === ix)
 }

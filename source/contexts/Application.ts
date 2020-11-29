@@ -1,23 +1,17 @@
 import { Router } from 'next/router'
 import React from 'react'
 import { IUserProfile } from '~/server/models'
-import { ICampaign } from '~/server/schema/ICampaign'
-import { ITheme } from '~/server/schema/ITheme'
-import { IUser } from '~/server/schema/IUser'
+import type { ICampaignData } from '~/server/models/Campaign'
+import { defaultTheme, ITheme } from '~/server/models/Theme'
+import type { IUserData } from '~/server/models/User'
 import { noop } from '~/utilities/noop'
 
-const CAMPAIGN_DEFAULTS: Partial<ICampaign> = {
+const CAMPAIGN_DEFAULTS: ICampaignData = {
 	editors: [],
 	navigation: [],
 	owners: [],
 	secret: true,
-	theme: {
-		background: '#fff',
-		fontFamily: 'Ubuntu',
-		normalText: '#333',
-		primary: '#42afe3',
-		primaryText: '#fff',
-	},
+	theme: defaultTheme,
 	title: 'New Campaign',
 }
 
@@ -27,7 +21,7 @@ export enum LayoutSize {
 	Large = 'large'
 }
 export interface IApplicationContext {
-	campaign: ICampaign,
+	campaign: ICampaignData,
 	handleLogOff: typeof noop,
 	rootUrl: string,
 	router?: Router,
@@ -37,13 +31,13 @@ export interface IApplicationContext {
 	size: LayoutSize,
 	subdomain: string,
 	theme: ITheme,
-	updateCampaign: (update?: Partial<ICampaign>) => void,
-	updateUser: (update: Partial<IUser>) => void,
+	updateCampaign: (update?: Partial<ICampaignData>) => void,
+	updateUser: (update: Partial<IUserData>) => void,
 	user: IUserProfile | null,
 }
 
 export const Application = React.createContext<IApplicationContext>({
-	campaign: CAMPAIGN_DEFAULTS as ICampaign,
+	campaign: CAMPAIGN_DEFAULTS as ICampaignData,
 	handleLogOff: noop,
 	rootUrl: '',
 	setCampaign: noop,
@@ -51,7 +45,7 @@ export const Application = React.createContext<IApplicationContext>({
 	setUser: noop,
 	size: LayoutSize.Large,
 	subdomain: '',
-	theme: CAMPAIGN_DEFAULTS.theme as ITheme,
+	theme: defaultTheme,
 	updateCampaign: noop,
 	updateUser: noop,
 	user: null,

@@ -1,6 +1,8 @@
 /** @jest-environment node */
-import { password } from '~/testing/user-fixtures'
-import { Users } from './User'
+import { Users } from '~/server/models/User'
+import { password } from '~/testing/fixtures'
+
+process.env.TEST_SUITE = 'user-model'
 
 test('default fields are correctly hydrated', async () => {
 	const user = (await Users.findOne({ email: 'foo@nunya.com' }))!
@@ -11,16 +13,11 @@ test('default fields are correctly hydrated', async () => {
 })
 
 test('email & username must be unique', async () => {
-	try {
-		await Users.create({ email: 'foo@nunya.com', name: 'Qux', password, username: 'qux' })
-	} catch (error) { // eslint-disable-next-line
-		expect(error.message).toMatch(/dup key:.*email:/)
-	}
-	try {
-		await Users.create({ email: 'qux@nunya.com', name: 'Qux', password, username: 'foo' })
-	} catch (error) { // eslint-disable-next-line
-		expect(error.message).toMatch(/dup key:.*username:/)
-	}
+	await expect(Users.create({ email: 'foo@nunya.com', name: 'Qux', password, username: 'qux' }))
+		.rejects.toThrow(/dup key:.*email:/)
+
+	await expect(Users.create({ email: 'qux@nunya.com', name: 'Qux', password, username: 'foo' }))
+		.rejects.toThrow(/dup key:.*username:/)
 
 	expect.assertions(2)
 })

@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
-import { cleanData, loadData } from '~/testing/fixtures'
-import '~/server/models'
 
 beforeAll(async () => {
-	await mongoose.connect(process.env.MONGO_URL!, {
+	const { MONGO_URL, TEST_SUITE } = process.env
+	const URL = MONGO_URL!.replace('TEST_SUITE', TEST_SUITE ?? 'jest')
+
+	await mongoose.connect(URL, {
 		useCreateIndex: true,
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -15,9 +16,13 @@ beforeAll(async () => {
 	})
 })
 
-beforeEach(async () => loadData())
-afterEach(async () => cleanData())
+beforeEach(async () => {
+	await Promise.all(
+		Object.values(mongoose.connection.collections)
+			.map(async collection => collection.deleteMany({})),
+	)
+})
 
-afterAll(() => {
+afterAll(async () => {
 	mongoose.disconnect()
 })

@@ -13,7 +13,7 @@ module.exports = {
 	setupFilesAfterEnv: [
 		'<rootDir>/jest.setup.ts',
 	],
-	testEnvironment: 'jsdom',
+	testEnvironment: 'node',
 	testURL: 'http://localhost',
 	transform: {
 		'^.+\\.[jt]sx?$': 'babel-jest',

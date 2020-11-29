@@ -3,27 +3,30 @@ import {
 } from '@typegoose/typegoose'
 import bcrypt from 'bcrypt'
 import { REGEX, MESSAGES } from '~/utilities/CONSTANTS'
-import { IArticleLink } from '../schema/IArticle'
-import { ICampaignLink } from '../schema/ICampaign'
-import { Campaign } from './Campaign'
-import { loadByCampaign } from '../utilities/loadByCampaign'
-import { ISheetLink, Sheet } from './Sheet'
+import { IArticleLink } from '~/server/models/Article'
+import { Campaigns, ICampaignLink } from '~/server/models/Campaign'
+import { DocumentBase, IDocumentBaseData } from '~/server/models/DocumentBase'
+import { ISheetLink, Sheet } from '~/server/models/Sheet'
+import { loadByCampaign } from '~/server/utilities/loadByCampaign'
+import { cleanData, loadData } from '~/testing/fixtures'
 
-export interface IUserData {
-	_id?: string,
-	createdAt?: Date,
+beforeEach(async () => {
+	await cleanData()
+	await loadData()
+})
+
+export interface IUserData extends IDocumentBaseData {
 	email: string,
 	favorites?: string[],
 	isAdmin?: boolean,
 	lastLogin?: Date | null,
 	name: string,
 	password: string,
-	updatedAt?: Date,
 	username: string,
 }
 
 export interface IUserLink {
-	_id: string,
+	id: string,
 	name: string,
 	username: string,
 }
@@ -54,12 +57,7 @@ type IUserSearchResult = Pick<IUserProfile, 'isAdmin' | 'lastLogin' | 'name' | '
 		this.password = hash
 	}
 })
-export class User implements IUserData {
-	_id?: string
-	createdAt?: Date
-	updatedAt?: Date
-	version?: number
-
+export class User extends DocumentBase<IUserData> implements IUserData {
 	@prop({
 		match: [REGEX.EMAIL_ADDRESS, MESSAGES.INVALID_EMAIL],
 		required: true,
@@ -91,10 +89,10 @@ export class User implements IUserData {
 	}
 
 	async campaignLinks(): Promise<ICampaignLink[]> {
-		return Campaign.find(
-			// @ts-expect-error - incomplete typings on .find()
-			{ $or: [{ editors: this._id }, { owners: this._id }, { players: this._id }] },
-			{ _id: 1, subdomain: 1, title: 1 },
+		const id = this.id as any // overcomes incorrect TS casting
+		return Campaigns.find(
+			{ $or: [{ editors: id }, { owners: id }, { players: id }] },
+			{ id: 1, subdomain: 1, title: 1 },
 		)
 	}
 	async favoriteLinks(): Promise<IArticleLink[]> {
@@ -109,22 +107,18 @@ export class User implements IUserData {
 		const byCampaignFavorites = await Promise.all(
 			Array.from(byCampaign.entries())
 				.map(async ([subdomain, slugs]) => {
-					const campaign = await Campaign.findOne({ subdomain }, { _id: 1, sources: 1 })
+					const campaign = await Campaigns.findOne({ subdomain }, { id: 1, sources: 1 })
 					const articles = await loadByCampaign<IArticleLink>('Article', campaign, {
 						aggregation: [{ $project: { slug: 1, title: 1 } }],
 						filter: { $or: [{ slug: { $in: [...slugs] } }, { aliases: { $in: [...slugs] } }] },
 					})
-					return articles.map(article => ({
-						slug: article.slug,
-						subdomain,
-						title: article.title,
-					}))
+					return articles.map(article => ({ slug: article.slug, subdomain, title: article.title }))
 				}),
 		)
 		return byCampaignFavorites.flat() as IArticleLink[]
 	}
 	async sheetLinks(): Promise<ISheetLink[]> {
-		const sheets = await Sheet.find({ ownedBy: this._id }, { slug: 1, title: 1 })
+		const sheets = await Sheet.find({ ownedBy: this.id }, { slug: 1, title: 1 })
 			.populate('campaign', 'subdomain')
 			.exec()
 		return sheets.map(sheet => ({
@@ -135,7 +129,7 @@ export class User implements IUserData {
 	}
 	async toProfile(fullView: boolean = false): Promise<IUserProfile> {
 		const profile = {
-			_id: this._id,
+			id: this.id,
 			isAdmin: this.isAdmin ?? false,
 			lastLogin: this.lastLogin ?? null,
 			name: this.name,
@@ -170,7 +164,6 @@ const search = async (
 interface IUsers extends ReturnModelType<typeof User> {
 	search: typeof search,
 }
-
 export const Users: IUsers = Object.assign(getModelForClass(User), {
 	search,
 })

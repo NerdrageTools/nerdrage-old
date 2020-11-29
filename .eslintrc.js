@@ -92,6 +92,7 @@ module.exports = {
 		'max-len': ['error', { code: 100, tabWidth: 2 }],
 		'newline-per-chained-call': 'off',
 		'no-confusing-arrow': ['error', { allowParens: true }],
+		'no-dupe-class-members': 'off',
 		'no-fallthrough': 'off',
 		'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
 		'no-redeclare': 'off',
@@ -162,6 +163,7 @@ module.exports = {
 	}, {
 		files: ['source/server/**/*.ts'],
 		rules: {
+			'class-methods-use-this': 'off',
 			'no-console': 'off',
 		},
 	}],

@@ -6,7 +6,7 @@ module.exports = {
 			version: '4.2.8',
 		},
 		instance: {
-			dbName: 'jest',
+			dbName: 'TEST_SUITE',
 		},
 	},
 }
