@@ -15,8 +15,11 @@ export default function Link({
   const subdomain = props.subdomain || context.subdomain
   const { rootUrl } = useContext(Application)
   const contents = children || type
-
   const queryString = !query ? '' : `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
+
+  if (!slug && props.href) {
+    return <a {...props}>{children}</a>
+  }
 
   if (active) {
     return <span className="active link" title={contents}>{contents}</span>
