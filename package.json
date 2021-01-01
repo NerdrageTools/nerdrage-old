@@ -1,6 +1,7 @@
 {
   "name": "root",
-  "private": true,
+	"private": true,
+	"version": "2.0.0",
   "scripts": {
     "build": "cd source && next build",
     "develop": "nodemon -w ./source/server -w ./source/utilities -e .js --ignore *.test.js --exec \"babel-node source/server/server.js\"",
