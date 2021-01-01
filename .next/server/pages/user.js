@@ -343,6 +343,16 @@ const Link = _ref => {
   const subdomain = props.subdomain || context.subdomain;
   const contents = children || type;
   const active = context.router.asPath === `/${type}/${slug}`;
+
+  if (!slug && props.href) {
+    return /*#__PURE__*/Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__["jsx"])("a", {
+      className: "external",
+      href: props.href,
+      target: "_new",
+      children: children
+    });
+  }
+
   const queryString = !query ? '' : `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
 
   if (active) {
