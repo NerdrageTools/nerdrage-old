@@ -1,4 +1,4 @@
-import flatten from '@/utilities/flatten'
+import flatten from '~/utilities/flatten'
 
 export default (object, ...keys) => {
 	if (typeof object !== 'object') return {}

@@ -16,6 +16,7 @@ module.exports = {
 		'import/no-extraneous-dependencies': 'off',
 		'import/no-unresolved': 'off',
 		'import/order': 'error',
+		'import/prefer-default-export': 'off',
 		indent: ['error', 'tab'],
 		'jsx-a11y/anchor-is-valid': 'off',
 		'jsx-a11y/click-events-have-key-events': 'off',

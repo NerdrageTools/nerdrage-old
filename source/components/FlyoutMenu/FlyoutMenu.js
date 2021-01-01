@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import MenuIcon from '@/icons/menu.svg'
-import noop from '@/utilities/noop'
+import MenuIcon from '~/icons/menu.svg'
+import { noop } from '~/utilities/noop'
 import './FlyoutMenu.scss'
 
 export default class FlyoutMenu extends Component {

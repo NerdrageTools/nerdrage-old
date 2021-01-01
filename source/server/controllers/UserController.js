@@ -1,12 +1,12 @@
 import express from 'express'
-import NoAnonymous from '@/server/middleware/NoAnonymous'
-import Article from '@/server/models/Article'
-import Campaign from '@/server/models/Campaign'
-import Sheet from '@/server/models/Sheet'
-import User from '@/server/models/User'
-import { decrypt, encrypt } from '@/utilities/encryption'
-import omit from '@/utilities/omit'
-import pluck from '@/utilities/pluck'
+import NoAnonymous from '~/server/middleware/NoAnonymous'
+import Article from '~/server/models/Article'
+import Campaign from '~/server/models/Campaign'
+import Sheet from '~/server/models/Sheet'
+import User from '~/server/models/User'
+import { decrypt, encrypt } from '~/utilities/encryption'
+import omit from '~/utilities/omit'
+import pluck from '~/utilities/pluck'
 
 const controller = express()
 
@@ -40,7 +40,7 @@ export function setCookie(response, username, domain) {
 }
 
 export function clearCookie(request, response) {
-	response.cookie('session', '', { domain: request.domain, maxAge: 0 })
+	response.cookie('session', '', { domain: request.domainName, maxAge: 0 })
 }
 
 export async function createUser(request, response) {
@@ -52,7 +52,7 @@ export async function createUser(request, response) {
 		})
 		await user.save()
 
-		setCookie(response, user.username, request.domain)
+		setCookie(response, user.username, request.domainName)
 		return response.status(200).json(user)
 	} catch (error) {
 		switch (error.code) {
@@ -165,7 +165,7 @@ export async function logIn(request, response) {
 		if (isMatch) {
 			await User.updateOne({ _id: user._id }, { lastLogin: Date.now() })
 			const loadedUser = await getUser(user.username, true)
-			setCookie(response, loadedUser.username, request.domain)
+			setCookie(response, loadedUser.username, request.domainName)
 			return response.status(200).json(loadedUser)
 		}
 

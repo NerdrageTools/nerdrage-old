@@ -1,7 +1,7 @@
 import url from 'url'
 import cheerio from 'cheerio'
-import Article from '@/server/models/Article'
-import unique from '@/utilities/unique'
+import Article from '~/server/models/Article'
+import unique from '~/utilities/unique'
 
 export default async function renderLinks(html, campaignFilter = { campaign: null }) {
 	const $ = cheerio.load(html || '', { decodeEntities: false, xmlMode: true })

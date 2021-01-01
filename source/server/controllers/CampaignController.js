@@ -1,9 +1,9 @@
 import express from 'express'
-import defaultTheme from '@/data/defaultTheme'
-import Campaign404 from '@/server/errors/Campaign404'
-import ContextLoader from '@/server/middleware/ContextLoader'
-import NoAnonymous from '@/server/middleware/NoAnonymous'
-import Campaign from '@/server/models/Campaign'
+import defaultTheme from '~/data/defaultTheme'
+import Campaign404 from '~/server/errors/Campaign404'
+import ContextLoader from '~/server/middleware/ContextLoader'
+import NoAnonymous from '~/server/middleware/NoAnonymous'
+import Campaign from '~/server/models/Campaign'
 
 const controller = express()
 

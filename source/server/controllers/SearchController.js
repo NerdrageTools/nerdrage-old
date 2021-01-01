@@ -2,11 +2,11 @@ import { Deburr } from 'deburr'
 import entities from 'entities'
 import express from 'express'
 import fetch from 'isomorphic-unfetch'
-import Campaign404 from '@/server/errors/Campaign404'
-import Campaign from '@/server/models/Campaign'
-import User from '@/server/models/User'
-import loadByCampaign from '@/server/utilities/loadByCampaign'
-import bound from '@/utilities/bound'
+import Campaign404 from '~/server/errors/Campaign404'
+import Campaign from '~/server/models/Campaign'
+import User from '~/server/models/User'
+import loadByCampaign from '~/server/utilities/loadByCampaign'
+import bound from '~/utilities/bound'
 
 const FONTS = fetch('https://fonts.google.com/metadata/fonts')
 	.then(async response => {

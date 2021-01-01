@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Dialog from '@/components/Dialog'
-import noop from '@/utilities/noop'
-import { slugify } from '@/utilities/slugs'
+import Dialog from '~/components/Dialog/Dialog'
+import { noop } from '~/utilities/noop'
+import { slugify } from '~/utilities/slugs'
 import './CreateLinkDialog.scss'
 
 const getTemplates = async type => {

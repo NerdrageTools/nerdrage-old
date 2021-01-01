@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import Application from '@/contexts/Application'
+import Application from '~/contexts/Application'
 import './_error.scss'
 
 export default function Error() {

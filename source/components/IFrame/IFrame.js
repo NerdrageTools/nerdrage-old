@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
-import noop from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 
 const applyProps = ({ bodyClasses, css, document }) => {
 	if (!document || !document.body || !document.head) {

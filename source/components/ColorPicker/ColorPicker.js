@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { CustomPicker, GithubPicker } from 'react-color'
 import './ColorPicker.scss'
-import noop from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 
 const defaultColors = [
 	'#000000', '#FFFFFF',

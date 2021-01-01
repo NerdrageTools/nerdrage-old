@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
-import computeSearchKeys from '@/utilities/computeSearchKeys'
+import computeSearchKeys from '~/utilities/computeSearchKeys'
 
 const SALT_WORK_FACTOR = 10
 

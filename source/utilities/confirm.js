@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Dialog from '@/components/Dialog'
+import Dialog from '~/components/Dialog/Dialog'
 
 export default async function confirm(text = '', title = 'Prompt') {
 	const container = document.createElement('div')

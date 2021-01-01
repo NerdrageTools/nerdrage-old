@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Link from '@/components/Link'
-import Remove from '@/icons/remove.svg'
-import TagIcon from '@/icons/tag.svg'
-import noop from '@/utilities/noop'
+import Link from '~/components/Link/Link'
+import Remove from '~/icons/remove.svg'
+import TagIcon from '~/icons/tag.svg'
+import { noop } from '~/utilities/noop'
 import './Tag.scss'
 
 export default class Tag extends Component {

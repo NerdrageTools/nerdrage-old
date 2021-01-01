@@ -1,5 +1,5 @@
 import cheerio from 'cheerio'
-import parseHref from '@/utilities/parseHref'
+import parseHref from '~/utilities/parseHref'
 
 export default function cleanUp(html) {
 	const $ = cheerio.load(html || '', { decodeEntities: false, xmlMode: true })

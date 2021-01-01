@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Dialog from '@/components/Dialog'
+import Dialog from '~/components/Dialog/Dialog'
 import './prompt.scss'
 
 export default async function alert(text = '', title = 'Prompt') {

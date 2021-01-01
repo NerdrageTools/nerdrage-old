@@ -1,11 +1,11 @@
 import Downshift from 'downshift'
 import React, { Component } from 'react'
-import Application from '@/contexts/Application'
-import LoadingIcon from '@/icons/loading.svg'
-import SearchIcon from '@/icons/search.svg'
-import debounce from '@/utilities/debounce'
-import noop from '@/utilities/noop'
-import objectMatch from '@/utilities/objectMatch'
+import Application from '~/contexts/Application'
+import LoadingIcon from '~/icons/loading.svg'
+import SearchIcon from '~/icons/search.svg'
+import debounce from '~/utilities/debounce'
+import { noop } from '~/utilities/noop'
+import objectMatch from '~/utilities/objectMatch'
 import './SearchBox.scss'
 
 export default class SearchBox extends Component {

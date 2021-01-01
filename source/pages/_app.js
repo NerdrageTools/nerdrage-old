@@ -1,18 +1,18 @@
 import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
-import Layout from '@/components/Layout'
-import Application from '@/contexts/Application'
-import defaultTheme from '@/data/defaultTheme'
-import '@/styles/all.scss'
+import Layout from '~/components/Layout/Layout'
+import Application from '~/contexts/Application'
+import defaultTheme from '~/data/defaultTheme'
+import '~/styles/all.scss'
 /* eslint-disable import/extensions */
-import imageBook from '@/icons/book.png'
-import imageCombo from '@/icons/combo.png'
-import imageSystem from '@/icons/dice.gif'
-import imageInfo from '@/icons/info.png'
+import imageBook from '~/icons/book.png'
+import imageCombo from '~/icons/combo.png'
+import imageSystem from '~/icons/dice.gif'
+import imageInfo from '~/icons/info.png'
 /* eslint-enable import/extensions */
-import Error from '@/pages/_error'
-import noop from '@/utilities/noop'
+import Error from '~/pages/_error'
+import { noop } from '~/utilities/noop'
 
 export default class Wiki extends App {
 	static getInitialProps = async context => {
@@ -39,7 +39,7 @@ export default class Wiki extends App {
 		const subdomain = host.split('.').shift()
 		const rootUrl = host.slice(subdomain.length + 1)
 
-		return { ...props, campaign, Component, rootUrl, subdomain, user }
+		return { ...props, campaign, rootUrl, subdomain, user }
 	}
 
 	state = {
@@ -119,39 +119,37 @@ export default class Wiki extends App {
 
 		return (
 			<Application.Provider value={context}>
-				<Container>
-					<Layout className={!campaign ? 'no-campaign' : ''}>
-						{campaignError
-							? (
-								<Error
-									statusCode={404}
-									message="This campaign does not exist."
-								/>
-							)
-							: <Component {...pageProps} />
-						}
-					</Layout>
-					<style>{`
-						:root {
-							--color-background:		${theme.background};
-							--color-borders:			 ${theme.primary};
-							--color-normal-text:	 ${theme.normalText};
-							--color-primary:			 ${theme.primary};
-							--color-primary-text:	${theme.primaryText};
-							--font-for-text:			 ${theme.fontForText};
-							--font-for-titles:		 ${theme.fontForTitles};
-							--font-size:					 ${theme.fontSize};
-							color:								 ${theme.normalText};
-							font-family:					 ${theme.fontForText};
-							font-size:						 ${theme.fontSize};
+				<Layout className={!campaign ? 'no-campaign' : ''}>
+					{campaignError
+						? (
+							<Error
+								statusCode={404}
+								message="This campaign does not exist."
+							/>
+						)
+						: <Component {...pageProps} />
+					}
+				</Layout>
+				<style>{`
+					:root {
+						--color-background:		${theme.background};
+						--color-borders:			 ${theme.primary};
+						--color-normal-text:	 ${theme.normalText};
+						--color-primary:			 ${theme.primary};
+						--color-primary-text:	${theme.primaryText};
+						--font-for-text:			 ${theme.fontForText};
+						--font-for-titles:		 ${theme.fontForTitles};
+						--font-size:					 ${theme.fontSize};
+						color:								 ${theme.normalText};
+						font-family:					 ${theme.fontForText};
+						font-size:						 ${theme.fontSize};
 
-							--image-book:					url(${imageBook});
-							--image-combo:				 url(${imageCombo});
-							--image-system:				url(${imageSystem});
-							--image-info:					url(${imageInfo});
-						}
-					`}</style>
-				</Container>
+						--image-book:					url(${imageBook});
+						--image-combo:				 url(${imageCombo});
+						--image-system:				url(${imageSystem});
+						--image-info:					url(${imageInfo});
+					}
+				`}</style>
 			</Application.Provider>
 		)
 	}

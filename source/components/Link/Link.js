@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import React, { useContext } from 'react'
-import Application from '@/contexts/Application'
+import Application from '~/contexts/Application'
 
 export default function Link({
 	active,

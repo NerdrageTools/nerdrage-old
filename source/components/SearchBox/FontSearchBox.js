@@ -1,6 +1,6 @@
 import React from 'react'
-import SearchBox from '@/components/SearchBox'
-import noop from '@/utilities/noop'
+import SearchBox from '~/components/SearchBox/SearchBox'
+import { noop } from '~/utilities/noop'
 
 const renderOption = (font, index, itemProps) => (
 	<li key={font.family} className="search-result" {...itemProps}>

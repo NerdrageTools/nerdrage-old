@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import SearchBox from '@/components/SearchBox'
-import Application from '@/contexts/Application'
+import SearchBox from '~/components/SearchBox/SearchBox'
+import Application from '~/contexts/Application'
 
 export default class ArticleSearchBox extends Component {
 	static contextType = Application

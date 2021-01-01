@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import Link from '@/components/Link'
-import Toggle from '@/components/Toggle'
-import PublicIcon from '@/icons/public.svg'
-import SecretIcon from '@/icons/secret.svg'
-import TemplateIcon from '@/icons/template.svg'
+import Link from '~/components/Link/Link'
+import Toggle from '~/components/Toggle/Toggle'
+import PublicIcon from '~/icons/public.svg'
+import SecretIcon from '~/icons/secret.svg'
+import TemplateIcon from '~/icons/template.svg'
 import './SheetList.scss'
 
 const loadSheets = () => fetch('/api/sheet/list-by/campaign', { credentials: 'include' })

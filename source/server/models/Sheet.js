@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Slug from '@/server/models/Slug'
+import Slug from '~/server/models/Slug'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 

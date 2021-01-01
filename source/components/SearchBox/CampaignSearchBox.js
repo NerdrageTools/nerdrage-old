@@ -1,7 +1,7 @@
 import React from 'react'
-import SearchBox from '@/components/SearchBox'
-import CampaignIcon from '@/icons/campaign.svg'
-import noop from '@/utilities/noop'
+import SearchBox from '~/components/SearchBox/SearchBox'
+import CampaignIcon from '~/icons/campaign.svg'
+import { noop } from '~/utilities/noop'
 import './CampaignSearchBox.scss'
 
 const renderOption = (campaign, index, itemProps) => (

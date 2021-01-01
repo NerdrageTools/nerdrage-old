@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import noop from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 import './EditableList.scss'
 
 export default class EditableList extends Component {

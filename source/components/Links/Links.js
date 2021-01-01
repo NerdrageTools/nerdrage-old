@@ -1,6 +1,6 @@
 import React from 'react'
-import Link from '@/components/Link'
-import TagIcon from '@/icons/tag.svg'
+import Link from '~/components/Link/Link'
+import TagIcon from '~/icons/tag.svg'
 import './Links.scss'
 
 const renderCampaignLink = campaign => (

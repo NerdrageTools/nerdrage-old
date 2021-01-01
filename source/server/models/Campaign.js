@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import defaultTheme from '@/data/defaultTheme'
-import unique from '@/utilities/unique'
+import defaultTheme from '~/data/defaultTheme'
+import unique from '~/utilities/unique'
 import Slug from './Slug'
 
 const { ObjectId } = mongoose.Types.ObjectId

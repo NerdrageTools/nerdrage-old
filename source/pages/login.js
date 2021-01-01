@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import React, { Component } from 'react'
-import Application from '@/contexts/Application'
+import Application from '~/contexts/Application'
 import './authPages.scss'
 
 export default class LoginPage extends Component {

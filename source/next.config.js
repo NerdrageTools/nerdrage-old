@@ -1,6 +1,5 @@
 const withCSS = require('@zeit/next-css')
 const withSass = require('@zeit/next-sass')
-const DirectoryNamedWebpackPlugin = require('directory-named-webpack-plugin')
 const withPlugins = require('next-compose-plugins')
 
 module.exports = withPlugins([withSass, withCSS], {
@@ -9,13 +8,10 @@ module.exports = withPlugins([withSass, withCSS], {
 	webpack(nextConfig, options) {
 		const config = { ...nextConfig }
 
-		config.module.rules.forEach(rule => {
-			if (!Array.isArray(rule.use)) return
-
-			const cssLoader = rule.use.find(use => use.loader && use.loader === 'css-loader')
-			if (!cssLoader || !cssLoader.options) return
-
-			delete cssLoader.options.minimize
+		config.module.rules.unshift({
+			exclude: /node_modules/,
+			loader: 'babel-loader',
+			test: /\.[jt]sx?$/,
 		})
 
 		config.module.rules.push({
@@ -43,8 +39,7 @@ module.exports = withPlugins([withSass, withCSS], {
 			test: /\.svg$/,
 		})
 
-		config.resolve.alias['@'] = __dirname
-		config.resolve.plugins = [new DirectoryNamedWebpackPlugin(true)]
+		config.resolve.alias['~'] = __dirname
 		config.resolve.symlinks = true
 
 		if (typeof nextConfig.webpack === 'function') {

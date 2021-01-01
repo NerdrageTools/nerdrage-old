@@ -1,7 +1,7 @@
 import React from 'react'
-import IconOff from '@/icons/favorite-off.svg'
-import IconOn from '@/icons/favorite-on.svg'
-import noop from '@/utilities/noop'
+import IconOff from '~/icons/favorite-off.svg'
+import IconOn from '~/icons/favorite-on.svg'
+import { noop } from '~/utilities/noop'
 import './Toggle.scss'
 
 export default function Toggle({

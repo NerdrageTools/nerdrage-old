@@ -1,5 +1,5 @@
 import { Deburr } from 'deburr'
-import range from '@/utilities/range'
+import range from '~/utilities/range'
 
 export default (text = '', { minLength = 3 } = {}) => {
 	if (typeof text !== 'string') throw new TypeError('text must be a string')

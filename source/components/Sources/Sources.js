@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Link from '@/components/Link'
-import CampaignSearchBox from '@/components/SearchBox/CampaignSearchBox'
-import CampaignIcon from '@/icons/campaign.svg'
-import RemoveIcon from '@/icons/remove.svg'
+import Link from '~/components/Link/Link'
+import CampaignSearchBox from '~/components/SearchBox/CampaignSearchBox'
+import CampaignIcon from '~/icons/campaign.svg'
+import RemoveIcon from '~/icons/remove.svg'
 import './Sources.scss'
 
 export default class Sources extends Component {

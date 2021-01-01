@@ -1,6 +1,6 @@
 import React from 'react'
 import Draggable from 'react-draggable'
-import noop from '@/utilities/noop'
+import { noop } from '~/utilities/noop'
 import './Dialog.scss'
 
 export default function Dialog({

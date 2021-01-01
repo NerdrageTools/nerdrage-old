@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Article from '@/server/models/Article'
+import Article from '~/server/models/Article'
 import transclude from './transclude'
 
 describe('utilities/transclude', () => {

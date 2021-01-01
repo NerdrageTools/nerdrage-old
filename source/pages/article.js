@@ -2,36 +2,36 @@ import fetch from 'isomorphic-unfetch'
 import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
-import Alert from '@/components/Alert'
-import Editable from '@/components/Editable'
-import Link from '@/components/Link'
-import Links from '@/components/Links'
-import TabSet from '@/components/TabSet'
-import TagBar from '@/components/TagBar'
-import Toggle from '@/components/Toggle'
-import Warning from '@/components/Warning'
-import Application from '@/contexts/Application'
-import EditIcon from '@/icons/edit.svg'
-import FavoriteOffIcon from '@/icons/favorite-off.svg'
-import FavoriteOnIcon from '@/icons/favorite-on.svg'
-import HtmlIcon from '@/icons/html.svg'
-import NavigationIcon from '@/icons/Navigation'
-import PublicIcon from '@/icons/public.svg'
-import ReadIcon from '@/icons/read.svg'
-import SecretIcon from '@/icons/secret.svg'
-import SettingsIcon from '@/icons/settings.svg'
-import TemplateIcon from '@/icons/template.svg'
-import confirm from '@/utilities/confirm'
-import pluck from '@/utilities/pluck'
-import URI from '@/utilities/URI'
+import Alert from '~/components/Alert/Alert'
+import Editable from '~/components/Editable/Editable'
+import Link from '~/components/Link/Link'
+import Links from '~/components/Links/Links'
+import TabSet from '~/components/TabSet/TabSet'
+import TagBar from '~/components/TagBar/TagBar'
+import Toggle from '~/components/Toggle/Toggle'
+import Warning from '~/components/Warning/Warning'
+import Application from '~/contexts/Application'
+import EditIcon from '~/icons/edit.svg'
+import FavoriteOffIcon from '~/icons/favorite-off.svg'
+import FavoriteOnIcon from '~/icons/favorite-on.svg'
+import HtmlIcon from '~/icons/html.svg'
+import NavigationIcon from '~/icons/Navigation'
+import PublicIcon from '~/icons/public.svg'
+import ReadIcon from '~/icons/read.svg'
+import SecretIcon from '~/icons/secret.svg'
+import SettingsIcon from '~/icons/settings.svg'
+import TemplateIcon from '~/icons/template.svg'
+import confirm from '~/utilities/confirm'
+import pluck from '~/utilities/pluck'
+import URI from '~/utilities/URI'
 import './article.scss'
 
 let HtmlEditor = () => <div />
 let WysiwygEditor = () => <div />
 
 if (process.browser && window) {
-	WysiwygEditor = dynamic(() => import('@/components/WysiwygEditor'))
-	HtmlEditor = dynamic(() => import('@/components/HtmlEditor'))
+	WysiwygEditor = dynamic(() => import('~/components/WysiwygEditor/WysiwygEditor'))
+	HtmlEditor = dynamic(() => import('~/components/HtmlEditor/HtmlEditor'))
 }
 
 const STATE_FIELDS = [

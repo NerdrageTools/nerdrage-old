@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import TagsInput from 'react-tagsinput'
-import Tag from '@/components/Tag'
-import noop from '@/utilities/noop'
+import Tag from '~/components/Tag/Tag'
+import { noop } from '~/utilities/noop'
 import './TagBar.scss'
 
 const exclude = (list, exclusions) => list.filter(el => !exclusions.includes(el))

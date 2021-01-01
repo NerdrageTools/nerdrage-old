@@ -32,6 +32,7 @@ app.prepare().then(async () => {
 	mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {
 		useCreateIndex: true,
 		useNewUrlParser: true,
+		useUnifiedTopology: true,
 	})
 	mongoose.Promise = global.Promise
 
