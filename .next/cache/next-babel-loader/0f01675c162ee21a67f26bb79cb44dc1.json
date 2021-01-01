@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default ((prop, reversed = false) => (objectA, objectB) => {\n  const a = String(objectA instanceof Map ? objectA.get(prop) : objectA[prop]);\n  const b = String(objectB instanceof Map ? objectB.get(prop) : objectB[prop]);\n  if (reversed) return b.localeCompare(a);\n  return a.localeCompare(b);\n});","map":null,"metadata":{},"sourceType":"module"}

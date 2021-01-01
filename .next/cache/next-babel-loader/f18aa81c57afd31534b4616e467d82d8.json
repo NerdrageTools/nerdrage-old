@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default {\n  background: '#fff',\n  fontForText: 'Ubuntu',\n  fontForTitles: 'Ubuntu',\n  fontSize: '16px',\n  normalText: '#333',\n  primary: '#f00',\n  primaryText: '#fff'\n};","map":null,"metadata":{},"sourceType":"module"}

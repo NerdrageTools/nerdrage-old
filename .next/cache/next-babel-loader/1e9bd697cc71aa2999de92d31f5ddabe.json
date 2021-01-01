@@ -1,0 +1,1 @@
+{"ast":null,"code":"export function URI(request, url) {\n  var baseURL = request ? \"\".concat(request.protocol, \"://\").concat(request.get('Host')) : '';\n  return \"\".concat(baseURL).concat(url);\n}","map":null,"metadata":{},"sourceType":"module"}

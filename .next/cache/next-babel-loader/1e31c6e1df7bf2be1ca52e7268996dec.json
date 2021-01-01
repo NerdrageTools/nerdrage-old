@@ -1,0 +1,1 @@
+{"ast":null,"code":"const objectMatch = (object = {}, match = {}) => {\n  if (typeof object !== typeof match) return false;\n  return Object.keys(match).every(key => typeof object[key] === 'object' || Array.isArray(object[key]) ? objectMatch(object[key], match[key]) : object[key] === match[key]);\n};\n\nexport default objectMatch;","map":null,"metadata":{},"sourceType":"module"}

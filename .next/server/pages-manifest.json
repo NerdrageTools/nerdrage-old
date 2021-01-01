@@ -1,0 +1,13 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/article": "pages/article.js",
+  "/campaign": "pages/campaign.js",
+  "/": "pages/index.js",
+  "/login": "pages/login.js",
+  "/map": "pages/map.js",
+  "/sheet": "pages/sheet.js",
+  "/signup": "pages/signup.js",
+  "/user": "pages/user.js",
+  "/_document": "pages/_document.js"
+}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function unique(array, ...args) {\n  let list;\n\n  if (args.length > 0) {\n    list = [array, ...args];\n  } else if (Array.isArray(array)) {\n    list = array;\n  } else {\n    list = [array];\n  }\n\n  return list.filter((el, ix, all) => all.indexOf(el) === ix);\n}","map":null,"metadata":{},"sourceType":"module"}

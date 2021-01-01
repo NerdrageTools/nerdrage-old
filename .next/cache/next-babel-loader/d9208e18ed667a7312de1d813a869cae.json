@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function bound(value, _ref) {\n  var min = _ref.min,\n      max = _ref.max;\n  if (min !== undefined && value < min) return min;\n  if (max !== undefined && value > max) return max;\n  return value;\n}","map":null,"metadata":{},"sourceType":"module"}
