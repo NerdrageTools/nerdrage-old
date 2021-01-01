@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "lib": ["ESNext", "dom", "dom.iterable"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "outDir": "./tmp",
+    "paths": {
+      "~/*": ["./source/*"]
+    },
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "ES2015",
+    "types": ["express", "node", "w3c-css-typed-object-model-level-1"],
+    "typeRoots": ["node_modules/@types", "tools/typings"]
+  },
+  "exclude": ["dist", "node_modules", "tmp"],
+  "include": ["source/**/*.d.ts", "source/**/*.ts", "source/**/*.tsx"]
+}

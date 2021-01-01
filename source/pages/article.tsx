@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fetch from 'isomorphic-unfetch'
 import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
@@ -25,10 +26,10 @@ import { confirm } from '~/utilities/confirm'
 import { pluck } from '~/utilities/pluck'
 import { URI } from '~/utilities/URI'
 
-const HtmlEditor = process.browser // @ts-expect-error - ts does not understand next/dynamic()
+const HtmlEditor = process.browser // // @ts-expect-error - ts does not understand next/dynamic()
 	? dynamic(() => import('../components/HtmlEditor/HtmlEditor').then(m => m.HtmlEditor))
 	: () => <div />
-const WysiwygEditor = process.browser // @ts-expect-error - ts does not understand next/dynamic()
+const WysiwygEditor = process.browser // // @ts-expect-error - ts does not understand next/dynamic()
 	? dynamic(() => import('../components/WysiwygEditor/WysiwygEditor').then(m => m.WysiwygEditor))
 	: () => <div />
 
@@ -333,7 +334,7 @@ export default class Article extends Component {
 						id: 'read',
 						tab: <ReadIcon />,
 					}, {
-						contents: <WysiwygEditor html={html} onChange={this.handleHtmlChange} />,
+						contents: <WysiwygEditor value={html} onChange={this.handleHtmlChange} />,
 						id: 'edit',
 						tab: <EditIcon />,
 					}, {

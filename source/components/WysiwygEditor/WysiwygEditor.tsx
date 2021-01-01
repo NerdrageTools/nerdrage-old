@@ -4,16 +4,17 @@ import { noop } from '~/utilities/noop'
 import 'jodit/build/jodit.min.css'
 
 interface Props {
-	html?: string,
 	onChange?: (html: string) => void,
+	readOnly: boolean,
+	value?: string,
 }
 
 export class WysiwygEditor extends Component<Props> {
 	static styles = import('./WysiwygEditor.scss')
-	static defaultProps = {
-		html: '',
+	static defaultProps: Props = {
 		onChange: noop,
 		readOnly: false,
+		value: '',
 	}
 	static get config(): any {
 		return {
@@ -40,11 +41,11 @@ export class WysiwygEditor extends Component<Props> {
 
 	componentDidMount = (): void => {
 		this.#editor = jodit.Jodit.make(this.#el.current!, WysiwygEditor.config)
-		this.#editor.setEditorValue(this.props.html)
+		this.#editor.setEditorValue(this.props.value)
 		this.#editor.events.on('change', this.handleChange)
 	}
 	componentDidUpdate = (): void => {
-		this.#editor.setEditorValue(this.props.html)
+		this.#editor.setEditorValue(this.props.value)
 	}
 	componentWillUnmount = (): void => {
 		this.#editor.destruct()

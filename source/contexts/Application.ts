@@ -1,4 +1,6 @@
+import { string } from 'mobx-state-tree/dist/internal'
 import React from 'react'
+import { Z_UNKNOWN } from 'zlib'
 
 const CAMPAIGN_DEFAULTS = {
 	createdAt: null,
@@ -24,7 +26,18 @@ const USER_DEFAULTS = {
 	anonymous: true,
 }
 
-export const Application = React.createContext({
+interface IApplication {
+	campaign: typeof CAMPAIGN_DEFAULTS,
+	router: any,
+	rootUrl: string,
+	subdomain: string,
+	user: typeof USER_DEFAULTS,
+}
+
+export const Application = React.createContext<IApplication>({
 	campaign: CAMPAIGN_DEFAULTS,
+	router: {},
+	rootUrl: '',
+	subdomain: '',
 	user: USER_DEFAULTS,
 })
