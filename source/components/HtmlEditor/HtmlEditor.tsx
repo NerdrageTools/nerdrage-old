@@ -1,42 +1,45 @@
 import React, { Component } from 'react'
-import ReactAce from 'react-ace'
-import 'brace/mode/html'
-import 'brace/theme/chrome'
+import AceEditor from 'react-ace'
+import { noop } from '~/utilities/noop'
+import 'ace-builds/webpack-resolver'
+import 'ace-builds/src-noconflict/mode-html'
+import 'ace-builds/src-noconflict/theme-github'
 
-export class HtmlEditor extends Component {
+interface Props {
+	value: string,
+	onChange: (html: string) => void,
+}
+export class HtmlEditor extends Component<Props> {
 	static defaultProps = {
-		editorProps: { $blockScrolling: Infinity },
-		height: '100%',
-		mode: 'html',
-		name: 'html',
-		scrollMargin: [5, 0, 5, 0],
-		setOptions: {
-			displayIndentGuides: true,
-			enableMultiselect: true,
-			highlightActiveLine: true,
-			highlightSelectedWord: true,
-			showInvisibles: false,
-			showPrintMargin: false,
-			wrap: true,
-		},
-		showGutter: true,
-		tabSize: 2,
-		theme: 'chrome',
-		width: '100%',
+		html: '',
+		onChange: noop,
 	}
 
-	componentDidMount = () => {
-		this.editor.session.on('changeAnnotation', (_, session) => {
-			const count = session.$annotations.length
-			const updated = session.$annotations.filter(annotation => (
-				!/doctype/i.test(annotation.text)
-			))
-
-			if (updated.length !== count) session.setAnnotations(updated)
-		})
-	}
-	componentWillUnmount = () => { this.editor = null }
-
-	setRef = ace => { this.editor = (ace || {}).editor }
-	render = () => <ReactAce ref={this.setRef} {...this.props} />
+	render = () => (
+		<AceEditor
+			onChange={this.props.onChange}
+			value={this.props.value}
+			{...{
+				editorProps: { $blockScrolling: Infinity },
+				height: '100%',
+				mode: 'html',
+				name: 'html',
+				scrollMargin: [5, 0, 5, 0],
+				setOptions: {
+					displayIndentGuides: true,
+					enableMultiselect: true,
+					highlightActiveLine: true,
+					highlightSelectedWord: true,
+					showInvisibles: false,
+					showPrintMargin: false,
+					useWorker: false,
+					wrap: true,
+				},
+				showGutter: true,
+				tabSize: 2,
+				theme: 'github',
+				width: '100%',
+			}}
+		/>
+	)
 }
