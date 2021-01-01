@@ -108,7 +108,6 @@
   },
   "resolutions": {
     "chokidar": "^3",
-    "fsevents": "^2",
     "nan": "^2.14.0",
     "sass-loader": "^10",
     "webpack": "^4"
