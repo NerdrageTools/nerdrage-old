@@ -1,5 +1,5 @@
 import cheerio from 'cheerio'
-import entities from 'entities'
+import * as entities from 'entities'
 import { html_beautify as beautify } from 'js-beautify'
 import mongoose from 'mongoose'
 import Slug from '~/server/models/Slug'

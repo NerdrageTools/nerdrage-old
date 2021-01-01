@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Link from '~/components/Link/Link'
+import { Link } from '~/components/Link/Link'
 import CampaignSearchBox from '~/components/SearchBox/CampaignSearchBox'
 import CampaignIcon from '~/icons/campaign.svg'
 import RemoveIcon from '~/icons/remove.svg'

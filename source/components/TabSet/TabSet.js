@@ -10,7 +10,7 @@ const DEFAULT_TAB = {
 	renderTab: () => <div />,
 }
 
-export default function TabSet({
+export function TabSet({
 	activeTabId,
 	buttons,
 	onTabClicked = () => {},

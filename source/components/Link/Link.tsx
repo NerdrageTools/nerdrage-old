@@ -1,32 +1,44 @@
 import NextLink from 'next/link'
-import React, { useContext } from 'react'
-import Application from '~/contexts/Application'
+import React, { FunctionComponent, useContext } from 'react'
+import { Application } from '~/contexts/Application'
 
-export default function Link({
-	active,
+export type LinkType = 'article' | 'campaign' | 'map' | 'sheet' | 'user'
+
+interface Props {
+	active?: boolean,
+	className?: string,
+	query?: Record<string, any>,
+	slug?: string,
+	subdomain?: string,
+	to?: string,
+	type?: LinkType,
+}
+
+export const Link: FunctionComponent<Props> = ({
 	children,
 	className = '',
 	query = null,
 	slug = '',
+	to,
 	type = 'article',
 	...props
-}) {
+}) => {
 	const context = useContext(Application)
 	const subdomain = props.subdomain || context.subdomain
-	const { rootUrl } = useContext(Application)
 	const contents = children || type
-	const queryString = !query ? '' : `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
+	const active = context.router!.asPath === `/${type}/${slug}`
 
-	if (!slug && props.href) {
-		return <a {...props}>{children}</a>
-	}
+	const queryString = !query
+		? ''
+		: `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
 
 	if (active) {
-		return <span className="active link" title={contents}>{contents}</span>
+		const title = typeof contents === 'string' ? contents : undefined
+		return <span className="active link" title={title}>{contents}</span>
 	}
 
 	if (subdomain && (!context.campaign || subdomain !== context.campaign.subdomain)) {
-		let href = `//${subdomain}.${rootUrl}/${type}`
+		let href = `//${subdomain}.${context.rootUrl}/${type}`
 		if (type !== 'campaign') href += `/${slug}`
 
 		return <a {...{ ...props, href, subdomain }}>{contents}</a>
@@ -34,7 +46,10 @@ export default function Link({
 
 	let as = `/${type}`
 	let href = `/${type}`
-	if (type !== 'campaign') {
+	if (to) {
+		as = to
+		href = to
+	} else if (type !== 'campaign') {
 		if (slug) {
 			as += `/${slug}`
 			href += `?slug=${slug}`

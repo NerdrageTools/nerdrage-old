@@ -1,7 +1,7 @@
 import express from 'express'
 import Sheet from '~/server/models/Sheet'
 import createCampaignFilter from '~/utilities/createCampaignFilter'
-import pluck from '~/utilities/pluck'
+import { pluck } from '~/utilities/pluck'
 
 export const getSheet = async (slug, campaign, user = {}) => {
 	const { isAdmin } = user

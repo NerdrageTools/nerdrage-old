@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import FlyoutMenu, { MenuItem } from '~/components/FlyoutMenu/FlyoutMenu'
-import Application from '~/contexts/Application'
+import { Application } from '~/contexts/Application'
 import ArticleIcon from '~/icons/read.svg'
 import SheetIcon from '~/icons/sheet.svg'
 import alert from '~/utilities/alert'

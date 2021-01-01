@@ -1,6 +1,6 @@
 import flatten from '~/utilities/flatten'
 
-export default function pluck(object, ...keys) {
+export function pluck(object, ...keys) {
 	if (!object || typeof object !== 'object') return {}
 
 	return flatten(keys).reduce((out, key) => {

@@ -4,7 +4,7 @@ import IconOn from '~/icons/favorite-on.svg'
 import { noop } from '~/utilities/noop'
 import './Toggle.scss'
 
-export default function Toggle({
+export function Toggle({
 	className = '',
 	offIcon = IconOff,
 	offProps = {},

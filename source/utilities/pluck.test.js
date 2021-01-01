@@ -1,4 +1,4 @@
-import pluck from './pluck'
+import { pluck } from './pluck'
 
 it('utilities/pluck', () => {
 	const object = { bar: 'BAR', foo: 'FOO' }

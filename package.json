@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@azgaar/fantasy-map-generator": "https://github.com/TroyAlford/Fantasy-Map-Generator/archive/v0.8.1-nr.tar.gz",
-    "@tinymce/tinymce-react": "^3.0.1",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "bcrypt": "^3.0.6",
@@ -28,6 +27,7 @@
     "entities": "^2.1.0",
     "express": "^4.17.1",
     "isomorphic-unfetch": "^3.0.0",
+    "jodit": "^3.5.4",
     "js-beautify": "^1.10.0",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
@@ -48,7 +48,6 @@
     "react-tagsinput": "^3.19.0",
     "sheetforge": "^2.1.9",
     "sortablejs": "^1.9.0",
-    "tinymce": "4.8.5",
     "typescript": "^4.1.3",
     "webfontloader": "^1.6.28"
   },
@@ -67,6 +66,9 @@
     "@babel/preset-typescript": "^7.12.7",
     "@babel/register": "^7.12.10",
     "@babel/runtime": "^7.12.5",
+    "@types/react": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
@@ -101,8 +103,8 @@
     "chokidar": "^3",
     "fsevents": "^2",
     "nan": "^2.14.0",
-		"sass-loader": "^10",
-		"webpack": "^4"
+    "sass-loader": "^10",
+    "webpack": "^4"
   },
   "jest": {
     "moduleNameMapper": {

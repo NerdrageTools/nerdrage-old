@@ -24,7 +24,7 @@ const USER_DEFAULTS = {
 	anonymous: true,
 }
 
-export default React.createContext({
+export const Application = React.createContext({
 	campaign: CAMPAIGN_DEFAULTS,
 	user: USER_DEFAULTS,
 })

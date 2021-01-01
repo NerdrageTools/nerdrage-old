@@ -6,7 +6,7 @@ import Sheet from '~/server/models/Sheet'
 import User from '~/server/models/User'
 import { decrypt, encrypt } from '~/utilities/encryption'
 import omit from '~/utilities/omit'
-import pluck from '~/utilities/pluck'
+import { pluck } from '~/utilities/pluck'
 
 const controller = express()
 

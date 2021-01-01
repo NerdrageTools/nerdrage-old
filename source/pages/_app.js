@@ -2,7 +2,7 @@ import fetch from 'isomorphic-unfetch'
 import App, { Container } from 'next/app'
 import React from 'react'
 import Layout from '~/components/Layout/Layout'
-import Application from '~/contexts/Application'
+import { Application } from '~/contexts/Application'
 import defaultTheme from '~/data/defaultTheme'
 import '~/styles/all.scss'
 /* eslint-disable import/extensions */

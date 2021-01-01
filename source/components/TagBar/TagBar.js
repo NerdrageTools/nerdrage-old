@@ -8,7 +8,7 @@ import './TagBar.scss'
 const exclude = (list, exclusions) => list.filter(el => !exclusions.includes(el))
 const areEqual = (array1, array2) => array1.every((el, ix) => el === array2[ix])
 
-export default class TagBar extends Component {
+export class TagBar extends Component {
 	static defaultProps = {
 		asLinks: false,
 		banned: [],

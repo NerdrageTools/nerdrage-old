@@ -1,6 +1,6 @@
 import Downshift from 'downshift'
 import React, { Component } from 'react'
-import Application from '~/contexts/Application'
+import { Application } from '~/contexts/Application'
 import LoadingIcon from '~/icons/loading.svg'
 import SearchIcon from '~/icons/search.svg'
 import debounce from '~/utilities/debounce'

@@ -1,7 +1,7 @@
 import React from 'react'
 import './Alert.scss'
 
-export default function Alert({
+export function Alert({
 	className = '',
 	children = [],
 	type = 'info',

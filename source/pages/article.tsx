@@ -2,15 +2,15 @@ import fetch from 'isomorphic-unfetch'
 import dynamic from 'next/dynamic'
 import React, { Component } from 'react'
 import JsxParser from 'react-jsx-parser'
-import Alert from '~/components/Alert/Alert'
-import Editable from '~/components/Editable/Editable'
-import Link from '~/components/Link/Link'
-import Links from '~/components/Links/Links'
-import TabSet from '~/components/TabSet/TabSet'
-import TagBar from '~/components/TagBar/TagBar'
-import Toggle from '~/components/Toggle/Toggle'
-import Warning from '~/components/Warning/Warning'
-import Application from '~/contexts/Application'
+import { Alert } from '~/components/Alert/Alert'
+import { Editable } from '~/components/Editable/Editable'
+import { Link } from '~/components/Link/Link'
+import { Links } from '~/components/Links/Links'
+import { TabSet } from '~/components/TabSet/TabSet'
+import { TagBar } from '~/components/TagBar/TagBar'
+import { Toggle } from '~/components/Toggle/Toggle'
+import { Warning } from '~/components/Warning/Warning'
+import { Application } from '~/contexts/Application'
 import EditIcon from '~/icons/edit.svg'
 import FavoriteOffIcon from '~/icons/favorite-off.svg'
 import FavoriteOnIcon from '~/icons/favorite-on.svg'
@@ -21,18 +21,16 @@ import ReadIcon from '~/icons/read.svg'
 import SecretIcon from '~/icons/secret.svg'
 import SettingsIcon from '~/icons/settings.svg'
 import TemplateIcon from '~/icons/template.svg'
-import confirm from '~/utilities/confirm'
-import pluck from '~/utilities/pluck'
-import URI from '~/utilities/URI'
-import './article.scss'
+import { confirm } from '~/utilities/confirm'
+import { pluck } from '~/utilities/pluck'
+import { URI } from '~/utilities/URI'
 
-let HtmlEditor = () => <div />
-let WysiwygEditor = () => <div />
-
-if (process.browser && window) {
-	WysiwygEditor = dynamic(() => import('~/components/WysiwygEditor/WysiwygEditor'))
-	HtmlEditor = dynamic(() => import('~/components/HtmlEditor/HtmlEditor'))
-}
+const HtmlEditor = process.browser // @ts-expect-error - ts does not understand next/dynamic()
+	? dynamic(() => import('../components/HtmlEditor/HtmlEditor').then(m => m.HtmlEditor))
+	: () => <div />
+const WysiwygEditor = process.browser // @ts-expect-error - ts does not understand next/dynamic()
+	? dynamic(() => import('../components/WysiwygEditor/WysiwygEditor').then(m => m.WysiwygEditor))
+	: () => <div />
 
 const STATE_FIELDS = [
 	'_id',
@@ -48,6 +46,7 @@ const STATE_FIELDS = [
 ]
 
 export default class Article extends Component {
+	static styles = import('./article.scss')
 	static contextType = Application
 	static defaultProps = {
 		childArticles: [],
@@ -91,7 +90,7 @@ export default class Article extends Component {
 		title: this.props.title || this.context.router.query.title,
 	}
 
-	componentDidMount() {
+	componentDidMount = (): void => {
 		const { slug } = this.props
 		const { router } = this.context
 		if (slug && router.query.slug !== slug) {
@@ -102,19 +101,19 @@ export default class Article extends Component {
 		}
 	}
 
-	get isDirty() {
+	get isDirty(): boolean {
 		const fromState = JSON.stringify(pluck(this.state, STATE_FIELDS))
 		const fromSaved = JSON.stringify(pluck(this.state.saved, STATE_FIELDS))
 
 		return fromState !== fromSaved
 	}
-	get isNavLink() {
+	get isNavLink(): boolean {
 		const { campaign = {} } = this.context
 		if (!campaign.navigation || !campaign.navigation.length) return false
 		return Boolean(campaign.navigation.find(n => n.slug === this.props.slug))
 	}
 
-	handleAliasesChange = aliases => this.setState({ aliases })
+	handleAliasesChange = (aliases: string[]): void => this.setState({ aliases })
 	handleDelete = async () => {
 		if (!await confirm('Are you sure you want to permanently delete this article?')) return
 		await fetch(`/api/article/${this.props.slug}`, { method: 'DELETE' })
@@ -128,11 +127,9 @@ export default class Article extends Component {
 		this.setState({ ...json, activeTab: 'read', saved: json })
 		this.context.updateUser()
 	}
-	handleHtmlChange = html => this.setState({ html })
-	handleReset = () => {
-		this.setState({ activeTab: 'read', ...this.state.saved })
-	}
-	handleSave = async () => {
+	handleHtmlChange = (html: string): void => this.setState({ html })
+	handleReset = (): void => this.setState({ activeTab: 'read', ...this.state.saved })
+	handleSave = async (): Promise<void> => {
 		const saved = await fetch(`/api/article/${this.props.slug}`, {
 			body: JSON.stringify(pluck(this.state, STATE_FIELDS)),
 			headers: { 'Content-Type': 'application/json' },
@@ -146,9 +143,9 @@ export default class Article extends Component {
 			this.setState({ activeTab: tab })
 		}
 	}
-	handleTagsChange = tags => this.setState({ tags })
-	handleTitleChange = title => this.setState({ title })
-	handleToggleEditMode = () => this.setState({
+	handleTagsChange = (tags: string[]): void => this.setState({ tags })
+	handleTitleChange = (title?: string): void => this.setState({ title })
+	handleToggleEditMode = (): void => this.setState({
 		activeTab: this.state.editMode ? 'read' : 'edit',
 		editMode: !this.state.editMode,
 	})
@@ -191,28 +188,32 @@ export default class Article extends Component {
 		}
 	}
 
-	renderReadOnlyContent = () => {
+	renderReadOnlyContent = (): JSX.Element => {
 		const jsx = (this.state.html || this.props.html || '').trim()
-		const components = {
-			a: Link,
-			Warning,
-		}
 
 		return <>
-			{jsx ? <JsxParser {...{ components, jsx }} /> : ''}
+			<JsxParser
+				allowUnknownElements
+				autoCloseVoidElements
+				components={{
+					a: Link,
+					Warning,
+				}}
+				jsx={jsx ?? ''}
+			/>
 			<Links pages={this.props.childArticles} />
 		</>
 	}
-	renderSettingsTab = () => <>
+	renderSettingsTab = (): JSX.Element => <>
 		<fieldset>
 			<legend>Aliases</legend>
 			<TagBar
 				banned={[this.state.slug]}
 				className="aliases"
-				onChange={this.handleAliasesChange}
-				tags={this.state.aliases}
 				inputSettings={{ placeholder: 'add alias' }}
+				onChange={this.handleAliasesChange}
 				readOnly={!this.props.isEditable}
+				tags={this.state.aliases}
 			/>
 		</fieldset>
 		{this.props.isEditable && (
@@ -225,7 +226,7 @@ export default class Article extends Component {
 			</fieldset>
 		)}
 	</>
-	render = () => {
+	render = (): JSX.Element => {
 		const {
 			_id, activeTab, aliases, html, isEditable, isOwner, message,
 			redirectedFrom, secret, slug, tags, template = false, title = '',
@@ -233,7 +234,7 @@ export default class Article extends Component {
 		const { campaign: source, childArticles, httpStatusCode } = this.props
 		const { campaign = {}, user: { favorites = [] } } = this.context
 		const isFavorite = favorites.find(f => (
-			f.campaign.subdomain === campaign.subdomain
+			f.subdomain === campaign.subdomain
 			&& f.slug === slug
 		))
 		const readOnly = !isEditable || !this.state.editMode
@@ -245,7 +246,7 @@ export default class Article extends Component {
 		if (httpStatusCode !== 200) {
 			return (
 				<div className={classNames}>
-					<Alert type="error">{message}</Alert>
+					<Alert>{message}</Alert>
 					{this.renderReadOnlyContent()}
 				</div>
 			)
@@ -263,33 +264,40 @@ export default class Article extends Component {
 						value={readOnly ? this.state.saved.title : title}
 					/>
 					{redirectedFrom && (
-						<div className="redirected-from">Redirected From: <b>{redirectedFrom}</b></div>
+						<div className="redirected-from">
+							Redirected From:
+							<b>{redirectedFrom}</b>
+						</div>
 					)}
 					{_id && isOwner && (
 						<Toggle
-							className="secret" value={secret}
+							className="secret"
 							offIcon={PublicIcon} onIcon={SecretIcon}
 							onToggle={this.handleToggleSecret}
+							value={secret}
 						/>
 					)}
 					{_id && campaign.isEditor && <>
 						<Toggle
-							className="template" value={template}
+							className="template"
 							offIcon={TemplateIcon} onIcon={TemplateIcon}
 							onToggle={this.handleToggleTemplate}
+							value={template}
 						/>
 						<Toggle
-							className="in-navigation" value={this.isNavLink}
+							className="in-navigation"
 							offIcon={NavigationIcon} offProps={{ title: 'Not Added to Site Navigation' }}
 							onIcon={NavigationIcon} onProps={{ title: 'Added to Site Navigation' }}
 							onToggle={this.handleToggleNavigation}
+							value={this.isNavLink}
 						/>
 					</>}
 					{campaign.isEditor && (
 						<Toggle
-							className="edit-mode" value={this.state.editMode}
+							className="edit-mode"
 							offIcon={EditIcon} onIcon={EditIcon}
 							onToggle={this.handleToggleEditMode}
+							value={this.state.editMode}
 						/>
 					)}
 					{_id && (
@@ -312,7 +320,9 @@ export default class Article extends Component {
 					buttons={<>
 						{(source.subdomain && source.subdomain !== campaign.subdomain) && (
 							<div className="source">
-		Source: <Link subdomain={source.subdomain} slug={slug}>{source.title}</Link>
+								Source:
+								{' '}
+								<Link slug={slug} subdomain={source.subdomain}>{source.title}</Link>
 							</div>
 						)}
 					</>}
@@ -327,7 +337,7 @@ export default class Article extends Component {
 						id: 'edit',
 						tab: <EditIcon />,
 					}, {
-						contents: <HtmlEditor value={html} onChange={this.handleHtmlChange} />,
+						contents: <HtmlEditor onChange={this.handleHtmlChange} value={html} />,
 						id: 'html',
 						tab: <HtmlIcon />,
 					}, {
@@ -342,8 +352,8 @@ export default class Article extends Component {
 						banned={[slug, ...aliases]}
 						className="tags"
 						onChange={this.handleTagsChange}
-						tags={tags}
 						readOnly={readOnly}
+						tags={tags}
 					/>
 				)}
 			</div>

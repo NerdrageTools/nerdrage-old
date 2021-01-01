@@ -12,7 +12,7 @@ const TYPES = [
 	'number', 'slider',
 ]
 
-export default class Editable extends Component {
+export class Editable extends Component {
 	static displayName = 'Editable'
 
 	static defaultProps = {

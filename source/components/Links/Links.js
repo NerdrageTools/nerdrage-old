@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from '~/components/Link/Link'
+import { Link } from '~/components/Link/Link'
 import TagIcon from '~/icons/tag.svg'
 import './Links.scss'
 
@@ -15,7 +15,7 @@ const renderPageLink = ({ slug, subdomain, title, type }) => (
 )
 
 
-export default function Links({
+export function Links({
 	caption = 'Child Articles',
 	className = '',
 	icon = <TagIcon />,

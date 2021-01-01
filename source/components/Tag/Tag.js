@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Link from '~/components/Link/Link'
+import { Link } from '~/components/Link/Link'
 import Remove from '~/icons/remove.svg'
 import TagIcon from '~/icons/tag.svg'
 import { noop } from '~/utilities/noop'

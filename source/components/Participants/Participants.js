@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import EditableList from '~/components/EditableList/EditableList'
-import Link from '~/components/Link/Link'
+import { Link } from '~/components/Link/Link'
 import UserSearchBox from '~/components/SearchBox/UserSearchBox'
 import NerdIcon from '~/icons/nerd.svg'
 import RemoveIcon from '~/icons/remove.svg'
 import compareBy from '~/utilities/compareBy'
 import { noop } from '~/utilities/noop'
-import pluck from '~/utilities/pluck'
+import { pluck } from '~/utilities/pluck'
 import './Participants.scss'
 
 const ORDER = {

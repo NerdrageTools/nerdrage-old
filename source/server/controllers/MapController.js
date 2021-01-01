@@ -3,7 +3,7 @@ import nocache from 'nocache'
 import Map from '~/server/models/Map'
 import loadByCampaign from '~/server/utilities/loadByCampaign'
 import omit from '~/utilities/omit'
-import pluck from '~/utilities/pluck'
+import { pluck } from '~/utilities/pluck'
 
 const loadMap = (slug, campaign) => (
 	loadByCampaign('Map', campaign, { filter: { slug } })

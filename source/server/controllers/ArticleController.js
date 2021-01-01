@@ -2,7 +2,7 @@ import express from 'express'
 import Article from '~/server/models/Article'
 import loadByCampaign from '~/server/utilities/loadByCampaign'
 import omit from '~/utilities/omit'
-import pluck from '~/utilities/pluck'
+import { pluck } from '~/utilities/pluck'
 
 const loadArticle = async (slug, campaign) => (
 	loadByCampaign('Article', campaign, { filter: { $or: [{ aliases: slug }, { slug }] } })
