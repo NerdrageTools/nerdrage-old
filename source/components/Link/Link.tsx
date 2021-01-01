@@ -28,6 +28,10 @@ export const Link: FunctionComponent<Props> = ({
 	const contents = children || type
 	const active = context.router!.asPath === `/${type}/${slug}`
 
+	if (!slug && props.href) {
+		return <a className="external" href={props.href} target="_new">{children}</a>
+	}
+
 	const queryString = !query
 		? ''
 		: `${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
