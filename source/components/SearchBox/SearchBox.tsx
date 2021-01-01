@@ -8,7 +8,7 @@ import SearchIcon from '~/icons/search.svg'
 import { noop } from '~/utilities/noop'
 
 interface Option {
-	_id: string,
+	id: string,
 	preview: string,
 	title: string,
 }

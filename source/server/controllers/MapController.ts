@@ -54,25 +54,25 @@ export const getMap = async (request, response) => {
 	let { map } = request
 
 	if (!map) {
-		map = omit(await new Map({ slug }).toJSON(), '_id')
+		map = omit(await new Map({ slug }).toJSON(), 'id')
 	} else {
 		map = await map.toJSON(campaign)
 	}
 
 	return response.status(200).json({
 		...omit(map, 'data'),
-		campaign: pluck(map.campaign, '_id', 'subdomain', 'title'),
+		campaign: pluck(map.campaign, 'id', 'subdomain', 'title'),
 		isEditable,
 		isOwner,
 	})
 }
 export const getMapData = async (request, response) => {
 	const { map } = request
-	if (map && map._id) {
+	if (map && map.id) {
 		response.set('Cache-Control', 'public, max-age=31557600')
 		response.set('ETag', map.checksum)
 
-		map.data = (await Map.findOne({ _id: map._id }, { data: 1 })).data
+		map.data = (await Map.findOne({ id: map.id }, { data: 1 })).data
 		response.status(200).json(map.toJSON())
 	} else {
 		response.status(404).send()
@@ -86,15 +86,15 @@ export const upsertMap = async (request, response) => {
 	} = request
 	let { map, body: updates } = request
 	updates = {
-		...omit(updates, '_id', 'slug', 'version'),
-		campaign: campaign._id,
+		...omit(updates, 'id', 'slug', 'version'),
+		campaign: campaign.id,
 		slug,
 	}
 	if (!isOwner) {
 		delete updates.secret // Only owners can set this field
 	}
 
-	if (map && map.campaign && map.campaign._id.equals(campaign._id)) {
+	if (map && map.campaign && map.campaign.id.equals(campaign.id)) {
 		map.set(updates)
 	} else {
 		map = new Map(updates)

@@ -55,8 +55,8 @@ const addParticipants = (
 	addition: Partial<Participation> = {},
 ): void => {
 	users.forEach(user => {
-		map.set(user._id!, {
-			...(map.get(user._id!) || user),
+		map.set(user.id!, {
+			...(map.get(user.id!) || user),
 			...user,
 			...addition,
 		} as Participant)
@@ -101,10 +101,10 @@ export class Participants extends Component<Props, State> {
 	handleSetEdit = (user: IUserLink, edit: Partial<ParticipantEdit> = {}): void => {
 		if (!user) return
 		const { current, edits } = this.state
-		const exists = current.find(p => p._id === user._id)
-		const currentEdit = edits.find(e => e._id === user._id) || {} as ParticipantEdit
+		const exists = current.find(p => p.id === user.id)
+		const currentEdit = edits.find(e => e.id === user.id) || {} as ParticipantEdit
 
-		const updated = edits.filter(e => e._id !== user._id)
+		const updated = edits.filter(e => e.id !== user.id)
 		if (edit.type === 'added' && !exists) {
 			updated.push({ ...user, ...edit, ...pluck(currentEdit, 'level', 'order') })
 		}
@@ -150,7 +150,7 @@ export class Participants extends Component<Props, State> {
 				<Scrollbars className="contents scrollbars" universal>
 					<ul className="participant-list">
 						{participants.map(user => (
-							<li key={user._id} className={`participant row ${user.type || ''}`}>
+							<li key={user.id} className={`participant row ${user.type || ''}`}>
 								<NerdIcon className="nerd icon" />
 								<Link className="display" slug={user.username} type="user">
 									<span className="name" title={user.name}>{user.name}</span>

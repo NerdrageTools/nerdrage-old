@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const withCSS = require('@zeit/next-css')
 const withSass = require('@zeit/next-sass')
 const DirectoryNamedWebpackPlugin = require('directory-named-webpack-plugin')
@@ -29,6 +30,7 @@ module.exports = withPlugins([withSass, withCSS], {
 		config.module.rules.unshift({
 			exclude: /node_modules/,
 			loader: 'babel-loader',
+			options: babelConfig,
 			test: /\.[jt]sx?$/,
 		})
 

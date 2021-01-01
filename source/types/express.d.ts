@@ -1,5 +1,5 @@
+import { IUserProfile } from '~/server/models'
 import { ICampaign } from '~/server/schema/ICampaign'
-import { IUser } from '~/server/schema/IUser'
 
 declare module 'express' {
 	export interface IRequest<TParams = ParamsDictionary, ParsedQs = any>
@@ -11,6 +11,6 @@ declare module 'express' {
 		isOwner: boolean,
 		slug: string,
 		subdomain: string,
-		user: IUser,
+		user: IUserProfile | null,
 	}
 }

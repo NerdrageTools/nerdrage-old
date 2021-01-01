@@ -14,7 +14,7 @@ import { confirm } from '~/utilities/confirm'
 import { pluck } from '~/utilities/pluck'
 import { URI } from '~/utilities/URI'
 
-const STATE_FIELDS = ['_id', 'isEditor', 'isOwner', 'secret', 'slug', 'template']
+const STATE_FIELDS = ['id', 'isEditor', 'isOwner', 'secret', 'slug', 'template']
 const UPDATABLE_FIELDS = ['title']
 
 export default class Sheet extends Component {
@@ -64,21 +64,21 @@ export default class Sheet extends Component {
 		}
 	}
 
-	get isDirty() {
+	get isDirty(): boolean {
 		return (
 			this.state.title !== this.state.saved.title
 			|| this.character.isDirty || this.layout.isDirty
 		)
 	}
 
-	updateSheet = ({ data = {}, layout = defaultSheetLayout }) => {
+	updateSheet = ({ data = {}, layout = defaultSheetLayout }): void => {
 		this.character.set(data)
 		this.character.markAsClean()
 		this.layout.set(layout)
 		this.layout.markAsClean()
 	}
 
-	handleDelete = async () => {
+	handleDelete = async (): Promise<void> => {
 		if (await confirm('Are you sure you want to permanently delete this sheet?')) {
 			const { slug } = this.context.router.query
 			const response = await fetch(`/api/sheet/${slug}`, { method: 'DELETE' })
@@ -87,12 +87,12 @@ export default class Sheet extends Component {
 			}
 		}
 	}
-	handleReset = () => {
+	handleReset = (): void => {
 		this.character.reset()
 		this.layout.reset()
 		this.setState(this.state.saved)
 	}
-	handleSave = async payload => {
+	handleSave = async (payload): Promise<void> => {
 		const { slug } = this.context.router.query
 		const response = await fetch(`/api/sheet/${slug}`, {
 			body: JSON.stringify(payload || {
@@ -114,15 +114,15 @@ export default class Sheet extends Component {
 
 		return this.setState(json)
 	}
-	handleSheetChange = () => this.forceUpdate()
-	handleTitleChange = title => this.setState({ title })
-	handleToggleSecret = () => this.handleSave({ secret: !this.state.secret })
-	handleToggleTemplate = () => this.handleSave({ template: !this.state.template })
+	handleSheetChange = (): void => this.forceUpdate()
+	handleTitleChange = (title: string): void => this.setState({ title })
+	handleToggleSecret = (): void => { this.handleSave({ secret: !this.state.secret }) }
+	handleToggleTemplate = (): void => { this.handleSave({ template: !this.state.template }) }
 
-	render = () => {
+	render = (): JSX.Element => {
 		const { httpStatusCode, message, slug } = this.props
 		const {
-			_id, isEditor, isOwner, secret, template, title,
+			id, isEditor, isOwner, secret, template, title,
 		} = this.state
 
 		if (httpStatusCode !== 200) {
@@ -140,11 +140,11 @@ export default class Sheet extends Component {
 					/>
 					{isEditor && this.isDirty && <>
 						<button className="safe" onClick={() => this.handleSave()}>
-							{_id ? 'Save' : 'Create'}
+							{id ? 'Save' : 'Create'}
 						</button>
-						{_id && <button className="safe" onClick={this.handleReset}>Reset</button>}
+						{id && <button className="safe" onClick={this.handleReset}>Reset</button>}
 					</>}
-					{_id && isEditor && <>
+					{id && isEditor && <>
 						<Toggle
 							className="secret"
 							offIcon={PublicIcon} onIcon={SecretIcon}
@@ -158,7 +158,7 @@ export default class Sheet extends Component {
 							value={template}
 						/>
 					</>}
-					{_id && isOwner && (
+					{id && isOwner && (
 						<button className="delete danger" onClick={this.handleDelete}>Delete</button>
 					)}
 				</div>

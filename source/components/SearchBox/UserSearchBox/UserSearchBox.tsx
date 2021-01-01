@@ -11,9 +11,9 @@ export class UserSearchBox extends SearchBox<IUser> {
 	readonly typeName: string = 'user'
 	readonly url: string = '/api/search/users/:searchTerm'
 
-	getValue = (user: IUser): string => user._id
+	getValue = (user: IUser): string => user.id
 	renderOption = (user: IUser, _: number, itemProps: OptionProps): JSX.Element => (
-		<li key={user._id} className="search-result" {...itemProps}>
+		<li key={user.id} className="search-result" {...itemProps}>
 			<NerdIcon /><b className="name">{user.name}</b>
 			<span>{` | ${user.username}`}</span>
 		</li>

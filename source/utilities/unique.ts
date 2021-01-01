@@ -4,8 +4,8 @@ export function unique<T>(first: T | T[], ...rest: T[]): T[] {
 	let list: T[]
 	if (rest.length > 0) {
 		list = [first as T, ...rest]
-	} else if (Array.isArray(first)) {
-		list = first
+	} else if (Array.isArray(first) || (first as any)?.isMongooseArray) {
+		list = first as T[]
 	} else {
 		list = [first]
 	}

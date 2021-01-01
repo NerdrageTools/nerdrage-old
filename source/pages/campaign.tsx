@@ -37,9 +37,9 @@ export default class CampaignPage extends Component {
 	handleParticipantsSave = ({ editors, owners, players }) => {
 		this.setState({ savingParticipants: true })
 		const update = {
-			editors: editors.map(user => user._id),
-			owners: owners.map(user => user._id),
-			players: players.map(user => user._id),
+			editors: editors.map(user => user.id),
+			owners: owners.map(user => user.id),
+			players: players.map(user => user.id),
 		}
 		this.context.updateCampaign(update, () => {
 			this.setState({ savingParticipants: false })
@@ -48,7 +48,7 @@ export default class CampaignPage extends Component {
 	handleReset = () => this.setState(pluck(this.context.campaign, STATE_FIELDS))
 	handleSave = () => this.context.updateCampaign(this.state)
 	handleSourcesChange = sources => {
-		this.context.updateCampaign({ sources: sources.map(s => s._id) })
+		this.context.updateCampaign({ sources: sources.map(s => s.id) })
 	}
 	handleTitleChange = title => this.setState({ title })
 	handleToggleSecret = () => {
@@ -57,8 +57,8 @@ export default class CampaignPage extends Component {
 	}
 	renderUserList = list => (
 		<ul className="user-list">
-			{list.map(({ _id, name, username }) => (
-				<li key={_id}>
+			{list.map(({ id, name, username }) => (
+				<li key={id}>
 					<Link slug={username} type="user">{name || username}</Link>
 				</li>
 			))}
@@ -66,7 +66,7 @@ export default class CampaignPage extends Component {
 	)
 	render = () => {
 		const { campaign } = this.context
-		if (!campaign._id) {
+		if (!campaign.id) {
 			return <ErrorPage message={campaign.message} statusCode={404} />
 		}
 

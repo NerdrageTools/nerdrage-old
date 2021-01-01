@@ -21,15 +21,10 @@ export const loadData = async (): Promise<void> => {
 	const daddy = await Campaigns.create({ editors: [editor], owners: [owner], players: [player], sources: [grandpa], subdomain: 'daddy', title: 'Daddy' })
 	const main = await Campaigns.create({ editors: [editor], owners: [owner], players: [player], sources: [daddy], subdomain: 'child', title: 'Child' })
 
-	// @ts-expect-error - global.fixtures
 	global.fixtures = {
+		articles: {},
 		campaigns: { grandpa, daddy, main },
 		users: { sysAdmin, owner, editor, player, other, foo, bar, baz },
 	}
 }
 /* eslint-enable max-len,sort-keys */
-
-export const cleanData = async (): Promise<void> => {
-	await Campaigns.deleteMany({})
-	await Users.deleteMany({})
-}

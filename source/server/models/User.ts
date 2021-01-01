@@ -8,12 +8,6 @@ import { Campaigns, ICampaignLink } from '~/server/models/Campaign'
 import { DocumentBase, IDocumentBaseData } from '~/server/models/DocumentBase'
 import { ISheetLink, Sheet } from '~/server/models/Sheet'
 import { loadByCampaign } from '~/server/utilities/loadByCampaign'
-import { cleanData, loadData } from '~/testing/fixtures'
-
-beforeEach(async () => {
-	await cleanData()
-	await loadData()
-})
 
 export interface IUserData extends IDocumentBaseData {
 	email: string,

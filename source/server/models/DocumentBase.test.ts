@@ -1,7 +1,7 @@
 /** @jest-environment node */
 /* eslint-disable max-classes-per-file */
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
-import { DocumentBase, IDocumentBaseData } from './DocumentBase'
+import { DocumentBase, IDocumentBaseData } from '~/server/models/DocumentBase'
 
 process.env.TEST_SUITE = 'models-DocumentBase'
 

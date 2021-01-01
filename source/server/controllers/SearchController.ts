@@ -1,7 +1,7 @@
 import deburr from 'lodash.deburr'
 import express, { IRequest, Response } from 'express'
 import fetch from 'isomorphic-unfetch'
-import { Articles, Campaign, Users } from '~/server/models'
+import { Article, Campaign, Users } from '~/server/models'
 import { IFontSearchResult } from '~/server/schema/IFont'
 import { bound } from '~/utilities/bound'
 
@@ -24,7 +24,7 @@ const FONTS = fetch('https://fonts.google.com/metadata/fonts').then(async respon
 
 export async function searchArticles(request: ISearchRequest, response: Response): Promise<void> {
 	const { params: { searchTerm }, subdomain, user } = request
-	const results = await Articles.search(searchTerm, subdomain, user?._id)
+	const results = await Article.search(searchTerm, subdomain, user?.id)
 
 	if (results === null) {
 		response.status(401).send({
@@ -44,11 +44,11 @@ export const searchCampaigns = (
 						$or: [
 							{ secret: false },
 							// @ts-expect-error - @types/mongoose sucks
-							{ editors: request.user._id },
+							{ editors: request.user.id },
 							// @ts-expect-error - @types/mongoose sucks
-							{ owners: request.user._id },
+							{ owners: request.user.id },
 							// @ts-expect-error - @types/mongoose sucks
-							{ players: request.user._id },
+							{ players: request.user.id },
 						],
 					},
 					{ $or: [{ slug: $regex }, { title: $regex }] },

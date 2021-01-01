@@ -41,8 +41,8 @@ export function SheetList({
 							<tbody>
 								{sheets
 									.filter(sheet => sheet.title.toLowerCase().match(filter.toLowerCase()))
-									.map(({ _id, secret, template, slug, title }) => (
-										<tr key={_id}>
+									.map(({ id, secret, template, slug, title }) => (
+										<tr key={id}>
 											<td className="link">
 												<Link slug={slug} type="sheet">{title}</Link>
 											</td>

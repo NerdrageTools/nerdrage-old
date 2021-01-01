@@ -24,8 +24,8 @@ beforeEach(async () => {
 		{ subdomain: 'bar' },
 	])
 	await Foos.create([
-		{ campaign: campaign1, foo: 'foo1' },
-		{ campaign: campaign2, foo: 'foo2' },
+		{ campaign: campaign1, foo: 'foo1', slug: 'foo1', title: 'Foo 1' },
+		{ campaign: campaign2, foo: 'foo2', slug: 'foo2', title: 'Foo 2' },
 	])
 })
 
@@ -37,21 +37,28 @@ test('subclasses can create', async () => {
 	expect(await Foos.countDocuments()).toBe(2)
 })
 
-test('campaign is required', async () => {
+test('campaign, slug, and title are required', async () => {
 	await expect(() => Foos.create({ foo: 'foo3' }))
-		.rejects.toThrow(/failed: campaign:.*is required/)
+		.rejects.toThrow(/`title`.*`slug`.*`campaign`.*is required/)
+})
+
+test('campaign autoPopulates', async () => {
+	const foo = await Foos.findOne({ slug: 'foo1' })
+	expect(foo.campaign).toReference(campaign1)
+	expect(foo.campaign.id).toBeTruthy()
+	expect(foo.campaign.subdomain).toEqual(campaign1.subdomain)
 })
 
 test('subclasses can filter', async () => {
 	let found = await Foos.find().byCampaign([campaign1])
 	expect(found).toHaveLength(1)
-	expect(found[0].campaign).refersTo(campaign1)
+	expect(found[0].campaign).toReference(campaign1)
 
 	found = await Foos.find().byCampaign([])
 	expect(found).toHaveLength(0)
 
 	found = await Foos.find().byCampaign([campaign1, campaign2])
 	expect(found).toHaveLength(2)
-	expect(found[0].campaign).refersTo(campaign1)
-	expect(found[1].campaign).refersTo(campaign2)
+	expect(found[0].campaign).toReference(campaign1)
+	expect(found[1].campaign).toReference(campaign2)
 })

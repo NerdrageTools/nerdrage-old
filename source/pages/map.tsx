@@ -12,7 +12,7 @@ import { pluck } from '~/utilities/pluck'
 import { URI } from '~/utilities/URI'
 
 const STATE_FIELDS = [
-	'_id',
+	'id',
 	'checksum',
 	'data',
 	'isOwner',
@@ -61,7 +61,7 @@ export default class Map extends Component {
 		const map = await fetch(`/api/map/${slug}`)
 		const json = {
 			...pluck(await map.json(), STATE_FIELDS),
-			_id: null,
+			id: null,
 			data: null,
 			title: router.query.title || '',
 		}
@@ -74,13 +74,13 @@ export default class Map extends Component {
 		this.iframeWindow = window
 
 		const {
-			_id, checksum, data, generating,
+			id, checksum, data, generating,
 		} = this.state
 		const { slug } = this.props
 
 		if (data) {
 			window.displayJsonData(data)
-		} else if (_id) {
+		} else if (id) {
 			this.setState({ loading: true })
 			const map = await fetch(`/api/map/${slug}/${checksum}`, { credentials: 'include' })
 				.then(response => response.json())
@@ -138,11 +138,11 @@ export default class Map extends Component {
 		const { campaign } = this.context
 		const { slug } = this.props
 		const {
-			_id, data, loading, generating, isEditable, isOwner, saving, secret, title,
+			id, data, loading, generating, isEditable, isOwner, saving, secret, title,
 		} = this.state
 
 		let contents
-		if (_id || (isEditable && generating)) {
+		if (id || (isEditable && generating)) {
 			contents = (
 				<IFrame
 					bodyClasses={[isEditable ? 'editable' : 'readOnly']}
@@ -190,14 +190,14 @@ export default class Map extends Component {
 						readOnly={!isEditable}
 						value={title}
 					/>
-					{_id && isOwner && (
+					{id && isOwner && (
 						<Toggle
 							className="secret" offIcon={PublicIcon}
 							onIcon={SecretIcon} onToggle={this.handleToggleSecret}
 							value={secret}
 						/>
 					)}
-					{_id && campaign.isEditor && (
+					{id && campaign.isEditor && (
 						<Toggle
 							className="in-navigation" offIcon={NavigationIcon}
 							offProps={{ title: 'Not Added to Site Navigation' }} onIcon={NavigationIcon}
@@ -208,7 +208,7 @@ export default class Map extends Component {
 					{(data || generating) && isEditable && (
 						<button className="safe" disabled={saving} onClick={this.handleSave}>Save</button>
 					)}
-					{_id && isEditable && (
+					{id && isEditable && (
 						<button className="danger" onClick={this.handleDelete}>Delete</button>
 					)}
 				</div>

@@ -33,7 +33,7 @@ const WysiwygEditor = process.browser // @ts-expect-error - ts does not understa
 	: () => <div />
 
 const STATE_FIELDS = [
-	'_id',
+	'id',
 	'aliases',
 	'html',
 	'isOwner',
@@ -84,7 +84,7 @@ export default class Article extends Component {
 		activeTab: 'read',
 		editMode: false,
 		...pluck(this.props, STATE_FIELDS),
-		saved: this.props._id ? pluck(this.props, STATE_FIELDS) : {
+		saved: this.props.id ? pluck(this.props, STATE_FIELDS) : {
 			title: this.props.title || this.context.router.query.title,
 		},
 		title: this.props.title || this.context.router.query.title,
@@ -120,7 +120,7 @@ export default class Article extends Component {
 		const article = await fetch(`/api/article/${this.props.slug}`)
 		const json = {
 			...pluck(await article.json(), STATE_FIELDS),
-			_id: null,
+			id: null,
 			title: this.context.router.query.title || '',
 		}
 
@@ -228,7 +228,7 @@ export default class Article extends Component {
 	</>
 	render = (): JSX.Element => {
 		const {
-			_id, activeTab, aliases, html, isEditable, isOwner, message,
+			id, activeTab, aliases, html, isEditable, isOwner, message,
 			redirectedFrom, secret, slug, tags, template = false, title = '',
 		} = this.state
 		const { campaign: source, childArticles, httpStatusCode } = this.props
@@ -269,7 +269,7 @@ export default class Article extends Component {
 							<b>{redirectedFrom}</b>
 						</div>
 					)}
-					{_id && isOwner && (
+					{id && isOwner && (
 						<Toggle
 							className="secret"
 							offIcon={PublicIcon} onIcon={SecretIcon}
@@ -277,7 +277,7 @@ export default class Article extends Component {
 							value={secret}
 						/>
 					)}
-					{_id && campaign.isEditor && <>
+					{id && campaign.isEditor && <>
 						<Toggle
 							className="template"
 							offIcon={TemplateIcon} onIcon={TemplateIcon}
@@ -300,7 +300,7 @@ export default class Article extends Component {
 							value={this.state.editMode}
 						/>
 					)}
-					{_id && (
+					{id && (
 						<Toggle
 							className="favorite"
 							offIcon={FavoriteOffIcon} onIcon={FavoriteOnIcon}
@@ -311,7 +311,7 @@ export default class Article extends Component {
 					{this.isDirty && campaign.isEditor && (
 						<button className="safe" onClick={this.handleSave}>Save</button>
 					)}
-					{_id && this.isDirty && campaign.isEditor && (
+					{id && this.isDirty && campaign.isEditor && (
 						<button className="safe" onClick={this.handleReset}>Reset</button>
 					)}
 				</div>

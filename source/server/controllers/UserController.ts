@@ -49,7 +49,7 @@ export async function createUser(request: IRequest, response: Response): Promise
 	}
 }
 export async function getUserFavorites(user: IUserData): Promise<IArticleLink[]> {
-	const profile = await (await Users.findOne({ _id: user._id }))?.toProfile(true)
+	const profile = await (await Users.findOne({ id: user.id }))?.toProfile(true)
 	return profile?.favorites ?? []
 }
 export async function getUser(username: string, populated: boolean = false)
@@ -73,7 +73,7 @@ export async function getUserRequest(request: IRequest, response: Response): Pro
 		return response.status(200).json(await user.toProfile())
 	}
 
-	if (!currentUser || !currentUser._id) {
+	if (!currentUser || !currentUser.id) {
 		return response.status(404).json({
 			message: `Unable to locate a user with username '${username}'.`,
 		})
@@ -113,7 +113,7 @@ export async function logOff(request: IRequest, response: Response): Promise<Res
 	return response.status(200).json(null)
 }
 export async function updateCurrentUser(request: IRequest, response: Response): Promise<Response> {
-	const currentUser = await Users.findOne({ _id: request?.user?._id })
+	const currentUser = await Users.findOne({ id: request?.user?.id })
 	if (!currentUser) {
 		return response.status(404).json({ message: 'You must be logged in to edit your profile.' })
 	}

@@ -20,7 +20,7 @@ export class ArticleSearchBox extends SearchBox<IArticleSearchResult> {
 		}
 	}
 
-	getValue = (article: IArticleSearchResult): string => article._id
+	getValue = (article: IArticleSearchResult): string => article.id
 	renderOption = (option: IArticleSearchResult, _: number, itemProps: OptionProps): JSX.Element => (
 		<li key={option.slug} className="search-result" {...itemProps}>
 			<b className="title">{option.title}</b>

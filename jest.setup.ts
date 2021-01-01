@@ -1,4 +1,20 @@
+import { Ref } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
+import { getId } from '~/server/utilities/getId'
+import { loadData } from '~/testing/fixtures'
+
+expect.extend({
+	toReference<T>(received: Ref<T>, expected: Ref<T>): jest.CustomMatcherResult {
+		const receivedId = getId(received)
+		const expectedId = getId(expected)
+		const pass = receivedId.equals(expectedId)
+
+		return {
+			message: () => (pass ? '' : `ID ${expectedId} does not match expected ID ${receivedId}`),
+			pass,
+		}
+	},
+})
 
 beforeAll(async () => {
 	const { MONGO_URL, TEST_SUITE } = process.env
@@ -21,6 +37,7 @@ beforeEach(async () => {
 		Object.values(mongoose.connection.collections)
 			.map(async collection => collection.deleteMany({})),
 	)
+	await loadData()
 })
 
 afterAll(async () => {

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { modelOptions, mongoose, pre, prop, Severity } from '@typegoose/typegoose'
+import { DocumentType, modelOptions, pre, prop, Severity } from '@typegoose/typegoose'
+import mongoose from 'mongoose'
 
 export interface IDocumentBaseData {
 	createdAt?: Date,
-	id?: mongoose.Schema.Types.ObjectId,
+	readonly id?: null | string,
 	lastUpdatedAt?: Date,
 	version?: number,
 }
@@ -17,20 +18,31 @@ export interface IDocumentBaseData {
 export abstract class DocumentBase<
 	TData extends IDocumentBaseData = IDocumentBaseData
 > {
-	@prop({ auto: true, type: mongoose.Schema.Types.ObjectId })
-	id?: mongoose.Schema.Types.ObjectId
+	@prop({ auto: true, type: mongoose.Types.ObjectId })
+	_id?: mongoose.Types.ObjectId
+
+	public get id(): null | string { return this._id ? String(this._id) : null }
 
 	@prop({ type: Date })
-	createdAt?: Date
+	public createdAt?: Date
 
 	@prop({ type: Date })
-	lastUpdatedAt?: Date
+	public lastUpdatedAt?: Date
 
 	@prop({ default: 0, type: Number })
 	version?: number = 0
 
-	constructor(data: TData) {
-		Object.assign(this, data)
+	public toDocument(): DocumentType<TData> {
+		if ((this as unknown as DocumentType<TData>).markModified !== undefined) {
+			return this as unknown as DocumentType<TData>
+		}
+
+		const Model = mongoose.models[this.constructor.name]
+		return new Model({ ...this })
+	}
+
+	public toJSON(): TData {
+		return this.toDocument().toObject()
 	}
 
 	/**
@@ -38,14 +50,10 @@ export abstract class DocumentBase<
 	 * @param user The user responsible for this change
 	 * @returns A promise, which resolves once the save succeeds/fails
 	 */
-	save = async (): Promise<this> => {
-		const Model = mongoose.models[this.constructor.name]
-		if (Model) {
-			const instance = new Model(this)
-			const data = await instance.save()
-			Object.assign(this, data.toJSON())
-		}
-
+	save = async (): Promise<DocumentBase<TData>> => {
+		const doc = this.toDocument()
+		const data = await doc.save()
+		Object.assign(this, data.toJSON())
 		return this
 	}
 

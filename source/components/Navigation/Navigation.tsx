@@ -53,7 +53,7 @@ export class Navigation extends Component<Props> {
 			onEnd: () => {
 				const updated = Array.from(ul.querySelectorAll('li'))
 					.map(li => li.getAttribute('data-id'))
-					.map(id => navigation.find(navLink => navLink._id === id))
+					.map(id => navigation.find(navLink => navLink.id === id))
 					.filter(Boolean) as INavigation[]
 
 				this.context.updateCampaign({ navigation: updated })
@@ -91,13 +91,13 @@ export class Navigation extends Component<Props> {
 		const { navigation } = this.context.campaign
 
 		this.context.updateCampaign({
-			navigation: navigation.filter(item => item._id !== id),
+			navigation: navigation.filter(item => item.id !== id),
 		})
 	}
 	handleEdit = async ({ currentTarget }: MouseEvent<SVGElement>): Promise<void> => {
 		const id = currentTarget.getAttribute('data-id')
 		const navigation = [...this.context.campaign.navigation]
-		const item = navigation.find(navItem => navItem._id === id)
+		const item = navigation.find(navItem => navItem.id === id)
 		if (!item) { return }
 
 		const edited = await this.promptForLinkDetails(item)
@@ -118,7 +118,7 @@ export class Navigation extends Component<Props> {
 			<div className="list-title">{campaignLink || listTitle}</div>
 		)}
 		<ul>
-			{list.map(({ _id, slug, title }, index) => {
+			{list.map(({ id, slug, title }, index) => {
 				const { subdomain = '', title: cTitle = '' } = this.context.campaign
 				let text: string = title
 				if (type !== 'campaign' && subdomain && subdomain !== this.context.subdomain) {
@@ -127,12 +127,12 @@ export class Navigation extends Component<Props> {
 
 				if (!slug) {
 					return (
-						<li key={_id || index} className="section" data-id={_id} title={title}>
+						<li key={id || index} className="section" data-id={id} title={title}>
 							<b>{text}</b>
 							{this.context.campaign.isEditor && (
 								<div className="controls">
-									<EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
-									<DeleteIcon className="delete" data-id={_id} onClick={this.handleDelete} />
+									<EditIcon className="edit" data-id={id} onClick={this.handleEdit} />
+									<DeleteIcon className="delete" data-id={id} onClick={this.handleDelete} />
 								</div>
 							)}
 						</li>
@@ -140,12 +140,12 @@ export class Navigation extends Component<Props> {
 				}
 
 				return (
-					<li key={_id || index} data-id={_id} title={title}>
+					<li key={id || index} data-id={id} title={title}>
 						<Link {...{ slug, type }}>{text}</Link>
 						{this.context.campaign.isEditor && (
 							<div className="controls">
-								<EditIcon className="edit" data-id={_id} onClick={this.handleEdit} />
-								<DeleteIcon className="delete" data-id={_id} onClick={this.handleDelete} />
+								<EditIcon className="edit" data-id={id} onClick={this.handleEdit} />
+								<DeleteIcon className="delete" data-id={id} onClick={this.handleDelete} />
 							</div>
 						)}
 					</li>
@@ -162,7 +162,7 @@ export class Navigation extends Component<Props> {
 
 		const navigation = campaign.navigation.map(link => ({
 			...link,
-			campaign: pluck(campaign, '_id', 'subdomain', 'title'),
+			campaign: pluck(campaign, 'id', 'subdomain', 'title'),
 		}))
 		const favorites = (user.favorites ?? []).filter(link => (
 			link.subdomain === campaign.subdomain

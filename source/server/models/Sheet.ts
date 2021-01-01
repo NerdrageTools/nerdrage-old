@@ -1,12 +1,18 @@
 import mongoose from 'mongoose'
-import { ICampaign } from '~/server/models/Campaign'
+import { ICampaignModel } from '~/server/models/Campaign'
 import { Slug } from '~/server/models/Slug'
 
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 
+export interface ISheetLink {
+	slug: string,
+	subdomain: string,
+	title: string,
+}
+
 interface TSheet extends mongoose.Document {
-	_id: string,
-	campaign: ICampaign['_id'],
+	campaign: ICampaignModel['id'],
+	id: string,
 }
 
 export const SheetSchema = new mongoose.Schema<TSheet>({

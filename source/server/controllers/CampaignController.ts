@@ -1,10 +1,9 @@
 import express, { IRequest, Response } from 'express'
-import { defaultTheme } from '~/data/Theme'
+import { defaultTheme } from '~/server/models/Theme'
 import { Campaign404 } from '~/server/errors/Campaign404'
 import { ContextLoader } from '~/server/middleware/ContextLoader'
 import { NoAnonymous } from '~/server/middleware/NoAnonymous'
-import { Campaign, ICampaignModel, IUserProfile } from '~/server/models'
-import { ICampaign } from '~/server/schema/ICampaign'
+import { Campaign, IUserProfile } from '~/server/models'
 import { noop } from '~/utilities/noop'
 
 const controller = express()
@@ -17,8 +16,8 @@ export async function loadCampaign(
 
 	try {
 		const campaign = await Campaign.findOne({ subdomain })
-			.populate('createdBy editors lastUpdatedBy players owners', '_id name username')
-			.populate('sources', '_id subdomain title')
+			.populate('createdBy editors lastUpdatedBy players owners', 'id name username')
+			.populate('sources', 'id subdomain title')
 			.exec()
 
 		if (!campaign) return null
@@ -27,10 +26,10 @@ export async function loadCampaign(
 			!user
 				? { isEditor: false, isOwner: false, isParticipant: false, isViewer: false }
 				: {
-					isEditor: Boolean(user.isAdmin || campaign.isEditableBy(user._id!)),
-					isOwner: Boolean(user.isAdmin || campaign.isOwnedBy(user._id!)),
-					isParticipant: Boolean(user.isAdmin || campaign.isMember(user._id!)),
-					isViewer: Boolean(user.isAdmin || campaign.isVisibleTo(user._id!)),
+					isEditor: Boolean(user.isAdmin || campaign.isEditableBy(user.id!)),
+					isOwner: Boolean(user.isAdmin || campaign.isOwnedBy(user.id!)),
+					isParticipant: Boolean(user.isAdmin || campaign.isMember(user.id!)),
+					isViewer: Boolean(user.isAdmin || campaign.isVisibleTo(user.id!)),
 				},
 		)
 	} catch (error) {
@@ -47,7 +46,7 @@ export const getCampaign = async (request: IGetRequest, response: Response): Pro
 	const { subdomain } = request.params || {}
 	const campaign = await loadCampaign(subdomain, request.user)
 
-	if (!campaign || !campaign._id) {
+	if (!campaign || !campaign.id) {
 		Campaign404({ campaign, subdomain }, response, noop)
 	} else {
 		response.status(200).json(campaign)
@@ -59,7 +58,7 @@ interface IUpsertRequest extends IRequest {
 	params: { subdomain: string },
 }
 const createCampaign = async (request: IUpsertRequest, response: Response) => {
-	const userId = request.user._id
+	const userId = request.user.id
 	if (!userId) {
 		return response.status(401).send({
 			message: 'Your account is not authorized to create campaigns.',
@@ -113,7 +112,7 @@ const updateCampaign = async (request: IUpsertRequest, response: Response) => {
 
 		if (!campaign) return Campaign404({ subdomain }, response)
 
-		const userId = request.user._id
+		const userId = request.user.id
 
 		if (!campaign.isEditor) {
 			return response.status(401).json({

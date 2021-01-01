@@ -14,12 +14,12 @@ export class Sources extends Component {
 	}
 
 	handleAddSource = source => {
-		if (!source || this.props.sources.some(s => s._id === source._id)) { return }
+		if (!source || this.props.sources.some(s => s.id === source.id)) { return }
 		this.props.onSave([...this.props.sources, source])
 	}
 	handleRemoveSource = source => {
-		if (!source || !this.props.sources.some(s => s._id === source._id)) { return }
-		this.props.onSave(this.props.sources.filter(s => s._id !== source._id))
+		if (!source || !this.props.sources.some(s => s.id === source.id)) { return }
+		this.props.onSave(this.props.sources.filter(s => s.id !== source.id))
 	}
 
 	render = () => {
@@ -32,7 +32,7 @@ export class Sources extends Component {
 				<div className="title">{title}</div>
 				<ul className="source-list">
 					{sources.map(source => (
-						<li key={source._id} className="campaign row">
+						<li key={source.id} className="campaign row">
 							<CampaignIcon />
 							<Link
 								campaign={source}

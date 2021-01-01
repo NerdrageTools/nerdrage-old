@@ -1,28 +1,27 @@
+import { titleCase } from 'title-case'
 import express, { IRequest, NextFunction, Response } from 'express'
-import { Article, Articles, IArticleData } from '~/server/models'
-import { IArticle } from '~/server/schema/IArticle'
-import { ICampaign } from '~/server/schema/ICampaign'
-import { loadByCampaign } from '~/server/utilities/loadByCampaign'
+import { ArticleClass, Article, IArticleData, IArticleRendered } from '~/server/models'
 import { omit } from '~/utilities/omit'
 import { pluck } from '~/utilities/pluck'
+import { DocumentType } from '@typegoose/typegoose'
 
-const loadArticle = async (slug: string, campaign: ICampaign): Promise<IArticleData | null> => {
-	const articles = await loadByCampaign<IArticleData>(
-		'Article', campaign,
-		{ filter: { $or: [{ aliases: slug }, { slug }] } },
+const loadArticle = async (slug: string, sources: string[]): Promise<ArticleClass | null> => {
+	const article = <IArticleData><unknown>(
+		await Article.find()
+			.byCampaign(sources)
+			.findOne({ $or: [{ aliases: slug }, { slug }] })
+			.populate('campaign', 'id subdomain title')
+			.populate('createdBy lastUpdatedBy', 'name username')
+			.exec()
 	)
-	if (!articles?.length) return null
 
-	return articles.shift()!
-		.populate('campaign', 'subdomain title')
-		.populate('createdBy lastUpdatedBy', 'name username')
-		.execPopulate()
+	return article ? new Article(article) : null
 }
 
 export const permissions = (...required: string[]) => (
 	async (request: IRequest, response: Response, next: NextFunction): Promise<void> => {
 		const { campaign, subdomain, params: { slug } } = request
-		const article = await loadArticle(slug, campaign)
+		const article = await loadArticle(slug, [campaign.id, ...campaign.sources])
 		const { isEditor, isOwner, isViewer } = campaign
 
 		if (required.includes('view') && !isViewer) {
@@ -47,14 +46,13 @@ export const permissions = (...required: string[]) => (
 				isVisible: isViewer,
 				slug,
 			})
+			return next()
 		}
-
-		return next()
 	}
 )
 
 interface IGetRequest extends IRequest {
-	document?: Article,
+	document?: ArticleClass,
 	params: { slug: string },
 	query: { template?: string },
 }
@@ -62,24 +60,22 @@ export const getArticle = (
 	async (request: IGetRequest, response: Response): Promise<void> => {
 		const templateSlug = request.query.template as string
 		const { campaign, isEditable, isOwner, slug } = request
-		let article: Article
+		let rendered: IArticleRendered
 
 		if (!request.document) {
-			article = omit(
-				await new Article({ slug, title: titleCase(slug) }).render(campaign),
-				'_id',
-			)
+			const article = new Article({ id: undefined, slug, title: titleCase(slug) })
 			if (templateSlug) {
-				const template = await loadArticle(templateSlug, campaign)
-				Object.assign(article, pluck(template ? template.toJSON() : {}, 'html', 'tags'))
+				const template = await loadArticle(templateSlug, [campaign.id, ...campaign.sources])
+				Object.assign(article, pluck(template?.render(), 'html', 'tags'))
 			}
+
+			rendered = await article.render(campaign)
 		} else {
-			article = await request.document.render(campaign)
+			rendered = await request.document.render(campaign)
 		}
 
 		response.status(200).json({
-			...article,
-			campaign: pluck(article.campaign, '_id', 'subdomain', 'title'),
+			...rendered,
 			isEditable,
 			isOwner,
 		})
@@ -87,8 +83,8 @@ export const getArticle = (
 )
 
 interface IUpsertRequest extends IRequest {
-	body: Partial<IArticle>,
-	document?: Article,
+	body: Partial<IArticleData>,
+	document?: DocumentType<ArticleClass>,
 }
 export const upsertArticle = (
 	async (request: IUpsertRequest, response: Response): Promise<void> => {
@@ -96,24 +92,23 @@ export const upsertArticle = (
 		let { document } = request
 
 		const updates: Partial<IArticleData> = {
-			...omit(request.body, '_id', 'slug'),
-			campaign: campaign._id,
-			lastUpdatedBy: user._id,
+			...omit(request.body, 'id', 'slug'),
+			campaign: campaign.id,
+			lastUpdatedBy: user!.id,
 			slug,
 		}
 		if (!request.isOwner) {
 			delete updates.secret // Only owners can set this field
 		}
 
-		// @ts-expect-error - ts thinks _id is a string
-		if (document?.campaign?._id?.equals!(campaign._id)) {
+		if (document?.campaign?.id?.equals!(campaign.id)) {
 			document.set(updates)
 		} else {
-			document = new Article(updates)
+			document = new ArticleClass(updates)
 		}
 
-		const { _id } = await document.save()
-		const saved = await Articles.findOne({ _id })
+		const { id } = await document.save()
+		const saved = await Article.findOne({ id })
 			.populate('campaign', 'subdomain title')
 			.populate('createdBy lastUpdatedBy', 'name username')
 			.exec()
@@ -123,7 +118,7 @@ export const upsertArticle = (
 )
 
 interface IDeleteRequest extends IRequest {
-	document?: Article,
+	document?: ArticleClass,
 }
 export const deleteArticle = (
 	async (request: IDeleteRequest, response: Response): Promise<void> => {

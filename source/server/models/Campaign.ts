@@ -1,13 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
-import mongoose from 'mongoose'
 import { DocumentBase, IDocumentBaseData } from '~/server/models/DocumentBase'
 import { Slug } from '~/server/models/Slug'
 import { defaultTheme, ITheme, Theme } from '~/server/models/Theme'
 import { User } from '~/server/models/User'
+import { getId } from '~/server/utilities/getId'
 import { unique } from '~/utilities/unique'
-
-const { ObjectId } = mongoose.Types
 
 export interface ICampaignData extends IDocumentBaseData {
 	createdBy?: Ref<User>,
@@ -33,16 +31,6 @@ interface INavigationData {
 class Navigation implements INavigationData {
 	@prop({ ...Slug, foreignField: 'slug', localField: 'slug', ref: 'Article' }) slug: string = ''
 	@prop({ trim: true, type: String }) title: string = ''
-}
-
-const getId = (id: number | string | Ref<any>): mongoose.Types.ObjectId => {
-	if (id?._bsontype === 'ObjectID') return id
-	if (!id) return ObjectId()
-	if (['string', 'number'].includes(typeof id)) {
-		return ObjectId(id as string)
-	}
-
-	return getId(id?._id)
 }
 
 const DEFAULT_NAVIGATION: INavigationData[] = [{ slug: 'home', title: 'Home' }]

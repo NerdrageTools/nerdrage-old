@@ -1,20 +1,65 @@
-import mongoose from 'mongoose'
+import { Campaign, Campaigns } from '~/server/models'
 import { Article } from '~/server/models/Article'
 import { transclude } from '~/utilities/transclude'
 
+process.env.TEST_SUITE = 'transclude'
+
+/* eslint-disable max-len,sort-keys */
 describe('utilities/transclude', () => {
-	beforeAll(async () => {
-		await mongoose.connect('mongodb://localhost/test-transclude', {
-			useCreateIndex: true,
-			useNewUrlParser: true,
-		})
-	})
+	let deepSource: Campaign
+	let source: Campaign
+	let current: Campaign
 
 	beforeEach(async () => {
-		await Article.deleteMany({})
+		deepSource = await Campaigns.create({ subdomain: 'deep-source' })
+		await Article.create([
+			{ slug: 'a', html: 'Deep-Source A' },
+			{ slug: 'b', html: 'Deep-Source B' },
+			{ slug: 'deep', html: 'Deep-Source Deep' },
+		].map(a => ({ ...a, campaign: deepSource, title: a.slug })))
+
+		source = await Campaigns.create({ subdomain: 'source', sources: [deepSource] })
+		await Article.create([
+			{ slug: 'a', html: 'Source A' },
+			{ slug: 'shallow', html: 'Source Shallow' },
+		].map(a => ({ ...a, campaign: source, title: a.slug })))
+
+		current = await Campaigns.create({ subdomain: 'current', sources: [source] })
+		await Article.create([
+			{ slug: 'a', html: 'Immediate A' },
+			{ slug: 'b', html: 'Nope! <div id="simple">Bug!</div>' },
+			{ slug: 'c', html: `
+				Nope!
+				<div id="simple">Foo</div>
+				<div id="nested">
+					Bar
+					<include sections="simple" from="b" />
+				</div>
+			`,
+			},
+		].map(a => ({
+			...a,
+			aliases: [a.slug.repeat(2), a.slug.repeat(3)],
+			campaign: current,
+			title: a.slug,
+		})))
 	})
 
-	test('transcludes', async () => {
+	test('no transcludes', async () => {
+		expect(await transclude(current, 'No Includes')).toEqual('No Includes')
+	})
+
+	test('missing article', async () => {
+		expect(await transclude(current.toJSON(), '<include from="non-existant" sections="*" />'))
+			.toEqual('')
+	})
+
+	test('simple transclude', async () => {
+		expect(await transclude(current, '<include from="a" sections="*" />'))
+			.toEqual('')
+	})
+
+	test.skip('transcludes', async () => {
 		await Article.deleteMany({ slug: { $in: ['a', 'b', 'c'] } })
 		await Article.create([
 			/* eslint-disable sort-keys */
@@ -49,10 +94,5 @@ describe('utilities/transclude', () => {
 		expect(transcluded.html).toMatchSnapshot()
 
 		done()
-	})
-
-	afterAll(async () => {
-		await mongoose.connection.db.dropDatabase()
-		await mongoose.disconnect()
 	})
 })

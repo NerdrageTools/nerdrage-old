@@ -11,9 +11,9 @@ export class CampaignSearchBox extends SearchBox<ICampaignLink> {
 	readonly typeName: string = 'campaign'
 	readonly url: string = '/api/search/campaigns/:searchTerm'
 
-	getValue = (campaign: ICampaignLink): string => campaign._id!
+	getValue = (campaign: ICampaignLink): string => campaign.id!
 	renderOption = (campaign: ICampaignLink, _: number, itemProps: OptionProps): JSX.Element => (
-		<li key={campaign._id} className="search-result" {...itemProps}>
+		<li key={campaign.id} className="search-result" {...itemProps}>
 			<CampaignIcon />
 			<b className="title">{campaign.title}</b>
 		</li>

@@ -1,24 +1,29 @@
+/* eslint-disable max-classes-per-file */
 import {
-	getModelForClass, index, modelOptions, pre, prop, Ref, ReturnModelType, Severity,
+	DocumentType, getClassForDocument, getModelForClass, index, modelOptions, pre, prop, queryMethod, Severity,
 } from '@typegoose/typegoose'
+import { QueryMethod, ReturnModelType } from '@typegoose/typegoose/lib/types'
 import cheerio from 'cheerio'
 import * as entities from 'entities'
 import { html_beautify as beautify } from 'js-beautify'
 import deburr from 'lodash.deburr'
-import { Slug } from '~/server/models/Slug'
-import { createCampaignFilter } from '~/utilities/createCampaignFilter'
+import { cleanUp } from '~/server/models/Article/cleanUp'
+import { Campaigns, ICampaignData, ICampaignLink } from '~/server/models/Campaign'
+import {
+	CampaignDocumentBase, CampaignHelpers, ICampaignDocumentBaseData, ICampaignDocumentBaseLink,
+} from '~/server/models/CampaignDocumentBase'
+import { bound } from '~/utilities/bound'
+import { pluck } from '~/utilities/pluck'
 import { transclude } from '~/utilities/transclude'
 import { unique } from '~/utilities/unique'
-import { cleanUp } from '~/server/models/Article/cleanUp'
-import { renderLinks } from '~/server/models/Article/renderLinks'
-import { Campaign } from './Campaign'
-import { User, Users } from './User'
+import { IUserLink, Users } from './User'
 import { loadByCampaign } from '../utilities/loadByCampaign'
-import { bound } from '~/utilities/bound'
 
-const slugifyArray = (array: string[]) => unique(array.map(value => (
-	value.toLowerCase().replace(/[^\w-_]/g, '-').replace(/-{2,}|^-|-$/g, '')
-))).sort()
+const slugifyArray = (array: string[]): string[] => (
+	unique<string>(array.map(value => (
+		value.toLowerCase().replace(/[^\w-_]/g, '-').replace(/-{2,}|^-|-$/g, '')
+	))).sort()
+)
 const BEAUTIFY_OPTIONS = {
 	end_with_newline: true,
 	indent_char: ' ',
@@ -27,28 +32,15 @@ const BEAUTIFY_OPTIONS = {
 	wrap_line_length: 0,
 }
 
-export interface IArticleData {
-	_id?: string,
+export interface IArticleData extends ICampaignDocumentBaseData {
 	aliases?: string[],
-	campaign: Ref<typeof Campaign>,
-	createdAt?: Date,
-	createdBy?: Ref<User>,
 	html?: string,
-	lastUpdatedBy?: Ref<User>,
 	plainText?: string,
 	secret?: boolean,
-	slug: string,
 	tags?: string[],
 	template?: boolean,
-	title: string,
-	updatedAt?: Date,
-	version?: number,
 }
-export interface IArticleLink {
-	slug: string,
-	subdomain: string,
-	title: string,
-}
+export type IArticleLink = ICampaignDocumentBaseLink
 
 interface ITextMatch {
 	idx: number,
@@ -69,100 +61,164 @@ export interface IArticleSearchResult {
 	title: string,
 }
 
+export interface IArticleRendered
+	extends Omit<IArticleData, 'campaign' | 'createdBy' | 'lastUpdatedBy' | 'plainText'> {
+	campaign: ICampaignLink,
+	childArticles: IArticleLink[],
+	createdBy: IUserLink,
+	lastUpdatedBy: IUserLink,
+}
+
+export interface ArticleHelpers extends CampaignHelpers {
+	bySlug: QueryMethod<typeof bySlug>,
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function bySlug(
+	this: ReturnModelType<{ new (...data: any): IArticleData }, ArticleHelpers>,
+	slug: string | string[],
+) {
+	return Array.isArray(slug)
+		? this.find({ $or: [{ slug: { $in: slug } }, { aliases: { $in: slug } }] })
+		: this.find({ $or: [{ slug }, { aliases: slug }] })
+}
+
 @index({ campaign: 1, slug: 1 }, { unique: true })
 @index({ plainText: 'text', title: 'text' })
 @modelOptions({
 	options: { allowMixed: Severity.ALLOW },
 	schemaOptions: { id: false, timestamps: true, versionKey: 'version' },
 })
-@pre<Article>('save', async function (next) {
-	this.aliases = slugifyArray(this.aliases)
+@pre<ArticleClass>('save', async function (next) {
+	this.aliases = slugifyArray(this.aliases ?? [])
 	this.html = beautify(cleanUp(this.html), BEAUTIFY_OPTIONS)
-	this.tags = slugifyArray(this.tags)
+	this.tags = slugifyArray(this.tags ?? [])
 
 	const $ = cheerio.load(this.html, { decodeEntities: false, xmlMode: true })
 	$('br').replaceWith('\r\n')
 	// @ts-expect-error - .text() is perfectly valid on Root
 	this.plainText = entities.decodeHTML($.text().replace(/[\r\n]/g, ' ').replace(/\s+/g, ' '))
 
-	await Articles.updateMany(
-		{ _id: { $ne: this._id }, campaign: this.campaign },
+	await Article.updateMany(
+		{ campaign: this.campaign, id: { $ne: this.id } },
 		{ $pull: { aliases: { $in: this.aliases } } },
 	)
 	next()
 })
-export class Article implements IArticleData {
-	_id?: string
-	createdAt?: Date
-	updatedAt?: Date
-	version?: number
-
+@queryMethod(bySlug)
+export class ArticleClass extends CampaignDocumentBase<IArticleData> {
 	@prop({ default: [], type: [String] })
-	public aliases: string[] = []
-
-	@prop({ default: null, ref: 'Campaign' })
-	public campaign: Ref<typeof Campaign>
-
-	@prop({ ref: 'User' })
-	public createdBy?: Ref<User>
+	public aliases?: string[] = []
 
 	@prop({ default: '' })
-	public html: string = ''
-
-	@prop({ ref: 'User' })
-	public lastUpdatedBy?: Ref<User>
+	public html?: string = ''
 
 	@prop({ default: '' })
-	public plainText: string = ''
+	public plainText?: string = ''
 
 	@prop({ default: false })
-	public secret: boolean = false
-
-	@prop({ ...Slug, required: true })
-	public slug: string = ''
+	public secret?: boolean = false
 
 	@prop({ default: [], type: [String] })
-	public tags: string[] = []
+	public tags?: string[] = []
 
 	@prop({ default: false })
-	public template: boolean = false
+	public template?: boolean = false
 
-	@prop({ required: true })
-	public title: string = ''
+	handlePreValidate(): void {
+		super.handlePreValidate()
+		this.aliases = unique<string>(this.aliases ?? []).sort()
+		this.tags = unique<string>(this.tags ?? []).sort()
+	}
 
-	async render(campaign?: ICampaign): Promise<Article> {
-		const campaignFilter = createCampaignFilter(campaign)
-		const includes = await transclude(this.html, campaignFilter)
-		const links = await renderLinks(includes.html, campaignFilter)
-		const childArticles = await Articles.aggregate([
-			{ $match: {
-				$and: [campaignFilter, { tags: { $in: [this.slug, ...this.aliases] } }],
-				template: false,
-			} },
-			{ $group: {
-				_id: '$slug',
-				id: { $first: '$_id' },
-				slug: { $first: '$slug' },
-				title: { $first: '$title' },
-			} },
-			{ $project: { _id: '$id', slug: '$slug', title: '$title' } },
-		]).exec()
+	async findLinkedArticles(campaign: ICampaignData, html?: string)
+		: Promise<DocumentType<ArticleClass>[]> {
+		const $ = cheerio.load(html ?? this.html ?? '', { decodeEntities: false, xmlMode: true })
+		const articles = unique<string>([
+			...$('a').toArray().map(el => (el.attribs.href ?? '')),
+			...$('include').toArray().map(el => (el.attribs.from)),
+		])
+
+		return Article.find()
+			.byCampaign([campaign.id, ...(campaign.sources ?? [])])
+			.find({ $or: [{ slug: { $in: articles } }, { aliases: { $in: articles } }] })
+			.exec()
+	}
+
+	get parser(): cheerio.Root {
+		return cheerio.load(this.html!, { decodeEntities: false, xmlMode: true })
+	}
+
+	get sections(): Map<string, string> {
+		if (!this.html) return new Map<string, string>()
+
+		const { parser } = this
+		return parser('[id]').toArray().reduce((map, el) => {
+			const $el = parser(el)
+			const id = $el.attr('id')
+			return id ? map.set(id, $el.html() ?? '') : map
+		}, new Map<string, string>().set('*', this.html))
+	}
+
+	async render(campaign: ICampaignData): Promise<IArticleRendered> {
+		const articles = await this.findLinkedArticles(campaign)
+		const includes = transclude(campaign, this?.html ?? '', this.sections)
+		const links = includes // await renderLinks(includes.html, campaignFilter)
+		const childArticles = (
+			await Article.find()
+				.bySlug(this.slug)
+				.byCampaign([campaign.id!, ...(campaign.sources ?? [])])
+				.exec()
+		).map<IArticleLink>(article => ({
+			...pluck(article, 'id', 'slug', 'title'),
+			subdomain: campaign.subdomain!,
+			type: 'article',
+		}))
+		// const childArticles = await Articles.aggregate([
+		// 	{ $match: {
+		// 		$and: [campaignFilter, { tags: { $in: [this.slug, ...this.aliases ?? []] } }],
+		// 		template: false,
+		// 	} },
+		// 	{ $group: {
+		// 		_id: '$slug',
+		// 		id: { $first: '$id' },
+		// 		slug: { $first: '$slug' },
+		// 		title: { $first: '$title' },
+		// 	} },
+		// 	{ $project: { id: '$id', slug: '$slug', title: '$title' } },
+		// ]).exec()
 
 		const html = beautify(links.html, BEAUTIFY_OPTIONS)
-		return Promise.resolve({ ...this.toJSON(), childArticles, html })
+		return {
+			aliases: [...this.aliases ?? []],
+			...pluck(this,
+				'id', 'createdAt', 'lastUpdatedAt', 'secret', 'slug',
+				'template', 'title', 'version',
+			),
+			campaign: pluck(campaign, 'id', 'subdomain', 'title'),
+			childArticles,
+			html,
+			tags: [...this.tags ?? []],
+		}
 	}
 }
 
+const findByCampaignSlug = async (slug: string, campaign: ICampaignData) => (
+	(await findByCampaignSlugs([slug], campaign)).shift()
+)
+const findByCampaignSlugs = async (slug: string[], campaign: ICampaignData) => (
+	Article.find().bySlug(slug).byCampaign([campaign.id, ...(campaign.sources ?? [])])
+		.exec() as Promise<DocumentType<IArticleData>[]>
+)
 const search = async (
 	searchTerm: string | RegExp,
 	subdomain: string,
 	userId: string = '',
 	limit: number = 10,
 ): Promise<IArticleSearchResult[] | null> => {
-	const campaign = subdomain ? await Campaign.findOne({ subdomain }) : null
+	const campaign = subdomain ? await Campaigns.findOne({ subdomain }) : null
 	if (!campaign) return null
 
-	const user = userId ? await Users.findOne({ _id: userId }) : null
+	const user = userId ? await Users.findOne({ id: userId }) : null
 	const userIsViewer = Boolean(user?.isAdmin || campaign.isVisibleTo(userId))
 	if (!userIsViewer) return null
 
@@ -217,9 +273,8 @@ const search = async (
 		}),
 	)
 }
-interface IArticles extends ReturnModelType<typeof Article> {
-	search: typeof search,
-}
-export const Articles: IArticles = Object.assign(getModelForClass(Article), {
-	search,
-})
+
+export const Article = Object.assign(
+	getModelForClass<typeof ArticleClass, ArticleHelpers>(ArticleClass),
+	{ findByCampaignSlug, findByCampaignSlugs, search },
+)
