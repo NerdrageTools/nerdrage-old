@@ -29,61 +29,62 @@ const routeHandler = routes.getRequestHandler(app)
 const { DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env
 
 app.prepare().then(async () => {
-  mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-  })
-  mongoose.Promise = global.Promise
+	mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}/${DB_NAME}`, {
+		useCreateIndex: true,
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	mongoose.Promise = global.Promise
 
-  const server = express()
-    .use(bodyParser.json({ limit: '10mb' }))
-    .use(cookieParser())
-    .use((request, response, next) => {
-      response.header('Access-Control-Allow-Credentials', 'true')
-      response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-      response.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
-      response.header('Access-Control-Allow-Origin', '*')
-      if (request.method === 'OPTIONS') {
-        response.status(200).send()
-      } else {
-        next()
-      }
-    })
-    .use(compression())
-    .use(cors())
-    .use(express.urlencoded({ extended: true }))
-    .use(express.json())
-    .options('*', cors())
+	const server = express()
+		.use(bodyParser.json({ limit: '10mb' }))
+		.use(cookieParser())
+		.use((request, response, next) => {
+			response.header('Access-Control-Allow-Credentials', 'true')
+			response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+			response.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+			response.header('Access-Control-Allow-Origin', '*')
+			if (request.method === 'OPTIONS') {
+				response.status(200).send()
+			} else {
+				next()
+			}
+		})
+		.use(compression())
+		.use(cors())
+		.use(express.urlencoded({ extended: true }))
+		.use(express.json())
+		.options('*', cors())
 
-  server.get('/favicon.ico', (_, response) => {
-    response.status(200).sendFile(`${__dirname}/favicon.ico`)
-  })
+	server.get('/favicon.ico', (_, response) => {
+		response.status(200).sendFile(`${__dirname}/favicon.ico`)
+	})
 
-  const modulePath = path.resolve(__dirname, '../../node_modules')
-  server.use(
-    '/static/fantasy-map-generator',
-    express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' })
-  )
+	const modulePath = path.resolve(__dirname, '../../node_modules')
+	server.use(
+		'/static/fantasy-map-generator',
+		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' }),
+	)
 
-  server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
-  server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
-  server.use('/api/map', ContextLoader, MapController)
-  server.use('/api/search', ContextLoader, nocache(), SearchController)
-  server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
-  server.use('/api/templates', ContextLoader, nocache(), TemplateController)
-  server.use('/api/user', ContextLoader, nocache(), UserController)
+	server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
+	server.use('/api/campaign', ContextLoader, nocache(), CampaignController)
+	server.use('/api/map', ContextLoader, MapController)
+	server.use('/api/search', ContextLoader, nocache(), SearchController)
+	server.use('/api/sheet', ContextLoader, Campaign404, nocache(), SheetController)
+	server.use('/api/templates', ContextLoader, nocache(), TemplateController)
+	server.use('/api/user', ContextLoader, nocache(), UserController)
 
-  server.get('/', (_, response) => response.redirect(302, '/article/home'))
+	server.get('/', (_, response) => response.redirect(302, '/article/home'))
 
-  server.get('/_next/*', routeHandler)
-  server.get('*', nocache(), ContextLoader, routeHandler)
+	server.get('/_next/*', routeHandler)
+	server.get('*', nocache(), ContextLoader, routeHandler)
 
-  server.listen(3000, error => {
-    if (error) throw error
-    console.log('~> Listening on port 3000')
-  })
+	server.listen(3000, error => {
+		if (error) throw error
+		console.log('~> Listening on port 3000')
+	})
 }).catch(exception => {
-  console.error(exception.stack)
-  process.exit(1)
+	console.error(exception.stack)
+	process.exit(1)
 })
 /* eslint-enable no-console */
