@@ -7,6 +7,7 @@ export type LinkType = 'article' | 'campaign' | 'map' | 'sheet' | 'user'
 interface Props {
 	active?: boolean,
 	className?: string,
+	href?: string,
 	query?: Record<string, any>,
 	slug?: string,
 	subdomain?: string,
