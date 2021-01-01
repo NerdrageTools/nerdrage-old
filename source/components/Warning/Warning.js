@@ -3,12 +3,12 @@ import WarningIcon from '@/icons/warning.svg'
 import '@/styles/classes/warning.scss'
 
 export default function Warning({
-  children = '',
+	children = '',
 }) {
-  return (
-    <div className="warning">
-      <WarningIcon />
-      {children}
-    </div>
-  )
+	return (
+		<div className="warning">
+			<WarningIcon />
+			{children}
+		</div>
+	)
 }

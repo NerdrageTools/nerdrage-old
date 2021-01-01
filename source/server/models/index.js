@@ -4,8 +4,8 @@ import Sheet from './Sheet'
 import User from './User'
 
 export default {
-  Article,
-  Campaign,
-  Sheet,
-  User,
+	Article,
+	Campaign,
+	Sheet,
+	User,
 }

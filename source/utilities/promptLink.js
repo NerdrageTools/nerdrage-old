@@ -4,23 +4,23 @@ import CreateLinkDialog from '@/components/CreateLinkDialog'
 import './prompt.scss'
 
 export default async function promptLink({
-  defaultText = '',
-  defaultSlug = '',
-  templateType = null,
-  title = 'Create Link',
+	defaultText = '',
+	defaultSlug = '',
+	templateType = null,
+	title = 'Create Link',
 }) {
-  const container = document.createElement('div')
-  document.body.appendChild(container)
+	const container = document.createElement('div')
+	document.body.appendChild(container)
 
-  return new Promise((resolve, reject) => {
-    const onCancel = () => reject()
-    const onOk = payload => resolve(payload)
+	return new Promise((resolve, reject) => {
+		const onCancel = () => reject()
+		const onOk = payload => resolve(payload)
 
-    ReactDOM.render(
-      <CreateLinkDialog {...{ defaultSlug, defaultText, onCancel, onOk, templateType, title }} />,
-      container,
-    )
-  }).finally(() => {
-    document.body.removeChild(container)
-  })
+		ReactDOM.render(
+			<CreateLinkDialog {...{ defaultSlug, defaultText, onCancel, onOk, templateType, title }} />,
+			container,
+		)
+	}).finally(() => {
+		document.body.removeChild(container)
+	})
 }

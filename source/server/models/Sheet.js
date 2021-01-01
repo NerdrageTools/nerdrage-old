@@ -4,20 +4,20 @@ import Slug from '@/server/models/Slug'
 const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 
 export const SheetSchema = new mongoose.Schema({
-  campaign: { ref: 'Campaign', required: true, type: ObjectIdType, unique: false },
-  data: { default: {}, type: Object },
-  layout: { default: {}, type: Object },
-  ownedBy: { ref: 'User', type: ObjectIdType },
-  secret: { default: true, type: Boolean },
-  slug: { ...Slug, required: true, unique: false },
-  template: { default: false, type: Boolean },
-  title: { default: 'Unnamed Character', type: String },
+	campaign: { ref: 'Campaign', required: true, type: ObjectIdType, unique: false },
+	data: { default: {}, type: Object },
+	layout: { default: {}, type: Object },
+	ownedBy: { ref: 'User', type: ObjectIdType },
+	secret: { default: true, type: Boolean },
+	slug: { ...Slug, required: true, unique: false },
+	template: { default: false, type: Boolean },
+	title: { default: 'Unnamed Character', type: String },
 }, {
-  id: false,
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-  versionKey: 'version',
+	id: false,
+	timestamps: true,
+	toJSON: { virtuals: true },
+	toObject: { virtuals: true },
+	versionKey: 'version',
 })
 
 SheetSchema.index({ campaign: 1, slug: 1 }, { unique: true })
