@@ -1,7 +1,7 @@
 import cheerio from 'cheerio'
-import * as entities from 'entities'
-import { html_beautify as beautify } from 'js-beautify'
+import { decodeHTML, decodeXML } from 'entities'
 import mongoose from 'mongoose'
+import { toJSX } from '~/server/models/Article/toJSX'
 import Slug from '~/server/models/Slug'
 import computeSearchKeys from '~/utilities/computeSearchKeys'
 import createCampaignFilter from '~/utilities/createCampaignFilter'
@@ -14,13 +14,6 @@ const { ObjectId: ObjectIdType } = mongoose.Schema.Types
 const slugifyArray = array => unique(array.map(value => (
 	value.toLowerCase().replace(/[^\w-_]/g, '-').replace(/-{2,}|^-|-$/g, '')
 ))).sort()
-const BEAUTIFY_OPTIONS = {
-	end_with_newline: true,
-	indent_char: ' ',
-	indent_size: 2,
-	preserve_newlines: false,
-	wrap_line_length: 0,
-}
 
 export const ArticleSchema = new mongoose.Schema({
 	aliases: [Slug],
@@ -57,12 +50,12 @@ ArticleSchema.index({ plainText: 'text', title: 'text' })
 ArticleSchema.index({ searchKeys: 1 })
 ArticleSchema.pre('save', function (next) {
 	this.aliases = slugifyArray(this.aliases)
-	this.html = beautify(cleanUp(this.html), BEAUTIFY_OPTIONS)
+	this.html = cleanUp(this.html)
 	this.tags = slugifyArray(this.tags)
 
 	const $ = cheerio.load(this.html, { decodeEntities: false, xmlMode: true })
 	$('br').replaceWith('\r\n')
-	this.plainText = entities.decodeHTML($.text().replace(/[\r\n]/g, ' ').replace(/\s+/g, ' '))
+	this.plainText = decodeHTML(decodeXML($.text().replace(/[\r\n]/g, ' ').replace(/\s+/g, ' ')))
 	this.searchKeys = computeSearchKeys(this.plainText)
 
 	mongoose.models.Article.updateMany(
@@ -74,7 +67,7 @@ ArticleSchema.pre('save', function (next) {
 ArticleSchema.methods.render = async function (campaign) {
 	const campaignFilter = createCampaignFilter(campaign)
 	const includes = await transclude(this.html, campaignFilter)
-	const links = await renderLinks(includes.html, campaignFilter)
+	const { html } = await renderLinks(includes.html, campaignFilter)
 	const childArticles = await mongoose.models.Article
 		.aggregate([
 			{ $match: {
@@ -91,12 +84,10 @@ ArticleSchema.methods.render = async function (campaign) {
 		])
 		.exec()
 
-	const html = beautify(links.html, BEAUTIFY_OPTIONS)
-
 	return Promise.resolve({
 		...this.toJSON(),
 		childArticles,
-		html,
+		html: toJSX(html),
 	})
 }
 

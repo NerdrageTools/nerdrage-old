@@ -34,6 +34,7 @@ app.prepare().then(async () => {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	})
+	// @ts-expect-error - ts thinks Promise can't be assigned
 	mongoose.Promise = global.Promise
 
 	const server = express()
@@ -63,7 +64,7 @@ app.prepare().then(async () => {
 	const modulePath = path.resolve(__dirname, '../../node_modules')
 	server.use(
 		'/static/fantasy-map-generator',
-		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxage: '1d' }),
+		express.static(`${modulePath}/@azgaar/fantasy-map-generator`, { maxAge: '1d' }),
 	)
 
 	server.use('/api/article', ContextLoader, Campaign404, nocache(), ArticleController)
@@ -79,7 +80,7 @@ app.prepare().then(async () => {
 	server.get('/_next/*', routeHandler)
 	server.get('*', nocache(), ContextLoader, routeHandler)
 
-	server.listen(3000, error => {
+	server.listen(3000, (error?: Error) => {
 		if (error) throw error
 		console.log('~> Listening on port 3000')
 	})

@@ -1,6 +1,6 @@
 import mockingoose from 'mockingoose'
 import renderLinks from './renderLinks'
-import '@/server/models/Article'
+import '~/server/models/Article'
 
 describe('models/Article/renderLinks', () => {
 	beforeEach(() => {
