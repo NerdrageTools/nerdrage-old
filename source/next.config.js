@@ -8,12 +8,6 @@ module.exports = withPlugins([withSass, withCSS], {
 	webpack(nextConfig, options) {
 		const config = { ...nextConfig }
 
-		config.module.rules.unshift({
-			exclude: /node_modules/,
-			loader: 'babel-loader',
-			test: /\.[jt]sx?$/,
-		})
-
 		config.module.rules.push({
 			loader: 'url-loader',
 			options: {

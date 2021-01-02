@@ -28,9 +28,9 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "target": "ES2015",
-    "types": ["express", "node", "w3c-css-typed-object-model-level-1"],
+    "types": ["express", "jest", "node", "w3c-css-typed-object-model-level-1"],
     "typeRoots": ["node_modules/@types", "tools/typings"]
   },
   "exclude": ["dist", "node_modules", "tmp"],
-  "include": ["source/**/*.d.ts", "source/**/*.ts", "source/**/*.tsx"]
+  "include": ["**/*.d.ts", "source/**/*.ts", "source/**/*.tsx"]
 }

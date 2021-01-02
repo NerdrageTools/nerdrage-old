@@ -200,7 +200,7 @@ export default class Article extends Component {
 					a: Link,
 					Warning,
 				}}
-				jsx={jsx ?? ''}
+				jsx={jsx}
 			/>
 			<Links pages={this.props.childArticles} />
 		</>
